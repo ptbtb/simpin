@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/public/vendor/fontawesome-free/css/all.css</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/config/adminlte.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/app/Models/Anggota.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/app/Http/Controllers/SettingCodeTransController.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/app/Http/Controllers/SettingPinjamanController.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/resources/views/setting/simpanan/index.blade.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/resources/views/anggota/record.blade.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/routes/web.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/app/Http/Controllers/AnggotaController.php</file>
+            <file>file:/C:/WinNMP/WWW/simpinlaravel/resources/views/setting/pinjaman/index.blade.php</file>
+        </group>
+    </open-files>
+</project-private>
