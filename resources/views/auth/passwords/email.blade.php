@@ -21,7 +21,7 @@ Reset Password
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 						@if($errors->has('email'))
 			                <div class="invalid-feedback">
-			                    <strong style="color: red; font-size: 11px"{{ $errors->first('email') }}</strong>
+			                    <strong style="color: red; font-size: 11px"{{ $errors->first('email') }}></strong>
 			                </div>
 			            @endif
 					</div>
