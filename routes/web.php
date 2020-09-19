@@ -64,3 +64,12 @@ Route::post('/setting/codetrans/update', [App\Http\Controllers\SettingCodeTransC
 Route::get('/setting/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy']);
 Route::get('/setting/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create']);
 Route::post('/setting/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store']);
+
+Route::group(['prefix' => 'user'], function ()
+{
+	Route::group(['middleware' => 'auth'], function ()
+	{
+		Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user-profile');
+		Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');
+	});
+});

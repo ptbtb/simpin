@@ -37,6 +37,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function getPhotoProfileAttribute()
+    {
+        if ($this->photo_profile_path)
+        {
+            return env('APP_URL').'/'.$this->photo_profile_path;
+        }
+
+        return env('APP_URL').'/img/user.jpg';
+    }
+
     public function adminlte_image()
     {
         return '';
