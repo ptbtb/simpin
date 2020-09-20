@@ -69,6 +69,14 @@ Route::group(['prefix' => 'user'], function ()
 {
 	Route::group(['middleware' => 'auth'], function ()
 	{
+        Route::get('list', [App\Http\Controllers\UserController::class, 'index'])->name('user-list');
+        Route::get('create', [App\Http\Controllers\UserController::class, 'create'])->name('user-create');
+        Route::post('create', [App\Http\Controllers\UserController::class, 'store'])->name('user-create');
+        
+        Route::get('{id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->where('id', '[0-9]+')->name('user-edit');
+        Route::post('{id}/edit', [App\Http\Controllers\UserController::class, 'update'])->where('id', '[0-9]+')->name('user-edit');
+        Route::delete('{id}/delete', [App\Http\Controllers\UserController::class, 'delete'])->where('id', '[0-9]+')->name('user-delete');
+        
 		Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user-profile');
         Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');
         

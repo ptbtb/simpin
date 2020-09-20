@@ -221,11 +221,13 @@ return [
         [
             'text' => 'Master Data',
             'icon' => 'fas fa-fw fa-database',
+            'can'  => ['view user'],
             'submenu' => [
                 [
                     'text' => 'User',
-                    'url' => '#',
+                    'url' => '/user/list',
                     'icon' => 'fa fa-user nav-icon',
+                    'can'  => ['view user'],
                 ],
                 [
                     'text' => 'Anggota',
