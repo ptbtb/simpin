@@ -70,6 +70,9 @@ Route::group(['prefix' => 'user'], function ()
 	Route::group(['middleware' => 'auth'], function ()
 	{
 		Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user-profile');
-		Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');
+        Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');
+        
+        Route::get('change-password', [App\Http\Controllers\UserController::class, 'changePassword'])->name('user-change-password');
+		Route::post('change-password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('user-change-password');
 	});
 });
