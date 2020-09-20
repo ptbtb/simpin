@@ -62,7 +62,7 @@ class RoleController extends Controller
         $this->authorize('edit role', Auth::user());
         $role = Role::with('permissions')->find($id);
         $permissionGroups = PermissionGroup::with('permissions')->get();
-        $data['title'] = "Create Role";
+        $data['title'] = "Edit Role";
         $data['role'] = $role;
         $data['permissionGroups'] = $permissionGroups;
         return view('authorization.role.edit', $data);
