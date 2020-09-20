@@ -33,8 +33,8 @@
 							</div>
 							<div class="col-md-6 form-group">
 								<label>Role</label>
-								<input type="text" name="role_name" value="{{ ($user->role)? $user->role->name:'' }}" placeholder="Your Role" readonly class="form-control">
-								<input type="hidden" name="role_id" value="{{ ($user->role)? $user->role->id:'' }}">
+								<input type="text" name="role_name" value="{{ ($user->roles->first())? $user->roles->first()->name:'' }}" placeholder="Your Role" readonly class="form-control">
+								<input type="hidden" name="role_id" value="{{ ($user->roles->first())? $user->roles->first()->id:'' }}">
 							</div>
 							<div class="col-md-6 form-group">
 								<label>Name</label>
