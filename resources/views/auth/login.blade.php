@@ -11,7 +11,10 @@ Login
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
 				<form class="login100-form validate-form" method="post" action="{{ route('login') }}">
 					{{ csrf_field() }}
-					<span class="login100-form-title p-b-49">
+					<div class="text-center  p-b-30">
+						<img src="{{ asset('vendor/adminlte/dist/img/jtk-logo.jpg') }}" style="max-width: 50%;">
+					</div>
+					<span class="login100-form-title p-b-30">
 						Login
 					</span>
 
