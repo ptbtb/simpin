@@ -51,7 +51,6 @@
                                 @endif
                             </td>
                             <td>
-                                {{-- <a href="" class="btn btn-sm btn-info"><i class="fa fa-key"></i> Permission</a> --}}
                                 @can('edit user')
                                     <a href="{{ route('user-edit', ['id'=>$user->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                 @endcan

@@ -84,3 +84,17 @@ Route::group(['prefix' => 'user'], function ()
 		Route::post('change-password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('user-change-password');
 	});
 });
+
+Route::group(['prefix' => 'role'], function ()
+{
+	Route::group(['middleware' => 'auth'], function ()
+	{
+        Route::get('list', [App\Http\Controllers\RoleController::class, 'index'])->name('role-list');
+        Route::get('create', [App\Http\Controllers\RoleController::class, 'create'])->name('role-create');
+        Route::post('create', [App\Http\Controllers\RoleController::class, 'store'])->name('role-create');
+        
+        Route::get('{id}/edit', [App\Http\Controllers\RoleController::class, 'edit'])->where('id', '[0-9]+')->name('role-edit');
+        Route::post('{id}/edit', [App\Http\Controllers\RoleController::class, 'update'])->where('id', '[0-9]+')->name('role-edit');
+        Route::delete('{id}/delete', [App\Http\Controllers\RoleController::class, 'delete'])->where('id', '[0-9]+')->name('role-delete');
+	});
+});
