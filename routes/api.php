@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('anggota/search', [App\Http\Controllers\Api\AnggotaController::class, 'search'])->name('api-anggota-search');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

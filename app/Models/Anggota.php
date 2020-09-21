@@ -28,4 +28,9 @@ class Anggota extends Model
         'emergency_kontak',
         'status',
         ];
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'kode_anggota');
+    }    
 }

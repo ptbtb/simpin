@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 use App\Models\User;
+use App\Models\Anggota;
 
 use Auth;
 use Storage;
@@ -37,12 +38,26 @@ class UserController extends Controller
 		$this->authorize('add user', Auth::user());
 		try
 		{
+			$anggota = null;
+			if(isset($request->kode_anggota))
+			{
+				$anggota = Anggota::where('kode_anggota', $request->kode_anggota)->first();
+			}
 			$user = new User();
 			$user->email = $request->email;
-			$user->name = $request->name;
+			if($anggota)
+			{
+				$user->name = $anggota->nama_anggota;
+				$user->kode_anggota = $anggota->kode_anggota;
+			}
+			else
+			{
+				$user->name = $request->name;
+			}
 			$user->password = Hash::make($request->password);
 			$user->save();
 
+			$file = $request->photo;
 			if ($file)
 			{
 				$config['disk'] = 'upload';

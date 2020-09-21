@@ -223,16 +223,18 @@ return [
             'icon' => 'fas fa-fw fa-database',
             'submenu' => [
                 [
+                    'text' => 'Role',
+                    'url' => '/role/list',
+                    'icon' => 'fa fa-cogs nav-icon',
+                    'active' => ['/role/list', '/role/create', 'regex:@^role/edit/[0-9]+$@'],
+                    'can'  => ['view role'],
+                ],
+                [
                     'text' => 'User',
                     'url' => '/user/list',
                     'icon' => 'fa fa-user nav-icon',
                     'can'  => ['view user'],
-                ],
-                [
-                    'text' => 'Role',
-                    'url' => '/role/list',
-                    'icon' => 'fa fa-cogs nav-icon',
-                    'can'  => ['view role'],
+                    'active' => ['/user/list', '/user/create', 'regex:@^user/edit/[0-9]+$@'],
                 ],
                 [
                     'text' => 'Anggota',

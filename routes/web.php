@@ -27,15 +27,20 @@ Route::get('/clear-cache', function() {
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/anggota', [App\Http\Controllers\AnggotaController::class, 'index']);
-Route::get('/anggota/nonaktif', [App\Http\Controllers\AnggotaController::class, 'nonaktif']);
-Route::get('/anggota/all', [App\Http\Controllers\AnggotaController::class, 'all']);
-Route::get('/anggota/add', [App\Http\Controllers\AnggotaController::class, 'add']);
-Route::get('/anggota/edit/{id}', [App\Http\Controllers\AnggotaController::class, 'edit']);
-Route::get('/anggota/destroy/{id}', [App\Http\Controllers\AnggotaController::class, 'destroy']);
-Route::post('/anggota/store', [App\Http\Controllers\AnggotaController::class, 'store']);
-Route::post('/anggota/update/{id}', [App\Http\Controllers\AnggotaController::class, 'update']);
 
+// anggota
+Route::group(['prefix' => 'anggota'], function ()
+{
+    Route::get('/', [App\Http\Controllers\AnggotaController::class, 'index']);
+    Route::get('/nonaktif', [App\Http\Controllers\AnggotaController::class, 'nonaktif']);
+    Route::get('/all', [App\Http\Controllers\AnggotaController::class, 'all']);
+    Route::get('/add', [App\Http\Controllers\AnggotaController::class, 'add']);
+    Route::get('/edit/{id}', [App\Http\Controllers\AnggotaController::class, 'edit']);
+    Route::get('/destroy/{id}', [App\Http\Controllers\AnggotaController::class, 'destroy']);
+    Route::post('/store', [App\Http\Controllers\AnggotaController::class, 'store']);
+    Route::post('/update/{id}', [App\Http\Controllers\AnggotaController::class, 'update']);
+    Route::get('/ajax-detail/{id}', [App\Http\Controllers\AnggotaController::class, 'ajaxDetail'])->name('anggota-ajax-detail');
+});
 
 //simpanan
 Route::get('/simpanan', [App\Http\Controllers\SimpananController::class, 'index']);
@@ -65,6 +70,7 @@ Route::get('/setting/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeT
 Route::get('/setting/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create']);
 Route::post('/setting/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store']);
 
+// user
 Route::group(['prefix' => 'user'], function ()
 {
 	Route::group(['middleware' => 'auth'], function ()
@@ -73,9 +79,9 @@ Route::group(['prefix' => 'user'], function ()
         Route::get('create', [App\Http\Controllers\UserController::class, 'create'])->name('user-create');
         Route::post('create', [App\Http\Controllers\UserController::class, 'store'])->name('user-create');
         
-        Route::get('{id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->where('id', '[0-9]+')->name('user-edit');
-        Route::post('{id}/edit', [App\Http\Controllers\UserController::class, 'update'])->where('id', '[0-9]+')->name('user-edit');
-        Route::delete('{id}/delete', [App\Http\Controllers\UserController::class, 'delete'])->where('id', '[0-9]+')->name('user-delete');
+        Route::get('/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->where('id', '[0-9]+')->name('user-edit');
+        Route::post('/edit/{id}', [App\Http\Controllers\UserController::class, 'update'])->where('id', '[0-9]+')->name('user-edit');
+        Route::delete('delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->where('id', '[0-9]+')->name('user-delete');
         
 		Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user-profile');
         Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');
@@ -85,6 +91,7 @@ Route::group(['prefix' => 'user'], function ()
 	});
 });
 
+// role
 Route::group(['prefix' => 'role'], function ()
 {
 	Route::group(['middleware' => 'auth'], function ()
@@ -93,8 +100,8 @@ Route::group(['prefix' => 'role'], function ()
         Route::get('create', [App\Http\Controllers\RoleController::class, 'create'])->name('role-create');
         Route::post('create', [App\Http\Controllers\RoleController::class, 'store'])->name('role-create');
         
-        Route::get('{id}/edit', [App\Http\Controllers\RoleController::class, 'edit'])->where('id', '[0-9]+')->name('role-edit');
-        Route::post('{id}/edit', [App\Http\Controllers\RoleController::class, 'update'])->where('id', '[0-9]+')->name('role-edit');
-        Route::delete('{id}/delete', [App\Http\Controllers\RoleController::class, 'delete'])->where('id', '[0-9]+')->name('role-delete');
+        Route::get('/edit/{id}', [App\Http\Controllers\RoleController::class, 'edit'])->where('id', '[0-9]+')->name('role-edit');
+        Route::post('/edit/{id}', [App\Http\Controllers\RoleController::class, 'update'])->where('id', '[0-9]+')->name('role-edit');
+        Route::delete('/delete/{id}', [App\Http\Controllers\RoleController::class, 'delete'])->where('id', '[0-9]+')->name('role-delete');
 	});
 });

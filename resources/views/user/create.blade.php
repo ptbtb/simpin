@@ -36,16 +36,25 @@
 						</div>
 						<div class="col-md-6 form-group">
 							<label>Role</label>
-							<select name="role_id" class="form-control" required>
+							<select name="role_id" class="form-control" required id="roleOption">
 								<option value="">Choose One</option>
 								@foreach ($roles as $role)
 									<option value="{{ $role->id }}">{{ $role->name }}</option>
 								@endforeach
 							</select>
 						</div>
-						<div class="col-md-6 form-group">
+						<div class="col-md-6 form-group" id="name">
 							<label>Name</label>
-							<input type="text" name="name" placeholder="Your Name" class="form-control" required autocomplete="off">
+							<input type="text" id="nameField" name="name" placeholder="Your Name" class="form-control" required autocomplete="off">
+						</div>
+						<div class="col-md-6 form-group d-none" id="anggotaSelect2">
+							<label for="anggotaName">Anggota Name</label>
+							<select name="kode_anggota" id="anggotaName" class="form-control">
+							</select>
+						</div>
+						<div class="col-12 form-group mt-2 d-none" id="anggotaForm">
+							<label for="detailAnggota">Detail Anggota</label>
+							<div id="detailAnggota" style="background-color: #f2f2f2"></div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -89,5 +98,55 @@
 		$('#photoButton').on('change', '.btn-file :file', function () {
             readURL(this, 'photoPreview');
         });
+
+		$('#roleOption').on('change', function () {
+			var selectedRole = $(this).children("option:selected").val();
+			var roleAnggota = {{ ROLE_ANGGOTA }};
+			if (selectedRole == roleAnggota)
+			{
+				$('#anggotaSelect2').removeClass('d-none');
+				$('#anggotaForm').removeClass('d-none');
+				$('#name').addClass('d-none');
+				$('#nameField').prop('required',false);
+				$('#anggotaName').prop('required',true);
+				$("#anggotaName").select2({
+					ajax: {
+						url: '{{ route('api-anggota-search') }}',
+						dataType: 'json',
+						delay: 250,
+						data: function (params) {
+							var query = {
+								search: params.term,
+								type: 'public'
+							}
+							return query;
+						},
+						processResults: function (data) {
+							return {
+								results: data
+							};
+						}
+					}
+				});
+			}
+			else
+			{
+				$('#anggotaSelect2').addClass('d-none');
+				$('#anggotaForm').addClass('d-none');
+				$('#name').removeClass('d-none');
+				$('#nameField').prop('required',true);
+				$('#anggotaName').prop('required',false);
+			}
+		});
+
+		$('#anggotaName').on('change', function ()
+		{
+			var selectedValue = $(this).children("option:selected").val();
+			var baseURL = {!! json_encode(url('/')) !!};
+			$.get(baseURL + "/anggota/ajax-detail/" + selectedValue, function( data ) {
+				$('#detailAnggota').html(data);
+			});
+		});
+		
 	</script>
 @endsection

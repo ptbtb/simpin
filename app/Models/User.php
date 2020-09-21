@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return 'user/profile';
     }
+
+    public function anggota()
+    {
+        return $this->belongsTo(Anggota::class,'kode_anggota');
+    }
 }

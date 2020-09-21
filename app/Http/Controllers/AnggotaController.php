@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Anggota;
+use App\Models\Anggota;
 
 class AnggotaController extends Controller {
 
@@ -94,4 +94,10 @@ class AnggotaController extends Controller {
         return redirect('/anggota')->with('status', 'Data Berhasil Dihapus');
     }
 
+    public function ajaxDetail($id)
+    {
+        $anggota = Anggota::find($id);
+        $data['anggota'] = $anggota;
+        return view('anggota.ajaxDetail', $data);
+    }
 }
