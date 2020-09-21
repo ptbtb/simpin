@@ -5,7 +5,16 @@
 @endsection
 
 @section('content_header')
-    <h4>{{ $title }}</h4>
+<div class="row">
+	<div class="col-6"><h4>{{ $title }}</h4></div>
+	<div class="col-6">
+		<ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('role-list') }}">Role</a></li>
+			<li class="breadcrumb-item active">Edit</li>
+		</ol>
+	</div>
+</div>
 @endsection
 
 @section('css')

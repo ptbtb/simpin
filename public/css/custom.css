@@ -8,3 +8,6 @@ and open the template in the editor.
     Author     : hakim
 */
 
+.breadcrumb li{
+    font-size: 1rem;
+}
