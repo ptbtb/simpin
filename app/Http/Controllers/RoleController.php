@@ -40,7 +40,12 @@ class RoleController extends Controller
             {
                 $role = Role::create(['name' => $request->name]);
 
-                $permissions = Permission::whereIn('id', $request->permissions)->get();
+                $permissionsArray = [];
+                if (isset($request->permissions))
+                {
+                    $permissionsArray = $request->permissions;
+                }
+                $permissions = Permission::whereIn('id', $permissionsArray)->get();
                 $role->syncPermissions($permissions);
             });
 
@@ -79,7 +84,12 @@ class RoleController extends Controller
                 $role->name = $request->name;
                 $role->save();
 
-                $permissions = Permission::whereIn('id', $request->permissions)->get();
+                $permissionsArray = [];
+                if (isset($request->permissions))
+                {
+                    $permissionsArray = $request->permissions;
+                }
+                $permissions = Permission::whereIn('id', $permissionsArray)->get();
                 $role->syncPermissions($permissions);
             });
 
