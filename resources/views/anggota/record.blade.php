@@ -41,7 +41,13 @@
                     <td >{{$anggota->kodeAnggotaPrefix}}</td>
                     <td >{{$anggota->nipp}}</td>
                     <td >{{$anggota->nama_anggota}}</td>
-                    <td >{{$anggota->jenisAnggota->nama_jenis_anggota}}</td>
+                    <td >
+                        @if ($anggota->jenisAnggota)
+                            {{$anggota->jenisAnggota->nama_jenis_anggota}}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <!--<td >{{$anggota->tempat_lahir}}</td>-->
                     <td >{{$anggota->tgl_lahir}}</td>
                     <td >{{$anggota->lokasi_kerja}}</td>
