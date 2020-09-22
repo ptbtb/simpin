@@ -107,7 +107,7 @@ class AnggotaController extends Controller {
         if($search == ''){
             $anggotas = Anggota::orderby('nama_anggota','asc')->select('kode_anggota','nama_anggota')->limit(5)->get();
         }else{
-            $anggotas = Anggota::orderby('nama_anggota','asc')->select('kode_anggota','nama_anggota')->where('nama_anggota', 'like', '%' .$search . '%')->limit(5)->get();
+            $anggotas = Anggota::orderby('nama_anggota','asc')->select('kode_anggota','nama_anggota')->where('kode_anggota', $search)->limit(5)->get();
         }
         $response = $anggotas->map(function ($anggota)
         {
