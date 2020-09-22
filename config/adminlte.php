@@ -206,11 +206,11 @@ return [
             'search' => false,
             'topnav' => true,
         ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
+        // [
+        //     'text' => 'blog',
+        //     'url' => 'admin/blog',
+        //     'can' => 'manage-blog',
+        // ],
         [
             'text' => 'Dashboard',
             'url' => '',
