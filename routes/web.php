@@ -40,6 +40,7 @@ Route::group(['prefix' => 'anggota'], function ()
     Route::post('/store', [App\Http\Controllers\AnggotaController::class, 'store']);
     Route::post('/update/{id}', [App\Http\Controllers\AnggotaController::class, 'update']);
     Route::get('/ajax-detail/{id}', [App\Http\Controllers\AnggotaController::class, 'ajaxDetail'])->name('anggota-ajax-detail');
+    Route::get('/ajax/search', [App\Http\Controllers\AnggotaController::class, 'search'])->name('anggota-ajax-search');
 });
 
 //simpanan

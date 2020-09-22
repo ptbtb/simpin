@@ -122,7 +122,7 @@
 				$('#anggotaName').prop('required',true);
 				$("#anggotaName").select2({
 					ajax: {
-						url: '{{ route('api-anggota-search') }}',
+						url: '{{ route('anggota-ajax-search') }}',
 						dataType: 'json',
 						delay: 250,
 						data: function (params) {
