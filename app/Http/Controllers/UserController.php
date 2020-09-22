@@ -41,11 +41,19 @@ class UserController extends Controller
 	public function indexAjax(Request $request)
 	{
 		$users = User::with('roles');
+		$currentUser = Auth::user();
 		if(isset($request->role_id) && $request->role_id !== '')
         {     
             $users = $users->whereHas('roles', function ($query) use ($request)
 			{
 				return $query->where('id', $request->role_id);
+			});
+		}
+		if (!$currentUser->hasRole('Admin'))
+		{
+			$users = $users->whereHas('roles', function ($query)
+			{
+				return $query->where('id', ROLE_ANGGOTA);
 			});
 		}
 		$users = $users->get();
