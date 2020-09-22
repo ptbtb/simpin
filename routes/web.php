@@ -76,6 +76,8 @@ Route::group(['prefix' => 'user'], function ()
 	Route::group(['middleware' => 'auth'], function ()
 	{
         Route::get('list', [App\Http\Controllers\UserController::class, 'index'])->name('user-list');
+        Route::post('list', [App\Http\Controllers\UserController::class, 'index'])->name('user-list');
+        Route::get('list/data', [App\Http\Controllers\UserController::class, 'indexAjax'])->name('user-list-ajax');
         Route::get('create', [App\Http\Controllers\UserController::class, 'create'])->name('user-create');
         Route::post('create', [App\Http\Controllers\UserController::class, 'store'])->name('user-create');
         

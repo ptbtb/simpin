@@ -11,29 +11,50 @@ use App\Models\User;
 use App\Models\Anggota;
 
 use Auth;
+use Datatables;
 use Storage;
 
 class UserController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
 		$this->authorize('view user', Auth::user());
 		$currentUser = Auth::user();
 		if ($currentUser->hasRole('Admin'))
 		{
-			$users = User::all();
+			$roles = Role::get();
+			$data['roles'] = $roles;
 		}
 		else
 		{
-			$users = User::whereHas('roles', function ($query)
-							{
-								return $query->where('name', 'Anggota');
-							})
-							->get();
+			if ($currentUser->can('filter user'))
+			{
+				$roles = Role::where('id', ROLE_ANGGOTA)->get();
+				$data['roles'] = $roles;
+			}							
 		}
-		$data['users'] = $users;
 		$data['title'] = 'List User';
+		$data['request'] = $request;
 		return view('user.index', $data);
+	}
+
+	public function indexAjax(Request $request)
+	{
+		$users = User::with('roles');
+		if(isset($request->role_id) && $request->role_id !== '')
+        {     
+            $users = $users->whereHas('roles', function ($query) use ($request)
+			{
+				return $query->where('id', $request->role_id);
+			});
+		}
+		$users = $users->get();
+		$users->map(function ($user, $key)
+		{
+			$user->number = $key+1;
+			return $user;
+		});
+		return $users;
 	}
 
 	public function create()
