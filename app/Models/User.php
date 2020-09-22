@@ -66,6 +66,6 @@ class User extends Authenticatable
 
     public function anggota()
     {
-        return $this->belongsTo(Anggota::class,'kode_anggota');
+        return $this->belongsTo(Anggota::class, 'kode_anggota', 'kode_anggota');
     }
 }
