@@ -18,7 +18,19 @@ class UserController extends Controller
 	public function index()
 	{
 		$this->authorize('view user', Auth::user());
-		$users = User::all();
+		$currentUser = Auth::user();
+		if ($currentUser->hasRole('Admin'))
+		{
+			$users = User::all();
+		}
+		else
+		{
+			$users = User::whereHas('roles', function ($query)
+							{
+								return $query->where('name', 'Anggota');
+							})
+							->get();
+		}
 		$data['users'] = $users;
 		$data['title'] = 'List User';
 		return view('user.index', $data);
@@ -27,7 +39,15 @@ class UserController extends Controller
 	public function create()
 	{
 		$this->authorize('add user', Auth::user());
-		$roles = Role::get();
+		$currentUser = Auth::user();
+		if ($currentUser->hasRole('Admin'))
+		{
+			$roles = Role::get();
+		}
+		else
+		{
+			$roles = Role::where('name', 'Anggota')->get();
+		}
 		$data['roles'] = $roles;
 		$data['title'] = 'Create User';
 		return view('user.create', $data);

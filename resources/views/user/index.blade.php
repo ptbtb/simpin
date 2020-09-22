@@ -42,7 +42,9 @@
                         <th style="width: 20%">Email</th>
                         <th>Name</th>
                         <th style="width: 25%">Role</th>
-                        <th style="width: 25%">Action</th>
+                        @if (auth()->user()->can('edit user') || auth()->user()->can('delete user'))
+                            <th style="width: 25%">Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -58,20 +60,22 @@
                                     -
                                 @endif
                             </td>
-                            <td>
-                                @can('edit user')
-                                    <a href="{{ route('user-edit', ['id'=>$user->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
-                                @endcan
-                                @can('delete user')
-                                    <form action="{{ route('user-delete', ['id'=>$user->id]) }}" method="post" style="display: inline">
-                                        <button  class="btn btn-sm btn-danger" type="submit" value="Delete">
-                                            <i class="fa fa-trash"></i> Delete
-                                        </button>
-                                        @method('delete')
-                                        @csrf
-                                    </form>
-                                @endcan
-                            </td>
+                            @if (auth()->user()->can('edit user') || auth()->user()->can('delete user'))
+                                <td>
+                                    @can('edit user')
+                                        <a href="{{ route('user-edit', ['id'=>$user->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                    @endcan
+                                    @can('delete user')
+                                        <form action="{{ route('user-delete', ['id'=>$user->id]) }}" method="post" style="display: inline">
+                                            <button  class="btn btn-sm btn-danger" type="submit" value="Delete">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+                                            @method('delete')
+                                            @csrf
+                                        </form>
+                                    @endcan
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
