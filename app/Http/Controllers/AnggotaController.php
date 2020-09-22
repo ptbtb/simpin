@@ -13,21 +13,21 @@ class AnggotaController extends Controller {
     }
 
     public function index() {
-        $anggotas = \App\Models\Anggota::where('status', 'aktif')->orderBy('kode_anggota', 'desc')->get();
+        $anggotas = \App\Models\Anggota::with('jenisAnggota')->where('status', 'aktif')->orderBy('kode_anggota', 'desc')->get();
         $data['anggota'] = $anggotas;
         $data['judul'] = 'Anggota Aktif';
         return view('/anggota/record', ['data' => $data]);
     }
 
     public function nonaktif() {
-        $anggotas = \App\Models\Anggota::where('status', 'keluar')->orderBy('kode_anggota', 'desc')->get();
+        $anggotas = \App\Models\Anggota::with('jenisAnggota')->where('status', 'keluar')->orderBy('kode_anggota', 'desc')->get();
         $data['anggota'] = $anggotas;
          $data['judul'] = 'Anggota Non Aktif';
         return view('/anggota/record', ['data' => $data]);
     }
 
     public function all() {
-        $anggotas = \App\Models\Anggota::orderBy('kode_anggota', 'desc')->get();
+        $anggotas = \App\Models\Anggota::with('jenisAnggota')->orderBy('kode_anggota', 'desc')->get();
         $data['anggota'] = $anggotas;
          $data['judul'] = 'Semua Anggotta';
         return view('/anggota/record', ['data' => $data]);

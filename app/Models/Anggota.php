@@ -33,4 +33,21 @@ class Anggota extends Model
     {
         return $this->hasOne(User::class, 'kode_anggota', 'kode_anggota');
     } 
+    
+    public function jenisAnggota()
+    {
+        return $this->belongsTo(JenisAnggota::class, 'id_jenis_anggota', 'id_jenis_anggota');
+    }
+
+    public function getKodeAnggotaPrefixAttribute()
+    {
+        if ($this->jenisAnggota)
+        {
+            return $this->jenisAnggota->prefix.' - '.$this->kode_anggota;
+        }
+        else
+        {
+            return $this->kode_anggota;
+        }
+    }
 }

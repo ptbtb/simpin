@@ -23,6 +23,7 @@
                     <th><a href="#">No Anggota</a></th>
                     <th><a href="#">NIPP</a></th>
                     <th><a href="#">Nama Anggota</a></th>
+                    <th><a href="#">Jenis Anggota</a></th>
                     <!--<th ><a href="#">Tempat</a></th>-->
                     <th ><a href="#">Tanggal Lahir</a></th>
                     <th><a href="#">Pekerjaan</a></th>
@@ -37,9 +38,10 @@
                 @foreach($data['anggota'] as $anggota)
                 <tr>
                     <td >{{$loop->iteration}}</td>
-                    <td >{{$anggota->kode_anggota}}</td>
+                    <td >{{$anggota->kodeAnggotaPrefix}}</td>
                     <td >{{$anggota->nipp}}</td>
                     <td >{{$anggota->nama_anggota}}</td>
+                    <td >{{$anggota->jenisAnggota->nama_jenis_anggota}}</td>
                     <!--<td >{{$anggota->tempat_lahir}}</td>-->
                     <td >{{$anggota->tgl_lahir}}</td>
                     <td >{{$anggota->lokasi_kerja}}</td>
