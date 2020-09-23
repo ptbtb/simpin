@@ -47,29 +47,46 @@ Route::group(['prefix' => 'anggota'], function ()
 Route::get('/simpanan', [App\Http\Controllers\SimpananController::class, 'index']);
 
 // setting
-    //simpanan
-Route::get('/setting/simpanan', [App\Http\Controllers\SettingSimpananController::class, 'index']);
-Route::get('/setting/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'edit']);
-Route::post('/setting/simpanan/update', [App\Http\Controllers\SettingSimpananController::class, 'update']);
-Route::get('/setting/simpanan/destroy/{id}', [App\Http\Controllers\SettingSimpananController::class, 'destroy']);
-Route::get('/setting/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'create']);
-Route::post('/setting/simpanan/store', [App\Http\Controllers\SettingSimpananController::class, 'store']);
-// setting
-    //pinjaman
-Route::get('/setting/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index']);
-Route::get('/setting/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'edit']);
-Route::post('/setting/pinjaman/update', [App\Http\Controllers\SettingPinjamanController::class, 'update']);
-Route::get('/setting/pinjaman/destroy/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'destroy']);
-Route::get('/setting/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'create']);
-Route::post('/setting/pinjaman/store', [App\Http\Controllers\SettingPinjamanController::class, 'store']);
+Route::group(['prefix' => 'setting'], function ()
+{
+        //simpanan
+    Route::get('/simpanan', [App\Http\Controllers\SettingSimpananController::class, 'index']);
+    Route::get('/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'edit']);
+    Route::post('/simpanan/update', [App\Http\Controllers\SettingSimpananController::class, 'update']);
+    Route::get('/simpanan/destroy/{id}', [App\Http\Controllers\SettingSimpananController::class, 'destroy']);
+    Route::get('/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'create']);
+    Route::post('/simpanan/store', [App\Http\Controllers\SettingSimpananController::class, 'store']);
 
-    //codetrans
-Route::get('/setting/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index']);
-Route::get('/setting/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit']);
-Route::post('/setting/codetrans/update', [App\Http\Controllers\SettingCodeTransController::class, 'update']);
-Route::get('/setting/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy']);
-Route::get('/setting/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create']);
-Route::post('/setting/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store']);
+        //pinjaman
+    Route::get('/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index']);
+    Route::get('/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'edit']);
+    Route::post('/pinjaman/update', [App\Http\Controllers\SettingPinjamanController::class, 'update']);
+    Route::get('/pinjaman/destroy/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'destroy']);
+    Route::get('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'create']);
+    Route::post('/pinjaman/store', [App\Http\Controllers\SettingPinjamanController::class, 'store']);
+
+        //codetrans
+    Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index']);
+    Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit']);
+    Route::post('/codetrans/update', [App\Http\Controllers\SettingCodeTransController::class, 'update']);
+    Route::get('/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy']);
+    Route::get('/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create']);
+    Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store']);
+
+    // Jenis Anggota
+    Route::group(['prefix' => 'jenis-anggota'], function ()
+    {
+        Route::group(['middleware' => 'auth'], function ()
+        {
+            Route::get('list', [App\Http\Controllers\JenisAnggotaController::class, 'index'])->name('jenis-anggota-list');
+            Route::get('create', [App\Http\Controllers\JenisAnggotaController::class, 'create'])->name('jenis-anggota-create');
+            Route::post('create', [App\Http\Controllers\JenisAnggotaController::class, 'store'])->name('jenis-anggota-create');
+            Route::get('edit/{id}', [App\Http\Controllers\JenisAnggotaController::class, 'edit'])->where('id', '[0-9]+')->name('jenis-anggota-edit');
+            Route::post('edit/{id}', [App\Http\Controllers\JenisAnggotaController::class, 'update'])->where('id', '[0-9]+')->name('jenis-anggota-edit');
+            Route::delete('delete/{id}', [App\Http\Controllers\JenisAnggotaController::class, 'delete'])->where('id', '[0-9]+')->name('jenis-anggota-delete');
+        });
+    });
+});
 
 // user
 Route::group(['prefix' => 'user'], function ()

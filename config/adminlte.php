@@ -290,6 +290,13 @@ return [
                     'url' => '/setting/pinjaman',
                     'icon' => 'fa fa-money-check-alt nav-icon',
                 ],
+                [
+                    'text' => 'Jenis Anggota',
+                    'url' => '/setting/jenis-anggota/list',
+                    'icon' => 'fa fa-address-book nav-icon',
+                    'can'  => ['view jenis anggota'],
+                    'active' => ['/setting/jenis-anggota/list', '/setting/jenis-anggota/create', 'regex:@^setting/jenis-anggota/edit/[0-9]+$@'],
+                ],
             ],
         ],
         ['header' => 'account_settings'],
