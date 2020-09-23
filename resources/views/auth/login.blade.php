@@ -5,9 +5,17 @@
 Login
 @endsection
 
+@push('css')
+	<style>
+		.login100-form-bgbtn{
+			background: -webkit-linear-gradient(right, #e64c26, #f3d031, #e64c26, #f3d031);
+		}
+	</style>
+@endpush
+
 @section('content')
 	<div class="limiter">
-		<div class="container-login100" style="background-image: url({{ asset('images/bg-01.jpg') }});">
+		<div class="container-login100" style="background-image: url({{ asset('images/bg2.jpg') }});">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
 				<form class="login100-form validate-form" method="post" action="{{ route('login') }}">
 					{{ csrf_field() }}
