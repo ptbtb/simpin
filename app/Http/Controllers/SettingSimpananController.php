@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+use Auth;
 class SettingSimpananController extends Controller
 {
      public function __construct() {
@@ -17,6 +19,7 @@ class SettingSimpananController extends Controller
     
     public function index()
     {
+        $this->authorize('view jenis simpanan', Auth::user());
         $simpanans = DB::table('t_jenis_simpan')
                 ->get();
         $data['simpanans'] = $simpanans;
@@ -30,6 +33,7 @@ class SettingSimpananController extends Controller
      */
     public function create()
     {
+        $this->authorize('add jenis simpanan', Auth::user());
        return view('/setting/simpanan/create');
     }
 
@@ -41,6 +45,7 @@ class SettingSimpananController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('add jenis simpanan', Auth::user());
         $this -> validate($request, [
         'kode_jenis_simpan' => 'required',
         'nama_simpanan' => 'required',
@@ -83,6 +88,7 @@ class SettingSimpananController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('edit jenis simpanan', Auth::user());
          $simpanan = DB::table('t_jenis_simpan')->where('kode_jenis_simpan', $id)->first();
         return view('/setting/simpanan/edit', ['simpanan' => $simpanan]);
     }
@@ -96,6 +102,7 @@ class SettingSimpananController extends Controller
      */
     public function update(Request $request)
     {
+        $this->authorize('edit jenis simpanan', Auth::user());
          DB::table('t_jenis_simpan') 
                  ->where('kode_jenis_simpan', $request -> kode_jenis_simpan)
                 -> update([
@@ -118,6 +125,7 @@ class SettingSimpananController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete jenis simpanan', Auth::user());
         DB::table('t_jenis_simpan')->where('kode_jenis_simpan', '=', $id)->delete();
          return redirect('/setting/simpanan') -> with('status', 'Data Berhasil Dihapus');
     }

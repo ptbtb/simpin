@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use Auth;
+
 class SettingPinjamanController extends Controller {
 
     public function __construct() {
@@ -17,6 +19,7 @@ class SettingPinjamanController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $this->authorize('view jenis pinjaman', Auth::user());
         $pinjaman = DB::table('t_jenis_pinjam')
                 ->get();
         $data['pinjaman'] = $pinjaman;
@@ -29,6 +32,7 @@ class SettingPinjamanController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        $this->authorize('add jenis pinjaman', Auth::user());
         return view('/setting/pinjaman/create');
     }
 
@@ -39,6 +43,7 @@ class SettingPinjamanController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+        $this->authorize('add jenis pinjaman', Auth::user());
         $this->validate($request, [
             'kode_jenis_pinjam' => 'required',
             'nama_pinjaman' => 'required',
@@ -78,6 +83,7 @@ class SettingPinjamanController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
+        $this->authorize('edit jenis pinjaman', Auth::user());
          $pinjaman = DB::table('t_jenis_pinjam')->where('kode_jenis_pinjam', $id)->first();
         return view('/setting/pinjaman/edit', ['pinjaman' => $pinjaman]);
     }
@@ -90,6 +96,7 @@ class SettingPinjamanController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request) {
+        $this->authorize('edit jenis pinjaman', Auth::user());
         DB::table('t_jenis_pinjam')
                 ->where('kode_jenis_pinjam', $request->kode_jenis_pinjam)
                 ->update([
@@ -110,6 +117,7 @@ class SettingPinjamanController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
+        $this->authorize('delete jenis pinjaman', Auth::user());
         DB::table('t_jenis_pinjam')->where('kode_jenis_pinjam', '=', $id)->delete();
         return redirect('/setting/pinjaman')->with('status', 'Data Berhasil Dihapus');
     }

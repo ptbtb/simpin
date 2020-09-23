@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use Auth;
+
 class SettingCodeTransController extends Controller {
 
     public function __construct() {
@@ -17,6 +19,7 @@ class SettingCodeTransController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $this->authorize('view kode transaksi', Auth::user());
         $codetrans = DB::table('t_code')
                 ->get();
         $data['codetrans'] = $codetrans;
@@ -29,6 +32,7 @@ class SettingCodeTransController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        $this->authorize('add kode transaksi', Auth::user());
         //
     }
 
@@ -39,6 +43,7 @@ class SettingCodeTransController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+        $this->authorize('add kode transaksi', Auth::user());
         //
     }
 
@@ -59,6 +64,7 @@ class SettingCodeTransController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
+        $this->authorize('edit kode transaksi', Auth::user());
         //
     }
 
@@ -70,6 +76,7 @@ class SettingCodeTransController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
+        $this->authorize('edit kode transaksi', Auth::user());
         //
     }
 
@@ -80,6 +87,7 @@ class SettingCodeTransController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
+        $this->authorize('delete kode transaksi', Auth::user());
         //
     }
 

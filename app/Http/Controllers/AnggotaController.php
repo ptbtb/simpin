@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Anggota;
 
+use Auth;
+
 class AnggotaController extends Controller {
 
     public function __construct() {
@@ -13,6 +15,7 @@ class AnggotaController extends Controller {
     }
 
     public function index() {
+        $this->authorize('view anggota', Auth::user());
         $anggotas = \App\Models\Anggota::with('jenisAnggota')->where('status', 'aktif')->orderBy('kode_anggota', 'desc')->get();
         $data['anggota'] = $anggotas;
         $data['judul'] = 'Anggota Aktif';
@@ -20,6 +23,7 @@ class AnggotaController extends Controller {
     }
 
     public function nonaktif() {
+        $this->authorize('view anggota', Auth::user());
         $anggotas = \App\Models\Anggota::with('jenisAnggota')->where('status', 'keluar')->orderBy('kode_anggota', 'desc')->get();
         $data['anggota'] = $anggotas;
          $data['judul'] = 'Anggota Non Aktif';
@@ -27,6 +31,7 @@ class AnggotaController extends Controller {
     }
 
     public function all() {
+        $this->authorize('view anggota', Auth::user());
         $anggotas = \App\Models\Anggota::with('jenisAnggota')->orderBy('kode_anggota', 'desc')->get();
         $data['anggota'] = $anggotas;
          $data['judul'] = 'Semua Anggotta';
@@ -34,16 +39,19 @@ class AnggotaController extends Controller {
     }
 
     public function add() {
+        $this->authorize('add anggota', Auth::user());
         $nomer = \App\Models\Anggota::max('kode_anggota');
         return view('/anggota/add', ['nomer' => $nomer + 1]);
     }
 
     public function edit($id) {
+        $this->authorize('edit anggota', Auth::user());
         $anggota = \App\Models\Anggota::find($id);
         return view('/anggota/edit', ['anggota' => $anggota]);
     }
 
     public function store(Request $request) {
+        $this->authorize('add anggota', Auth::user());
 
         $Anggota = \App\Models\Anggota::create([
                     'kode_anggota' => $request->kode_anggota,
@@ -68,6 +76,7 @@ class AnggotaController extends Controller {
     }
 
     public function update(Request $request, $id) {
+        $this->authorize('edit anggota', Auth::user());
         $Anggota = \App\Models\Anggota::find($id);
         $Anggota->tgl_masuk = $request->tgl_masuk;
         $Anggota->nama_anggota = $request->nama_anggota;
@@ -89,6 +98,7 @@ class AnggotaController extends Controller {
     }
 
     public function destroy($ids) {
+        $this->authorize('delete anggota', Auth::user());
         $Anggota = \App\Models\Anggota::destroy($ids);
        
         return redirect('/anggota')->with('status', 'Data Berhasil Dihapus');

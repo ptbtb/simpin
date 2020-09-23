@@ -221,6 +221,7 @@ return [
         [
             'text' => 'Master Data',
             'icon' => 'fas fa-fw fa-database',
+            'can'  => ['view role', 'view user', 'view anggota', 'add anggota', 'view simpanan'],
             'submenu' => [
                 [
                     'text' => 'Role',
@@ -240,26 +241,31 @@ return [
                     'text' => 'Anggota',
                     'url' => '#',
                     'icon' => 'fa fa-users nav-icon',
+                    'can'  => ['view anggota', 'add anggota'],
                     'submenu' => [
                         [
                             'text' => 'Semua',
                             'url' => '/anggota/all',
                             'icon' => 'fa fa-user nav-icon',
+                            'can'  => ['view anggota'],
                         ],
                         [
                             'text' => 'aktif',
                             'url' => '/anggota',
                             'icon' => 'fa fa-user-check nav-icon',
+                            'can'  => ['view anggota'],
                         ],
                         [
                             'text' => 'NonAktif',
                             'url' => '/anggota/nonaktif',
                             'icon' => 'fa fa-user-lock nav-icon',
+                            'can'  => ['view anggota'],
                         ],
                         [
                             'text' => 'Add',
                             'url' => '/anggota/add',
                             'icon' => 'fa fa-user-plus nav-icon',
+                            'can'  => ['add anggota'],
                         ],
                     ],
                 ],
@@ -267,6 +273,7 @@ return [
                     'text' => 'Simpanan',
                     'url' => '/simpanan',
                     'icon' => 'fa fa-money-bill nav-icon',
+                    'can'  => ['view simpanan'],
                 ],
             ],
         ],
@@ -274,21 +281,25 @@ return [
             'text' => 'Setting',
             'url' => '/setting',
             'icon' => 'fa fa-toolbox nav-icon',
+            'can'  => ['view kode transaksi', 'view jenis simpanan', 'view jenis anggota'],
             'submenu' => [
                 [
                     'text' => 'Kode Transaksi',
                     'url' => '/setting/codetrans',
                     'icon' => 'fa fa-superscript nav-icon',
+                    'can'  => ['view kode transaksi'],
                 ],
                 [
                     'text' => 'Jenis Simpanan',
                     'url' => '/setting/simpanan',
                     'icon' => 'fa fa-money-bill nav-icon',
+                    'can'  => ['view jenis simpanan'],
                 ],
                 [
                     'text' => 'Jenis Pinjaman',
                     'url' => '/setting/pinjaman',
                     'icon' => 'fa fa-money-check-alt nav-icon',
+                    'can'  => ['view jenis pinjaman'],
                 ],
                 [
                     'text' => 'Jenis Anggota',

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use Auth;
+
 class SimpananController extends Controller
 {
     /**
@@ -14,6 +16,7 @@ class SimpananController extends Controller
      */
     public function index()
     {
+        $this->authorize('view simpanan', Auth::user());
         $simpanans = DB::table('simpanan')
                 ->get();
         $data['simpanans'] = $simpanans;
