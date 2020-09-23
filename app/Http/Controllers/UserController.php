@@ -152,7 +152,15 @@ class UserController extends Controller
 	{
 		$this->authorize('edit user', Auth::user());
 		$user = User::findOrFail($id);
-		$roles = Role::get();
+		$currentUser = Auth::user();
+		if ($currentUser->hasRole('Admin'))
+		{
+			$roles = Role::get();
+		}
+		else
+		{
+			$roles = Role::where('name', 'Anggota')->get();
+		}
 		
 		$data['user'] = $user;
 		$data['roles'] = $roles;
@@ -202,9 +210,11 @@ class UserController extends Controller
 
 		// asign role user
 		$role = Role::where('id',$request->role_id)->first();
+		$userRole = $user->roles->first();
+		$user->removeRole($userRole->name);
 		$user->assignRole($role->name);
     	$user->save();
-    	return redirect()->back()->withSuccess('Update user success');
+    	return redirect()->route('user-list')->withSuccess('Update user success');
 	}
 
 	public function delete($id)
