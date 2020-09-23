@@ -46,16 +46,16 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="permission">Permission</label>
+                            <label for="permission" class="m-0">Permission</label>
                             <div class="row">
                                 @foreach ($permissionGroups as $permissionGroup)
-                                    <div class="col-md-3">
-                                        <div class="border p-2">
+                                    <div class="col-md-3 mt-2">
+                                        <div class="border p-2 h-100">
                                             <div class="font-weight-bold">{{ $permissionGroup->name }}</div>
                                             <hr class="my-1">
                                             @foreach ($permissionGroup->permissions as $permission)
                                                 <div>
-                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="{{ $permission->id }}"> <label for="{{ $permission->id }}" class="font-weight-normal">{{ $permission->name }}</label>
+                                                    <input style="cursor: pointer" type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="{{ $permission->id }}"> <label style="cursor: pointer" for="{{ $permission->id }}" class="font-weight-normal">{{ $permission->name }}</label>
                                                 </div>
                                             @endforeach
                                         </div>
