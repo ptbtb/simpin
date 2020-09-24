@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('anggota/search', [App\Http\Controllers\Api\AnggotaController::class, 'search'])->name('api-anggota-search');
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'user'], function ()
+{
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::get('', 'App\Http\Controllers\api\UserController@getUser')->name('api-get-user');
+        Route::get('logout', 'App\Http\Controllers\api\UserController@logout')->name('api-get-user');
+    });
 });
