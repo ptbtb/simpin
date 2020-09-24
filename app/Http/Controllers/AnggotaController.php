@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+use App\Exports\AnggotaExport;
+
 use App\Models\Anggota;
 use App\Models\JenisAnggota;
 
 use Auth;
+use Excel;
+use PDF;
+use Carbon\Carbon;
 
 class AnggotaController extends Controller {
 
@@ -165,5 +171,34 @@ class AnggotaController extends Controller {
         });
 
         return response()->json($response,200);
+    }
+
+    // Generate PDF
+    public function createPDF(Request $request) {
+        $anggotas = Anggota::with('jenisAnggota');
+        if ($request->status)
+        {
+            $anggotas = $anggotas->where('status', $request->status);
+        }
+        if ($request->id_jenis_anggota)
+        {
+            $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
+        }
+
+        $anggotas = $anggotas->get();
+
+        // share data to view
+        view()->share('anggotas',$anggotas);
+        $pdf = PDF::loadView('anggota.pdf', $anggotas)->setPaper('a4', 'landscape');
+  
+        // download PDF file with download method
+        $filename = 'export_anggota_'.Carbon::now()->format('d M Y').'.pdf';
+        return $pdf->download($filename);
+    }
+
+    public function createExcel(Request $request)
+    {
+        $filename = 'export_anggota_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+        return Excel::download(new AnggotaExport($request), $filename);
     }
 }

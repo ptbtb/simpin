@@ -44,7 +44,7 @@
                     <select name="id_jenis_anggota" class="form-control">
                         <option value="">Pilih Semua</option>
                         @foreach ($jenisAnggotas as $jenisAnggota)
-                            <option value="{{ $jenisAnggota->id_jenis_anggota }}">{{ $jenisAnggota->nama_jenis_anggota }}</option>
+                            <option value="{{ $jenisAnggota->id_jenis_anggota }}" {{ ($request->id_jenis_anggota && $request->id_jenis_anggota == $jenisAnggota->id_jenis_anggota)? 'selected':'' }}>{{ $jenisAnggota->nama_jenis_anggota }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -58,6 +58,8 @@
 <div class="card">
     @can('add anggota')
         <div class="card-header text-right">
+            <a href="{{ route('anggota-download-excel', $request->all()) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download Excel</a>
+            <a href="{{ route('anggota-download-pdf', $request->all()) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
             <a href="{{ route('anggota-create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Anggota</a>
         </div>
     @endcan
