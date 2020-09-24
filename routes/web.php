@@ -31,16 +31,19 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // anggota
 Route::group(['prefix' => 'anggota'], function ()
 {
-    Route::get('/', [App\Http\Controllers\AnggotaController::class, 'index']);
-    Route::get('/nonaktif', [App\Http\Controllers\AnggotaController::class, 'nonaktif']);
-    Route::get('/all', [App\Http\Controllers\AnggotaController::class, 'all']);
-    Route::get('/add', [App\Http\Controllers\AnggotaController::class, 'add']);
-    Route::get('/edit/{id}', [App\Http\Controllers\AnggotaController::class, 'edit']);
-    Route::get('/destroy/{id}', [App\Http\Controllers\AnggotaController::class, 'destroy']);
-    Route::post('/store', [App\Http\Controllers\AnggotaController::class, 'store']);
-    Route::post('/update/{id}', [App\Http\Controllers\AnggotaController::class, 'update']);
-    Route::get('/ajax-detail/{id}', [App\Http\Controllers\AnggotaController::class, 'ajaxDetail'])->name('anggota-ajax-detail');
-    Route::get('/ajax/search', [App\Http\Controllers\AnggotaController::class, 'search'])->name('anggota-ajax-search');
+    Route::group(['middleware' => 'auth'], function ()
+    {
+        Route::get('list', [App\Http\Controllers\AnggotaController::class, 'index'])->name('anggota-list');
+        Route::post('list', [App\Http\Controllers\AnggotaController::class, 'index'])->name('anggota-list');
+        Route::get('list/data', [App\Http\Controllers\AnggotaController::class, 'indexAjax'])->name('anggota-list-ajax');
+        Route::get('create', [App\Http\Controllers\AnggotaController::class, 'create'])->name('anggota-create');
+        Route::post('create', [App\Http\Controllers\AnggotaController::class, 'store'])->name('anggota-create');
+        Route::get('edit/{id}', [App\Http\Controllers\AnggotaController::class, 'edit'])->where('id', '[0-9]+')->name('anggota-edit');
+        Route::post('update/{id}', [App\Http\Controllers\AnggotaController::class, 'update'])->where('id', '[0-9]+')->name('anggota-edit');
+        Route::delete('delete/{id}', [App\Http\Controllers\AnggotaController::class, 'delete'])->where('id', '[0-9]+')->name('anggota-delete');
+        Route::get('ajax-detail/{id}', [App\Http\Controllers\AnggotaController::class, 'ajaxDetail'])->name('anggota-ajax-detail');
+        Route::get('ajax/search', [App\Http\Controllers\AnggotaController::class, 'search'])->name('anggota-ajax-search');
+    });
 });
 
 //simpanan
@@ -98,7 +101,6 @@ Route::group(['prefix' => 'user'], function ()
         Route::get('list/data', [App\Http\Controllers\UserController::class, 'indexAjax'])->name('user-list-ajax');
         Route::get('create', [App\Http\Controllers\UserController::class, 'create'])->name('user-create');
         Route::post('create', [App\Http\Controllers\UserController::class, 'store'])->name('user-create');
-        
         Route::get('/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->where('id', '[0-9]+')->name('user-edit');
         Route::post('/edit/{id}', [App\Http\Controllers\UserController::class, 'update'])->where('id', '[0-9]+')->name('user-edit');
         Route::delete('delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->where('id', '[0-9]+')->name('user-delete');
@@ -119,7 +121,6 @@ Route::group(['prefix' => 'role'], function ()
         Route::get('list', [App\Http\Controllers\RoleController::class, 'index'])->name('role-list');
         Route::get('create', [App\Http\Controllers\RoleController::class, 'create'])->name('role-create');
         Route::post('create', [App\Http\Controllers\RoleController::class, 'store'])->name('role-create');
-        
         Route::get('/edit/{id}', [App\Http\Controllers\RoleController::class, 'edit'])->where('id', '[0-9]+')->name('role-edit');
         Route::post('/edit/{id}', [App\Http\Controllers\RoleController::class, 'update'])->where('id', '[0-9]+')->name('role-edit');
         Route::delete('/delete/{id}', [App\Http\Controllers\RoleController::class, 'delete'])->where('id', '[0-9]+')->name('role-delete');

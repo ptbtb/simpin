@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Anggota extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = "t_anggota";
     protected $primaryKey = 'kode_anggota';
+    protected $appends = ['kode_anggota_prefix'];
     public $incrementing = false;
     protected $fillable = ['kode_anggota',
         'kode_tabungan',

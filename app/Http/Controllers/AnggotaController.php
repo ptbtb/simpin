@@ -5,59 +5,70 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Anggota;
+use App\Models\JenisAnggota;
 
 use Auth;
 
 class AnggotaController extends Controller {
 
-    public function __construct() {
-        $this->middleware('auth');
-    }
-
-    public function index() {
+    public function index(Request $request)
+    {
         $this->authorize('view anggota', Auth::user());
-        $anggotas = \App\Models\Anggota::with('jenisAnggota')->where('status', 'aktif')->orderBy('kode_anggota', 'desc')->get();
-        $data['anggota'] = $anggotas;
-        $data['judul'] = 'Anggota Aktif';
-        return view('/anggota/record', ['data' => $data]);
+        $data['jenisAnggotas'] = JenisAnggota::all();
+        $data['request'] = $request;
+        $data['title'] = 'List Anggota';
+        return view('anggota.index', $data);
     }
 
-    public function nonaktif() {
-        $this->authorize('view anggota', Auth::user());
-        $anggotas = \App\Models\Anggota::with('jenisAnggota')->where('status', 'keluar')->orderBy('kode_anggota', 'desc')->get();
-        $data['anggota'] = $anggotas;
-         $data['judul'] = 'Anggota Non Aktif';
-        return view('/anggota/record', ['data' => $data]);
+    public function indexAJax(Request $request)
+    {
+        $anggotas = Anggota::with('jenisAnggota');
+        if ($request->status)
+        {
+            $anggotas = $anggotas->where('status', $request->status);
+        }
+        if ($request->id_jenis_anggota)
+        {
+            $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
+        }
+
+        $anggotas = $anggotas->get();
+
+        return $anggotas;    
     }
 
-    public function all() {
-        $this->authorize('view anggota', Auth::user());
-        $anggotas = \App\Models\Anggota::with('jenisAnggota')->orderBy('kode_anggota', 'desc')->get();
-        $data['anggota'] = $anggotas;
-         $data['judul'] = 'Semua Anggotta';
-        return view('/anggota/record', ['data' => $data]);
-    }
-
-    public function add() {
+    public function create()
+    {
         $this->authorize('add anggota', Auth::user());
-        $nomer = \App\Models\Anggota::max('kode_anggota');
-        return view('/anggota/add', ['nomer' => $nomer + 1]);
+        $nomer = Anggota::max('kode_anggota');
+        $data['title'] = 'Tambah Anggota';
+        $data['nomer'] = $nomer + 1;
+        $data['jenisAnggotas'] = JenisAnggota::all();
+        return view('/anggota/create', $data);
     }
 
     public function edit($id) {
         $this->authorize('edit anggota', Auth::user());
-        $anggota = \App\Models\Anggota::find($id);
-        return view('/anggota/edit', ['anggota' => $anggota]);
+        $anggota = Anggota::find($id);
+        $data['title'] = 'Tambah Anggota';
+        $data['anggota'] = $anggota;
+        $data['jenisAnggotas'] = JenisAnggota::all();
+        return view('/anggota/edit', $data);
     }
 
     public function store(Request $request) {
         $this->authorize('add anggota', Auth::user());
-
-        $Anggota = \App\Models\Anggota::create([
+        try
+        {
+            DB::transaction(function () use ($request)
+            {
+                $Anggota = Anggota::create([
                     'kode_anggota' => $request->kode_anggota,
                     'kode_tabungan' => $request->kode_anggota,
+                    'id_jenis_anggota' => $request->jensi_anggota,
                     'tgl_masuk' => $request->tgl_masuk,
                     'nama_anggota' => $request->nama_anggota,
+                    'jenis_kelamin' => $request->jenis_kelamin,
                     'tempat_lahir' => $request->tmp_lahir,
                     'tgl_lahir' => $request->tgl_lahir,
                     'alamat_anggota' => $request->alamat_anggota,
@@ -70,38 +81,64 @@ class AnggotaController extends Controller {
                     'email' => $request->email,
                     'emergency_kontak' => $request->emergency_kontak,
                     'status' => 'aktif',
-        ]);
-        // alihkan halaman tambah buku ke halaman books
-        return redirect('/anggota')->with('status', 'Data anggota Berhasil Ditambahkan');
+                ]);
+            });
+            // alihkan halaman tambah buku ke halaman books
+
+            return redirect()->route('anggota-list')->withSuccess('Data anggota Berhasil Ditambahkan');
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+			if (isset($e->errorInfo[2]))
+			{
+				$message = $e->errorInfo[2];
+			}
+			return redirect()->back()->withError($message);
+        }
     }
 
     public function update(Request $request, $id) {
         $this->authorize('edit anggota', Auth::user());
-        $Anggota = \App\Models\Anggota::find($id);
-        $Anggota->tgl_masuk = $request->tgl_masuk;
-        $Anggota->nama_anggota = $request->nama_anggota;
-        $Anggota->tempat_lahir = $request->tmp_lahir;
-        $Anggota->tgl_lahir = $request->tgl_lahir;
-        $Anggota->alamat_anggota = $request->alamat_anggota;
-        $Anggota->telp = $request->telp;
-        $Anggota->lokasi_kerja = $request->lokasi_kerja;
-        $Anggota->u_entry = $request->u_entry;
-        $Anggota->ktp = $request->ktp;
-        $Anggota->nipp = $request->nipp;
-        $Anggota->no_rek = $request->no_rek;
-        $Anggota->email = $request->email;
-        $Anggota->emergency_kontak = $request->emergency_kontak;
-        $Anggota->status = 'aktif';
-        $Anggota->save();
-        // alihkan halaman tambah buku ke halaman books
-        return redirect('/anggota')->with('status', 'Data anggota Berhasil Dirubah');
+        try
+        {
+            $Anggota = Anggota::find($id);
+            $Anggota->tgl_masuk = $request->tgl_masuk;
+            $Anggota->nama_anggota = $request->nama_anggota;
+            $Anggota->id_jenis_anggota = $request->jenis_anggota;
+            $Anggota->tempat_lahir = $request->tmp_lahir;
+            $Anggota->tgl_lahir = $request->tgl_lahir;
+            $Anggota->alamat_anggota = $request->alamat_anggota;
+            $Anggota->jenis_kelamin = $request->jenis_kelamin;
+            $Anggota->telp = $request->telp;
+            $Anggota->lokasi_kerja = $request->lokasi_kerja;
+            $Anggota->u_entry = $request->u_entry;
+            $Anggota->ktp = $request->ktp;
+            $Anggota->nipp = $request->nipp;
+            $Anggota->no_rek = $request->no_rek;
+            $Anggota->email = $request->email;
+            $Anggota->emergency_kontak = $request->emergency_kontak;
+            $Anggota->status = 'aktif';
+            $Anggota->save();
+            // alihkan halaman tambah buku ke halaman books
+            return redirect()->route('anggota-list')->withSuccess('Data anggota Berhasil Dirubah');
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+			if (isset($e->errorInfo[2]))
+			{
+				$message = $e->errorInfo[2];
+			}
+			return redirect()->back()->withError($message);
+        }
     }
 
-    public function destroy($ids) {
+    public function delete($ids) {
         $this->authorize('delete anggota', Auth::user());
-        $Anggota = \App\Models\Anggota::destroy($ids);
+        $Anggota = Anggota::destroy($ids);
        
-        return redirect('/anggota')->with('status', 'Data Berhasil Dihapus');
+        return redirect()->route('anggota-list')->withSuccess('Data anggota Berhasil Dihapus');
     }
 
     public function ajaxDetail($id)

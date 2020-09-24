@@ -239,35 +239,10 @@ return [
                 ],
                 [
                     'text' => 'Anggota',
-                    'url' => '#',
+                    'url' => '/anggota/list',
                     'icon' => 'fa fa-users nav-icon',
-                    'can'  => ['view anggota', 'add anggota'],
-                    'submenu' => [
-                        [
-                            'text' => 'Semua',
-                            'url' => '/anggota/all',
-                            'icon' => 'fa fa-user nav-icon',
-                            'can'  => ['view anggota'],
-                        ],
-                        [
-                            'text' => 'aktif',
-                            'url' => '/anggota',
-                            'icon' => 'fa fa-user-check nav-icon',
-                            'can'  => ['view anggota'],
-                        ],
-                        [
-                            'text' => 'NonAktif',
-                            'url' => '/anggota/nonaktif',
-                            'icon' => 'fa fa-user-lock nav-icon',
-                            'can'  => ['view anggota'],
-                        ],
-                        [
-                            'text' => 'Add',
-                            'url' => '/anggota/add',
-                            'icon' => 'fa fa-user-plus nav-icon',
-                            'can'  => ['add anggota'],
-                        ],
-                    ],
+                    'active' => ['/anggota/list', '/anggota/create', 'regex:@^anggota/edit/[0-9]+$@'],
+                    'can'  => ['view anggota'],
                 ],
                 [
                     'text' => 'Simpanan',

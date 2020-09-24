@@ -11,3 +11,9 @@ and open the template in the editor.
 .breadcrumb li{
     font-size: 1rem;
 }
+
+.box-custom{
+    border-radius: 0 !important;
+    border: 1px solid #dddddd !important;
+    box-shadow: none !important;
+}
