@@ -296,7 +296,7 @@ return [
             'text' => 'Pinjaman',
             'url' => '/pinjaman',
             'icon' => 'fas fa-hand-holding-usd nav-icon',
-            'can'  => [],
+            'can'  => ['view history pinjaman', 'view pinjaman'],
             'submenu' => [
                 [
                     'text' => 'History Pinjaman',

@@ -46,7 +46,7 @@ class TransaksiController extends Controller
     public function createExcel(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('view pinjaman', $user);
+        $this->authorize('view transaksi anggota', $user);
         $anggota = $user->anggota;
         $request->anggota = $anggota;
         $filename = 'export_transaksi_excel_'.Carbon::now()->format('d M Y').'.xlsx';
@@ -56,7 +56,7 @@ class TransaksiController extends Controller
     public function createPDF(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('view pinjaman', $user);
+        $this->authorize('view transaksi anggota', $user);
 
         $anggota = $user->anggota;
         $kode_anggota = $anggota->kode_anggota;
