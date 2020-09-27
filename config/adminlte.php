@@ -285,6 +285,33 @@ return [
                 ],
             ],
         ],
+        ['header' => 'ANGGOTA'],
+        [
+            'text' => 'Transaksi',
+            'url' => '/transaksi',
+            'icon' => 'fas fa-exchange-alt nav-icon',
+            'can'  => ['view transaksi anggota'],
+        ],
+        [
+            'text' => 'Pinjaman',
+            'url' => '/pinjaman',
+            'icon' => 'fas fa-hand-holding-usd nav-icon',
+            'can'  => [],
+            'submenu' => [
+                [
+                    'text' => 'History Pinjaman',
+                    'url' => '/pinjaman/history',
+                    'icon' => 'fas fa-history nav-icon',
+                    'can'  => ['view history pinjaman'],
+                ],
+                [
+                    'text' => 'List Pinjaman',
+                    'url' => '/pinjaman/list',
+                    'icon' => 'fas fa-file-invoice-dollar nav-icon',
+                    'can'  => ['view pinjaman'],
+                ],
+            ],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

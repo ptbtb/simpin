@@ -41,6 +41,11 @@ class Anggota extends Model
         return $this->belongsTo(JenisAnggota::class, 'id_jenis_anggota', 'id_jenis_anggota');
     }
 
+    public function listPinjaman()
+    {
+        return $this->hasMany(Pinjam::class, 'kode_anggota');
+    }
+
     public function getKodeAnggotaPrefixAttribute()
     {
         if ($this->jenisAnggota)

@@ -49,7 +49,7 @@
                             <label for="permission" class="m-0">Permission</label>
                             <div class="row">
                                 @foreach ($permissionGroups as $permissionGroup)
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 mt-2">
                                         <div class="border p-2 h-100 mt-2">
                                             <div class="font-weight-bold">{{ $permissionGroup->name }}</div>
                                             <hr class="my-1">

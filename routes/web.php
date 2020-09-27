@@ -129,3 +129,30 @@ Route::group(['prefix' => 'role'], function ()
         Route::delete('/delete/{id}', [App\Http\Controllers\RoleController::class, 'delete'])->where('id', '[0-9]+')->name('role-delete');
 	});
 });
+
+// transaksi
+Route::group(['prefix' => 'transaksi'], function ()
+{
+	Route::group(['middleware' => 'auth'], function ()
+	{
+        Route::get('', [App\Http\Controllers\TransaksiController::class, 'listTransaksiAnggota'])->name('transaksi-list-anggota');
+        Route::post('', [App\Http\Controllers\TransaksiController::class, 'listTransaksiAnggota'])->name('transaksi-list-anggota');
+        Route::get('download/pdf', [App\Http\Controllers\TransaksiController::class, 'createPDF'])->name('transaksi-download-pdf');
+        Route::get('download/excel', [App\Http\Controllers\TransaksiController::class, 'createExcel'])->name('transaksi-download-excel');
+	});
+});
+
+// pinjaman
+Route::group(['prefix' => 'pinjaman'], function ()
+{
+	Route::group(['middleware' => 'auth'], function ()
+	{
+        Route::get('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
+        Route::post('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
+        Route::get('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');
+        Route::post('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');
+        Route::get('detail/{id}', [App\Http\Controllers\PinjamanController::class, 'show'])->where('id', '[0-9]+')->name('pinjaman-detail');
+        Route::get('download/pdf', [App\Http\Controllers\PinjamanController::class, 'createPDF'])->name('pinjaman-download-pdf');
+        Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcel'])->name('pinjaman-download-excel');
+	});
+});
