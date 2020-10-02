@@ -285,6 +285,28 @@ return [
                 ],
             ],
         ],
+        ['header' => 'OPERATOR'],
+        [
+            'text' => 'Penarikan',
+            'icon' => 'fas fa-exchange-alt nav-icon',
+            'can'  => ['add penarikan', 'view history penarikan'],
+            'active' => ['/penarikan/history', '/penarikan/create'],
+            'submenu' => [
+                [
+                    'text' => 'History Penarikan',
+                    'url' => '/penarikan/history',
+                    'icon' => 'fas fa-history nav-icon',
+                    'can'  => ['view history penarikan'],
+                ],
+                [
+                    'text' => 'Buat Penarikan',
+                    'url' => '/penarikan/create',
+                    'icon' => 'fas fa-plus nav-icon',
+                    'can'  => ['add penarikan'],
+                    'active'  => ['/penarikan/create', 'regex:@^penarikan/receipt/[0-9]+$@'],
+                ],
+            ],
+        ],
         ['header' => 'ANGGOTA'],
         [
             'text' => 'Transaksi',

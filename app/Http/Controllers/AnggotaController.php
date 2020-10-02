@@ -173,6 +173,11 @@ class AnggotaController extends Controller {
         return response()->json($response,200);
     }
 
+    public function searchId($id)
+    {
+        return Anggota::find($id);
+    }
+
     // Generate PDF
     public function createPDF(Request $request) {
         $anggotas = Anggota::with('jenisAnggota');

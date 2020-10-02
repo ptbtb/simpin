@@ -43,6 +43,7 @@ Route::group(['prefix' => 'anggota'], function ()
         Route::delete('delete/{id}', [App\Http\Controllers\AnggotaController::class, 'delete'])->where('id', '[0-9]+')->name('anggota-delete');
         Route::get('ajax-detail/{id}', [App\Http\Controllers\AnggotaController::class, 'ajaxDetail'])->name('anggota-ajax-detail');
         Route::get('ajax/search', [App\Http\Controllers\AnggotaController::class, 'search'])->name('anggota-ajax-search');
+        Route::get('ajax/search/{id}', [App\Http\Controllers\AnggotaController::class, 'searchId'])->where('id', '[0-9]+')->name('anggota-ajax-searchid');
 
         Route::get('download/pdf', [App\Http\Controllers\AnggotaController::class, 'createPDF'])->name('anggota-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\AnggotaController::class, 'createExcel'])->name('anggota-download-excel');
@@ -154,5 +155,22 @@ Route::group(['prefix' => 'pinjaman'], function ()
         Route::get('detail/{id}', [App\Http\Controllers\PinjamanController::class, 'show'])->where('id', '[0-9]+')->name('pinjaman-detail');
         Route::get('download/pdf', [App\Http\Controllers\PinjamanController::class, 'createPDF'])->name('pinjaman-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcel'])->name('pinjaman-download-excel');
+	});
+});
+
+// penarikan
+Route::group(['prefix' => 'penarikan'], function ()
+{
+	Route::group(['middleware' => 'auth'], function ()
+	{
+        Route::get('create', [App\Http\Controllers\PenarikanController::class, 'create'])->name('penarikan-create');
+        Route::post('create', [App\Http\Controllers\PenarikanController::class, 'store'])->name('penarikan-create');
+        Route::get('history', [App\Http\Controllers\PenarikanController::class, 'history'])->name('penarikan-history');
+        Route::post('history', [App\Http\Controllers\PenarikanController::class, 'history'])->name('penarikan-history');
+        Route::get('receipt/{id}', [App\Http\Controllers\PenarikanController::class, 'receipt'])->where('id', '[0-9]+')->name('penarikan-receipt');
+        Route::get('receipt/download/{id}', [App\Http\Controllers\PenarikanController::class, 'downloadReceipt'])->where('id', '[0-9]+')->name('penarikan-receipt-download');
+        Route::get('anggota/detail/{id}', [App\Http\Controllers\PenarikanController::class, 'detailAnggota'])->where('id', '[0-9]+')->name('penarikan-detail-anggota');
+        Route::get('download/pdf', [App\Http\Controllers\PenarikanController::class, 'createPDF'])->name('penarikan-download-pdf');
+        Route::get('download/excel', [App\Http\Controllers\PenarikanController::class, 'createExcel'])->name('penarikan-download-excel');
 	});
 });
