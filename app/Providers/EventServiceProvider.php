@@ -18,6 +18,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Penarikan\PenarikanCreated' => [
             'App\Listeners\PenarikanListener@onPenarikanCreated',
         ],
+        'App\Events\Pinjaman\PengajuanApproved' => [
+            'App\Listeners\PinjamanListener@onPengajuanApproved',
+        ],
+        'App\Events\Pinjaman\PinjamanCreated' => [
+            'App\Listeners\AngsuranListener@onPinjamanCreated',
+        ],
     ];
 
     /**

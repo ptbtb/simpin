@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Events\Pinjaman\PengajuanApproved;
 use App\Exports\PinjamanExport;
 
 use App\Managers\PinjamanManager;
@@ -214,8 +215,9 @@ class PinjamanController extends Controller
             if ($request->action == APPROVE_PENGAJUAN_PINJAMAN)
             {
                 $pengajuan->status = "diterima";
-                AngsuranManager::generateAngsuran($pengajuan);
-                // $pengajuan->save();
+                $pengajuan->tgl_acc = Carbon::now();
+                $pengajuan->save();
+                event(new PengajuanApproved($pengajuan));
             }
             else
             {
