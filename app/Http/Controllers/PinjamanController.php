@@ -52,7 +52,7 @@ class PinjamanController extends Controller
     public function indexPengajuan(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('view pinjaman', $user);
+        $this->authorize('view pengajuan pinjaman', $user);
 
         if ($user->isAnggota())
         {

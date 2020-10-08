@@ -26,14 +26,22 @@
         <form action="{{ route('pengajuan-pinjaman-add') }}" method="post">
             @csrf
             <div class="row">
-                <div class="col-md-6 form-group">
-                    <label>Nama Anggota</label>
-                    <input type="text" name="nama_anggota" class="form-control" readonly value="{{ Auth::user()->anggota->nama_anggota }}">
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>Kode Anggota</label>
-                    <input type="text" name="kode_anggota" class="form-control" readonly value="{{ Auth::user()->anggota->kodeAnggotaPrefix }}">
-                </div>
+                @if (\Auth::user()->isAnggota())
+                    <div class="col-md-6 form-group">
+                        <label>Kode Anggota</label>
+                        <input type="text" name="kode_anggota" class="form-control" readonly value="{{ Auth::user()->anggota->kodeAnggotaPrefix }}">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Nama Anggota</label>
+                        <input type="text" name="nama_anggota" class="form-control" readonly value="{{ Auth::user()->anggota->nama_anggota }}">
+                    </div>
+                @else
+                    <div class="col-md-6 form-group">
+                        <label for="anggotaName">Anggota Name</label>
+                        <select name="kode_anggota" id="anggotaName" class="form-control">
+                        </select>
+                    </div>
+                @endif
                 <div class="col-md-6 form-group">
                     <label>Jenis Pinjaman</label>
                     <select name="jenis_pinjaman" class="form-control" required id="jenisPinjaman">
@@ -104,6 +112,26 @@
             var besarPinjaman = $(this).val();
             var idJenisPinjaman = $('#jenisPinjaman').find(":selected").val();
             updateAngsuran(idJenisPinjaman, besarPinjaman);
+        });
+
+        $("#anggotaName").select2({
+            ajax: {
+                url: '{{ route('anggota-ajax-search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
         });
 
         function updateAngsuran(idJenisPinjaman, besarPinjaman) {

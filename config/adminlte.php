@@ -218,63 +218,7 @@ return [
             'label' => '',
             'label_color' => '',
         ],
-        // ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan']],
-        [
-            'text' => 'Penarikan',
-            'icon' => 'fas fa-exchange-alt nav-icon',
-            'can'  => ['add penarikan', 'view history penarikan'],
-            'active' => ['/penarikan/history', '/penarikan/create'],
-            'submenu' => [
-                [
-                    'text' => 'History Penarikan',
-                    'url' => '/penarikan/history',
-                    'icon' => 'fas fa-history nav-icon',
-                    'can'  => ['view history penarikan'],
-                ],
-                [
-                    'text' => 'Buat Penarikan',
-                    'url' => '/penarikan/create',
-                    'icon' => 'fas fa-plus nav-icon',
-                    'can'  => ['add penarikan'],
-                    'active'  => ['/penarikan/create', 'regex:@^penarikan/receipt/[0-9]+$@'],
-                ],
-            ],
-        ],        
-        // ['header' => 'ANGGOTA'],
-        [
-            'text' => 'Transaksi',
-            'url' => '/transaksi',
-            'icon' => 'fas fa-handshake nav-icon',
-            'can'  => ['view transaksi anggota'],
-        ],
-        [
-            'text' => 'Pinjaman',
-            'url' => '/pinjaman',
-            'icon' => 'fas fa-hand-holding-usd nav-icon',
-            'can'  => ['view history pinjaman', 'view pinjaman', 'view pengajuan pinjaman'],
-            'submenu' => [
-                [
-                    'text' => 'Pengajuan Pinjaman',
-                    'url' => '/pinjaman/pengajuan/list',
-                    'icon' => 'fas fa-list nav-icon',
-                    'can'  => ['view pengajuan pinjaman'],
-                    'active' => ['/pinjaman/pengajuan/create']
-                ],
-                [
-                    'text' => 'List Pinjaman',
-                    'url' => '/pinjaman/list',
-                    'icon' => 'fas fa-file-invoice-dollar nav-icon',
-                    'can'  => ['view pinjaman'],
-                ],
-                [
-                    'text' => 'History Pinjaman',
-                    'url' => '/pinjaman/history',
-                    'icon' => 'fas fa-history nav-icon',
-                    'can'  => ['view history pinjaman'],
-                ],
-            ],
-        ],
-        ['header' => 'MASTER DATA', 'can'  => ['view user']],
+        ['header' => 'MASTER DATA', 'can'  => ['view user', 'view anggota']],
         [
             'text' => 'Master Data',
             'icon' => 'fas fa-fw fa-database',
@@ -339,6 +283,62 @@ return [
                     'icon' => 'fa fa-address-book nav-icon',
                     'can'  => ['view jenis anggota'],
                     'active' => ['/setting/jenis-anggota/list', '/setting/jenis-anggota/create', 'regex:@^setting/jenis-anggota/edit/[0-9]+$@'],
+                ],
+            ],
+        ],
+        ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan']],
+        [
+            'text' => 'Penarikan',
+            'icon' => 'fas fa-exchange-alt nav-icon',
+            'can'  => ['add penarikan', 'view history penarikan'],
+            'active' => ['/penarikan/history', '/penarikan/create'],
+            'submenu' => [
+                [
+                    'text' => 'History Penarikan',
+                    'url' => '/penarikan/history',
+                    'icon' => 'fas fa-history nav-icon',
+                    'can'  => ['view history penarikan'],
+                ],
+                [
+                    'text' => 'Buat Penarikan',
+                    'url' => '/penarikan/create',
+                    'icon' => 'fas fa-plus nav-icon',
+                    'can'  => ['add penarikan'],
+                    'active'  => ['/penarikan/create', 'regex:@^penarikan/receipt/[0-9]+$@'],
+                ],
+            ],
+        ],        
+        // ['header' => 'ANGGOTA'],
+        [
+            'text' => 'Transaksi',
+            'url' => '/transaksi',
+            'icon' => 'fas fa-handshake nav-icon',
+            'can'  => ['view transaksi anggota'],
+        ],
+        [
+            'text' => 'Pinjaman',
+            'url' => '/pinjaman',
+            'icon' => 'fas fa-hand-holding-usd nav-icon',
+            'can'  => ['view history pinjaman', 'view pinjaman', 'view pengajuan pinjaman'],
+            'submenu' => [
+                [
+                    'text' => 'Pengajuan Pinjaman',
+                    'url' => '/pinjaman/pengajuan/list',
+                    'icon' => 'fas fa-list nav-icon',
+                    'can'  => ['view pengajuan pinjaman'],
+                    'active' => ['/pinjaman/pengajuan/create']
+                ],
+                [
+                    'text' => 'List Pinjaman',
+                    'url' => '/pinjaman/list',
+                    'icon' => 'fas fa-file-invoice-dollar nav-icon',
+                    'can'  => ['view pinjaman'],
+                ],
+                [
+                    'text' => 'History Pinjaman',
+                    'url' => '/pinjaman/history',
+                    'icon' => 'fas fa-history nav-icon',
+                    'can'  => ['view history pinjaman'],
                 ],
             ],
         ],

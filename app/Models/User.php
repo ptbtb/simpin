@@ -75,4 +75,9 @@ class User extends Authenticatable
     {
         return $this->roles->first()->id == ROLE_ANGGOTA;
     }
+
+    public function isAdmin()
+    {
+        return $this->roles->first()->id == ROLE_ADMIN;
+    }
 }
