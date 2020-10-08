@@ -11,6 +11,7 @@ class JenisPinjaman extends Model
 
     protected $table = "t_jenis_pinjam";
     protected $primaryKey = "kode_jenis_pinjam";
+    protected $keyType = 'string';
     protected $dates = ['tgl_entry'];
     
     public function listPinjaman()

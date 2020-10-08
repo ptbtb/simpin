@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Anggota::class, 'kode_anggota', 'kode_anggota');
     }
+
+    public function isAnggota()
+    {
+        return $this->roles->first()->id == ROLE_ANGGOTA;
+    }
 }
