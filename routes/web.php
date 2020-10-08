@@ -155,6 +155,14 @@ Route::group(['prefix' => 'pinjaman'], function ()
         Route::get('detail/{id}', [App\Http\Controllers\PinjamanController::class, 'show'])->where('id', '[0-9]+')->name('pinjaman-detail');
         Route::get('download/pdf', [App\Http\Controllers\PinjamanController::class, 'createPDF'])->name('pinjaman-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcel'])->name('pinjaman-download-excel');
+
+        Route::group(['prefix' => 'pengajuan'], function ()
+        {
+            Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
+            Route::get('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add');
+            Route::post('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add');
+            Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
+        });
 	});
 });
 

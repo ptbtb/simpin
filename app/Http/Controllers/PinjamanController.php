@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Pinjaman;
-
 use App\Exports\PinjamanExport;
+
+use App\Managers\PinjamanManager;
+
+use App\Models\Pengajuan;
+use App\Models\Pinjaman;
+use App\Models\JenisPinjaman;
 
 use Auth;
 use Carbon\Carbon;
+use DB;
 use Excel;
 use PDF;
 
@@ -41,6 +46,33 @@ class PinjamanController extends Controller
         $data['listPinjaman'] = $listPinjaman;
         $data['request'] = $request;
         return view('pinjaman.index',$data);
+    }
+
+    public function indexPengajuan(Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('view pinjaman', $user);
+
+        if ($user->isAnggota())
+        {
+            $anggota = $user->anggota;
+            if (is_null($anggota))
+            {
+                return redirect()->back()->withError('Your account has no members');
+            }
+            
+            $listPengajuanPinjaman = Pengajuan::where('kode_anggota', $anggota->kode_anggota)
+                                                ->get();
+        }
+        else
+        {
+            $listPengajuanPinjaman = Pengajuan::with('anggota')->get();
+        }
+        
+        $data['title'] = "List Pengajuan Pinjaman";
+        $data['listPengajuanPinjaman'] = $listPengajuanPinjaman;
+        $data['request'] = $request;
+        return view('pinjaman.indexPengajuan',$data);
     }
 
     public function history(Request $request)
@@ -141,5 +173,61 @@ class PinjamanController extends Controller
         $request->anggota = $anggota;
         $filename = 'export_pinjaman_excel_'.Carbon::now()->format('d M Y').'.pdf';
         return Excel::download(new PinjamanExport($request), $filename, \Maatwebsite\Excel\Excel::DOMPDF);
+    }
+
+    public function createPengajuanPinjaman()
+    {
+        $user = Auth::user();
+        $this->authorize('add pengajuan pinjaman', $user);
+        $data['title'] = 'Buat Pengajuan Pinjaman';
+        $data['listJenisPinjaman'] = JenisPinjaman::all();
+        return view('pinjaman.createPengajuanPinjaman', $data);
+    }
+
+    public function storePengajuanPinjaman(Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('add pengajuan pinjaman', $user);
+        DB::transaction(function () use ($request)
+        {
+            $pengajuan = new Pengajuan();
+            $pengajuan->tgl_pengajuan = Carbon::now();
+            $pengajuan->kode_anggota = $request->kode_anggota;
+            $pengajuan->kode_jenis_pinjam = $request->jenis_pinjaman;
+            $pengajuan->besar_pinjam = $request->besar_pinjaman;
+            $pengajuan->status = 'submited';
+            $pengajuan->save(); 
+        });
+        
+        return redirect()->route('pengajuan-pinjaman-add')->withSuccess('Pengajuan pinjaman telah dibuat dan menunggu persetujuan.');
+    }
+
+    public function updateStatusPengajuanPinjaman(Request $request)
+    {
+        try
+        {
+            $pengajuan = Pengajuan::find($request->id);
+            if (is_null($pengajuan))
+            {
+                return response()->json(['message' => 'not found'], 404);
+            }
+            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN)
+            {
+                $pengajuan->status = "diterima";
+                AngsuranManager::generateAngsuran($pengajuan);
+                // $pengajuan->save();
+            }
+            else
+            {
+                $pengajuan->status = "ditolak";
+                $pengajuan->save();
+            }
+            return response()->json(['message' => 'success'], 200);
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+            return response()->json(['message' => $message], 500);
+        }
     }
 }
