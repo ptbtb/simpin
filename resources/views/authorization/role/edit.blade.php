@@ -53,7 +53,7 @@
                                         <div class="border p-2 h-100 mt-2">
                                             <div class="font-weight-bold">{{ $permissionGroup->name }}</div>
                                             <hr class="my-1">
-                                            @foreach ($permissionGroup->permissions as $permission)
+                                            @foreach ($permissionGroup->permissions->sortBy('sequence')->values() as $permission)
                                                 <div>
                                                     @php
                                                         $isChecked = false;
