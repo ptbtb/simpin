@@ -189,6 +189,12 @@ class PinjamanController extends Controller
     {
         $user = Auth::user();
         $this->authorize('add pengajuan pinjaman', $user);
+
+        if ($request->maksimal_besar_pinjaman < $request->besar_pinjaman)
+        {
+            return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas maksimal peminjaman.');
+        }
+
         DB::transaction(function () use ($request)
         {
             $pengajuan = new Pengajuan();
@@ -207,6 +213,8 @@ class PinjamanController extends Controller
     {
         try
         {
+            $user = Auth::user();
+            $this->authorize('approve pengajuan pinjaman', $user);
             $pengajuan = Pengajuan::find($request->id);
             if (is_null($pengajuan))
             {
