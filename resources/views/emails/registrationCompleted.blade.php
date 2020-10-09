@@ -7,7 +7,7 @@
     <title>Registration Completed</title>
 </head>
 <body>
-    <h4>Dear {{ $details['anggota']->nama_anggota }}</h4>
+    <h4>Dear {{ $details['user']->name }}</h4>
     <p>Anda telah berhasil melakukan registrasi user untuk e-simpin dan mobile-simpin  dengan akun sebagai berikut:</p>
     <p>
         Username: <b>{{ $details['user']->email }}</b><br>
