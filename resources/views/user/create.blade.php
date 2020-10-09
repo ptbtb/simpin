@@ -43,7 +43,7 @@
 						</div>
 						<div class="col-md-6 form-group">
 							<label>Password</label>
-							<input type="password" name="password" placeholder="Your Password" class="form-control" autocomplete="off" required>
+							<input type="password" name="password" placeholder="Your Password" class="form-control" value="{{ uniqid() }}" autocomplete="off" readonly>
 						</div>
 						<div class="col-md-6 form-group">
 							<label>Role</label>

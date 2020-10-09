@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\User\UserCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -11,6 +12,7 @@ use App\Models\User;
 use App\Models\Anggota;
 
 use Auth;
+use Carbon\Carbon;
 use Datatables;
 use Storage;
 
@@ -133,7 +135,10 @@ class UserController extends Controller
 			// asign role user
 			$role = Role::where('id',$request->role_id)->first();
 			$user->assignRole($role->name);
+			$user->activation_code = uniqid().$user->id;
 			$user->save();
+
+			event(new UserCreated($user, $request->password));
 			
 			return redirect()->route('user-list')->withSuccess('Create user Success');
 		}
@@ -293,5 +298,34 @@ class UserController extends Controller
 		$user->password = $hashPassword;
 		$user->save();
 		return redirect()->back()->with(['success' => 'Update password success']);
+	}
+
+	public function validation($validationId)
+	{
+		try
+		{
+			$user = User::where('activation_code',$validationId)->first();
+			if (is_null($user))
+			{
+				abort(404);
+			}
+			if ($user->isVerified())
+			{
+				return redirect()->route('login');
+			}
+			$user->is_verified = 1;
+			$user->email_verified_at = Carbon::now();
+			$user->save();
+			return redirect()->route('login')->withSuccess('Akun anda berhasil di verifikasi. silahkan login');
+		}
+		catch (\Throwable $e)
+		{
+			$message = $e->getMessage();
+			if (isset($e->errorInfo[2]))
+			{
+				$message = $e->errorInfo[2];
+			}
+			return redirect()->back()->withError($message);
+		}
 	}
 }

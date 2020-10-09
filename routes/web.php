@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +33,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // anggota
 Route::group(['prefix' => 'anggota'], function ()
 {
-    Route::group(['middleware' => 'auth'], function ()
+    Route::group(['middleware' => ['auth', 'check']], function ()
     {
         Route::get('list', [App\Http\Controllers\AnggotaController::class, 'index'])->name('anggota-list');
         Route::post('list', [App\Http\Controllers\AnggotaController::class, 'index'])->name('anggota-list');
@@ -83,7 +85,7 @@ Route::group(['prefix' => 'setting'], function ()
     // Jenis Anggota
     Route::group(['prefix' => 'jenis-anggota'], function ()
     {
-        Route::group(['middleware' => 'auth'], function ()
+        Route::group(['middleware' => ['auth', 'check']], function ()
         {
             Route::get('list', [App\Http\Controllers\JenisAnggotaController::class, 'index'])->name('jenis-anggota-list');
             Route::get('create', [App\Http\Controllers\JenisAnggotaController::class, 'create'])->name('jenis-anggota-create');
@@ -98,7 +100,8 @@ Route::group(['prefix' => 'setting'], function ()
 // user
 Route::group(['prefix' => 'user'], function ()
 {
-	Route::group(['middleware' => 'auth'], function ()
+    Route::get('validation/{validation_id}', [App\Http\Controllers\UserController::class, 'validation'])->name('user-validation');
+	Route::group(['middleware' => ['auth', 'check']], function ()
 	{
         Route::get('list', [App\Http\Controllers\UserController::class, 'index'])->name('user-list');
         Route::post('list', [App\Http\Controllers\UserController::class, 'index'])->name('user-list');
@@ -120,7 +123,7 @@ Route::group(['prefix' => 'user'], function ()
 // role
 Route::group(['prefix' => 'role'], function ()
 {
-	Route::group(['middleware' => 'auth'], function ()
+	Route::group(['middleware' => ['auth', 'check']], function ()
 	{
         Route::get('list', [App\Http\Controllers\RoleController::class, 'index'])->name('role-list');
         Route::get('create', [App\Http\Controllers\RoleController::class, 'create'])->name('role-create');
@@ -134,7 +137,7 @@ Route::group(['prefix' => 'role'], function ()
 // transaksi
 Route::group(['prefix' => 'transaksi'], function ()
 {
-	Route::group(['middleware' => 'auth'], function ()
+	Route::group(['middleware' => ['auth', 'check']], function ()
 	{
         Route::get('', [App\Http\Controllers\TransaksiController::class, 'listTransaksiAnggota'])->name('transaksi-list-anggota');
         Route::post('', [App\Http\Controllers\TransaksiController::class, 'listTransaksiAnggota'])->name('transaksi-list-anggota');
@@ -146,7 +149,7 @@ Route::group(['prefix' => 'transaksi'], function ()
 // pinjaman
 Route::group(['prefix' => 'pinjaman'], function ()
 {
-	Route::group(['middleware' => 'auth'], function ()
+	Route::group(['middleware' => ['auth', 'check']], function ()
 	{
         Route::get('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
         Route::post('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
@@ -169,7 +172,7 @@ Route::group(['prefix' => 'pinjaman'], function ()
 // penarikan
 Route::group(['prefix' => 'penarikan'], function ()
 {
-	Route::group(['middleware' => 'auth'], function ()
+	Route::group(['middleware' => ['auth', 'check']], function ()
 	{
         Route::get('create', [App\Http\Controllers\PenarikanController::class, 'create'])->name('penarikan-create');
         Route::post('create', [App\Http\Controllers\PenarikanController::class, 'store'])->name('penarikan-create');

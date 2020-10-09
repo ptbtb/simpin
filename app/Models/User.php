@@ -13,7 +13,7 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, SoftDeletes, HasApiTokens;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -79,5 +79,10 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->roles->first()->id == ROLE_ADMIN;
+    }
+
+    public function isVerified()
+    {
+        return $this->is_verified == 1;
     }
 }
