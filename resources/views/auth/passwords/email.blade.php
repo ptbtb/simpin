@@ -8,6 +8,14 @@ Reset Password
 @section('content')
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url({{ asset('images/bg-01.jpg') }});">
+			<div class="w-100">
+				{{-- @include('flashAlert') --}}
+				@if(session('status'))
+					<div class="alert alert-success">
+						{{ session('status') }}
+					</div>
+				@endif
+			</div>
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
 				<form class="login100-form validate-form" method="post" action="{{ url('/password/email') }}">
 					{{ csrf_field() }}
