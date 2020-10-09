@@ -17,3 +17,15 @@ and open the template in the editor.
     border: 1px solid #dddddd !important;
     box-shadow: none !important;
 }
+
+.brand-image{
+    width: 33px !important;
+    height: 33px !important;
+    object-fit: cover;
+    object-position: center;
+}
+
+.user-image{
+    object-fit: cover;
+    object-position: center;
+}

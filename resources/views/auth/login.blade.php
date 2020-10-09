@@ -23,7 +23,7 @@ Login
 				<form class="login100-form validate-form" method="post" action="{{ route('login') }}">
 					{{ csrf_field() }}
 					<div class="text-center  p-b-30">
-						<img src="{{ asset('vendor/adminlte/dist/img/jtk-logo.jpg') }}" style="max-width: 50%;">
+						<img src="{{ asset('img/new-logo.jpg') }}" style="max-width: 50%;">
 					</div>
 					<span class="login100-form-title p-b-30">
 						Login
