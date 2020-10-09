@@ -49,7 +49,7 @@
                         <a href="{{ route('transaksi-list-anggota') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-3 col-6 d-none">
                     <!-- small box -->
                     <div class="small-box bg-danger">
                         <div class="inner" style="min-height: 123px;">
