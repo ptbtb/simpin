@@ -222,7 +222,7 @@ return [
         [
             'text' => 'Master Data',
             'icon' => 'fas fa-fw fa-database',
-            'can'  => ['view role', 'view user', 'view anggota', 'add anggota', 'view simpanan'],
+            'can'  => ['view role', 'view user', 'view anggota', 'add anggota'],
             'submenu' => [
                 [
                     'text' => 'Role',
@@ -244,12 +244,6 @@ return [
                     'icon' => 'fa fa-users nav-icon',
                     'active' => ['/anggota/list', '/anggota/create', 'regex:@^anggota/edit/[0-9]+$@'],
                     'can'  => ['view anggota'],
-                ],
-                [
-                    'text' => 'Simpanan',
-                    'url' => '/simpanan',
-                    'icon' => 'fa fa-money-bill nav-icon',
-                    'can'  => ['view simpanan'],
                 ],
             ],
         ],
@@ -339,6 +333,33 @@ return [
                     'url' => '/pinjaman/history',
                     'icon' => 'fas fa-history nav-icon',
                     'can'  => ['view history pinjaman'],
+                ],
+            ],
+        ],
+        [
+            'text' => 'Simpanan',
+            'url' => '/simpanan/',
+            'icon' => 'fa fa-money-bill nav-icon',
+            'can'  => ['view simpanan','view history simpanan'],
+            'submenu' => [
+                // [
+                //     'text' => 'Pengajuan Pinjaman',
+                //     'url' => '/pinjaman/pengajuan/list',
+                //     'icon' => 'fas fa-list nav-icon',
+                //     'can'  => ['view pengajuan pinjaman'],
+                //     'active' => ['/pinjaman/pengajuan/create']
+                // ],
+                // [
+                //     'text' => 'List Pinjaman',
+                //     'url' => '/pinjaman/list',
+                //     'icon' => 'fas fa-file-invoice-dollar nav-icon',
+                //     'can'  => ['view pinjaman'],
+                // ],
+                [
+                    'text' => 'History Simpanan',
+                    'url' => '/simpanan/history',
+                    'icon' => 'fas fa-history nav-icon',
+                    'can'  => ['view history simpanan'],
                 ],
             ],
         ],

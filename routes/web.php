@@ -52,9 +52,6 @@ Route::group(['prefix' => 'anggota'], function ()
     });
 });
 
-//simpanan
-Route::get('/simpanan', [App\Http\Controllers\SimpananController::class, 'index']);
-
 // setting
 Route::group(['prefix' => 'setting'], function ()
 {
@@ -167,6 +164,20 @@ Route::group(['prefix' => 'pinjaman'], function ()
             Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
         });
 	});
+});
+
+
+//simpanan
+Route::group(['prefix' => 'simpanan'], function ()
+{
+    Route::group(['middleware' => ['auth', 'check']], function ()
+    {
+        Route::get('history', [App\Http\Controllers\SimpananController::class, 'history'])->name('simpanan-history');
+        Route::post('history', [App\Http\Controllers\SimpananController::class, 'history'])->name('simpanan-history');
+        Route::get('detail/{id}', [App\Http\Controllers\SimpananController::class, 'show'])->where('id', '[0-9]+')->name('simpanan-detail');
+        Route::get('download/pdf', [App\Http\Controllers\SimpananController::class, 'createPDF'])->name('simpanan-download-pdf');
+        Route::get('download/excel', [App\Http\Controllers\SimpananController::class, 'createExcel'])->name('simpanan-download-excel');
+    });
 });
 
 // penarikan
