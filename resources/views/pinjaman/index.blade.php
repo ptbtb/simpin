@@ -68,6 +68,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        @if (\Auth::user()->roles()->first()->id == ROLE_ADMIN)
+                            <th>Nama Anggota</th>
+                        @endif
                         <th>Tanggal Pinjaman</th>
                         <th>Jenis Pinjaman</th>
                         <th>Besar Pinjaman</th>
@@ -81,6 +84,15 @@
                     @foreach ($listPinjaman as $pinjaman)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            @if (\Auth::user()->roles()->first()->id == ROLE_ADMIN)
+                                <td>
+                                    @if ($pinjaman->anggota)
+                                        {{ $pinjaman->anggota->nama_anggota }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            @endif
                             <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
                             <td>{{ $pinjaman->jenisPinjaman->nama_pinjaman }}</td>
                             <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
