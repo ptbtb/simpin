@@ -70,6 +70,7 @@
                         <th>No</th>
                         @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
                             <th>Nama Anggota</th>
+                            <th>Nomor Anggota</th>
                         @endif
                         <th>Tanggal Pinjaman</th>
                         <th>Jenis Pinjaman</th>
@@ -88,6 +89,13 @@
                                 <td>
                                     @if ($pinjaman->anggota)
                                         {{ $pinjaman->anggota->nama_anggota }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($pinjaman->anggota)
+                                        {{ $pinjaman->anggota->kode_anggota }}
                                     @else
                                         -
                                     @endif

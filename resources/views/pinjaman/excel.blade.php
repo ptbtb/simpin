@@ -32,6 +32,13 @@
                             -
                         @endif
                     </td>
+                    <td>
+                        @if ($pinjaman->anggota)
+                            {{ $pinjaman->anggota->kode_anggota }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
                     <td>{{ $pinjaman->jenisPinjaman->nama_pinjaman }}</td>
                     <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
