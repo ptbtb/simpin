@@ -126,14 +126,7 @@ class PinjamanController extends Controller
         $user = Auth::user();
         $this->authorize('view pinjaman', $user);
 
-        $anggota = $user->anggota;
-        if (is_null($anggota))
-        {
-            return redirect()->back()->withError('Your account has no members');
-        }
-
         $pinjaman = Pinjaman::with('anggota','listAngsuran')
-                            ->where('kode_anggota', $anggota->kode_anggota)
                             ->where('kode_pinjam', $id)
                             ->first();
         

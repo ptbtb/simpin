@@ -12,6 +12,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Nama Anggota</th>
                 <th>Tanggal Pinjaman</th>
                 <th>Jenis Pinjaman</th>
                 <th>Besar Pinjaman</th>
@@ -24,6 +25,13 @@
             @foreach ($listPinjaman as $pinjaman)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>
+                        @if ($pinjaman->anggota)
+                            {{ $pinjaman->anggota->nama_anggota }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
                     <td>{{ $pinjaman->jenisPinjaman->nama_pinjaman }}</td>
                     <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>

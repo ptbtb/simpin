@@ -3,7 +3,13 @@
         <tr>
             <td>Nama</td>
             <td>:</td>
-            <td>{{ $pinjaman->anggota->nama_anggota }}</td>
+            <td>
+                @if ($pinjaman->anggota)
+                    {{ $pinjaman->anggota->nama_anggota }}
+                @else
+                    -
+                @endif
+            </td>
             <td>Jenis Pinjaman</td>
             <td>:</td>
             <td>{{ $jenisPinjaman->nama_pinjaman }}</td>
