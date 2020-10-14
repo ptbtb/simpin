@@ -16,7 +16,11 @@ class PinjamanExport implements FromView
 
     public function view(): View
     {
-        $listPinjaman = Pinjaman::where('kode_anggota', $this->request->anggota->kode_anggota);
+        $listPinjaman = Pinjaman::with('anggota');
+        if ($this->request->anggota)
+        {
+            $listPinjaman = $listPinjaman->where('kode_anggota', $this->request->anggota->kode_anggota);
+        }
         if ($this->request->from)
         {
             $listPinjaman = $listPinjaman->where('tgl_entri','>=', $this->request->from);

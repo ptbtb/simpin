@@ -150,8 +150,21 @@ class PinjamanController extends Controller
         $user = Auth::user();
         $this->authorize('view pinjaman', $user);
 
-        $anggota = $user->anggota;
-        $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota);
+        if ($user->roles->first()->id == ROLE_ANGGOTA)
+        {
+            $anggota = $user->anggota;
+            if (is_null($anggota))
+            {
+                return redirect()->back()->withError('Your account has no members');
+            }
+            
+            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota);
+        }
+        else
+        {
+            $listPinjaman = Pinjaman::with('anggota');
+        }
+
         if ($request->from)
         {
             $listPinjaman = $listPinjaman->where('tgl_entri','>=', $request->from);
