@@ -78,7 +78,7 @@
                         <th>Sisa Pinjaman</th>
                         <th>Jatuh Tempo</th>
                         <th>Status</th>
-                        <th>#</th>
+                        <th style="width: 15%">#</th>
                     </tr>
                 </thead>
                 <tbody>

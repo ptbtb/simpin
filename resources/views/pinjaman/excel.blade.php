@@ -13,10 +13,12 @@
             <tr>
                 <th>No</th>
                 <th>Nama Anggota</th>
+                <th>Nomor Anggota</th>
                 <th>Tanggal Pinjaman</th>
                 <th>Jenis Pinjaman</th>
                 <th>Besar Pinjaman</th>
                 <th>Sisa Pinjaman</th>
+                <th>Sisa Angsuran</th>
                 <th>Jatuh Tempo</th>
                 <th>Status</th>
             </tr>
@@ -43,6 +45,7 @@
                     <td>{{ $pinjaman->jenisPinjaman->nama_pinjaman }}</td>
                     <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
                     <td>Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
+                    <td>{{ $pinjaman->sisa_angsuran }}</td>
                     <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
                     <td>{{ ucwords($pinjaman->status) }}</td>
                 </tr>
