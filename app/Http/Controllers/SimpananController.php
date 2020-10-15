@@ -132,7 +132,7 @@ class SimpananController extends Controller
     public function createPDF(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('view simpanan', $user);
+        $this->authorize('view history simpanan', $user);
 
         if ($user->roles->first()->id == ROLE_ANGGOTA)
         {
@@ -171,7 +171,7 @@ class SimpananController extends Controller
     public function createExcel(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('view simpanan', $user);
+        $this->authorize('view history simpanan', $user);
         $anggota = $user->anggota;
         $request->anggota = $anggota;
         $filename = 'export_simpanan_excel_'.Carbon::now()->format('d M Y').'.xlsx';
