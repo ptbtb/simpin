@@ -100,8 +100,20 @@
                             @endif
                             <td>{{ $simpanan->jenis_simpan }}</td>
                             <td>Rp. {{ number_format($simpanan->besar_simpanan,0,",",".") }}</td>
-                            <td>{{ $simpanan->tgl_mulai->format('d M Y') }}</td>
-                            <td>{{ $simpanan->tgl_entri->format('d M Y') }}</td>
+                            <td>
+                                @if ($simpanan->tgl_mulai)
+                                    {{ $simpanan->tgl_mulai->format('d M Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if ($simpanan->tgl_entri)
+                                    {{ $simpanan->tgl_entri->format('d M Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody> 
