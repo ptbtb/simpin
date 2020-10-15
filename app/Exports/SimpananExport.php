@@ -29,7 +29,8 @@ class SimpananExport implements FromView
         {
             $listSimpanan = $listSimpanan->where('tgl_entri','<=', $this->request->to);
         }
-        $listSimpanan = $listSimpanan->get();
+        // $listSimpanan = $listSimpanan->get();
+        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->take(200)->get();
         return view('simpanan.excel', [
             'listSimpanan' => $listSimpanan
         ]);

@@ -157,7 +157,8 @@ class SimpananController extends Controller
         {
             $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
         }
-        $listSimpanan = $listSimpanan->get();
+        // $listSimpanan = $listSimpanan->get();
+        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->take(200)->get();
 
         // share data to view
         view()->share('listSimpanan',$listSimpanan);
