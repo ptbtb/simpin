@@ -342,19 +342,12 @@ return [
             'icon' => 'fa fa-money-bill nav-icon',
             'can'  => ['view simpanan','view history simpanan'],
             'submenu' => [
-                // [
-                //     'text' => 'Pengajuan Pinjaman',
-                //     'url' => '/pinjaman/pengajuan/list',
-                //     'icon' => 'fas fa-list nav-icon',
-                //     'can'  => ['view pengajuan pinjaman'],
-                //     'active' => ['/pinjaman/pengajuan/create']
-                // ],
-                // [
-                //     'text' => 'List Pinjaman',
-                //     'url' => '/pinjaman/list',
-                //     'icon' => 'fas fa-file-invoice-dollar nav-icon',
-                //     'can'  => ['view pinjaman'],
-                // ],
+                [
+                    'text' => 'List Simpanan',
+                    'url' => '/simpanan/list',
+                    'icon' => 'fas fa-file-invoice-dollar nav-icon',
+                    'can'  => ['view simpanan'],
+                ],
                 [
                     'text' => 'History Simpanan',
                     'url' => '/simpanan/history',

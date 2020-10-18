@@ -83,17 +83,19 @@
     <script>
         $.fn.dataTable.ext.errMode = 'none';
         $('.table').DataTable({
+            processing: true,
+            serverside: true,
             ajax: {
                 url: '{{ route('user-list-ajax') }}',
-                dataSrc: '',
+                dataSrc: 'data',
                 data: function(data){
                     @if(isset($request->role_id)) data.role_id = '{{ $request->role_id }}'; @endif
                 }
             },
             aoColumns: [
                 { 
-                    mData: 'number', sType: "string", 
-                    className: "dt-body-center", "name": "number",						
+                    mData: 'id', sType: "string", 
+                    className: "dt-body-center", "name": "id"				
                 },
                 { 
                     mData: 'email', sType: "string", 

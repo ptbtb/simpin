@@ -172,6 +172,11 @@ Route::group(['prefix' => 'simpanan'], function ()
 {
     Route::group(['middleware' => ['auth', 'check']], function ()
     {
+        Route::get('list', [App\Http\Controllers\SimpananController::class, 'index'])->name('simpanan-list');
+        Route::post('list', [App\Http\Controllers\SimpananController::class, 'index'])->name('simpanan-list');
+        Route::get('list/data', [App\Http\Controllers\SimpananController::class, 'indexAjax'])->name('simpanan-list-ajax');
+        Route::get('create', [App\Http\Controllers\SimpananController::class, 'create'])->name('simpanan-add');
+        Route::post('create', [App\Http\Controllers\SimpananController::class, 'store'])->name('simpanan-add');
         Route::get('history', [App\Http\Controllers\SimpananController::class, 'history'])->name('simpanan-history');
         Route::post('history', [App\Http\Controllers\SimpananController::class, 'history'])->name('simpanan-history');
         Route::get('detail/{id}', [App\Http\Controllers\SimpananController::class, 'show'])->where('id', '[0-9]+')->name('simpanan-detail');

@@ -13,8 +13,9 @@ use App\Models\Anggota;
 
 use Auth;
 use Carbon\Carbon;
-use Datatables;
 use Storage;
+// use Yajra\DataTables\DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -59,13 +60,15 @@ class UserController extends Controller
 				return $query->where('id', ROLE_ANGGOTA);
 			});
 		}
-		$users = $users->get();
-		$users->map(function ($user, $key)
-		{
-			$user->number = $key+1;
-			return $user;
-		});
-		return $users;
+		$users = $users->orderBy('created_at','asc');
+		// $users = $users->get();
+		// $users->map(function ($user, $key)
+		// {
+		// 	$user->number = $key+1;
+		// 	return $user;
+		// });
+		// return $users;
+		return DataTables::eloquent($users)->make(true);
 	}
 
 	public function create()
