@@ -34,7 +34,6 @@
                 <div class="col-md-4 form-group">
                     <label>Jenis Simpanan</label>
                     <select name="jenis_simpanan" id="jenisSimpanan" class="form-control">
-                        <option value="">Pilih salah satu</option>
                     </select>
                 </div>
                 <div class="col-md-4 form-group">
@@ -203,6 +202,7 @@
 
     function initiateSelect2() {
         $("#jenisSimpanan").select2({
+            placeholder: 'Pilih Semua',
             ajax: {
                 url: '{{ route('jenis-simpanan-search') }}',
                 dataType: 'json',
