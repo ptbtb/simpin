@@ -180,6 +180,7 @@ Route::group(['prefix' => 'simpanan'], function ()
         Route::get('create', [App\Http\Controllers\SimpananController::class, 'create'])->name('simpanan-add');
         Route::post('create', [App\Http\Controllers\SimpananController::class, 'store'])->name('simpanan-add');
         Route::get('history', [App\Http\Controllers\SimpananController::class, 'history'])->name('simpanan-history');
+        Route::get('history/data', [App\Http\Controllers\SimpananController::class, 'historyData'])->name('simpanan-history-data');
         Route::post('history', [App\Http\Controllers\SimpananController::class, 'history'])->name('simpanan-history');
         Route::get('detail/{id}', [App\Http\Controllers\SimpananController::class, 'show'])->where('id', '[0-9]+')->name('simpanan-detail');
         Route::get('download/pdf', [App\Http\Controllers\SimpananController::class, 'createPDF'])->name('simpanan-download-pdf');

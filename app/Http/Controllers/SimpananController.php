@@ -156,7 +156,15 @@ class SimpananController extends Controller
     {
         $user = Auth::user();
         $this->authorize('view history simpanan', $user);
+        $data['title'] = "History Simpanan";
+        $data['request'] = $request;
+        return view('simpanan.history',$data);
+    }
 
+    public function historyData(Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('view history simpanan', $user);
         if ($user->roles->first()->id == ROLE_ANGGOTA)
         {
             $anggota = $user->anggota;
@@ -180,11 +188,8 @@ class SimpananController extends Controller
         {
             $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
         }
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->take(200)->get();
-        $data['title'] = "History Simpanan";
-        $data['listSimpanan'] = $listSimpanan;
-        $data['request'] = $request;
-        return view('simpanan.history',$data);
+        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc');
+        return DataTables::eloquent($listSimpanan)->make(true);
     }
 
     public function createPDF(Request $request)

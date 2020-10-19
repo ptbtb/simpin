@@ -69,6 +69,7 @@
                     <tr>
                         <th>No</th>
                         @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
+                            <th>Kode Simpanan</th>
                             <th>Nama Anggota</th>
                             <th>Nomor Anggota</th>
                         @endif
@@ -79,43 +80,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($listSimpanan as $simpanan)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
-                                <td>
-                                    @if ($simpanan->anggota)
-                                        {{ $simpanan->anggota->nama_anggota }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($simpanan->anggota)
-                                        {{ $simpanan->anggota->kode_anggota }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                            @endif
-                            <td>{{ $simpanan->jenis_simpan }}</td>
-                            <td>Rp. {{ number_format($simpanan->besar_simpanan,0,",",".") }}</td>
-                            <td>
-                                @if ($simpanan->tgl_mulai)
-                                    {{ $simpanan->tgl_mulai->format('d M Y') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td>
-                                @if ($simpanan->tgl_entri)
-                                    {{ $simpanan->tgl_entri->format('d M Y') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
                 </tbody> 
             </table>
         </div>
@@ -134,6 +98,96 @@
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
         });
-        $('.table').DataTable();
+        var t = $('.table').DataTable({
+            processing: true,
+            serverside: true,
+            responsive: true,
+            // order: [[ 6, "desc" ]],
+            ajax: {
+                url: '{{ route('simpanan-history-data') }}',
+                dataSrc: 'data',
+                data: function(data){
+                    @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
+                    @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
+                }
+            },
+            aoColumns: [
+                { 
+                    mData: null		
+                },
+                @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
+                { 
+                    mData: 'kode_simpan', sType: "string", 
+                    className: "dt-body-center", "name": "kode_simpan"				
+                },
+                { 
+                    mData: 'anggota.nama_anggota', sType: "string", 
+                    className: "dt-body-center", "name": "anggota.nama_anggota"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'anggota.kode_anggota', sType: "string", 
+                    className: "dt-body-center", "name": "anggota.kode_anggota"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                @endif
+                { 
+                    mData: 'jenis_simpan', sType: "string", 
+                    className: "dt-body-center", "name": "jenis_simpan"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'besar_simpanan_rupiah', sType: "string", 
+                    className: "dt-body-center", "name": "besar_simpanan_rupiah"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'tanggal_mulai', sType: "string", 
+                    className: "dt-body-center", "name": "tanggal_mulai"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'tanggal_entri', sType: "string", 
+                    className: "dt-body-center", "name": "tanggal_entri"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+            ]
+        });
+
+        t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
     </script>
 @endsection
