@@ -203,6 +203,7 @@
     function initiateSelect2() {
         $("#jenisSimpanan").select2({
             placeholder: 'Pilih Semua',
+            allowClear: true,
             ajax: {
                 url: '{{ route('jenis-simpanan-search') }}',
                 dataType: 'json',
