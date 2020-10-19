@@ -19,6 +19,11 @@ class Simpanan extends Model
         return $this->belongsTo(Anggota::class, 'kode_anggota');
     }
 
+    public function jenisSimpanan()
+    {
+        return $this->belongsTo(JenisSimpanan::class, 'kode_jenis_simpan', 'kode_jenis_simpan');
+    }
+
     public function getTanggalEntriAttribute()
     {
         if ($this->tgl_entri)

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use Auth;
+use Hash;
 use Carbon\Carbon;
 use Excel;
 use PDF;
@@ -25,10 +26,8 @@ class SimpananController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view simpanan', Auth::user());
-        $listJenisSimpanan = JenisSimpanan::all(); 
         $data['title'] = "List Transaksi Simpanan";
         $data['request'] = $request;
-        $data['listJenisSimpanan'] = $listJenisSimpanan;
         return view('simpanan.index', $data);
     }
 
@@ -36,7 +35,7 @@ class SimpananController extends Controller
     {
         $this->authorize('view simpanan', Auth::user());
         $simpanan = Simpanan::with('anggota');
-        \Log::info($request);
+        
         if ($request->from)
         {
             $simpanan = $simpanan->where('tgl_entri','>=', $request->from);
@@ -45,11 +44,11 @@ class SimpananController extends Controller
         {
             $simpanan = $simpanan->where('tgl_entri','<=', $request->to);
         }
-        if ($request->jenisSimpanan)
+        if ($request->jenis_simpanan)
         {
-            $simpanan = $simpanan->where('jenis_simpan',$request->jenisSimpanan);
+            $simpanan = $simpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
         }
-        $simpanan = $simpanan->orderBy('tgl_entri','asc')->take(100);
+        $simpanan = $simpanan->orderBy('tgl_entri','desc');
         return DataTables::eloquent($simpanan)->make(true);
     }
 
@@ -64,7 +63,6 @@ class SimpananController extends Controller
         $listJenisSimpanan = JenisSimpanan::all(); 
         $data['title'] = "List Transaksi Simpanan";
         $data['listJenisSimpanan'] = $listJenisSimpanan;
-        $data['listKodeTransaksi'] = KodeTransaksi::all();
         // dd($data);
         return view('simpanan.create', $data);
     }
@@ -80,6 +78,13 @@ class SimpananController extends Controller
         $this->authorize('add simpanan', Auth::user());
         try
         {
+            // check password
+            $check = Hash::check($request->password, Auth::user()->password);
+            if (!$check)
+            {
+                return redirect()->back()->withError("Password yang anda masukkan salah");
+            }
+
             $besarSimpanan = $request->besar_simpanan;
             $jenisSimpanan = JenisSimpanan::find($request->jenis_simpanan);
 
@@ -89,7 +94,7 @@ class SimpananController extends Controller
             $simpanan->kode_anggota = $request->kode_anggota;
             $simpanan->u_entry = Auth::user()->name;
             $simpanan->tgl_entri = Carbon::now();
-            $simpanan->code_trans = $request->kode_transaksi;
+            $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
             $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
             $simpanan->save();
 

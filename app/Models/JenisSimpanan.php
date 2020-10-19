@@ -12,4 +12,10 @@ class JenisSimpanan extends Model
     protected $primaryKey = "kode_jenis_simpan";
     protected $keyType = 'string';
     protected $dates = ['tgl_entri'];
+    protected $appends = ['view_nama'];
+
+    public function getViewNamaAttribute()
+    {
+        return strtoupper($this->nama_simpanan);
+    }
 }

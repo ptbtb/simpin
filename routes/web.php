@@ -62,6 +62,8 @@ Route::group(['prefix' => 'setting'], function ()
     Route::get('/simpanan/destroy/{id}', [App\Http\Controllers\SettingSimpananController::class, 'destroy']);
     Route::get('/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'create']);
     Route::post('/simpanan/store', [App\Http\Controllers\SettingSimpananController::class, 'store']);
+    Route::get('/simpanan/jenis/search', [App\Http\Controllers\JenisSimpananController::class, 'search'])->name('jenis-simpanan-search');
+    Route::get('/simpanan/jenis/search/{id}', [App\Http\Controllers\JenisSimpananController::class, 'searchId'])->name('jenis-simpanan-searchId');
 
         //pinjaman
     Route::get('/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index']);

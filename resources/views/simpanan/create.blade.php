@@ -41,19 +41,10 @@
                     <label for="besarSimpanan">Besar Simpanan</label>
                     <input type="text" name="besar_simpanan" id="besarSimpanan" class="form-control" placeholder="Besar Simpanan" autocomplete="off" required>
                 </div>
-                <div class="col-md-6 form-group">
+                <div class="col-md-12 form-group">
                     <label for="kodeAnggota">Anggota</label>
                     <select name="kode_anggota" id="kodeAnggota" class="form-control" required>
                         <option value="">Pilih salah satu</option>
-                    </select>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label for="kodeTransaksi">Kode Transaksi</label>
-                    <select name="kode_transaksi" id="kodeTransaksi" class="form-control" required>
-                        <option value="">Pilih salah satu</option>
-                        @foreach ($listKodeTransaksi as $kodeTransaksi)
-                            <option value="{!! $kodeTransaksi->CODE !!}">{{ $kodeTransaksi->NAMA_TRANSAKSI }} ({{ $kodeTransaksi->CODE }})</option>
-                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-12 form-group">
@@ -79,8 +70,25 @@
 <script>
     var jenisSimpanan = collect({!!$listJenisSimpanan!!});
 
-    $('#jenisSimpanan').select2();
-    $('#kodeTransaksi').select2();
+    $("#jenisSimpanan").select2({
+        ajax: {
+            url: '{{ route('jenis-simpanan-search') }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                    type: 'public'
+                }
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    });
     $("#kodeAnggota").select2({
         ajax: {
             placeholder: "Select a state",

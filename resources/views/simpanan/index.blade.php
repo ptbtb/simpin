@@ -4,6 +4,7 @@
     {{ $title }}
 @endsection
 @section('plugins.Datatables', true)
+@section('plugins.Select2', true)
 @section('content_header')
 <div class="row">
 	<div class="col-6"><h4>{{ $title }}</h4></div>
@@ -32,11 +33,8 @@
             <div class="row">
                 <div class="col-md-4 form-group">
                     <label>Jenis Simpanan</label>
-                    <select name="jenisSimpanan" id="jenisSimnpanan" class="form-control">
+                    <select name="jenis_simpanan" id="jenisSimpanan" class="form-control">
                         <option value="">Pilih salah satu</option>
-                        @foreach ($listJenisSimpanan as $jenisSimpanan)
-                            <option value="{{ strtoupper($jenisSimpanan->nama_simpanan) }}" {{ (strtoupper($jenisSimpanan->nama_simpanan) == strtoupper($request->jenisSimpanan))? 'selected':'' }}>{{ strtoupper($jenisSimpanan->nama_simpanan) }}</option>
-                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-4 form-group">
@@ -57,8 +55,8 @@
 <div class="card">
     @can('add simpanan')
         <div class="card-header text-right">
-            <a href="{{ route('simpanan-download-pdf', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenisSimpanan, 'status' => 'lunas']) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
-            <a href="{{ route('simpanan-download-excel', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenisSimpanan, 'status' => 'lunas']) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a>
+            <a href="{{ route('simpanan-download-pdf', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan]) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
+            <a href="{{ route('simpanan-download-excel', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan]) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a>
             <a class="btn btn-success" href="{{ route('simpanan-add') }}"><i class="fas fa-plus"></i> Tambah Transaksi</a>
         </div>
     @endcan
@@ -100,6 +98,12 @@
 <script>
     $.fn.dataTable.ext.errMode = 'none';
     var baseURL = {!! json_encode(url('/')) !!};
+
+    $(document).ready(function ()
+    {
+        initiateSelect2();
+        updateSelect2();
+    });
     $('#from').datepicker({
         uiLibrary: 'bootstrap4',
         format: 'yyyy-mm-dd'
@@ -118,7 +122,7 @@
             data: function(data){
                 @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
                 @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
-                @if(isset($request->jenisSimpanan)) data.jenisSimpanan = '{{ $request->jenisSimpanan }}'; @endif
+                @if(isset($request->jenis_simpanan)) data.jenis_simpanan = '{{ $request->jenis_simpanan }}'; @endif
             }
         },
         aoColumns: [
@@ -195,5 +199,49 @@
             },
         ]
     });
+
+    function initiateSelect2() {
+        $("#jenisSimpanan").select2({
+            ajax: {
+                url: '{{ route('jenis-simpanan-search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+    }
+
+    function updateSelect2()
+    {
+        // Fetch the preselected item, and add to the control
+        var challengeSelect = $('#jenisSimnpanan');
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('jenis-simpanan-search') }}' + '/' +'{{ $request->jenis_simpanan }}'
+        }).then(function (data) {
+            // create the option and append to Select2
+            var option = new Option(data.view_nama, data.kode_jenis_simpan, true, true);
+            challengeSelect.append(option).trigger('change');
+
+            // manually trigger the `select2:select` event
+            challengeSelect.trigger({
+                type: 'select2:select',
+                params: {
+                    data: data
+                }
+            });
+        });
+    }
 </script>
 @stop
