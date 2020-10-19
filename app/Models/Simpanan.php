@@ -13,6 +13,7 @@ class Simpanan extends Model
     protected $primaryKey = "kode_simpan";
     protected $dates = ['tgl_mulai', 'tgl_entri'];
     protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah'];
+    protected $fillable = ['jenis_simpan', 'besar_simpanan','kode_anggota','u_entry','tgl_mulai','tgl_entri','kode_jenis_simpan','keterangan'];
 
     public function anggota()
     {

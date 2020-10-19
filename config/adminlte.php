@@ -343,10 +343,17 @@ return [
             'can'  => ['view simpanan','view history simpanan'],
             'submenu' => [
                 [
+                    'text' => 'Import Data Simpanan',
+                    'url' => '/simpanan/import/excel',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import simpanan'],
+                ],
+                [
                     'text' => 'List Simpanan',
                     'url' => '/simpanan/list',
                     'icon' => 'fas fa-file-invoice-dollar nav-icon',
                     'can'  => ['view simpanan'],
+                    'active' => ['/simpanan/create']
                 ],
                 [
                     'text' => 'History Simpanan',

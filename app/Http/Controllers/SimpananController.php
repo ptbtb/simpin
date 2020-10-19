@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SimpananExport;
+use App\Imports\SimpananImport;
 use App\Models\JenisSimpanan;
 use App\Models\KodeTransaksi;
 use App\Models\Simpanan;
@@ -242,5 +243,28 @@ class SimpananController extends Controller
         
         $filename = 'export_simpanan_excel_'.Carbon::now()->format('d M Y').'.xlsx';
         return Excel::download(new SimpananExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importExcel()
+    {
+        $this->authorize('import simpanan', Auth::user());
+        $data['title'] = 'Import Transaksi Simpanan';
+        return view('simpanan.import', $data);
+    }
+
+    public function storeImportExcel(Request $request)
+    {
+        $this->authorize('import simpanan', Auth::user());
+        try
+        {
+            Excel::import(new SimpananImport, $request->file);
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
+        
     }
 }
