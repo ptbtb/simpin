@@ -116,6 +116,7 @@
         processing: true,
         serverside: true,
         responsive: true,
+        order: [[ 6, "desc" ]],
         ajax: {
             url: '{{ route('simpanan-list-ajax') }}',
             dataSrc: 'data',
