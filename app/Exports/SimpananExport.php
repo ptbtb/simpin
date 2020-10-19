@@ -31,10 +31,10 @@ class SimpananExport implements FromView
         }
         if ($this->request->jenis_simpanan)
         {
-            $listSimpanan = $listSimpanan->where('jenis_simpan',$this->request->jenis_simpanan);
+            $listSimpanan = $listSimpanan->where('kode_jenis_simpan',$this->request->jenis_simpanan);
         }
         // $listSimpanan = $listSimpanan->get();
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->take(200)->get();
+        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->get();
         return view('simpanan.excel', [
             'listSimpanan' => $listSimpanan
         ]);

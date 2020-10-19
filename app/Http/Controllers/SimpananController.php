@@ -216,10 +216,10 @@ class SimpananController extends Controller
         }
         if ($request->jenis_simpanan)
         {
-            $listSimpanan = $listSimpanan->where('jenis_simpan',$request->jenis_simpanan);
+            $listSimpanan = $listSimpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
         }
         // $listSimpanan = $listSimpanan->get();
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->take(5)->get();
+        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->get();
 
         // share data to view
         view()->share('listSimpanan',$listSimpanan);

@@ -225,7 +225,7 @@
     function updateSelect2()
     {
         // Fetch the preselected item, and add to the control
-        var challengeSelect = $('#jenisSimnpanan');
+        var challengeSelect = $('#jenisSimpanan');
         $.ajax({
             type: 'GET',
             url: '{{ route('jenis-simpanan-search') }}' + '/' +'{{ $request->jenis_simpanan }}'
