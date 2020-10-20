@@ -168,6 +168,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -176,7 +177,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
+        App\Providers\NavigationServiceProvider::class,
 
     ],
 

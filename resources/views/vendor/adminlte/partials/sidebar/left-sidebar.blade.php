@@ -23,5 +23,8 @@
             </ul>
         </nav>
     </div>
-
+    <div class="px-3 pb-3 text-white">
+        <hr style="border-color: #fff">
+        {!! $settings[COMPANY_SETTING_ADDRESS] !!}
+    </div>
 </aside>
