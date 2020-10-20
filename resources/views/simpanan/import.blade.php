@@ -32,6 +32,9 @@
             <div class="card-body">
                 <form action="{{ route('simpanan-import-excel') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <div class="form-group">
+                        <a href="{{ asset('template-excel/template-simpanan.csv') }}">Download Template Excel Here</a>
+                    </div>
                     <div class="form-group ">
                         <label>Choose File</label><br>
                         <input type="file" name="file" id="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"><br>

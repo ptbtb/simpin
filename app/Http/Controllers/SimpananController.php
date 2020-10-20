@@ -36,14 +36,23 @@ class SimpananController extends Controller
     {
         $this->authorize('view simpanan', Auth::user());
         $simpanan = Simpanan::with('anggota');
-        
-        if ($request->from)
+        if ($request->from || $request->to)
         {
-            $simpanan = $simpanan->where('tgl_entri','>=', $request->from);
+            if ($request->from)
+            {
+                $simpanan = $simpanan->where('tgl_entri','>=', $request->from);
+            }
+            if ($request->to)
+            {
+                $simpanan = $simpanan->where('tgl_entri','<=', $request->to);
+            }
         }
-        if ($request->to)
+        else
         {
-            $simpanan = $simpanan->where('tgl_entri','<=', $request->to);
+            $from = Carbon::now()->addDays(-30)->format('Y-m-d');
+            $to = Carbon::now()->format('Y-m-d');
+            $simpanan = $simpanan->where('tgl_entri','>=', $from)
+                                ->where('tgl_entri','<=', $to);
         }
         if ($request->jenis_simpanan)
         {
@@ -180,13 +189,23 @@ class SimpananController extends Controller
             $listSimpanan = Simpanan::with('anggota');
         }
 
-        if ($request->from)
+        if ($request->from || $request->to)
         {
-            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $request->from);
+            if ($request->from)
+            {
+                $listSimpanan = $listSimpanan->where('tgl_entri','>=', $request->from);
+            }
+            if ($request->to)
+            {
+                $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
+            }
         }
-        if ($request->to)
+        else
         {
-            $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
+            $from = Carbon::now()->addDays(-30)->format('Y-m-d');
+            $to = Carbon::now()->format('Y-m-d');
+            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $from)
+                                        ->where('tgl_entri','<=', $to);
         }
         $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc');
         return DataTables::eloquent($listSimpanan)->make(true);
@@ -212,13 +231,23 @@ class SimpananController extends Controller
             $listSimpanan = Simpanan::with('anggota');
         }
 
-        if ($request->from)
+        if ($request->from || $request->to)
         {
-            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $request->from);
+            if ($request->from)
+            {
+                $listSimpanan = $listSimpanan->where('tgl_entri','>=', $request->from);
+            }
+            if ($request->to)
+            {
+                $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
+            }
         }
-        if ($request->to)
+        else
         {
-            $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
+            $from = Carbon::now()->addDays(-30)->format('Y-m-d');
+            $to = Carbon::now()->format('Y-m-d');
+            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $from)
+                                        ->where('tgl_entri','<=', $to);
         }
         if ($request->jenis_simpanan)
         {

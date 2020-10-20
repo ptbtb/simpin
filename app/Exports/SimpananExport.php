@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Simpanan;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Http\Request;
@@ -21,13 +22,23 @@ class SimpananExport implements FromView
         {
             $listSimpanan = $listSimpanan->where('kode_anggota', $this->request->anggota->kode_anggota);
         }
-        if ($this->request->from)
+        if ($this->request->from || $this->request->to)
         {
-            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $this->request->from);
+            if ($this->request->from)
+            {
+                $listSimpanan = $listSimpanan->where('tgl_entri','>=', $this->request->from);
+            }
+            if ($this->request->to)
+            {
+                $listSimpanan = $listSimpanan->where('tgl_entri','<=', $this->request->to);
+            }
         }
-        if ($this->request->to)
+        else
         {
-            $listSimpanan = $listSimpanan->where('tgl_entri','<=', $this->request->to);
+            $from = Carbon::now()->addDays(-30)->format('Y-m-d');
+            $to = Carbon::now()->format('Y-m-d');
+            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $from)
+                                        ->where('tgl_entri','<=', $to);
         }
         if ($this->request->jenis_simpanan)
         {
