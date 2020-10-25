@@ -236,7 +236,7 @@ return [
                     'url' => '/user/list',
                     'icon' => 'fa fa-user nav-icon',
                     'can'  => ['view user'],
-                    'active' => ['/user/list', '/user/create', 'regex:@^user/edit/[0-9]+$@'],
+                    'active' => ['/user/list', '/user/create','/user/import/excel', 'regex:@^user/edit/[0-9]+$@'],
                 ],
                 [
                     'text' => 'Anggota',

@@ -12,8 +12,8 @@
 	<div class="col-6">
 		<ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="">Simpanan</a></li>
-			<li class="breadcrumb-item active">Import Transaksi</li>
+            <li class="breadcrumb-item"><a href="">User</a></li>
+			<li class="breadcrumb-item active">Import User</li>
 		</ol>
 	</div>
 </div>
@@ -30,10 +30,10 @@
                 <label>Upload Excel File</label>
             </div>
             <div class="card-body">
-                <form action="{{ route('simpanan-import-excel') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('user-import-excel') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <a href="{{ asset('template-excel/template-simpanan.xlsx') }}">Download Template Excel Here</a>
+                        <a href="{{ asset('template-excel/user-template.xlsx') }}">Download Template Excel Here</a>
                     </div>
                     <div class="form-group ">
                         <label>Choose File</label><br>

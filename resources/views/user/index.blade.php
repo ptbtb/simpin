@@ -55,11 +55,14 @@
         </div>
     @endcan
     <div class="card">
-        @can('add user')
-            <div class="card-header text-right">
+        <div class="card-header text-right">
+            @can('add user')
                 <a href="{{ route('user-create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add User</a>
-            </div>
-        @endcan
+            @endcan
+            @can('import user')
+                <a href="{{ route('user-import-excel') }}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> Import User</a>
+            @endcan
+        </div>
         <div class="card-body table-responsive">
             <table class="table table-striped">
                 <thead>

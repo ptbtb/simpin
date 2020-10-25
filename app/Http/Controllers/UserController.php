@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\User\UserCreated;
+use App\Imports\UserImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -14,6 +15,7 @@ use App\Models\Anggota;
 use Auth;
 use Carbon\Carbon;
 use Storage;
+use Excel;
 // use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -331,4 +333,27 @@ class UserController extends Controller
 			return redirect()->back()->withError($message);
 		}
 	}
+
+	public function importExcel()
+	{
+		$this->authorize('import user', Auth::user());
+        $data['title'] = 'Import User';
+        return view('user.import', $data);
+	}
+
+	public function storeImportExcel(Request $request)
+    {
+        $this->authorize('import user', Auth::user());
+        try
+        {
+            Excel::import(new UserImport, $request->file);
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
+        
+    }
 }

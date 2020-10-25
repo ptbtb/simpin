@@ -115,7 +115,10 @@ Route::group(['prefix' => 'user'], function ()
         Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');
         
         Route::get('change-password', [App\Http\Controllers\UserController::class, 'changePassword'])->name('user-change-password');
-		Route::post('change-password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('user-change-password');
+        Route::post('change-password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('user-change-password');
+        
+        Route::get('import/excel', [App\Http\Controllers\UserController::class, 'importExcel'])->name('user-import-excel');
+        Route::post('import/excel', [App\Http\Controllers\UserController::class, 'storeImportExcel'])->name('user-import-excel');
 	});
 });
 
