@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Events\Penarikan\PenarikanCreated;
 use App\Exports\PenarikanExport;
+use App\Imports\PenarikanImport;
 use App\Managers\PenarikanManager;
 use App\Models\Anggota;
 use App\Models\Penarikan;
@@ -199,5 +200,26 @@ class PenarikanController extends Controller
         $this->authorize('view history penarikan', $user);
         $filename = 'export_transaksi_excel_'.Carbon::now()->format('d M Y').'.xlsx';
         return Excel::download(new PenarikanExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function importExcel()
+    {
+        $data['title'] = 'Import Transaksi Penarikan';
+		return view('penarikan.import', $data);
+    }
+
+    public function storeImportExcel(Request $request)
+    {
+        $this->authorize('import penarikan', Auth::user());
+        try
+        {
+            Excel::import(new PenarikanImport, $request->file);
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
     }
 }

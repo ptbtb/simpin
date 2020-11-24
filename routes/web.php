@@ -207,5 +207,7 @@ Route::group(['prefix' => 'penarikan'], function ()
         Route::get('anggota/detail/{id}', [App\Http\Controllers\PenarikanController::class, 'detailAnggota'])->where('id', '[0-9]+')->name('penarikan-detail-anggota');
         Route::get('download/pdf', [App\Http\Controllers\PenarikanController::class, 'createPDF'])->name('penarikan-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\PenarikanController::class, 'createExcel'])->name('penarikan-download-excel');
+        Route::get('import/excel', [App\Http\Controllers\PenarikanController::class, 'importExcel'])->name('penarikan-import-excel');
+        Route::post('import/excel', [App\Http\Controllers\PenarikanController::class, 'storeImportExcel'])->name('penarikan-import-excel');
 	});
 });

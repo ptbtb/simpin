@@ -280,13 +280,19 @@ return [
                 ],
             ],
         ],
-        ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan']],
+        ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan','import penarikan']],
         [
             'text' => 'Penarikan',
             'icon' => 'fas fa-exchange-alt nav-icon',
             'can'  => ['add penarikan', 'view history penarikan'],
-            'active' => ['/penarikan/history', '/penarikan/create'],
+            'active' => ['/penarikan/history', '/penarikan/create','/penarikan/import/excel'],
             'submenu' => [
+                [
+                    'text' => 'Import Data Penarikan',
+                    'url' => '/penarikan/import/excel',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import penarikan'],
+                ],
                 [
                     'text' => 'History Penarikan',
                     'url' => '/penarikan/history',
