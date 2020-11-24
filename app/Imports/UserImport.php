@@ -26,7 +26,7 @@ class UserImport implements OnEachRow
         $fields = [
             'kode_anggota' => $row[0],
             'name' => $row[1],
-            'email' => str_replace(' ', '', $row[2]),
+            'email' => trim($row[2]),
             'password' => Hash::make($password),
         ];
         
