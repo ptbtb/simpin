@@ -26,10 +26,17 @@ class UserImport implements OnEachRow
         $fields = [
             'kode_anggota' => $row[0],
             'name' => $row[1],
-            'email' => $row[2],
+            'email' => str_replace(' ', '', $row[2]),
             'password' => Hash::make($password),
         ];
-
+        
+        // if user is excist, next
+        $user = User::where('email',$fields['email'])->first();
+        if ($user)
+        {
+            return null;
+        }
+        
         $user = User::create($fields);
         $role = Role::where('id',ROLE_ANGGOTA)->first();
         $user->assignRole($role->name);
