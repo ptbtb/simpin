@@ -119,6 +119,7 @@ Route::group(['prefix' => 'user'], function ()
         
         Route::get('import/excel', [App\Http\Controllers\UserController::class, 'importExcel'])->name('user-import-excel');
         Route::post('import/excel', [App\Http\Controllers\UserController::class, 'storeImportExcel'])->name('user-import-excel');
+        Route::get('download/excel', [App\Http\Controllers\UserController::class, 'createExcel'])->name('user-download-excel');
 	});
 });
 

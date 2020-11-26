@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Spatie\Permission\Models\Role;
+use Auth;
 
 class UserImport implements OnEachRow
 {
@@ -28,6 +29,7 @@ class UserImport implements OnEachRow
             'name' => $row[1],
             'email' => trim($row[2]),
             'password' => Hash::make($password),
+            'created_by' => Auth::user()->id
         ];
         
         // if user is excist, next

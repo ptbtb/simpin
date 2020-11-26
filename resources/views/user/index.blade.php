@@ -62,6 +62,9 @@
             @can('import user')
                 <a href="{{ route('user-import-excel') }}" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> Import User</a>
             @endcan
+            @can('export user')
+                <a href="{{ route('user-download-excel', $request->all()) }}" class="btn btn-warning btn-sm"><i class="fa fa-download"></i> Export to Excel</a>
+            @endcan
         </div>
         <div class="card-body table-responsive">
             <table class="table table-striped">

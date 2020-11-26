@@ -22,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'kode_anggota'
+        'name', 'email', 'password', 'kode_anggota', 'created_by'
     ];
 
     /**
@@ -82,6 +82,11 @@ class User extends Authenticatable
     public function anggota()
     {
         return $this->belongsTo(Anggota::class, 'kode_anggota', 'kode_anggota');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function isAnggota()

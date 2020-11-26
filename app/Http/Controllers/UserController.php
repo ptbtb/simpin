@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\User\UserCreated;
+use App\Exports\UserExport;
 use App\Imports\UserImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -112,6 +113,7 @@ class UserController extends Controller
 				$user->name = $request->name;
 			}
 			$user->password = Hash::make($request->password);
+			$user->created_by = Auth::user()->id;
 			$user->save();
 
 			$file = $request->photo;
@@ -355,5 +357,13 @@ class UserController extends Controller
             return redirect()->back()->withError('Gagal import data');
         }
         
+	}
+	
+	public function createExcel(Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('export user', $user);
+        $filename = 'export_user_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+        return Excel::download(new UserExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 }
