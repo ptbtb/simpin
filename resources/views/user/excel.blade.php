@@ -22,6 +22,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Lokasi Kerja</th>
                 <th>Created By</th>
                 <th>Cretaed At</th>
             </tr>
@@ -32,12 +33,23 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->roles->first()->name }}</td>
+                    <td>
+                        @if ($user->roles()->first())
+                            {{ $user->roles->first()->name }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>
                         @if ($user->creator)
                             {{ $user->creator->name }}
                         @else
                             -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($user->anggota)
+                            {{ $user->anggota->lokasi_kerja }}
                         @endif
                     </td>
                     <td>{{ $user->created_at->toDateTimeString() }}</td>
