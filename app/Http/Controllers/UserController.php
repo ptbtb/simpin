@@ -361,9 +361,17 @@ class UserController extends Controller
 	
 	public function createExcel(Request $request)
     {
-        $user = Auth::user();
-        $this->authorize('export user', $user);
-        $filename = 'export_user_excel_'.Carbon::now()->format('d M Y').'.xlsx';
-        return Excel::download(new UserExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+        try
+        {
+			$user = Auth::user();
+			$this->authorize('export user', $user);
+			$filename = 'export_user_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+			return Excel::download(new UserExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Gagal Export data');
+        }
     }
 }
