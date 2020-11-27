@@ -48,7 +48,10 @@ Route::group(['prefix' => 'anggota'], function ()
         Route::get('ajax/search/{id}', [App\Http\Controllers\AnggotaController::class, 'searchId'])->where('id', '[0-9]+')->name('anggota-ajax-searchid');
 
         Route::get('download/pdf', [App\Http\Controllers\AnggotaController::class, 'createPDF'])->name('anggota-download-pdf');
-        Route::get('download/excel', [App\Http\Controllers\AnggotaController::class, 'createExcel'])->name('anggota-download-excel');
+        Route::get('download/excel', [App\Http\Controllers\AnggotaController::class, 'createExcel'])->name('anggota-download-excel');        
+
+        Route::get('import/excel', [App\Http\Controllers\AnggotaController::class, 'importExcel'])->name('anggota-import-excel');
+        Route::post('import/excel', [App\Http\Controllers\AnggotaController::class, 'storeImportExcel'])->name('anggota-import-excel');
     });
 });
 

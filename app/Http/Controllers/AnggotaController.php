@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Exports\AnggotaExport;
-
+use App\Imports\AnggotaImport;
 use App\Models\Anggota;
 use App\Models\JenisAnggota;
 
@@ -71,7 +71,7 @@ class AnggotaController extends Controller {
                 $Anggota = Anggota::create([
                     'kode_anggota' => $request->kode_anggota,
                     'kode_tabungan' => $request->kode_anggota,
-                    'id_jenis_anggota' => $request->jensi_anggota,
+                    'id_jenis_anggota' => $request->jenis_anggota,
                     'tgl_masuk' => $request->tgl_masuk,
                     'nama_anggota' => $request->nama_anggota,
                     'jenis_kelamin' => $request->jenis_kelamin,
@@ -206,4 +206,26 @@ class AnggotaController extends Controller {
         $filename = 'export_anggota_excel_'.Carbon::now()->format('d M Y').'.xlsx';
         return Excel::download(new AnggotaExport($request), $filename);
     }
+
+	public function importExcel()
+	{
+		$this->authorize('import anggota', Auth::user());
+        $data['title'] = 'Import Anggota';
+        return view('anggota.import', $data);
+	}
+
+	public function storeImportExcel(Request $request)
+    {
+        $this->authorize('import anggota', Auth::user());
+        try
+        {
+            Excel::import(new AnggotaImport, $request->file);
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
+	}
 }

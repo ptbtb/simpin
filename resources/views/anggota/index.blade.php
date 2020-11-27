@@ -60,7 +60,12 @@
         <div class="card-header text-right">
             <a href="{{ route('anggota-download-excel', $request->all()) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download Excel</a>
             <a href="{{ route('anggota-download-pdf', $request->all()) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
-            <a href="{{ route('anggota-create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Anggota</a>
+            @can('import anggota')
+                <a href="{{ route('anggota-import-excel') }}" class="btn btn-warning btn-sm"><i class="fa fa-upload"></i> Import Anggota</a>
+            @endcan
+            @can('add anggota')
+                <a href="{{ route('anggota-create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Anggota</a>
+            @endcan
         </div>
     @endcan
     <div class="card-body table-reponseive">
