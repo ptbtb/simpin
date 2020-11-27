@@ -41,15 +41,15 @@
                         @endif
                     </td>
                     <td>
+                        @if ($user->anggota)
+                            {{ $user->anggota->lokasi_kerja }}
+                        @endif
+                    </td>
+                    <td>
                         @if ($user->creator)
                             {{ $user->creator->name }}
                         @else
                             -
-                        @endif
-                    </td>
-                    <td>
-                        @if ($user->anggota)
-                            {{ $user->anggota->lokasi_kerja }}
                         @endif
                     </td>
                     <td>{{ $user->created_at->toDateTimeString() }}</td>
