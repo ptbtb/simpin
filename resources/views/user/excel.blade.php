@@ -19,7 +19,8 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Name</th>
+                <th>No Anggota</th>
+                <th>Nama</th>
                 <th>Email</th>
                 <th>Role</th>
                 <th>Lokasi Kerja</th>
@@ -31,6 +32,13 @@
             @foreach ($users as $user)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>
+                        @if ($user->anggota)
+                            {{ $user->anggota->kode_anggota }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
@@ -43,6 +51,8 @@
                     <td>
                         @if ($user->anggota)
                             {{ $user->anggota->lokasi_kerja }}
+                        @else
+                            -
                         @endif
                     </td>
                     <td>

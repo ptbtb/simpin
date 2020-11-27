@@ -7,6 +7,8 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Http\Request;
 
+use Auth;
+
 class UserExport implements FromView
 {
     public function __construct(Request $request)
@@ -16,6 +18,7 @@ class UserExport implements FromView
 
     public function view(): View
     {
+        $currentUser = Auth::user();
         $users = User::with('anggota');
         if ($this->request->role_id)
         {
@@ -25,6 +28,14 @@ class UserExport implements FromView
 				return $query->where('id', $roleId);
 			});
         }
+
+        if (!$currentUser->hasRole('Admin'))
+		{
+			$users = $users->whereHas('roles', function ($query)
+			{
+				return $query->where('id', ROLE_ANGGOTA);
+			});
+		}
 
         $users = $users->get();
         return view('user.excel', [
