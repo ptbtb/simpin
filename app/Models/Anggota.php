@@ -14,7 +14,7 @@ class Anggota extends Model
     protected $appends = ['kode_anggota_prefix'];
     public $incrementing = false;
     protected $fillable = ['kode_anggota',
-        'kode_tabungan',
+        // 'kode_tabungan',
         'tgl_masuk',
         'nama_anggota',
         'tempat_lahir',

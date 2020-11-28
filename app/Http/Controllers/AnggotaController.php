@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Anggota\AnggotaCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -66,11 +67,21 @@ class AnggotaController extends Controller {
         $this->authorize('add anggota', Auth::user());
         try
         {
+            $anggota = Anggota::where('email',$request->email)
+                            ->orWhere('kode_anggota', $request->kode_anggota)
+                            ->first();
+
+            if ($anggota)
+            {
+                $message = "Gagal menambahkan anggota. Email atau kode anggota sudah pernah terdaftar dalam sistem";
+                return redirect()->back()->withError($message);
+            }
+
             DB::transaction(function () use ($request)
             {
-                $Anggota = Anggota::create([
+                $anggota = Anggota::create([
                     'kode_anggota' => $request->kode_anggota,
-                    'kode_tabungan' => $request->kode_anggota,
+                    // 'kode_tabungan' =>  $request->kode_anggota,
                     'id_jenis_anggota' => $request->jenis_anggota,
                     'tgl_masuk' => $request->tgl_masuk,
                     'nama_anggota' => $request->nama_anggota,
@@ -88,6 +99,8 @@ class AnggotaController extends Controller {
                     'emergency_kontak' => $request->emergency_kontak,
                     'status' => 'aktif',
                 ]);
+
+                event(new AnggotaCreated($anggota));
             });
             // alihkan halaman tambah buku ke halaman books
 

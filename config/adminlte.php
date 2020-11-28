@@ -242,7 +242,7 @@ return [
                     'text' => 'Anggota',
                     'url' => '/anggota/list',
                     'icon' => 'fa fa-users nav-icon',
-                    'active' => ['/anggota/list', '/anggota/create', 'regex:@^anggota/edit/[0-9]+$@'],
+                    'active' => ['/anggota/list', '/anggota/create', '/anggota/import/excel', 'regex:@^anggota/edit/[0-9]+$@'],
                     'can'  => ['view anggota'],
                 ],
             ],

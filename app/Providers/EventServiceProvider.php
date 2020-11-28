@@ -27,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Pinjaman\PinjamanCreated' => [
             'App\Listeners\AngsuranListener@onPinjamanCreated',
         ],
+        'App\Events\Anggota\AnggotaCreated' => [
+            'App\Listeners\TabunganListener@onAnggotaCreated',
+        ],
     ];
 
     /**

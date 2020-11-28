@@ -31,7 +31,8 @@
 								{{-- <div class="col-md-6"> --}}
 									<div class="col-md-12 form-group">
 										<label>Kode Anggota</label>
-										<input type="text" name="kode_anggota" class="form-control" size="54px" value="{{$nomer}}" readonly title="Kode harus diisi" />
+										{{-- <input type="text" name="kode_anggota" class="form-control" size="54px" value="{{$nomer}}" readonly title="Kode harus diisi" /> --}}
+										<input type="number" name="kode_anggota" class="form-control" size="54px" placeholder="kode_anggota" title="Kode harus diisi" />
 									</div>
 									<div class="col-md-6 form-group">
 										<label>Jenis Anggota</label>
