@@ -54,15 +54,14 @@ class AnggotaImport implements OnEachRow
         ];
         
         // if email or nipp is excist, next
-        $anggota = Anggota::where('email',$fields['email'])
-                            ->orWhere('kode_anggota', $fields['kode_anggota'])
+        $anggota = Anggota::where('kode_anggota', $fields['kode_anggota'])
                             ->first();
 
         if ($anggota)
         {
             return null;
         }
-        
+
         $anggota = Anggota::create($fields);
 
         event(new AnggotaCreated($anggota));
