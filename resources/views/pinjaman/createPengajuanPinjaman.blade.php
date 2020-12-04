@@ -81,8 +81,16 @@
 
 @section('js')
     <script src="{{ asset('js/collect.min.js') }}"></script>
+    <script src="{{ asset('js/cleave.min.js') }}"></script>
     <script>
         var jenisPinjaman = collect({!!$listJenisPinjaman!!});
+
+        var cleave = new Cleave('#besarPinjaman', {
+			numeral: true,
+			prefix: 'Rp ',
+			noImmediatePrefix: true,
+			numeralThousandsGroupStyle: 'thousand'
+		});
 
         $(document).ready(function ()
         {
@@ -104,7 +112,7 @@
             var selectedJenisPinjaman = jenisPinjaman.where('kode_jenis_pinjam',id).first();
             $('#lamaAngsuran').val(selectedJenisPinjaman.lama_angsuran);
             // $('#bunga').val(selectedJenisPinjaman.bunga);
-            $('#maksimalBesarPinjaman').val(selectedJenisPinjaman.maks_pinjam);
+            $('#maksimalBesarPinjaman').val(toRupiah(selectedJenisPinjaman.maks_pinjam));
         }
 
         $('#besarPinjaman').on('keyup', function ()
@@ -133,6 +141,23 @@
                 }
             }
         });
+
+        function toRupiah(number)
+        {
+            var stringNumber = number.toString();
+            var length = stringNumber.length;
+            var temp = length;
+            var res = "Rp ";
+            for (let i = 0; i < length; i++) {
+                res = res + stringNumber.charAt(i);
+                temp--;
+                if (temp%3 == 0 && temp > 0)
+                {
+                    res = res + ".";
+                }
+            }
+            return res;
+        }
 
         function updateAngsuran(idJenisPinjaman, besarPinjaman) {
             var jPinjaman = jenisPinjaman.where('kode_jenis_pinjam',idJenisPinjaman).first();

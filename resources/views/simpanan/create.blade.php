@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="besarSimpanan">Besar Simpanan</label>
-                    <input type="text" name="besar_simpanan" id="besarSimpanan" class="form-control" placeholder="Besar Simpanan" autocomplete="off" required>
+                    <input type="text" name="besar_simpanan" id="besarSimpanan" onkeypress="return isNumberKey(event)"  class="form-control" placeholder="Besar Simpanan" autocomplete="off" required >
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="kodeAnggota">Anggota</label>
@@ -118,24 +118,45 @@
         {
             $('#besarSimpanan').val('');
             $('#besarSimpanan').attr('readonly',false);
-            // var cleave = new Cleave('#besarSimpanan', {
-            //     numeral: true,
-            //     prefix: 'Rp ',
-            //     noImmediatePrefix: true,
-            //     numeralThousandsGroupStyle: 'thousand'
-            // });
         }
         else
         {
-            $('#besarSimpanan').val(besarSimpanan);
-            // var cleave = new Cleave('#besarSimpanan', {
-            //     numeral: true,
-            //     prefix: 'Rp ',
-            //     noImmediatePrefix: true,
-            //     numeralThousandsGroupStyle: 'thousand'
-            // });
+            $('#besarSimpanan').val(toRupiah(besarSimpanan));
             $('#besarSimpanan').attr('readonly',true);
         }
     });
+
+    $('#besarSimpanan').on('keyup', function ()
+    {
+        var besarSimpanan = $(this).val().toString();
+        besarSimpanan = besarSimpanan.replace(/[^\d]/g, "",'');
+        $('#besarSimpanan').val(toRupiah(besarSimpanan));
+    });
+
+    function toRupiah(number)
+    {
+        var stringNumber = number.toString();
+        var length = stringNumber.length;
+        var temp = length;
+        var res = "Rp ";
+        for (let i = 0; i < length; i++) {
+            res = res + stringNumber.charAt(i);
+            temp--;
+            if (temp%3 == 0 && temp > 0)
+            {
+                res = res + ".";
+            }
+        }
+        return res;
+    }
+
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+
+        return true;
+    }
 </script>
 @stop

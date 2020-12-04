@@ -212,19 +212,22 @@ class PinjamanController extends Controller
     {
         $user = Auth::user();
         $this->authorize('add pengajuan pinjaman', $user);
+        
+        $besarPinjaman = filter_var($request->besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
+        $maksimalPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
 
-        if ($request->maksimal_besar_pinjaman < $request->besar_pinjaman)
+        if ($maksimalPinjaman < $besarPinjaman)
         {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas maksimal peminjaman.');
         }
 
-        DB::transaction(function () use ($request)
+        DB::transaction(function () use ($request, $besarPinjaman)
         {
             $pengajuan = new Pengajuan();
             $pengajuan->tgl_pengajuan = Carbon::now();
             $pengajuan->kode_anggota = $request->kode_anggota;
             $pengajuan->kode_jenis_pinjam = $request->jenis_pinjaman;
-            $pengajuan->besar_pinjam = $request->besar_pinjaman;
+            $pengajuan->besar_pinjam = $besarPinjaman;
             $pengajuan->status = 'submited';
             $pengajuan->save(); 
         });

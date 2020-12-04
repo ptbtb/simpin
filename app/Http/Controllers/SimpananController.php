@@ -95,7 +95,7 @@ class SimpananController extends Controller
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
 
-            $besarSimpanan = $request->besar_simpanan;
+            $besarSimpanan = filter_var($request->besar_simpanan, FILTER_SANITIZE_NUMBER_INT);
             $jenisSimpanan = JenisSimpanan::find($request->jenis_simpanan);
 
             $simpanan = new Simpanan();
