@@ -12,38 +12,30 @@
         <thead>
             <tr>
                 <th>No</th>
-                @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
-                    <th>Nama Anggota</th>
-                    <th>Nomor Anggota</th>
-                @endif
                 <th>Jenis Simpanan</th>
                 <th>Besar Simpanan</th>
+                <th>Kode Anggota</th>
+                <th>User Entry</th>
                 <th>Tanggal Mulai</th>
-                <th>Tanggal Entry</th>
+                <th>Tanggal Entri</th>
+                <th>Kode Jenis Simpan</th>
+                <th>Keterangan</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($listSimpanan as $simpanan)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
-                        <td>
-                            @if ($simpanan->anggota)
-                                {{ $simpanan->anggota->nama_anggota }}
-                            @else
-                                -
-                            @endif
-                        </td>
-                        <td>
-                            @if ($simpanan->anggota)
-                                {{ $simpanan->anggota->kode_anggota }}
-                            @else
-                                -
-                            @endif
-                        </td>
-                    @endif
                     <td>{{ $simpanan->jenis_simpan }}</td>
                     <td>Rp. {{ number_format($simpanan->besar_simpanan,0,",",".") }}</td>
+                    <td>
+                        @if ($simpanan->tgl_mulai)
+                            {{ $simpanan->tgl_mulai->format('d M Y') }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>{{ $simpanan->kode_anggota }}</td>
+                    <td>{{ $simpanan->u_entry }}</td>
                     <td>
                         @if ($simpanan->tgl_mulai)
                             {{ $simpanan->tgl_mulai->format('d M Y') }}
@@ -54,6 +46,14 @@
                     <td>
                         @if ($simpanan->tgl_entri)
                             {{ $simpanan->tgl_entri->format('d M Y') }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>{{ $simpanan->kode_jenis_simpan }}</td>
+                    <td>
+                        @if ($simpanan->keterangan)
+                            {{ $simpanan->keterangan }}
                         @else
                             -
                         @endif

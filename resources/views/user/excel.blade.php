@@ -19,13 +19,9 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>No Anggota</th>
+                <th>Kode Anggota</th>
                 <th>Nama</th>
                 <th>Email</th>
-                <th>Role</th>
-                <th>Lokasi Kerja</th>
-                <th>Created By</th>
-                <th>Cretaed At</th>
             </tr>
         </thead>
         <tbody>
@@ -41,28 +37,6 @@
                     </td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>
-                        @if ($user->roles()->first())
-                            {{ $user->roles->first()->name }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>
-                        @if ($user->anggota)
-                            {{ $user->anggota->lokasi_kerja }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>
-                        @if ($user->creator)
-                            {{ $user->creator->name }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>{{ $user->created_at->toDateTimeString() }}</td>
                 </tr>
                 @if ($loop->iteration % 20 == 0)
                     <div class="page-break"></div>

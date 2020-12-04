@@ -13,18 +13,24 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Anggota</th>
-                    <th>Tanggal Penarikan</th>
-                    <th>Besar Penarikan</th>
+                    <th>Kode Anggota</th>
+                    <th>Kode Tabungan</th>
+                    <th>Besar Ambil</th>
+                    <th>Tanggal Ambil</th>
+                    <th>Keterangan</th>
+                    <th>Kode Transaksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($listPenarikan as $penarikan)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $penarikan->anggota->nama_anggota }}</td>
-                        <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
+                        <td>{{ $penarikan->anggota->kode_anggota }}</td>
+                        <td>{{ $penarikan->anggota->tabungan->kode_tabungan }}</td>
                         <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
+                        <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
+                        <td>{{ $penarikan->keterangan }}</td>
+                        <td>{{ $penarikan->code_trans }}</td>
                     </tr>
                 @endforeach
             </tbody> 

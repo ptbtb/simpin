@@ -19,12 +19,22 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>No Anggota</th>
+                <th>Kode Anggota</th>
+                <th>Kode Tabungan</th>
+                <th>Jenis Anggota</th>
                 <th>NIPP</th>
                 <th>Nama Anggota</th>
-                <th>Jenis Anggota</th>
+                <th>Tempat Lahir</th>
                 <th>Tanggal Lahir</th>
-                <th>Pekerjaan</th>
+                <th>Jenis Kelamin</th>
+                <th>Alamat Anggota</th>
+                <th>KTP</th>
+                <th>Lokasi Kerja</th>
+                <th>Tanggal Masuk</th>
+                <th>Email</th>
+                <th>No Telepon</th>
+                <th>Emergency Kontak</th>
+                <th>No Rekening</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -33,8 +43,13 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $anggota->kode_anggota }}</td>
-                    <td>{{ $anggota->nipp }}</td>
-                    <td>{{ $anggota->nama_anggota }}</td>
+                    <td>
+                        @if ($anggota->tabungan)
+                            {{ $anggota->tabungan->kode_tabungan }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>
                         @if ($anggota->jenisAnggota && $anggota->jenisAnggota->nama_jenis_anggota)
                             {{ $anggota->jenisAnggota->nama_jenis_anggota }}
@@ -42,8 +57,19 @@
                             -
                         @endif
                     </td>
+                    <td>{{ $anggota->nipp }}</td>
+                    <td>{{ $anggota->nama_anggota }}</td>
+                    <td>{{ $anggota->tempat_lahir }}</td>
                     <td>{{ $anggota->tgl_lahir }}</td>
+                    <td>{{ $anggota->jenis_kelamin }}</td>
+                    <td>{{ $anggota->alamat_anggota }}</td>
+                    <td>{{ $anggota->ktp."" }}</td>
                     <td>{{ $anggota->lokasi_kerja }}</td>
+                    <td>{{ $anggota->tgl_masuk }}</td>
+                    <td>{{ $anggota->email }}</td>
+                    <td>{{ $anggota->telp }}</td>
+                    <td>{{ $anggota->emergency_kontak }}</td>
+                    <td>{{ $anggota->no_rek }}</td>
                     <td>{{ $anggota->status }}</td>
                 </tr>
                 @if ($loop->iteration % 20 == 0)
