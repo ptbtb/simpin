@@ -27,14 +27,14 @@
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner" style="min-height: 123px;">
-                            <h3 style="font-size: 1.5rem">Rp. {{ number_format($saldo->jumlah,0,",",".") }}</h3>
+                            <h3 style="font-size: 1.5rem"><a href="{{ route('simpanan-index-card') }}" class="link-dashboard">Rp. {{ number_format($saldo->jumlah,0,",",".") }}</a></h3>
 
                             <p class="font-weight-bold">Saldo </p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-money-check-alt"></i>
                         </div>
-                        <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('simpanan-index-card') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">

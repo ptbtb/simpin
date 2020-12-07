@@ -369,7 +369,7 @@ return [
                 ],
                 [
                     'text' => 'Kartu Simpanan',
-                    'url' => '/simpanan/card/index',
+                    'url' => '/simpanan/card',
                     'icon' => 'fas fa-clipboard nav-icon',
                     'can'  => ['kartu simpanan'],
                 ],
