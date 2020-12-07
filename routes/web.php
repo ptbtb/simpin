@@ -194,6 +194,14 @@ Route::group(['prefix' => 'simpanan'], function ()
         Route::get('download/excel', [App\Http\Controllers\SimpananController::class, 'createExcel'])->name('simpanan-download-excel');
         Route::get('import/excel', [App\Http\Controllers\SimpananController::class, 'importExcel'])->name('simpanan-import-excel');
         Route::post('import/excel', [App\Http\Controllers\SimpananController::class, 'storeImportExcel'])->name('simpanan-import-excel');
+
+        Route::group(['prefix' => 'card'], function ()
+        {
+            Route::get('index', [App\Http\Controllers\SimpananController::class, 'indexCard'])->name('simpanan-index-card'); 
+            Route::get('view/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'showCard'])->name('simpanan-show-card'); 
+            Route::get('download/pdf/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadPDFCard'])->name('simpanan-download-pdf-card'); 
+            Route::get('download/excel/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadExcelCard'])->name('simpanan-download-pdf-card'); 
+        });
     });
 });
 

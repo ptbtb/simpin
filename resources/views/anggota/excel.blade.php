@@ -44,8 +44,8 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $anggota->kode_anggota }}</td>
                     <td>
-                        @if ($anggota->tabungan)
-                            {{ $anggota->tabungan->kode_tabungan }}
+                        @if ($anggota->tabungan->count())
+                            {{ $anggota->tabungan->first()->kode_tabungan }}
                         @else
                             -
                         @endif

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KartuSimpananExport;
 use App\Exports\SimpananExport;
 use App\Imports\SimpananImport;
+use App\Models\Anggota;
 use App\Models\JenisSimpanan;
-use App\Models\KodeTransaksi;
+use App\Models\Penarikan;
 use App\Models\Simpanan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 use Auth;
 use Hash;
@@ -300,5 +301,225 @@ class SimpananController extends Controller
             return redirect()->back()->withError('Gagal import data');
         }
         
+    }
+
+    public function indexCard(Request $request)
+    {
+        try
+        {
+            $data['title'] = "Kartu Simpanan";
+            return view('simpanan.card.index', $data);
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Terjadi kesalahan sistem');
+        }
+    }
+
+    public function showCard($kodeAnggota)
+    {
+        try
+        {
+            // get anggota
+            $anggota = Anggota::with('tabungan')->findOrFail($kodeAnggota);
+
+            // get this year
+            $thisYear = Carbon::now()->year;
+
+            // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
+            $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
+                                    ->where('kode_anggota', $anggota->kode_anggota)
+                                    ->orderBy('tgl_entri','asc')
+                                    ->get();
+                                    
+            // data di grouping berdasarkan kode jenis simpan
+            $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
+
+            // kode_jenis_simpan yang wajib ada
+            $requiredKey = collect([JENIS_SIMPANAN_POKOK, JENIS_SIMPANAN_WAJIB, JENIS_SIMPANAN_SUKARELA]);
+
+            // set default value untuk key yang tidak ada
+            foreach ($requiredKey as $value)
+            {
+                if (!isset($groupedListSimpanan[$value]))
+                {
+                    $groupedListSimpanan[$value] = collect([]);
+                }
+            }
+
+            $simpananKeys = $groupedListSimpanan->keys();
+            $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
+                                        ->whereYear('tgl_ambil', $thisYear)
+                                        ->whereIn('code_trans', $simpananKeys)
+                                        ->orderBy('tgl_ambil', 'asc')
+                                        ->get();
+            /*
+                tiap jenis simpanan di bagi jadi 3 komponen
+                1. saldo akhir tahun tiap jenis simpanan
+                2. list simpanan untuk tiap jenis simpanan pada tahun ini
+                3. jumlah simpanan untuk tiap jenis simpanan pada tahun ini
+                4. nama jenis simpanan
+                5. total saldo akhir tiap jenis simpanan
+            */
+
+            $listSimpanan = [];
+            $index = count($requiredKey);
+            foreach ($groupedListSimpanan as $key => $list)
+            {
+                $jenisSimpanan = JenisSimpanan::find($key);
+                if ($jenisSimpanan)
+                {
+                    $tabungan = $anggota->tabungan->where('kode_trans',$key)->first();
+                    $res['name'] = $jenisSimpanan->nama_simpanan;
+                    $res['balance'] = ($tabungan)? $tabungan->besar_tabungan:0;
+                    $res['list'] = $list;
+                    $res['amount'] = $list->sum('besar_simpanan');
+                    $res['final_balance'] = $res['balance'] + $res['amount'];
+                    $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
+                    $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
+                    if ($key == JENIS_SIMPANAN_POKOK)
+                    {
+                        $listSimpanan[0] = (object)$res;
+                    }
+                    else if($key == JENIS_SIMPANAN_WAJIB)
+                    {
+                        $listSimpanan[1] = (object)$res;
+                    }
+                    else if($key == JENIS_SIMPANAN_SUKARELA)
+                    {
+                        $listSimpanan[2] = (object)$res;
+                    }
+                    else
+                    {
+                        $listSimpanan[$index] = (object)$res;
+                        $index++;
+                    }
+                }
+            }
+                                    
+            $data['anggota'] = $anggota;
+            $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
+            
+            return view('simpanan.card.detail', $data);
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Terjadi kesalahan sistem');
+        }
+    }
+
+    public function downloadPDFCard($kodeAnggota)
+    {
+        try
+        {
+            // get anggota
+            $anggota = Anggota::findOrFail($kodeAnggota);
+
+            // get this year
+            $thisYear = Carbon::now()->year;
+
+            // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
+            $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
+                                    ->where('kode_anggota', $anggota->kode_anggota)
+                                    ->orderBy('tgl_entri','asc')
+                                    ->get();
+                                    
+            // data di grouping berdasarkan kode jenis simpan
+            $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
+
+            // kode_jenis_simpan yang wajib ada
+            $requiredKey = collect([JENIS_SIMPANAN_POKOK, JENIS_SIMPANAN_WAJIB, JENIS_SIMPANAN_SUKARELA]);
+
+            // set default value untuk key yang tidak ada
+            foreach ($requiredKey as $value)
+            {
+                if (!isset($groupedListSimpanan[$value]))
+                {
+                    $groupedListSimpanan[$value] = collect([]);
+                }
+            }
+
+            $simpananKeys = $groupedListSimpanan->keys();
+            $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
+                                        ->whereYear('tgl_ambil', $thisYear)
+                                        ->whereIn('code_trans', $simpananKeys)
+                                        ->orderBy('tgl_ambil', 'asc')
+                                        ->get();
+            /*
+                tiap jenis simpanan di bagi jadi 3 komponen
+                1. saldo akhir tahun tiap jenis simpanan
+                2. list simpanan untuk tiap jenis simpanan pada tahun ini
+                3. jumlah simpanan untuk tiap jenis simpanan pada tahun ini
+                4. nama jenis simpanan
+                5. total saldo akhir tiap jenis simpanan
+            */
+
+            $listSimpanan = [];
+            $index = count($requiredKey);
+            foreach ($groupedListSimpanan as $key => $list)
+            {
+                $jenisSimpanan = JenisSimpanan::find($key);
+                if ($jenisSimpanan)
+                {
+                    $res['name'] = $jenisSimpanan->nama_simpanan;
+                    $res['balance'] = 5000000;
+                    $res['list'] = $list;
+                    $res['amount'] = $list->sum('besar_simpanan');
+                    $res['final_balance'] = $res['balance'] + $res['amount'];
+                    $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
+                    $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
+                    if ($key == JENIS_SIMPANAN_POKOK)
+                    {
+                        $listSimpanan[0] = (object)$res;
+                    }
+                    else if($key == JENIS_SIMPANAN_WAJIB)
+                    {
+                        $listSimpanan[1] = (object)$res;
+                    }
+                    else if($key == JENIS_SIMPANAN_SUKARELA)
+                    {
+                        $listSimpanan[2] = (object)$res;
+                    }
+                    else
+                    {
+                        $listSimpanan[$index] = (object)$res;
+                        $index++;
+                    }
+                }
+            }
+                                    
+            $data['anggota'] = $anggota;
+            $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
+            
+            // share data to view
+            view()->share('data',$data);
+            PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
+            $pdf = PDF::loadView('simpanan.card.export2', $data)->setPaper('a4', 'portrait');
+    
+            // download PDF file with download method
+            $filename = 'export_kartu_simpanan_'.Carbon::now()->format('d M Y').'.pdf';
+            return $pdf->download($filename);
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Terjadi kesalahan sistem');
+        }
+    }
+
+    public function downloadExcelCard($kodeAnggota)
+    {
+        try
+        {
+            $filename = 'export_kartu_simpanan_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+            return Excel::download(new KartuSimpananExport($kodeAnggota), $filename);
+        }
+        catch (\Throwable $th)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Terjadi kesalahan sistem');
+        }
     }
 }

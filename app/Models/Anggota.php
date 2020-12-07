@@ -13,6 +13,7 @@ class Anggota extends Model
     protected $primaryKey = 'kode_anggota';
     protected $appends = ['kode_anggota_prefix'];
     public $incrementing = false;
+    public $dates = ['tgl_lahir'];
     protected $fillable = ['kode_anggota',
         // 'kode_tabungan',
         'tgl_masuk',
@@ -43,7 +44,7 @@ class Anggota extends Model
 
     public function tabungan()
     {
-        return $this->hasOne(Tabungan::class, 'kode_anggota');
+        return $this->hasMany(Tabungan::class, 'kode_anggota');
     }
 
     public function listPinjaman()
@@ -54,6 +55,11 @@ class Anggota extends Model
     public function listPenarikan()
     {
         return $this->hasMany(Penarikan::class, 'kode_anggota');
+    }
+    
+    public function listSimpanan()
+    {
+        return $this->hasMany(Simpanan::class, 'kode_anggota');
     }
 
     public function getKodeAnggotaPrefixAttribute()

@@ -346,7 +346,7 @@ return [
             'text' => 'Simpanan',
             'url' => '/simpanan/',
             'icon' => 'fa fa-money-bill nav-icon',
-            'can'  => ['view simpanan','view history simpanan'],
+            'can'  => ['view simpanan','view history simpanan','kartu simpanan'],
             'submenu' => [
                 [
                     'text' => 'Import Data Simpanan',
@@ -366,6 +366,12 @@ return [
                     'url' => '/simpanan/history',
                     'icon' => 'fas fa-history nav-icon',
                     'can'  => ['view history simpanan'],
+                ],
+                [
+                    'text' => 'Kartu Simpanan',
+                    'url' => '/simpanan/card/index',
+                    'icon' => 'fas fa-clipboard nav-icon',
+                    'can'  => ['kartu simpanan'],
                 ],
             ],
         ],
