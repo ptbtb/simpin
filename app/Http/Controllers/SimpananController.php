@@ -55,9 +55,15 @@ class SimpananController extends Controller
             $simpanan = $simpanan->where('tgl_entri','>=', $from)
                                 ->where('tgl_entri','<=', $to);
         }
+
         if ($request->jenis_simpanan)
         {
             $simpanan = $simpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
+        }
+
+        if ($request->kode_anggota)
+        {
+            $simpanan = $simpanan->where('kode_anggota', $request->kode_anggota);
         }
         $simpanan = $simpanan->orderBy('tgl_entri','desc');
         return DataTables::eloquent($simpanan)->make(true);
@@ -68,13 +74,17 @@ class SimpananController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $this->authorize('add simpanan', Auth::user());
         $listJenisSimpanan = JenisSimpanan::all(); 
-        $data['title'] = "List Transaksi Simpanan";
+        if ($request->kode_anggota)
+        {
+            $data['anggota'] = Anggota::find($request->kode_anggota);
+        }
+        $data['title'] = "Tambah Transaksi Simpanan";
         $data['listJenisSimpanan'] = $listJenisSimpanan;
-        // dd($data);
+        $data['request'] = $request;
         return view('simpanan.create', $data);
     }
 
@@ -109,7 +119,7 @@ class SimpananController extends Controller
             $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
             $simpanan->save();
 
-            return redirect()->back()->withSuccess('Berhasil menambah transaksi');
+            return redirect()->route('simpanan-list', ['kode_anggota' => $request->kode_anggota])->withSuccess('Berhasil menambah transaksi');
         }
         catch (\Throwable $th)
         {
@@ -254,6 +264,12 @@ class SimpananController extends Controller
         {
             $listSimpanan = $listSimpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
         }
+        
+        if ($request->kode_anggota)
+        {
+            $listSimpanan = $listSimpanan->where('kode_anggota', $request->kode_anggota);
+        }
+
         // $listSimpanan = $listSimpanan->get();
         $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->get();
 
@@ -307,7 +323,12 @@ class SimpananController extends Controller
     {
         try
         {
+            if ($request->kode_anggota)
+            {
+                $data['anggota'] = Anggota::find($request->kode_anggota);
+            }
             $data['title'] = "Kartu Simpanan";
+            $data['request'] = $request;
             return view('simpanan.card.index', $data);
         }
         catch (\Throwable $e)
@@ -319,8 +340,8 @@ class SimpananController extends Controller
 
     public function showCard($kodeAnggota)
     {
-        try
-        {
+        // try
+        // {
             // get anggota
             $anggota = Anggota::with('tabungan')->findOrFail($kodeAnggota);
 
@@ -397,12 +418,12 @@ class SimpananController extends Controller
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
             
             return view('simpanan.card.detail', $data);
-        }
-        catch (\Throwable $e)
-        {
-            \Log::error($e);
-            return redirect()->back()->withError('Terjadi kesalahan sistem');
-        }
+        // }
+        // catch (\Throwable $e)
+        // {
+        //     \Log::error($e);
+        //     return redirect()->back()->withError('Terjadi kesalahan sistem');
+        // }
     }
 
     public function downloadPDFCard($kodeAnggota)

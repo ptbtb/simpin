@@ -41,12 +41,21 @@
                     <label for="besarSimpanan">Besar Simpanan</label>
                     <input type="text" name="besar_simpanan" id="besarSimpanan" onkeypress="return isNumberKey(event)"  class="form-control" placeholder="Besar Simpanan" autocomplete="off" required >
                 </div>
-                <div class="col-md-12 form-group">
-                    <label for="kodeAnggota">Anggota</label>
-                    <select name="kode_anggota" id="kodeAnggota" class="form-control" required>
-                        <option value="">Pilih salah satu</option>
-                    </select>
-                </div>
+                @if ($request->kode_anggota)
+                    <div class="col-md-12 form-group">
+                        <label for="kodeAnggota">Kode Anggota</label>
+                        <select name="kode_anggota" id="kodeAnggota" class="form-control" required>
+                            <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
+                        </select>
+                    </div>
+                @else
+                    <div class="col-md-12 form-group">
+                        <label for="kodeAnggota">Anggota</label>
+                        <select name="kode_anggota" id="kodeAnggota" class="form-control" required>
+                            <option value="">Pilih salah satu</option>
+                        </select>
+                    </div>
+                @endif
                 <div class="col-md-12 form-group">
                     <label for="keterangan">Keterangan</label>
                     <textarea name="keterangan" id="keterangan" rows="5" class="form-control"></textarea>
@@ -70,45 +79,11 @@
 <script>
     var jenisSimpanan = collect({!!$listJenisSimpanan!!});
 
-    $("#jenisSimpanan").select2({
-        ajax: {
-            url: '{{ route('jenis-simpanan-search') }}',
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                    type: 'public'
-                }
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: data
-                };
-            }
-        }
+    $(document).ready(function ()
+    {
+        initiateSelect2();
     });
-    $("#kodeAnggota").select2({
-        ajax: {
-            placeholder: "Select a state",
-            url: '{{ route('anggota-ajax-search') }}',
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    search: params.term,
-                    type: 'public'
-                }
-                return query;
-            },
-            processResults: function (data) {
-                return {
-                    results: data
-                };
-            }
-        }
-    });
+
     $('#jenisSimpanan').on('change', function ()
     {
         var selectedValue = $(this).children("option:selected").val();
@@ -132,6 +107,52 @@
         besarSimpanan = besarSimpanan.replace(/[^\d]/g, "",'');
         $('#besarSimpanan').val(toRupiah(besarSimpanan));
     });
+
+    function initiateSelect2()
+    {
+        $("#jenisSimpanan").select2({
+            ajax: {
+                url: '{{ route('jenis-simpanan-search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        @if(!$request->kode_anggota)
+            $("#kodeAnggota").select2({
+                ajax: {
+                    placeholder: "Select a state",
+                    url: '{{ route('anggota-ajax-search') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public'
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        @endif
+    }
 
     function toRupiah(number)
     {

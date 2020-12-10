@@ -15,6 +15,11 @@
         .link-dashboard:hover{
             color: azure;
         }
+
+        .c-title{
+            font-weight: bold;
+            font-size: 16px;
+        }
     </style>
 @endsection
 
@@ -82,6 +87,111 @@
         </div>
     </div>
 </div>
+
+@if (!\Auth::user()->isAnggota())
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <form action="{{ route('home') }}" method="POST">
+                    @csrf
+                    <label>Search Anggota</label>
+                    <div class="input-group">
+                        <input class="form-control form-control-navbar" name="kw_kode_anggota" type="search" name="q" placeholder="No Anggota" aria-label="search" autocomplete="off" required>
+                        <div class="input-group-append border" style="border-top-right-radius: .25rem; border-bottom-right-radius: .25rem; border-color: #ced4da !important">
+                            <button class="btn btn-navbar" type="submit" name="search" value="search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            @if (isset($searchResult))
+                <hr class="my-3">
+                <h6 style="font-size: .8rem; font-weight: 700" class="mt-3">Data Anggota</h6>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="table-responsive border p-2" style="border-radius: 4px">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-0">Tanggal Daftar</th>
+                                        <td class="border-0">:</td>
+                                        <td class="border-0">{{ $searchResult->created_at->format('d F Y') }}</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th style="width: 20%">No Anggota</th>
+                                        <td style="width: 2%">:</td>
+                                        <td style="width: 28%">{{ $searchResult->kode_anggota }}</td>
+                                        <th style="width: 20%">Nama</th>
+                                        <td style="width: 2%">:</td>
+                                        <td style="width: 28%">{{ $searchResult->nama_anggota }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tempat Lahir</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->tempat_lahir)? ucwords(strtolower($searchResult->tempat_lahir)):'-' }}</td>
+                                        <th>Tanggal Lahir</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->tgl_lahir)? $searchResult->tgl_lahir->format('d F Y'):'-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Jenis Kelamin</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->jenis_kelamin)? ($searchResult->jenis_kelamin == 'L')? 'Laki - laki':'Perempuan':'-' }}</td>
+                                        <th>Alamat</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->alamat_anggota)? $searchResult->alamat_anggota:'' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>KTP</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->ktp)? $searchResult->ktp:'-' }}</td>
+                                        <th>NIPP</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->nipp)? $searchResult->nipp:'-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Lokasi Kerja</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->lokasi_kerja)? $searchResult->lokasi_kerja:'-' }}</td>
+                                        <th>Tanggal Masuk</th>
+                                        <th>:</td>
+                                        <td>{{ ($searchResult->tgl_masuk)? $searchResult->tgl_masuk->format('d F Y'):'-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->email)? $searchResult->email:'-' }}</td>
+                                        <th>Nomor Telepon</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->telp)? $searchResult->telp:'-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Emergency Kontak</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->emergency_kontak)? $searchResult->emergency_kontak:'-' }}</td>
+                                        <th>Nomor Rekening</th>
+                                        <td>:</td>
+                                        <td>{{ ($searchResult->no_rek)? $searchResult->no_rek:'-' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('simpanan-list', ['kode_anggota'=>$searchResult->kode_anggota]) }}" class="btn btn-success btn-sm w-100"><i class="fa fa-money-bill"></i> Simpanan</a>
+                        <a href="" class="btn btn-info btn-sm w-100 mt-1"><i class="fas fa-hand-holding-usd"></i> Pinjaman</a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('simpanan-index-card', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-warning btn-sm w-100"><i class="fas fa-clipboard"></i> Kartu Simpanan</a>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+@endif
 @stop
 
 @section('css')

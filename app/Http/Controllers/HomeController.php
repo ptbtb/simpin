@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anggota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +29,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $role = $user->roles->first();
@@ -48,7 +49,19 @@ class HomeController extends Controller
         {
             $anggota = DB::table('t_anggota')->where('status', 'aktif')->count();
             $data['anggota']=$anggota;
+
+            // if search
+            if ($request->search)
+            {
+                $result = Anggota::find($request->kw_kode_anggota);
+                if(is_null($result))
+                {
+                    return redirect()->back()->withError('Anggota tidak ditemukan');
+                }
+                $data['searchResult'] = $result;
+            }
         }
+
         $data['role'] = $role;
         return view('home', $data);
     }

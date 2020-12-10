@@ -29,6 +29,7 @@ Route::get('/clear-cache', function() {
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // anggota
 Route::group(['prefix' => 'anggota'], function ()
