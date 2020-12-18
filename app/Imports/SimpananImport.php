@@ -22,7 +22,7 @@ class SimpananImport implements OnEachRow
         $tglMulai = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4])->format('Y-m-d');
         $fields = [
             'jenis_simpan' => ($row[0] == "\N" || $row[0] == '' || $row[0] == null)? '':$row[0],
-            'besar_simpanan' => ($row[1] == "\N" || $row[1] == '' || $row[1] == null)? '':$row[1],
+            'besar_simpanan' => ($row[1] == "\N" || $row[1] == '' || $row[1] == null)? 0:$row[1],
             'kode_anggota' => ($row[2] == "\N" || $row[2] == '' || $row[2] == null)? '':$row[2],
             'u_entry' => Auth::user()->name,
             'tgl_mulai' => ($row[4] == "\N" || $row[4] == ''|| $row[4] == null)? null:Carbon::createFromFormat('Y-m-d',$tglMulai),
@@ -30,6 +30,7 @@ class SimpananImport implements OnEachRow
             'kode_jenis_simpan' => ($row[6] == "\N" || $row[6] == '' || $row[6] == null)? null:$row[6],
             'keterangan' => ($row[7] == "\N" || $row[7] == '' || $row[7] == null)? null:$row[7],
         ];
+
         $simpanan = Simpanan::create($fields);
         return $simpanan;
     }

@@ -12,6 +12,7 @@ use App\Models\Simpanan;
 use Illuminate\Http\Request;
 
 use Auth;
+use DB;
 use Hash;
 use Carbon\Carbon;
 use Excel;
@@ -308,7 +309,10 @@ class SimpananController extends Controller
         $this->authorize('import simpanan', Auth::user());
         try
         {
-            Excel::import(new SimpananImport, $request->file);
+            DB::transaction(function () use ($request)
+            {
+                Excel::import(new SimpananImport, $request->file); 
+            });
             return redirect()->back()->withSuccess('Import data berhasil');
         }
         catch (\Throwable $e)
@@ -340,8 +344,8 @@ class SimpananController extends Controller
 
     public function showCard($kodeAnggota)
     {
-        // try
-        // {
+        try
+        {
             // get anggota
             $anggota = Anggota::with('tabungan')->findOrFail($kodeAnggota);
 
@@ -418,12 +422,12 @@ class SimpananController extends Controller
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
             
             return view('simpanan.card.detail', $data);
-        // }
-        // catch (\Throwable $e)
-        // {
-        //     \Log::error($e);
-        //     return redirect()->back()->withError('Terjadi kesalahan sistem');
-        // }
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Terjadi kesalahan sistem');
+        }
     }
 
     public function downloadPDFCard($kodeAnggota)
