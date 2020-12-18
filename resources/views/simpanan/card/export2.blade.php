@@ -155,7 +155,6 @@
             <td colspan="2" class="border-top-0 border-left-0"></td>
         </tr>
         @php
-            $jumlahSimpanan = $jumlahSimpanan + $value->final_balance;
             $jumlahPengambilan = $jumlahPengambilan + $value->withdrawalAmount;
         @endphp
     @endforeach

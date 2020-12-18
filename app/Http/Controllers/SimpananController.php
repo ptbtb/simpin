@@ -435,7 +435,7 @@ class SimpananController extends Controller
         try
         {
             // get anggota
-            $anggota = Anggota::findOrFail($kodeAnggota);
+            $anggota = Anggota::with('tabungan')->findOrFail($kodeAnggota);
 
             // get this year
             $thisYear = Carbon::now()->year;
@@ -450,7 +450,9 @@ class SimpananController extends Controller
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
             // kode_jenis_simpan yang wajib ada
-            $requiredKey = collect([JENIS_SIMPANAN_POKOK, JENIS_SIMPANAN_WAJIB, JENIS_SIMPANAN_SUKARELA]);
+            $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->take(3);
+            $requiredKey = $jenisSimpanan->pluck('kode_jenis_simpan');
+            $requiredKeyIndex = $jenisSimpanan->pluck('sequence','kode_jenis_simpan');
 
             // set default value untuk key yang tidak ada
             foreach ($requiredKey as $value)
@@ -483,24 +485,18 @@ class SimpananController extends Controller
                 $jenisSimpanan = JenisSimpanan::find($key);
                 if ($jenisSimpanan)
                 {
+                    $tabungan = $anggota->tabungan->where('kode_trans',$key)->first();
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = 5000000;
+                    $res['balance'] = ($tabungan)? $tabungan->besar_tabungan:0;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('besar_simpanan');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
                     $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
                     $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
-                    if ($key == JENIS_SIMPANAN_POKOK)
+                    if (isset($requiredKeyIndex[$key]))
                     {
-                        $listSimpanan[0] = (object)$res;
-                    }
-                    else if($key == JENIS_SIMPANAN_WAJIB)
-                    {
-                        $listSimpanan[1] = (object)$res;
-                    }
-                    else if($key == JENIS_SIMPANAN_SUKARELA)
-                    {
-                        $listSimpanan[2] = (object)$res;
+                        $seq = $requiredKeyIndex[$key];
+                        $listSimpanan[$seq] = (object)$res;
                     }
                     else
                     {
