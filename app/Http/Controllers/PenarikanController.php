@@ -70,12 +70,13 @@ class PenarikanController extends Controller
             }
 
             $penarikan = new Penarikan();
-            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan)
+            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user)
             {
                 $penarikan->kode_anggota = $anggota->kode_anggota;
                 $penarikan->kode_tabungan = $tabungan->kode_tabungan;
                 $penarikan->besar_ambil = $besarPenarikan;
                 $penarikan->tgl_ambil = Carbon::now();
+                $penarikan->u_entry = $user->name;
                 $penarikan->save();
             });
 

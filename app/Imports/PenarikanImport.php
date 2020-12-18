@@ -31,6 +31,7 @@ class PenarikanImport implements OnEachRow
             'tgl_ambil' => Carbon::createFromFormat('Y-m-d', $tglAmbil),
             'keterangan' => $row[4],
             'code_trans' => $row[5],
+            'u_entry' => $row[6],
         ];
         $penarikan = null;
         DB::transaction(function () use ($fields, &$penarikan)
