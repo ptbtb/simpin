@@ -9,6 +9,7 @@ use App\Models\Anggota;
 use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
+use App\Models\Tabungan;
 use Illuminate\Http\Request;
 
 use Auth;
@@ -362,7 +363,7 @@ class SimpananController extends Controller
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
             // kode_jenis_simpan yang wajib ada
-            $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->take(3);
+            $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc');
             $requiredKey = $jenisSimpanan->pluck('kode_jenis_simpan');
             $requiredKeyIndex = $jenisSimpanan->pluck('sequence','kode_jenis_simpan');
 
@@ -439,13 +440,13 @@ class SimpananController extends Controller
 
             // get this year
             $thisYear = Carbon::now()->year;
-
+            $listTabungan = Tabungan::where('kode_anggota', $anggota->kode_anggota)
+                                    ->get();
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
                                     ->where('kode_anggota', $anggota->kode_anggota)
                                     ->orderBy('tgl_entri','asc')
-                                    ->get();
-                                    
+                                    ->get();                  
             // data di grouping berdasarkan kode jenis simpan
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
@@ -484,7 +485,7 @@ class SimpananController extends Controller
                 if ($jenisSimpanan)
                 {
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = 5000000;
+                    $res['balance'] = $listTabungan->where('kode_trans',$key)->values()->sum('besar_tabungan');
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('besar_simpanan');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
