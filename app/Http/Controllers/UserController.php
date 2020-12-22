@@ -12,6 +12,7 @@ use Spatie\Permission\Models\Role;
 
 use App\Models\User;
 use App\Models\Anggota;
+use App\Models\KelasCompany;
 
 use Auth;
 use Carbon\Carbon;
@@ -239,9 +240,16 @@ class UserController extends Controller
 	
     public function profile()
     {
-    	$user = Auth::user();
+		$user = Auth::user();
+
+		if (is_null($user->anggota))
+			$classList = "";
+		else
+			$classList = KelasCompany::where('company_id', $user->anggota->company_id)->get();
+		
     	$data['title'] = 'Edit Profile';
     	$data['user'] = $user;
+		$data['classList'] = $classList;
     	return view('user.profile', $data);
     }
 
@@ -254,7 +262,12 @@ class UserController extends Controller
     	}
 
 		$user->name = $request->name;
+		$user->salary = $request->salary;
+		$user->kelas_company_id = $request->kelas_company;
 		$file = $request->photo;
+		$file_ktp = $request->ktp_photo;
+		$file_salary = $request->salary_slip;
+
 		if ($file)
 		{
 			$config['disk'] = 'upload';
@@ -276,6 +289,51 @@ class UserController extends Controller
 				$user->photo_profile_path = $config['disk'].$config['upload_path'].'/'.$filename;
 			}
 		}
+		
+		if ($file_ktp)
+		{
+			$config['disk'] = 'upload';
+			$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
+			$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
+
+			// create directory if doesn't exist
+			if (!Storage::disk($config['disk'])->has($config['upload_path']))
+			{
+				Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+			}
+
+			// upload file if valid
+			if ($file_ktp->isValid())
+			{
+				$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
+
+				Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
+				$user->photo_ktp_path = $config['disk'].$config['upload_path'].'/'.$filename;
+			}
+		}
+		
+		if ($file_salary)
+		{
+			$config['disk'] = 'upload';
+			$config['upload_path'] = '/user/'.$user->id.'/salary'; 
+			$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/salary';
+
+			// create directory if doesn't exist
+			if (!Storage::disk($config['disk'])->has($config['upload_path']))
+			{
+				Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+			}
+
+			// upload file if valid
+			if ($file_salary->isValid())
+			{
+				$filename = uniqid() .'.'. $file_salary->getClientOriginalExtension();
+
+				Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_salary, $filename);
+				$user->salary_path = $config['disk'].$config['upload_path'].'/'.$filename;
+			}
+		}
+
     	$user->save();
     	return redirect()->back()->withMessage('Update profile success');
 	}
