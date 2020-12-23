@@ -329,6 +329,12 @@ return [
                     'active' => ['/pinjaman/pengajuan/create']
                 ],
                 [
+                    'text' => 'Download Form Pinjaman',
+                    'url' => '/pinjaman/download-form-pinjaman',
+                    'icon' => 'fas fa-download nav-icon',
+                    'can'  => ['view download form pinjaman'],
+                ],
+                [
                     'text' => 'List Pinjaman',
                     'url' => '/pinjaman/list',
                     'icon' => 'fas fa-file-invoice-dollar nav-icon',

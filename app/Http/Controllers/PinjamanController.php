@@ -135,6 +135,14 @@ class PinjamanController extends Controller
         return view('pinjaman.detail', $data);
     }
 
+    public function downloadFormPinjaman(Request $request){
+        $user = Auth::user();
+        $this->authorize('download form pinjaman', $user);
+        $data['title'] = 'Download Form Pinjaman';
+        $data['listJenisPinjaman'] = JenisPinjaman::all();
+        return view('pinjaman.downloadFormPinjaman', $data);
+    }
+
     public function createExcel(Request $request)
     {
         $user = Auth::user();
