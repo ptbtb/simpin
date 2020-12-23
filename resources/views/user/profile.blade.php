@@ -45,21 +45,21 @@
 								<label>Company Class</label>
 								<select name="kelas_company" class="form-control">
 									@foreach($classList as $itemClass)
-										<option value="{{ $itemClass->id }}">{{ $itemClass->nama }}</option>
+										<option value="{{ $itemClass->id }}" {{ ($penghasilan && $penghasilan->kelas_company_id == $itemClass->id)? 'selected':'' }}>{{ $itemClass->nama }}</option>
 									@endforeach
 								</select>
 							</div>
 							@endif
 							<div class="col-md-6 form-group">
 								<label>Salary</label>
-								<input type="number" name="salary" value="{{ $user->salary }}" placeholder="Your Salary" class="form-control">
+								<input type="number" name="salary" value="{{ ($penghasilan->gaji_bulanan)? $penghasilan->gaji_bulanan:'' }}" placeholder="Your Salary" class="form-control">
 							</div>
 							<div class="col-md-6 form-group">
 								<label>Salary Slip</label>
 								<div class="custom-file">
 									<input type="file" class="custom-file-input" id="salary_slip" name="salary_slip"  accept="application/pdf">
-									@if(isset($user) && $user->salary_path)
-										<label class="custom-file-label" for="customFile">{{ $user->salary_path }}</label>
+									@if($penghasilan && $penghasilan->slip_gaji)
+										<label class="custom-file-label" for="customFile">{{ $penghasilan->slip_gaji }}</label>
 									@else
 										<label class="custom-file-label" for="customFile">Choose Document</label>
 									@endif
@@ -92,8 +92,8 @@
 							<label>KTP Photo</label>
 							<div class="form-group">
 								<div class="col-md-12 text-center" id="photoKtpButton">
-									@if(isset($user) && $user->photo_ktp_path)
-										<img class="img-fit" id="ktpPreview" src="{{ secure_asset($user->photo_ktp_path) }}"/>
+									@if(isset($penghasilan) && $penghasilan->foto_ktp)
+										<img class="img-fit" id="ktpPreview" src="{{ asset($penghasilan->foto_ktp) }}"/>
 									@else
 										<img class="img-fit" id="ktpPreview" src="{{ asset('img/no_image_available.jpeg') }}">
 									@endif

@@ -36,6 +36,11 @@ class Anggota extends Model
     {
         return $this->hasOne(User::class, 'kode_anggota', 'kode_anggota');
     } 
+
+    public function penghasilan()
+    {
+        return $this->hasOne(Penghasilan::class, 'kode_anggota');
+    }
     
     public function jenisAnggota()
     {

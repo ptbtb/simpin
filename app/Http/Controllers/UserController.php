@@ -13,11 +13,12 @@ use Spatie\Permission\Models\Role;
 use App\Models\User;
 use App\Models\Anggota;
 use App\Models\KelasCompany;
-
+use App\Models\Penghasilan;
 use Auth;
 use Carbon\Carbon;
 use Storage;
 use Excel;
+use Illuminate\Support\Facades\DB;
 // use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -250,6 +251,7 @@ class UserController extends Controller
     	$data['title'] = 'Edit Profile';
     	$data['user'] = $user;
 		$data['classList'] = $classList;
+		$data['penghasilan'] = $user->anggota->penghasilan;
     	return view('user.profile', $data);
     }
 
@@ -259,82 +261,99 @@ class UserController extends Controller
     	if (is_null($user))
     	{
     		return redirect()->back()->withMessage('User not found');
-    	}
-
-		$user->name = $request->name;
-		$user->salary = $request->salary;
-		$user->kelas_company_id = $request->kelas_company;
-		$file = $request->photo;
-		$file_ktp = $request->ktp_photo;
-		$file_salary = $request->salary_slip;
-
-		if ($file)
-		{
-			$config['disk'] = 'upload';
-			$config['upload_path'] = '/user/'.$user->id.'/photo'; 
-			$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/photo';
-
-			// create directory if doesn't exist
-			if (!Storage::disk($config['disk'])->has($config['upload_path']))
-			{
-				Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-			}
-
-			// upload file if valid
-			if ($file->isValid())
-			{
-				$filename = uniqid() .'.'. $file->getClientOriginalExtension();
-
-				Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
-				$user->photo_profile_path = $config['disk'].$config['upload_path'].'/'.$filename;
-			}
 		}
 		
-		if ($file_ktp)
+		DB::transaction(function () use ($user, $request)
 		{
-			$config['disk'] = 'upload';
-			$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
-			$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
+			$user->name = $request->name;
+			$file = $request->photo;
 
-			// create directory if doesn't exist
-			if (!Storage::disk($config['disk'])->has($config['upload_path']))
+			if ($file)
 			{
-				Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+				$config['disk'] = 'upload';
+				$config['upload_path'] = '/user/'.$user->id.'/photo'; 
+				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/photo';
+
+				// create directory if doesn't exist
+				if (!Storage::disk($config['disk'])->has($config['upload_path']))
+				{
+					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+				}
+
+				// upload file if valid
+				if ($file->isValid())
+				{
+					$filename = uniqid() .'.'. $file->getClientOriginalExtension();
+
+					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+					$user->photo_profile_path = $config['disk'].$config['upload_path'].'/'.$filename;
+				}
 			}
 
-			// upload file if valid
-			if ($file_ktp->isValid())
-			{
-				$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
+			$user->save();
 
-				Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
-				$user->photo_ktp_path = $config['disk'].$config['upload_path'].'/'.$filename;
-			}
-		}
-		
-		if ($file_salary)
-		{
-			$config['disk'] = 'upload';
-			$config['upload_path'] = '/user/'.$user->id.'/salary'; 
-			$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/salary';
+			// ambil data penghasilan
+			$anggota = $user->anggota;
+			$penghasilan = $anggota->penghasilan;
 
-			// create directory if doesn't exist
-			if (!Storage::disk($config['disk'])->has($config['upload_path']))
+			// jika null, buat row baru. 1 anggota punya 1 row penghasilan
+			if (is_null($penghasilan))
 			{
-				Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+				$penghasilan = new Penghasilan();
+				$penghasilan->kode_anggota = $anggota->kode_anggota;
 			}
 
-			// upload file if valid
-			if ($file_salary->isValid())
+			$penghasilan->gaji_bulanan = $request->salary;
+			$penghasilan->kelas_company_id = $request->kelas_company;
+			$file_ktp = $request->ktp_photo;
+			$file_salary = $request->salary_slip;
+			
+			if ($file_ktp)
 			{
-				$filename = uniqid() .'.'. $file_salary->getClientOriginalExtension();
+				$config['disk'] = 'upload';
+				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
+				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
 
-				Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_salary, $filename);
-				$user->salary_path = $config['disk'].$config['upload_path'].'/'.$filename;
+				// create directory if doesn't exist
+				if (!Storage::disk($config['disk'])->has($config['upload_path']))
+				{
+					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+				}
+
+				// upload file if valid
+				if ($file_ktp->isValid())
+				{
+					$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
+
+					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
+					$penghasilan->foto_ktp = $config['disk'].$config['upload_path'].'/'.$filename;
+				}
 			}
-		}
+			
+			if ($file_salary)
+			{
+				$config['disk'] = 'upload';
+				$config['upload_path'] = '/user/'.$user->id.'/salary'; 
+				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/salary';
 
-    	$user->save();
+				// create directory if doesn't exist
+				if (!Storage::disk($config['disk'])->has($config['upload_path']))
+				{
+					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+				}
+
+				// upload file if valid
+				if ($file_salary->isValid())
+				{
+					$filename = uniqid() .'.'. $file_salary->getClientOriginalExtension();
+
+					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_salary, $filename);
+					$penghasilan->slip_gaji = $config['disk'].$config['upload_path'].'/'.$filename;
+				}
+			}
+
+			$penghasilan->save();
+		});
     	return redirect()->back()->withMessage('Update profile success');
 	}
 	
