@@ -109,14 +109,18 @@
                 },
                 { 
                     mData: 'name', sType: "string", 
-                    className: "dt-body-center", "name": "name"						
+                    className: "dt-body-center", "name": "name"				
                 },
                 { 
                     mData: 'roles', sType: "string", 
                     className: "dt-body-center", "name": "roles.name"	,
                     mRender: function(data, type, full) 
                     {
-                        return data[0].name;
+                        if(data[0])
+                        {
+                            return data[0].name;
+                        }
+                        return '-';
                     }					
                 },
                 @if (auth()->user()->can('edit user') || auth()->user()->can('delete user'))
