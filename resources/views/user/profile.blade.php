@@ -52,7 +52,7 @@
 							@endif
 							<div class="col-md-6 form-group">
 								<label>Salary</label>
-								<input type="number" name="salary" value="{{ ($penghasilan->gaji_bulanan)? $penghasilan->gaji_bulanan:'' }}" placeholder="Your Salary" class="form-control">
+								<input type="number" name="salary" value="{{ ($penghasilan && $penghasilan->gaji_bulanan)? $penghasilan->gaji_bulanan:'' }}" placeholder="Your Salary" class="form-control">
 							</div>
 							<div class="col-md-6 form-group">
 								<label>Salary Slip</label>
