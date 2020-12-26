@@ -47,6 +47,7 @@ Route::group(['prefix' => 'anggota'], function ()
         Route::get('ajax-detail/{id}', [App\Http\Controllers\AnggotaController::class, 'ajaxDetail'])->name('anggota-ajax-detail');
         Route::get('ajax/search', [App\Http\Controllers\AnggotaController::class, 'search'])->name('anggota-ajax-search');
         Route::get('ajax/search/{id}', [App\Http\Controllers\AnggotaController::class, 'searchId'])->where('id', '[0-9]+')->name('anggota-ajax-searchid');
+        Route::get('ajax/detailAnggota', [App\Http\Controllers\AnggotaController::class, 'getDetail'])->name('anggota-ajax-getDetail');
 
         Route::get('download/pdf', [App\Http\Controllers\AnggotaController::class, 'createPDF'])->name('anggota-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\AnggotaController::class, 'createExcel'])->name('anggota-download-excel');        
@@ -68,6 +69,7 @@ Route::group(['prefix' => 'setting'], function ()
     Route::post('/simpanan/store', [App\Http\Controllers\SettingSimpananController::class, 'store']);
     Route::get('/simpanan/jenis/search', [App\Http\Controllers\JenisSimpananController::class, 'search'])->name('jenis-simpanan-search');
     Route::get('/simpanan/jenis/search/{id}', [App\Http\Controllers\JenisSimpananController::class, 'searchId'])->name('jenis-simpanan-searchId');
+    Route::get('/simpanan/jenis/searchByUser', [App\Http\Controllers\JenisSimpananController::class, 'searchSimpananByUser'])->name('jenis-simpanan-searchByUser');
 
         //pinjaman
     Route::get('/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index']);
@@ -197,6 +199,7 @@ Route::group(['prefix' => 'simpanan'], function ()
         Route::get('download/excel', [App\Http\Controllers\SimpananController::class, 'createExcel'])->name('simpanan-download-excel');
         Route::get('import/excel', [App\Http\Controllers\SimpananController::class, 'importExcel'])->name('simpanan-import-excel');
         Route::post('import/excel', [App\Http\Controllers\SimpananController::class, 'storeImportExcel'])->name('simpanan-import-excel');
+        Route::get('ajax/payment-value', [App\Http\Controllers\SimpananController::class, 'paymentValue'])->name('ajax-simpanan-payment-value');
 
         Route::group(['prefix' => 'card'], function ()
         {

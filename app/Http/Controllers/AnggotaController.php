@@ -191,6 +191,19 @@ class AnggotaController extends Controller {
         return Anggota::find($id);
     }
 
+    public function getDetail(Request $request){
+        $anggotaId = $request->anggotaId;
+
+        $anggota = DB::table('t_anggota')
+                ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
+                ->join('t_kelas_company', 't_penghasilan.kelas_company_id', 't_kelas_company.id')
+                ->select('t_anggota.kode_anggota', 't_anggota.nama_anggota', 't_penghasilan.gaji_bulanan', 't_kelas_company.nama', 't_kelas_company.id')
+                ->where('t_anggota.kode_anggota', '=', $anggotaId)
+                ->first();
+
+        return response()->json($anggota, 200);
+    }
+
     // Generate PDF
     public function createPDF(Request $request) {
         $anggotas = Anggota::with('jenisAnggota');
