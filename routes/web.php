@@ -168,14 +168,17 @@ Route::group(['prefix' => 'pinjaman'], function ()
         Route::get('download/pdf', [App\Http\Controllers\PinjamanController::class, 'createPDF'])->name('pinjaman-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcel'])->name('pinjaman-download-excel');
         Route::get('download-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'downloadFormPinjaman'])->name('download-form-pinjaman');
-
+        Route::post('download-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'simulasiPinjaman'])->name('download-form-pinjaman');
+        Route::get('generate-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'generateFormPinjaman'])->name('generate-form-pinjaman');
 
         Route::group(['prefix' => 'pengajuan'], function ()
         {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
-            Route::get('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add');
+            Route::get('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add')->middleware(['pinjaman']);
+            Route::get('maxPinjaman', [App\Http\Controllers\PinjamanController::class, 'calculateMaxPinjaman'])->name('pengajuan-pinjaman-calculate-max-pinjaman');
             Route::post('create', [App\Http\Controllers\PinjamanController::class, 'storePengajuanPinjaman'])->name('pengajuan-pinjaman-add');
-            Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
+            Route::get('calculate-angsuran', [App\Http\Controllers\PinjamanController::class, 'calculateAngsuran'])->name('pengajuan-pinjaman-calculate-angsuran');
+            Route::get('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
         });
 	});
 });

@@ -15,4 +15,9 @@ class Penghasilan extends Model
     {
         return $this->belongsTo(Anggota::class, 'kode_anggota');
     }
+
+    public function kelasCompany()
+    {
+        return $this->belongsTo(KelasCompany::class, 'kelas_company_id', 'id');
+    }
 }

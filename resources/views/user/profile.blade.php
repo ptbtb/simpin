@@ -43,21 +43,51 @@
 							@if (!$classList == '')
 							<div class="col-md-6 form-group">
 								<label>Company Class</label>
-								<select name="kelas_company" class="form-control">
-									@foreach($classList as $itemClass)
-										<option value="{{ $itemClass->id }}" {{ ($penghasilan && $penghasilan->kelas_company_id == $itemClass->id)? 'selected':'' }}>{{ $itemClass->nama }}</option>
-									@endforeach
-								</select>
+								@if (\Auth::user()->isAnggota())
+									@if ($penghasilan && $penghasilan->kelas_company_id)
+										<input type="text" name="kelas_company_name" class="form-control" value="{{ $penghasilan->kelasCompany->nama }}" readonly>
+										<input type="hidden" name="kelas_company" class="form-control" value="{{ $penghasilan->kelasCompany->id }}" readonly>
+									@else
+										<select name="kelas_company" class="form-control">
+											<option value="">Choose One</option>
+											@foreach($classList as $itemClass)
+												<option value="{{ $itemClass->id }}" {{ ($penghasilan && $penghasilan->kelas_company_id == $itemClass->id)? 'selected':'' }}>{{ $itemClass->nama }}</option>
+											@endforeach
+										</select>
+									@endif
+								@else
+									<select name="kelas_company" class="form-control">
+										<option value="">Choose One</option>
+										@foreach($classList as $itemClass)
+											<option value="{{ $itemClass->id }}" {{ ($penghasilan && $penghasilan->kelas_company_id == $itemClass->id)? 'selected':'' }}>{{ $itemClass->nama }}</option>
+										@endforeach
+									</select>
+								@endif
 							</div>
 							@endif
 							<div class="col-md-6 form-group">
 								<label>Salary</label>
-								<input type="number" name="salary" value="{{ ($penghasilan && $penghasilan->gaji_bulanan)? $penghasilan->gaji_bulanan:'' }}" placeholder="Your Salary" class="form-control">
+								<input type="text" id="salary" onkeypress="return isNumberKey(event)" name="salary" placeholder="Your Salary" 
+								@if ($penghasilan && $penghasilan->gaji_bulanan)
+									value="{{ $penghasilan->gaji_bulanan }}"
+								@endif 
+								class="form-control toRupiah">
 							</div>
+
+							@foreach ($listPenghasilanTertentu as $penghasilanTertentu)
+								<div class="col-md-6 form-group">
+									<label>{{ $penghasilanTertentu->name }}</label>
+									<input type="text" id="penghasilanTertentu{{ $penghasilanTertentu->id }}" name="penghasilan_tertentu[{{ $penghasilanTertentu->id }}]" class="form-control toRupiah" placeholder="{{ $penghasilanTertentu->name }}" 
+									@if (isset($valuePenghasilanTertentu))
+										value="{{ $valuePenghasilanTertentu->where('jenis_penghasilan_tertentu_id', $penghasilanTertentu->id)->first()->value }}"
+									@endif 
+									onkeypress="return isNumberKey(event)">
+								</div>
+							@endforeach
 							<div class="col-md-6 form-group">
 								<label>Salary Slip</label>
 								<div class="custom-file">
-									<input type="file" class="custom-file-input" id="salary_slip" name="salary_slip"  accept="application/pdf">
+									<input type="file" class="custom-file-input" id="salary_slip" name="salary_slip"  accept="application/pdf" style="cursor: pointer">
 									@if($penghasilan && $penghasilan->slip_gaji)
 										<label class="custom-file-label" for="customFile">{{ $penghasilan->slip_gaji }}</label>
 									@else
@@ -121,17 +151,65 @@
                 reader.readAsDataURL(input.files[0]);
             }
 		}
-		
-		$('#photoButton').on('change', '.btn-file :file', function () {
-            readURL(this, 'photoPreview');
-        });
-		$('#photoKtpButton').on('change', '.btn-file :file', function () {
-            readURL(this, 'ktpPreview');
-        });
 
-		$(".custom-file-input").on("change", function() {
-			var fileName = $(this).val().split("\\").pop();
-			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		$(document).ready(function ()
+		{
+			$('.toRupiah').each(function (index)
+			{
+				var value = $(this).val();
+				if (value != null && value != '')
+				{
+					$(this).val(toRupiah(value));
+				}
+			});
+			initiateEvent();
 		});
+
+		function initiateEvent()
+		{
+			$('#photoButton').on('change', '.btn-file :file', function () {
+				readURL(this, 'photoPreview');
+			});
+			$('#photoKtpButton').on('change', '.btn-file :file', function () {
+				readURL(this, 'ktpPreview');
+			});
+
+			$(".custom-file-input").on("change", function() {
+				var fileName = $(this).val().split("\\").pop();
+				$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+			});
+
+			$('.toRupiah').on('keyup', function () {
+				var val = $(this).val();
+				val = val.replace(/[^\d]/g, "",'');
+				$(this).val(toRupiah(val));
+			});
+		}
+		
+		function toRupiah(number)
+        {
+            var stringNumber = number.toString();
+            var length = stringNumber.length;
+            var temp = length;
+            var res = "Rp ";
+            for (let i = 0; i < length; i++) {
+                res = res + stringNumber.charAt(i);
+                temp--;
+                if (temp%3 == 0 && temp > 0)
+                {
+                    res = res + ".";
+                }
+            }
+            return res;
+        }
+
+		function isNumberKey(evt)
+		{
+			var charCode = (evt.which) ? evt.which : event.keyCode
+			if (charCode > 31 && (charCode < 48 || charCode > 57))
+			return false;
+
+			return true;
+		}
 	</script>
 @endsection

@@ -52,6 +52,16 @@ class Anggota extends Model
         return $this->hasMany(Tabungan::class, 'kode_anggota');
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function listPenghasilanTertentu()
+    {
+        return $this->hasMany(PenghasilanTertentu::class,'kode_anggota');
+    }
+
     public function listPinjaman()
     {
         return $this->hasMany(Pinjam::class, 'kode_anggota');
@@ -77,5 +87,20 @@ class Anggota extends Model
         {
             return $this->kode_anggota;
         }
+    }
+
+    public function isAnggotaBiasa()
+    {
+        return $this->id_jenis_anggota = JENIS_ANGGOTA_BIASA;
+    }
+
+    public function isAnggotaLuarBiasa()
+    {
+        return $this->id_jenis_anggota = JENIS_ANGGOTA_LUAR_BIASA;
+    }
+
+    public function isPensiunan()
+    {
+        return $this->id_jenis_anggota = JENIS_ANGGOTA_PENSIUNAN;
     }
 }

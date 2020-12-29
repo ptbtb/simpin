@@ -11,6 +11,8 @@ class Pengajuan extends Model
 
     protected $table = "t_pengajuan";
     protected $primaryKey = "kode_pengajuan";
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $dates = ['tgl_pengajuan', 'tgl_acc'];
 
     public function anggota()
@@ -18,8 +20,48 @@ class Pengajuan extends Model
         return $this->belongsTo(Anggota::class, 'kode_anggota', 'kode_anggota');
     }
 
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function paidByCashier()
+    {
+        return $this->belongsTo(User::class, 'paid_by_cashier');
+    }
+
     public function jenisPinjaman()
     {
         return $this->belongsTo(JenisPinjaman::class, 'kode_jenis_pinjam', 'kode_jenis_pinjam');
+    }
+
+    public function statusPengajuan()
+    {
+        return $this->belongsTo(StatusPengajuan::class, 'id_status_pengajuan');
+    }
+
+    public function scopeNotApproved($query)
+    {
+        return $query->whereIn('id_status_pengajuan', [STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI, STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN]);
+    }
+
+    public function menungguKonfirmasi()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
+    }
+
+    public function menungguPembayaran()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+    }
+
+    public function diterima()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
     }
 }

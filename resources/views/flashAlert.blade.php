@@ -30,6 +30,9 @@
 @if ($errors->any())
 <div class="alert alert-danger">
   <button type="button" class="close" data-dismiss="alert">×</button> 
-  Please check the form below for errors
+  {{-- Please check the form below for errors --}}
+  <ul style="list-style-type: circle; margin: 0; padding-left: 1rem;">
+    {!! implode('', $errors->all('<li>:message</li>')) !!}
+  </ul>
 </div>
 @endif

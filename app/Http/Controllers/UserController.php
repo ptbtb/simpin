@@ -12,8 +12,10 @@ use Spatie\Permission\Models\Role;
 
 use App\Models\User;
 use App\Models\Anggota;
+use App\Models\JenisPenghasilanTertentu;
 use App\Models\KelasCompany;
 use App\Models\Penghasilan;
+use App\Models\PenghasilanTertentu;
 use Auth;
 use Carbon\Carbon;
 use Storage;
@@ -242,16 +244,27 @@ class UserController extends Controller
     public function profile()
     {
 		$user = Auth::user();
+		$listPenghasilanTertentu = JenisPenghasilanTertentu::show()->get();
 
 		if (is_null($user->anggota))
+		{
 			$classList = "";
+		}
 		else
+		{
 			$classList = KelasCompany::where('company_id', $user->anggota->company_id)->get();
-		
+			$penghasilanTertentu = $user->anggota->listPenghasilanTertentu;
+			if ($penghasilanTertentu->count())
+			{
+				$data['valuePenghasilanTertentu'] = $penghasilanTertentu;
+			}
+		}
+
     	$data['title'] = 'Edit Profile';
     	$data['user'] = $user;
 		$data['classList'] = $classList;
 		$data['penghasilan'] = $user->anggota->penghasilan;
+		$data['listPenghasilanTertentu'] = $listPenghasilanTertentu;
     	return view('user.profile', $data);
     }
 
@@ -260,7 +273,7 @@ class UserController extends Controller
     	$user = User::find($request->user_id);
     	if (is_null($user))
     	{
-    		return redirect()->back()->withMessage('User not found');
+    		return redirect()->back()->witError('User not found');
 		}
 		
 		DB::transaction(function () use ($user, $request)
@@ -295,6 +308,8 @@ class UserController extends Controller
 			// ambil data penghasilan
 			$anggota = $user->anggota;
 			$penghasilan = $anggota->penghasilan;
+			
+			$salary = filter_var($request->salary, FILTER_SANITIZE_NUMBER_INT);
 
 			// jika null, buat row baru. 1 anggota punya 1 row penghasilan
 			if (is_null($penghasilan))
@@ -303,7 +318,7 @@ class UserController extends Controller
 				$penghasilan->kode_anggota = $anggota->kode_anggota;
 			}
 
-			$penghasilan->gaji_bulanan = $request->salary;
+			$penghasilan->gaji_bulanan = $salary;
 			$penghasilan->kelas_company_id = $request->kelas_company;
 			$file_ktp = $request->ktp_photo;
 			$file_salary = $request->salary_slip;
@@ -353,8 +368,26 @@ class UserController extends Controller
 			}
 
 			$penghasilan->save();
+
+			$requestPenghasilanTertentu = $request->penghasilan_tertentu;
+			foreach ($requestPenghasilanTertentu as $key => $value)
+			{
+				$penghasilanTertentuAnggota = $anggota->listPenghasilanTertentu->where('jenis_penghasilan_tertentu_id', $key)->first();
+				if (is_null($penghasilanTertentuAnggota))
+				{
+					$penghasilanTertentuAnggota = new PenghasilanTertentu();
+					$penghasilanTertentuAnggota->jenis_penghasilan_tertentu_id = $key;
+					$penghasilanTertentuAnggota->kode_anggota = $anggota->kode_anggota;
+				}
+				$val = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+				if ($val)
+				{
+					$penghasilanTertentuAnggota->value = $val;
+				}
+				$penghasilanTertentuAnggota->save();
+			}
 		});
-    	return redirect()->back()->withMessage('Update profile success');
+    	return redirect()->back()->withSuccess('Update profile success');
 	}
 	
 	public function changePassword()

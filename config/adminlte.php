@@ -332,7 +332,7 @@ return [
                     'text' => 'Download Form Pinjaman',
                     'url' => '/pinjaman/download-form-pinjaman',
                     'icon' => 'fas fa-download nav-icon',
-                    'can'  => ['view download form pinjaman'],
+                    'can'  => ['download form pinjaman'],
                 ],
                 [
                     'text' => 'List Pinjaman',

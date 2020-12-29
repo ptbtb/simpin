@@ -75,9 +75,10 @@
                         <th>Besar Pinjaman</th>
                         <th>Status</th>
                         <th>Tanggal Acc</th>
-                        @can('approve pengajuan pinjaman')
-                            <th>Action</th>
-                        @endcan
+                        <th>Diajukan Oleh</th>
+                        <th>Dikonfirmasi Oleh</th>
+                        <th>Pembayaran Oleh</th>
+                        <th style="width: 20%">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,9 +93,9 @@
                                     -
                                 @endif
                             </td>
-                            <td>Jenis Pinjaman</td>
+                            <td>{{ ucwords(strtolower($pengajuan->jenisPinjaman->nama_pinjaman)) }}</td>
                             <td>Rp. {{ number_format($pengajuan->besar_pinjam,0,",",".") }}</td>
-                            <td class="str-to">{{ ucfirst($pengajuan->status) }}</td>
+                            <td class="str-to">{{ ucfirst($pengajuan->statusPengajuan->name) }}</td>
                             <td>
                                 @if ($pengajuan->tgl_acc)
                                     {{ $pengajuan->tgl_acc->format('d M Y') }}
@@ -102,18 +103,49 @@
                                     -
                                 @endif
                             </td>
-                            @can('approve pengajuan pinjaman')
-                                <td>
-                                    @if ($pengajuan->status == 'submited')
-                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
-                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
-                                    @elseif($pengajuan->status == 'diterima')
-                                        <b style="color: green !important"><i class="fas fa-check"></i></b>
+                            <td>
+                                @if ($pengajuan->createdBy)
+                                    {{ $pengajuan->createdBy->name }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if ($pengajuan->approvedBy)
+                                    {{ $pengajuan->approvedBy->name }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if ($pengajuan->paidByCashier)
+                                    {{ $pengajuan->paidByCashier->name }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if (Auth::user()->isAnggota())
+                                    @if ($pengajuan->menungguKonfirmasi())
+                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ CANCEL_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Cancel</a>
                                     @else
-                                        <b style="color: red !important"><i class="fas fa-times"></i></b>
+                                        -
                                     @endif
-                                </td>
-                            @endcan
+                                @else    
+                                    @can('approve pengajuan pinjaman')
+                                        @if ($pengajuan->menungguKonfirmasi())
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                        @elseif($pengajuan->menungguPembayaran())
+                                            <b style="color: blue !important"><i class="fas fa-clock"></i></b>
+                                        @elseif($pengajuan->diterima())
+                                            <b style="color: green !important"><i class="fas fa-check"></i></b>
+                                        @else
+                                            <b style="color: red !important"><i class="fas fa-times"></i></b>
+                                        @endif
+                                    @endcan
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody> 
@@ -153,8 +185,9 @@
                 confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    console.log(url);
                     $.ajax({
-                    type: 'post',
+                    type: 'get',
                     url: url,
                     data: {
                         "_token": "{{ csrf_token() }}",
