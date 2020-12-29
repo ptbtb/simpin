@@ -174,6 +174,8 @@ class SimpananController extends Controller
                 }
             }
             else {
+
+                $periodeTime = strtotime($request->periode);
                 
                 $simpanan = new Simpanan();
                 $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
@@ -181,12 +183,14 @@ class SimpananController extends Controller
                 $simpanan->kode_anggota = $anggotaId;
                 $simpanan->u_entry = Auth::user()->name;
                 $simpanan->tgl_entri = Carbon::now();
+                $simpanan->periode = date("Y-m-d", $periodeTime);
                 $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                 $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
                 $simpanan->save();
             }
 
-            return redirect()->route('simpanan-list', ['kode_anggota' => $request->kode_anggota])->withSuccess('Berhasil menambah transaksi');
+            // return redirect()->route('simpanan-list', ['kode_anggota' => $request->kode_anggota])->withSuccess('Berhasil menambah transaksi');
+            return redirect()->route('simpanan-list')->withSuccess('Berhasil menambah transaksi');
         }
         catch (\Throwable $th)
         {
@@ -292,7 +296,7 @@ class SimpananController extends Controller
     public function paymentValue(Request $request){
         $type = $request->type;
         $anggotaId = $request->anggotaId;
-        $attribute = '[]';
+        $attribute = [];
 
         // Kalkulasi Simpanan Pokok
         if ($type == '411.01.000') {
@@ -323,6 +327,9 @@ class SimpananController extends Controller
                     ->select('t_kelas_simpanan.simpanan as paymentValue')
                     ->where('t_anggota.kode_anggota', '=', $anggotaId)
                     ->first();
+            
+            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', '411.12.000')->first();
+            $attribute = $latestAngsur;
             
             $paymentValue = $payment->paymentValue;
         }

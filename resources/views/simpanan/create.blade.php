@@ -54,10 +54,14 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-12 form-group">
+                <div class="col-md-12 form-group" id="besaSimpananDetail">
                     <label for="besarSimpanan">Besar Simpanan</label>
                     <input type="text" name="besar_simpanan" id="besarSimpanan" onkeypress="return isNumberKey(event)"  class="form-control" placeholder="Besar Simpanan" autocomplete="off" required disabled >
                     <div class="text-danger" id="warningText"></div>
+                </div>
+                <div class="col-md-6 form-group" id="periodeDetail">
+                    <label for="besarSimpanan">Periode</label>
+                    <input type="text" name="periode" id="periode" class="form-control" placeholder="Periode" autocomplete="off" required readonly>
                 </div>
                 <div class="col-md-6" id="angsuranSimpanan">
                     <label for="besarSimpanan">Detail Informasi</label>
@@ -82,8 +86,9 @@
 @stop
 
 @section('js')
-<script src="{{ asset('js/collect.min.js') }}"></script>+
+<script src="{{ asset('js/collect.min.js') }}"></script>
 <script src="{{ asset('js/cleave.min.js') }}"></script>
+<script src="{{ asset('js/moment.js') }}"></script>
 <script>
     var jenisSimpanan = collect({!!$listJenisSimpanan!!});
     var anggotaId;
@@ -95,6 +100,7 @@
         initiateSelect2();
          $('#angsuranSimpanan').hide();
          $('#warningText').hide();
+         $('#periodeDetail').hide();
 
     });
 
@@ -123,25 +129,19 @@
         var besarSimpanan = $(this).val().toString();
         besarSimpanan = besarSimpanan.replace(/[^\d]/g, "",'');
         $('#besarSimpanan').val(toRupiah(besarSimpanan));
-        if((tipeSimpanan === '502.01.000') || (tipeSimpanan === '409.01.000') || ( tipeSimpanan === '409.03.000')){
+        if(tipeSimpanan === '502.01.000'){
             if(besarSimpanan > besarSimpananSukarela) {
-                $('#warningText').text('Besar Simpanan Maksimal 65% dari Total Gaji/bulan');
-                $('#warningText').show();
-                $('#btnSubmit').prop('disabled', true);
+                errMessage('warningText', 'Jumlah besar simpanan melebihi 65% dari total gaji/bulan');
             } else {
-                $('#warningText').hide();
-                $('#btnSubmit').prop('disabled', false);
+                clearErrMessage('warningText');
             }
         }
         if(tipeSimpanan === '411.01.000'){
             if(besarSimpanan > besarSimpananPokok) {
-                $('#warningText').text('Besar Simpanan Maksimal Sisa Angsuran');
-                $('#warningText').show();
-                $('#btnSubmit').prop('disabled', true);
+                errMessage('warningText', 'Jumlah besar simpanan melebihi sisa angsuran');
                 
             } else {
-                $('#warningText').hide();
-                $('#btnSubmit').prop('disabled', false);
+                clearErrMessage('warningText');
             }
         }
     });
@@ -203,14 +203,11 @@
             success: function (response) {
                 if (!response.hasOwnProperty('gaji_bulanan')){
                     $('#jenisSimpanan').prop('disabled', true);
-                    $('#btnSubmit').prop('disabled', true);
-                    $('#warningTextAnggota').text('Anggota ini belum memiliki gaji bulanan');
-                    $('#warningTextAnggota').show();
+                    errMessage('warningTextAnggota', 'Anggota ini belum memiliki gaji bulanan');
                 }
                 else {
                     $('#jenisSimpanan').prop('disabled', false);
-                    $('#btnSubmit').prop('disabled', false  );
-                    $('#warningTextAnggota').hide();
+                    clearErrMessage('warningTextAnggota');
                 }
             }  
         })
@@ -232,9 +229,15 @@
                     // simpanan wajib
                     if(type === '411.12.000') {
                         const paymentValue = response.paymentValue;
+                        let latestPayment = response.attribute.periode || response.attribute.tanggal_entri;
+                        let monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
+                        let dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
+                        $('#periode').val(monthYear);
                         $('#besarSimpanan').val(toRupiah(paymentValue));
                         $('#besarSimpanan').attr('readonly',true);
                         $('#angsuranSimpanan').hide();
+                        $('#periodeDetail').show();
+                        $('#besaSimpananDetail').removeClass('col-md-12').addClass('col-md-6');
                     }
                     // simpanan pokok
                     if(type === '411.01.000') {
@@ -250,7 +253,11 @@
                         })
                         $('#detailAngsuran').append('<div class="col-md-6"> Sisa Angsuran </div>');
                         $('#detailAngsuran').append('<div class="col-md-6">' + toRupiah(paymentValue) + '</div>');
+                        
                         $('#angsuranSimpanan').show();
+                        $('#periodeDetail').hide();
+                        $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');
+                        
                         if(angsuranSimpanan.length === 3) {
                             $('#besarSimpanan').attr('readonly',true);
                         } else {
@@ -259,12 +266,16 @@
                       
     
                     }
-                    // simpanan sukarela / khusus
-                    if(type ===  '502.01.000' || type === '409.01.000' || type === '409.03.000'  ) {
+                    // simpanan sukarela
+                    if(type ===  '502.01.000') {
                         const paymentValue = response.paymentValue;
                         besarSimpananSukarela = response.paymentValue; 
                         $('#besarSimpanan').val(toRupiah(paymentValue));
+
                         $('#angsuranSimpanan').hide();
+                        $('#periodeDetail').hide();
+                        $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');
+
                         $('#besarSimpanan').attr('readonly',false);
 
                     }
@@ -273,6 +284,8 @@
             }  
         })
     }
+
+
 
     function toRupiah(number)
     {
@@ -299,5 +312,20 @@
 
         return true;
     }
+
+    function errMessage(idElement, message)
+    {
+        $('#' +idElement).text(message);
+        $('#' +idElement).show();
+        $('#btnSubmit').prop('disabled', true);
+    }
+    
+    function clearErrMessage(idElement, message)
+    {
+        $('#' +idElement).hide();
+        $('#btnSubmit').prop('disabled', false);
+    }
+
+    
 </script>
 @stop

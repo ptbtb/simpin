@@ -44,10 +44,10 @@ class JenisSimpananController extends Controller
                                 ->first();
         
         if (is_null($checkSimpananPokokAnggota)){
-            $listJenisSimpanan = JenisSimpanan::orderby('nama_simpanan','asc')->select('kode_jenis_simpan','nama_simpanan')->limit(10)->get();
+            $listJenisSimpanan = JenisSimpanan::orderby('nama_simpanan','asc')->select('kode_jenis_simpan','nama_simpanan')->where('nama_simpanan', '!=', 'SIMPANAN KHUSUS PAGU')->limit(10)->get();
         }
         else {
-            $listJenisSimpanan = JenisSimpanan::where('nama_simpanan', '!=', 'SIMPANAN POKOK')->get();
+            $listJenisSimpanan = JenisSimpanan::where('nama_simpanan', '!=', 'SIMPANAN POKOK')->where('nama_simpanan', '!=', 'SIMPANAN KHUSUS PAGU')->get();
         }
         
         $response = $listJenisSimpanan->map(function ($jenisSimpanan)
