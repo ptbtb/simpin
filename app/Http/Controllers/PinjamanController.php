@@ -620,13 +620,17 @@ class PinjamanController extends Controller
     
     public function bayarAngsuran(Request $request, $id)
     {
-        // try
-        // {
+        try
+        {
             $pinjaman = Pinjaman::findOrFail($id);
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran',STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
             $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
             foreach ($listAngsuran as $angsuran)
             {
+                if ($angsuran->besar_pembayaran)
+                {
+                    $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
+                }
                 if ($pembayaran > $angsuran->totalAngsuran)
                 {
                     $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
@@ -653,12 +657,12 @@ class PinjamanController extends Controller
                 }
             }
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
-        // }
-        // catch (\Throwable $e)
-        // {
-        //     \Log::error($e);
-        //     $message = $e->getMessage();
-        //     return redirect()->back()->withError('gagal melakukan pembayaran');
-        // }
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            $message = $e->getMessage();
+            return redirect()->back()->withError('gagal melakukan pembayaran');
+        }
     }
 }

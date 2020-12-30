@@ -96,7 +96,9 @@
         <div class="mt-3 p-2 box-custom">
             <div class="d-flex">
                 <h6 style="font-weight: 600">Angsuran</h6>
-                <a class="btn btn-sm btn-success ml-auto mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
+                @can('bayar angsuran pinjaman')
+                    <a class="btn btn-sm btn-success ml-auto mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
+                @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -107,8 +109,9 @@
                             <th>Jasa</th>
                             <th>Total Angsuran</th>
                             <th>Denda</th>
-                            {{-- <th>Sisa Pinjaman</th> --}}
+                            <th>Besar Pembayaran</th>
                             <th>Dibayar Pada Tanggal</th>
+                            <th>Diupdate Oleh</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -120,8 +123,9 @@
                                 <td>Rp. {{ number_format($angsuran->jasa,0,",",".") }}</td>
                                 <td>Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}</td>
                                 <td>Rp. {{ number_format($angsuran->denda,0,",",".") }}</td>
-                                {{-- <td>Rp. {{ number_format($angsuran->sisa_pinjam,0,",",".") }}</td> --}}
+                                <td>Rp. {{ number_format($angsuran->besar_pembayaran,0,",",".") }}</td>
                                 <td>{{($angsuran->paid_at)?  $angsuran->paid_at->format('d M Y'):'-' }}</td>
+                                <td>{{ ($angsuran->paid_at)? $angsuran->u_entry:'-' }}</td>
                                 <td>{{ $angsuran->statusAngsuran->name }}</td>
                             </tr>
                         @endforeach
@@ -131,6 +135,7 @@
         </div>
     </div>
 </div>
+@can('bayar angsuran pinjaman')
 <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <form action="{{ route('pinjaman-bayar-angsuran', ['id'=>$pinjaman->kode_pinjam]) }}" method="POST">
         @csrf
@@ -162,6 +167,7 @@
         </div>
     </form>
 </div>
+@endcan
 @endsection
 
 @section('js')

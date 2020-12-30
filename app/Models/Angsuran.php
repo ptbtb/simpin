@@ -18,6 +18,11 @@ class Angsuran extends Model
         return $this->belongsTo(StatusAngsuran::class, 'id_status_angsuran');
     }
 
+    public function pinjaman()
+    {
+        return $this->belongsTo(Pinjaman::class, 'kode_pinjam');
+    }
+
     public function getTotalAngsuranAttribute()
     {
         return $this->besar_angsuran + $this->jasa;
@@ -25,6 +30,10 @@ class Angsuran extends Model
 
     public function getSisaPinjamanAttribute()
     {
-        return $this->sisa_pinjam + $this->totalAngsuran - $this->besar_pembayaran;
+        if ($this->besar_pembayaran > $this->jasa)
+        {
+            return $this->sisa_pinjam + $this->totalAngsuran - $this->besar_pembayaran;
+        }
+        return $this->pinjaman->sisa_pinjaman;
     }
 }
