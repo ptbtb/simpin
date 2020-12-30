@@ -89,6 +89,14 @@ class Anggota extends Model
         }
     }
 
+    public function getNoKtpAttribute()
+    {
+        if (is_numeric($this->ktp))
+        {
+            return $this->ktp;
+        }
+    }
+
     public function isAnggotaBiasa()
     {
         return $this->id_jenis_anggota = JENIS_ANGGOTA_BIASA;
