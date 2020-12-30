@@ -19,6 +19,7 @@ use Auth;
 use Carbon\Carbon;
 use DB;
 use Excel;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
@@ -312,6 +313,11 @@ class PinjamanController extends Controller
         try
         {
             $user = Auth::user();
+            $check = Hash::check($request->password, $user->password);
+            if (!$check)
+            {
+                return response()->json(['message' => 'Wrong Password'], 412);
+            }
             $pengajuan = Pengajuan::find($request->id);
             if($request->action == CANCEL_PENGAJUAN_PINJAMAN)
             {
@@ -445,6 +451,7 @@ class PinjamanController extends Controller
         {
             $provisi = 0.01;
         }
+        $provisi = round($besarPinjaman * $provisi,2);
         $asuransiPinjaman = AsuransiPinjaman::where('lama_pinjaman', $jenisPinjaman->lama_angsuran)
                                                 ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
                                                 ->first();
@@ -500,6 +507,7 @@ class PinjamanController extends Controller
         {
             $provisi = 0.01;
         }
+        $provisi = round($besarPinjaman * $provisi,2);
         $asuransiPinjaman = AsuransiPinjaman::where('lama_pinjaman', $jenisPinjaman->lama_angsuran)
                                                 ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
                                                 ->first();
@@ -583,5 +591,17 @@ class PinjamanController extends Controller
 			$hasil = trim(self::penyebut($nilai));
 		}     		
 		return $hasil;
-	}
+    }
+    
+    public function detailPembayaran($idPinjaman)
+    {
+        $pinjaman = Pinjaman::find($idPinjaman);
+        if (is_null($pinjaman))
+        {
+            return response()->json(['message' => 'Pinjaman Not Found'], 404);
+        }
+        $data['pinjaman'] = $pinjaman;
+        $data['jenisPinjaman'] = $pinjaman->jenisPinjaman;
+        return view('pinjaman.detailPembayaran', $data);
+    }
 }

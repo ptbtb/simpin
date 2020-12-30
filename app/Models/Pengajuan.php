@@ -30,6 +30,11 @@ class Pengajuan extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    public function pinjaman()
+    {
+        return $this->hasOne(Pinjaman::class, 'kode_pengajuan_pinjaman');
+    }
+
     public function paidByCashier()
     {
         return $this->belongsTo(User::class, 'paid_by_cashier');

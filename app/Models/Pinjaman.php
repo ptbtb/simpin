@@ -25,6 +25,11 @@ class Pinjaman extends Model
         return $this->belongsTo(JenisPinjaman::class,'kode_jenis_pinjam');
     }
 
+    public function pengajuan()
+    {
+        return $this->belongsTo(Pengajuan::class, 'kode_pengajuan_pinjaman');
+    }
+
     public function listAngsuran()
     {
         return $this->hasMany(Angsuran::class, 'kode_pinjam');
@@ -38,5 +43,10 @@ class Pinjaman extends Model
     public function scopePaid($query)
     {
         return $query->where('id_status_pinjaman', STATUS_PINJAMAN_LUNAS);
+    }
+
+    public function getPinjamanDiTransferAttribute()
+    {
+        return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi;
     }
 }

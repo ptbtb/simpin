@@ -137,7 +137,7 @@
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguPembayaran())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval">Konfirmasi Pembayaran</a>
+                                            <a data-id="{{ $pengajuan->pinjaman->kode_pinjam }}" data-action="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
                                             <!-- <b style="color: blue !important"><i class="fas fa-clock"></i></b> -->
                                         @elseif($pengajuan->diterima())
                                             <b style="color: green !important"><i class="fas fa-check"></i></b>
@@ -153,6 +153,23 @@
             </table>
         </div>
     </div>
+
+    <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Detail Pinjaman</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval">Bayar</a>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -160,6 +177,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
+        $.fn.modal.Constructor.prototype._enforceFocus = function() {};
         $('#from').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
@@ -180,20 +198,28 @@
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                },
+                validationMessage:'Password required',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log(url);
+                    var password = result.value;
                     $.ajax({
-                    type: 'get',
-                    url: url,
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        "id": id,
-                        "action": action
+                        type: 'get',
+                        url: url,
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "id": id,
+                            "action": action,
+                            "password": password
                     },                        
                     success: function(data) {
                         Swal.fire({
@@ -208,11 +234,10 @@
                         });
                     },
                     error: function(error){
-                        console.log('error')
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            text: "Failed to update data",
+                            text: error.responseJSON.message,
                             showConfirmButton: true
                         }).then((result) => {
                             if (result.isConfirmed) {
@@ -222,6 +247,21 @@
                     }
                 });
                 }
+            });
+        });
+
+        $('.btn-konfirmasi').on('click', function ()
+        {
+            var id = $(this).data('id');
+            var action = $(this).data('action');
+            var url = baseURL + '/pinjaman/detail-pembayaran/'+id;
+            
+            $.get(url, function( data ) {
+                $('#my-modal .modal-body').html(data);
+                $('#my-modal').modal({
+                    backdrop: false 
+                });
+                $('#my-modal').modal('show');
             });
         });
     </script>

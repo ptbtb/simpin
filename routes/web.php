@@ -165,6 +165,7 @@ Route::group(['prefix' => 'pinjaman'], function ()
         Route::get('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');
         Route::post('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');
         Route::get('detail/{id}', [App\Http\Controllers\PinjamanController::class, 'show'])->name('pinjaman-detail');
+        Route::get('detail-pembayaran/{id}', [App\Http\Controllers\PinjamanController::class, 'detailPembayaran'])->name('pinjaman-detail-pembayaran');
         Route::get('download/pdf', [App\Http\Controllers\PinjamanController::class, 'createPDF'])->name('pinjaman-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcel'])->name('pinjaman-download-excel');
         Route::get('download-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'downloadFormPinjaman'])->name('download-form-pinjaman');
