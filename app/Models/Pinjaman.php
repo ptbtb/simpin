@@ -52,6 +52,6 @@ class Pinjaman extends Model
 
     public function getPinjamanDiTransferAttribute()
     {
-        return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi;
+        return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi- $this->biaya_asuransi;
     }
 }
