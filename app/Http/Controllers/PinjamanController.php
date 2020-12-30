@@ -226,7 +226,7 @@ class PinjamanController extends Controller
 
         //  chek pengajuan yang belum accepted
         $jenisPinjaman = JenisPinjaman::find($request->jenis_pinjaman);
-        $checkPengajuan = Pengajuan::where('kode_jenis_pinjam', $jenisPinjaman->kode_jenis_pinjam)
+        $checkPengajuan = Pengajuan::whereraw("SUBSTRING(kode_jenis_pinjam,1,6)=".substr($jenisPinjaman->kode_jenis_pinjam,0,6)." ")
                                     ->notApproved()
                                     ->where('kode_anggota', $request->kode_anggota)
                                     ->get();
@@ -237,7 +237,7 @@ class PinjamanController extends Controller
         }
 
         // check pinjaman yang belum lunas
-        $checkPinjaman = Pinjaman::where('kode_jenis_pinjam', $jenisPinjaman->kode_jenis_pinjam)
+        $checkPinjaman = Pinjaman::whereraw("SUBSTRING(kode_jenis_pinjam,1,6)=".substr($jenisPinjaman->kode_jenis_pinjam,0,6)." ")
                                 ->notPaid()
                                 ->where('kode_anggota', $request->kode_anggota)
                                 ->get();
@@ -255,14 +255,15 @@ class PinjamanController extends Controller
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas maksimal peminjaman.');
         }
 
-        // check gaji
-        // $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)->first()->gaji_bulanan;
-        // $potonganGaji = 0.65*$gaji;
-        // $angsuranPerbulan = $request->besar_pinjam/$request->lama_angsuran;
-        // if ($potonganGaji > $angsuranPerbulan)
-        // {
-        //     # code...
-        // }
+         //check gaji
+         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)->first()->gaji_bulanan;
+         $potonganGaji = 0.65*$gaji;
+         $angsuranPerbulan = $besarPinjaman/$request->lama_angsuran;
+         //dd([$potonganGaji,$angsuranPerbulan]);die;
+         if ($angsuranPerbulan > $potonganGaji)
+         {
+              return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas 65 % gaji Anda.');
+         }
 
         DB::transaction(function () use ($request, $besarPinjaman, $user)
         {

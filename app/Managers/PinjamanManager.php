@@ -43,7 +43,7 @@ class PinjamanManager
             $pinjaman->besar_pinjam = $pengajuan->besar_pinjam;
             $pinjaman->besar_angsuran = $totalAngsuranBulan;
             $pinjaman->lama_angsuran = $jenisPinjaman->lama_angsuran;
-            $pinjaman->sisa_angsuran = 0;
+            $pinjaman->sisa_angsuran = $jenisPinjaman->lama_angsuran;
             $pinjaman->sisa_pinjaman = $pengajuan->besar_pinjam;
             $pinjaman->u_entry = "Administrator";
             $pinjaman->tgl_entri = Carbon::now();
