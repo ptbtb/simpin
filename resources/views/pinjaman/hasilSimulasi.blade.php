@@ -52,9 +52,9 @@
                             <th>Status</th>
                             <th>:</th>
                             <td>{{ ucwords(strtolower($anggota->status)) }}</td>
-                            <th>Saldo</th>
+                            <th>Gaji</th>
                             <th>:</th>
-                            <td id="saldo"></td>
+                            <td id="gaji"></td>
                         </tr>
                     </table>
                 </div>
@@ -112,7 +112,13 @@
                 </div>
             </div>
             <div class="col-md-4">
+                @if ($angsuranPokok > $potonganGaji)
+                <b style="color: red">Jumlah pinjaman yang diajukan melebihi batas 65% gaji anda</b>
+                @else
                 <a href="{{ route('generate-form-pinjaman', $collection) }}" class="btn btn-sm btn-info" target="_blank"><i class="fas fa-download"></i> Download Form Persetujuan</a>
+                @endif
+                <br>
+                <a href="{{ route('download-form-pinjaman') }}" class="btn btn-sm btn-warning mt-2"><i class="fas fa-arrow-left"></i> Kembali</a>
             </div>
         </div>
     </div>
@@ -130,11 +136,11 @@
 
 @section('js')
     <script>
-        var saldo = besarPinjaman = maksimalPinjaman = biayaAdministrasi = provisi = asuransi = jasa = angsuranPokok = besarAngsuran = 0;
+        var gaji = besarPinjaman = maksimalPinjaman = biayaAdministrasi = provisi = asuransi = jasa = angsuranPokok = besarAngsuran = 0;
 
         $(document).ready(function ()
         {
-            saldo = {{ $saldo->jumlah }};
+            gaji = {{ $anggota->penghasilan->gaji_bulanan }};
             besarPinjaman = {{ $besarPinjaman }};
             maksimalPinjaman = {{ $maksimalBesarPinjaman }};
             biayaAdministrasi = {{ $biayaAdministrasi }};
@@ -144,7 +150,7 @@
             angsuranPokok = {{ $angsuranPokok }};
             besarAngsuran = {{ $angsuranPerbulan }};
 
-            $('#saldo').text(toRupiah(saldo));
+            $('#gaji').text(toRupiah(gaji));
             $('#besarPinjaman').text(toRupiah(besarPinjaman));
             $('#maksimalPinjaman').text(toRupiah(maksimalPinjaman));
             $('#biayaAdministrasi').text(toRupiah(biayaAdministrasi));

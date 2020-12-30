@@ -53,7 +53,7 @@
         </table>
     </div>
     <div class="text-center">
-        <h5>FORMULIR PINJAMAN <br> (JANGKA PANJANG, JANGKA PENDEK)**</h5>
+        <h5>FORMULIR PINJAMAN <br> {{ strtoupper($jenisPinjaman->kategoriJenisPinjaman->name) }}</h5>
         <table style="width: 100%">
             <tr>
                 <td colspan="7">Yang bertanda tangan di bawah ini:</td>

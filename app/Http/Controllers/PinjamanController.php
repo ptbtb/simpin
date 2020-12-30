@@ -431,6 +431,11 @@ class PinjamanController extends Controller
         $lamaAngsuran = $request->lama_angsuran;
         $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
         $provisi = 0;
+
+        //check gaji
+        $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)->first()->gaji_bulanan;
+        $potonganGaji = 0.65*$gaji;
+
         if ($jenisPinjaman->isDanaLain())
         {
             $provisi = 0.01;
@@ -439,13 +444,13 @@ class PinjamanController extends Controller
                                                 ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
                                                 ->first();
 
-        $angsuranPokok = ceil( $besarPinjaman/$lamaAngsuran);
+        $angsuranPokok = ceil($besarPinjaman/$lamaAngsuran);
         $asuransi = 0;
         if ($asuransiPinjaman)
         {
             $asuransi = $asuransiPinjaman->besar_asuransi/100;
         }
-        $asuransi = $besarPinjaman*$asuransi;
+        $asuransi = ceil($besarPinjaman*$asuransi);
 
         $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3)
@@ -467,6 +472,7 @@ class PinjamanController extends Controller
             'jasa'=> $jasa,
             'angsuranPerbulan'=> $angsuranPerbulan,
             'angsuranPokok'=> $angsuranPokok,
+            'potonganGaji' => $potonganGaji
         ];
 
         $data = $collection;
@@ -499,7 +505,7 @@ class PinjamanController extends Controller
         {
             $asuransi = $asuransiPinjaman->besar_asuransi/100;
         }
-        $asuransi = $besarPinjaman*$asuransi;
+        $asuransi = ceil($besarPinjaman*$asuransi);
 
         $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3)

@@ -7,6 +7,7 @@ use App\Models\Pinjaman;
 use App\Models\Pengajuan;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PinjamanManager 
 {
@@ -15,12 +16,12 @@ class PinjamanManager
         try
         {
             $jenisPinjaman = $pengajuan->jenisPinjaman;
-            $angsuranPerbulan = $pengajuan->besar_pinjam/$jenisPinjaman->lama_angsuran;
+            $angsuranPerbulan = ceil($pengajuan->besar_pinjam/$jenisPinjaman->lama_angsuran);
             // $bungaPerbulan = $angsuranPerbulan*$jenisPinjaman->bunga/100;
-            $jasaPerbulan = $angsuranPerbulan*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
+            $jasaPerbulan = $pengajuan->besar_pinjam*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
             if ($pengajuan->besar_pinjam > 100000000 && $jenisPinjaman->lama_angsuran > 3)
             {
-                $jasaPerbulan = $angsuranPerbulan*3/100;
+                $jasaPerbulan = $pengajuan->besar_pinjam*3/100;
             }
             $asuransiPinjaman = AsuransiPinjaman::where('lama_pinjaman', $jenisPinjaman->lama_angsuran)
                                                 ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
@@ -30,8 +31,16 @@ class PinjamanManager
             {
                 $asuransi = $asuransiPinjaman->besar_asuransi/100;
             }
-            $asuransiPerbulan = $angsuranPerbulan*$asuransi;
-            $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan+$asuransiPerbulan;
+            $asuransi = ceil($pengajuan->besar_pinjam*$asuransi);
+            $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan;
+            $provisi = 0;
+            if ($jenisPinjaman->isDanaLain())
+            {
+                $provisi = 0.01;
+            }
+            $provisi = ceil($pengajuan->besar_pinjam * $provisi);
+            $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
+            $jasaPerbulan = ceil($jasaPerbulan);
            
             $pinjaman = new Pinjaman();
             $kodeAnggota = $pengajuan->kode_anggota;
@@ -42,10 +51,15 @@ class PinjamanManager
             $pinjaman->kode_jenis_pinjam = $pengajuan->kode_jenis_pinjam;
             $pinjaman->besar_pinjam = $pengajuan->besar_pinjam;
             $pinjaman->besar_angsuran = $totalAngsuranBulan;
+            $pinjaman->besar_angsuran_pokok = $angsuranPerbulan;
             $pinjaman->lama_angsuran = $jenisPinjaman->lama_angsuran;
             $pinjaman->sisa_angsuran = $jenisPinjaman->lama_angsuran;
             $pinjaman->sisa_pinjaman = $pengajuan->besar_pinjam;
-            $pinjaman->u_entry = "Administrator";
+            $pinjaman->biaya_jasa = $jasaPerbulan;
+            $pinjaman->biaya_asuransi = $asuransi;
+            $pinjaman->biaya_provisi = $provisi;
+            $pinjaman->biaya_administrasi = $biayaAdministrasi;
+            $pinjaman->u_entry = Auth::user()->name;
             $pinjaman->tgl_entri = Carbon::now();
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($jenisPinjaman->lama_angsuran);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;

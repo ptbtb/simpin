@@ -15,12 +15,13 @@ class AngsuranManager
             $sisaPinjaman = $pinjaman->besar_pinjam;
             for ($i=1; $i <= $pinjaman->lama_angsuran; $i++)
             { 
-                $sisaPinjaman = $sisaPinjaman-$pinjaman->besar_angsuran;
+                $sisaPinjaman = $sisaPinjaman-$pinjaman->besar_angsuran_pokok;
                 $angsuran = new Angsuran();
                 $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
                 $angsuran->angsuran_ke = $i;
-                $angsuran->besar_angsuran = $pinjaman->besar_angsuran;
+                $angsuran->besar_angsuran = $pinjaman->besar_angsuran_pokok;
                 $angsuran->denda = 0;
+                $angsuran->jasa = $pinjaman->biaya_jasa;
                 $angsuran->kode_anggota = $pinjaman->kode_anggota;
                 $angsuran->sisa_pinjam = $sisaPinjaman;
                 $angsuran->tgl_entri = Carbon::now();
