@@ -181,7 +181,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="{{ route('simpanan-list', ['kode_anggota'=>$searchResult->kode_anggota]) }}" class="btn btn-success btn-sm w-100"><i class="fa fa-money-bill"></i> Simpanan</a>
+                        <a href="{{ route('simpanan-add', ['kode_anggota'=>$searchResult->kode_anggota]) }}" class="btn btn-success btn-sm w-100"><i class="fa fa-money-bill"></i> Simpanan</a>
                         <a href="" class="btn btn-info btn-sm w-100 mt-1"><i class="fas fa-hand-holding-usd"></i> Pinjaman</a>
                     </div>
                     <div class="col-md-2">

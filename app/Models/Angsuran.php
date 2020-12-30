@@ -34,6 +34,6 @@ class Angsuran extends Model
         {
             return $this->sisa_pinjam + $this->totalAngsuran - $this->besar_pembayaran;
         }
-        return $this->pinjaman->sisa_pinjaman;
+        return $this->sisa_pinjam + $this->besar_angsuran;
     }
 }

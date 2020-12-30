@@ -29,7 +29,7 @@
             @csrf
             <div class="row">
                 @if ($request->kode_anggota)
-                    <div class="col-md-12 form-group">
+                    <div class="col-md-6 form-group">
                         <label for="kodeAnggota">Kode Anggota</label>
                         <select name="kode_anggota" id="kodeAnggota" class="form-control" required>
                             <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
@@ -190,6 +190,10 @@
                     }
                 }
             });
+        @else
+            $("#kodeAnggota").select2();
+        anggotaId={{$request->kode_anggota}};
+         callDetailAnggota(anggotaId);   
         @endif
     }
 
@@ -270,8 +274,20 @@
                     if(type ===  '502.01.000') {
                         const paymentValue = response.paymentValue;
                         besarSimpananSukarela = response.paymentValue; 
+                        let latestPayment = response.attribute.periode || response.attribute.tanggal_entri;
+                        let monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
+                        let dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
                         $('#besarSimpanan').val(toRupiah(paymentValue));
+                        $('#periode').val(monthYear);
+                        $('#angsuranSimpanan').hide();
+                        $('#periodeDetail').show();
+                          $('#besaSimpananDetail').removeClass('col-md-12').addClass('col-md-6');
 
+                        $('#besarSimpanan').attr('readonly',false);
+
+                    }
+                    if(type ===  '409.01.000') {
+                        
                         $('#angsuranSimpanan').hide();
                         $('#periodeDetail').hide();
                         $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');

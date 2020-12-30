@@ -301,6 +301,8 @@ class SimpananController extends Controller
         // Kalkulasi Simpanan Pokok
         if ($type == '411.01.000') {
             $checkPaymentAvailable = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
+            $checkPaymentAvailable_old = DB::table('t_tabungan')->where('kode_anggota', '=', $anggotaId)->where('kode_trans', '=', '411.01.000')->first();
+            $besarSimpananPokok = DB::table('t_jenis_simpan')->where('kode_jenis_simpan', '=', '411.01.000')->first();
             if ($checkPaymentAvailable) {
                 $angsuranList = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $checkPaymentAvailable->kode_simpan)->get();
 
@@ -309,11 +311,13 @@ class SimpananController extends Controller
                     $angsuranValue += $angsuran->besar_angsuran;
                 }
 
-                $paymentValue = 500000 - $angsuranValue;
+                $paymentValue = $besarSimpananPokok->besar_simpanan - $angsuranValue;
                 $attribute = $angsuranList;
+            }elseif($checkPaymentAvailable_old){
+                $paymentValue = 0;
             }
             else {
-                $paymentValue = 500000;
+                $paymentValue = $besarSimpananPokok->besar_simpanan;
             }
         }
 
@@ -342,8 +346,13 @@ class SimpananController extends Controller
                     ->select('t_penghasilan.gaji_bulanan as penghasilan')
                     ->where('t_anggota.kode_anggota', '=', $anggotaId)
                     ->first();
-            
+            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', '502.01.000')->first();
+            $attribute = $latestAngsur;
+            if ($latestAngsur){
+                $paymentValue= $latestAngsur->besar_simpanan;
+            }else{
             $paymentValue = 0.65 * $anggota->penghasilan;
+            }
 
         }
         
