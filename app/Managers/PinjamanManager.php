@@ -19,7 +19,7 @@ class PinjamanManager
             $angsuranPerbulan = round($pengajuan->besar_pinjam/$jenisPinjaman->lama_angsuran,2);
             // $bungaPerbulan = $angsuranPerbulan*$jenisPinjaman->bunga/100;
             $jasaPerbulan = $pengajuan->besar_pinjam*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
-            if ($pengajuan->besar_pinjam > 100000000 && $jenisPinjaman->lama_angsuran > 3)
+            if ($pengajuan->besar_pinjam > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek())
             {
                 $jasaPerbulan = $pengajuan->besar_pinjam*3/100;
             }

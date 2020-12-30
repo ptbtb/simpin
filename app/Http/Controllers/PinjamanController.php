@@ -472,7 +472,7 @@ class PinjamanController extends Controller
         $asuransi = round($besarPinjaman*$asuransi,2);
 
         $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
-        if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3)
+        if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek())
         {
             $jasa = $besarPinjaman*3/100;
         }
@@ -528,7 +528,7 @@ class PinjamanController extends Controller
         $asuransi = round($besarPinjaman*$asuransi,2);
 
         $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
-        if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3)
+        if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek())
         {
             $jasa = $besarPinjaman*3/100;
         }
