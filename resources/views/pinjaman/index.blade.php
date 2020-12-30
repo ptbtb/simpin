@@ -106,9 +106,10 @@
                             <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
                             <td>Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
                             <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
-                            <td>{{ ucwords($pinjaman->status) }}</td>
+                            <td>{{ ucwords($pinjaman->statusPinjaman->name) }}</td>
                             <td>
-                                <a data-id="{{ $pinjaman->kode_pinjam }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a>
+                                <a href="{{ route('pinjaman-detail', ['id'=>$pinjaman->kode_pinjam]) }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a>
+                                {{-- <a data-id="{{ $pinjaman->kode_pinjam }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a> --}}
                             </td>
                         </tr>
                     @endforeach

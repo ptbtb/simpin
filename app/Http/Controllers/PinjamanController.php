@@ -133,9 +133,15 @@ class PinjamanController extends Controller
         $pinjaman = Pinjaman::with('anggota','listAngsuran')
                             ->where('kode_pinjam', $id)
                             ->first();
+
+        $listAngsuran = $pinjaman->listAngsuran->sortBy('angsuran_ke')->values();
+        $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
         
         $data['pinjaman'] = $pinjaman;
+        $data['title'] = 'Detail Pinjaman';
         $data['jenisPinjaman'] = $pinjaman->jenisPinjaman;
+        $data['listAngsuran'] = $listAngsuran;
+        $data['tagihan'] = $tagihan;
         return view('pinjaman.detail', $data);
     }
 
@@ -610,5 +616,49 @@ class PinjamanController extends Controller
         $data['pinjaman'] = $pinjaman;
         $data['jenisPinjaman'] = $pinjaman->jenisPinjaman;
         return view('pinjaman.detailPembayaran', $data);
+    }
+    
+    public function bayarAngsuran(Request $request, $id)
+    {
+        // try
+        // {
+            $pinjaman = Pinjaman::findOrFail($id);
+            $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran',STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
+            $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
+            foreach ($listAngsuran as $angsuran)
+            {
+                if ($pembayaran > $angsuran->totalAngsuran)
+                {
+                    $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
+                    $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
+                    $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
+                    $pinjaman->save();
+                }
+                else
+                {
+                    $angsuran->besar_pembayaran = $pembayaran;
+                }
+    
+                
+                $pembayaran = $pembayaran - $angsuran->totalAngsuran;
+                $angsuran->paid_at = Carbon::now();
+                $angsuran->u_entry = Auth::user()->name;
+                $angsuran->save();
+    
+                if ($pembayaran <= 0)
+                {
+                    $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
+                    $pinjaman->save();
+                    break;
+                }
+            }
+            return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
+        // }
+        // catch (\Throwable $e)
+        // {
+        //     \Log::error($e);
+        //     $message = $e->getMessage();
+        //     return redirect()->back()->withError('gagal melakukan pembayaran');
+        // }
     }
 }

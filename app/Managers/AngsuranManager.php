@@ -15,6 +15,7 @@ class AngsuranManager
             $sisaPinjaman = $pinjaman->besar_pinjam;
             for ($i=1; $i <= $pinjaman->lama_angsuran; $i++)
             { 
+                $jatuhTempo = $pinjaman->tgl_entri->addMonths($i)->endOfMonth();
                 $sisaPinjaman = $sisaPinjaman-$pinjaman->besar_angsuran_pokok;
                 $angsuran = new Angsuran();
                 $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
@@ -25,6 +26,7 @@ class AngsuranManager
                 $angsuran->kode_anggota = $pinjaman->kode_anggota;
                 $angsuran->sisa_pinjam = $sisaPinjaman;
                 $angsuran->tgl_entri = Carbon::now();
+                $angsuran->jatuh_tempo = $jatuhTempo;
                 $angsuran->u_entry = 'Administrator';
                 $angsuran->save();
             }
