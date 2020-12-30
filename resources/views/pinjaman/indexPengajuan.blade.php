@@ -137,7 +137,9 @@
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguPembayaran())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
+                                            @can('bayar pengajuan pinjaman')
+                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
+                                            @endcan
                                             <!-- <b style="color: blue !important"><i class="fas fa-clock"></i></b> -->
                                         @elseif($pengajuan->diterima())
                                             <b style="color: green !important"><i class="fas fa-check"></i></b>

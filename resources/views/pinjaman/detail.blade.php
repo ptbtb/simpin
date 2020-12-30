@@ -42,8 +42,13 @@
         <tr>
             <td>Status</td>
             <td>:</td>
-            <td class="font-weight-bold">{{ ucwords($pinjaman->status) }}</td>
-            <td colspan="6"></td>
+            <td class="font-weight-bold">{{ ucwords($pinjaman->statusPinjaman->name) }}</td>
+            <td>Administrasi</td>
+            <td>:</td>
+            <td>Rp. {{ number_format($pinjaman->biaya_administrasi,0,",",".") }}</td>
+            <td>Provisi</td>
+            <td>:</td>
+            <td>Rp. {{ number_format($pinjaman->biaya_provisi,0,",",".") }}</td>
         </tr>
     </table>
 </div>
@@ -55,20 +60,24 @@
             <thead>
                 <tr>
                     <th>Angsuran Ke</th>
-                    <th>Tanggal Angsuran</th>
-                    <th>Besar Angsuran</th>
+                    <th>Angsuran Pokok</th>
+                    <th>Jasa</th>
+                    <th>Total Angsuran</th>
                     <th>Denda</th>
                     <th>Sisa Pinjaman</th>
+                    <th>Dibayar Pada Tanggal</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($pinjaman->listAngsuran->sortBy('angsuran_ke')->values() as $angsuran)
                     <tr>
                         <td>{{ $angsuran->angsuran_ke }}</td>
-                        <td>{{ $angsuran->tgl_entri->format('d M Y') }}</td>
                         <td>Rp. {{ number_format($angsuran->besar_angsuran,0,",",".") }}</td>
+                        <td>Rp. {{ number_format($angsuran->jasa,0,",",".") }}</td>
+                        <td>Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}</td>
                         <td>Rp. {{ number_format($angsuran->denda,0,",",".") }}</td>
                         <td>Rp. {{ number_format($angsuran->sisa_pinjam,0,",",".") }}</td>
+                        <td>{{($angsuran->paid_at)?  $angsuran->paid_at->format('d M Y'):'-' }}</td>
                     </tr>
                 @endforeach
             </tbody>

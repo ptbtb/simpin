@@ -11,5 +11,5 @@ class Angsuran extends Model
 
     protected $table = "t_angsur";
     protected $primaryKey = "kode_angsur";
-    protected $dates = ['tgl_entri'];
+    protected $dates = ['tgl_entri','paid_at'];
 }

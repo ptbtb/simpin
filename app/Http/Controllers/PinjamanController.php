@@ -341,6 +341,7 @@ class PinjamanController extends Controller
             }
             elseif ($request->action == KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN)
             {
+                $pengajuan->paid_by_cashier = $user->id;
                 $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
                 $pengajuan->save();
             }
@@ -512,20 +513,20 @@ class PinjamanController extends Controller
                                                 ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
                                                 ->first();
 
-        $angsuranPokok = ceil( $besarPinjaman/$lamaAngsuran);
+        $angsuranPokok = round( $besarPinjaman/$lamaAngsuran,2);
         $asuransi = 0;
         if ($asuransiPinjaman)
         {
             $asuransi = $asuransiPinjaman->besar_asuransi/100;
         }
-        $asuransi = ceil($besarPinjaman*$asuransi);
+        $asuransi = round($besarPinjaman*$asuransi,2);
 
         $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3)
         {
             $jasa = $besarPinjaman*3/100;
         }
-        $jasa = ceil($jasa);
+        $jasa = round($jasa,2);
         $angsuranPerbulan = $angsuranPokok + $asuransi + $jasa;
         $terbilang = self::terbilang($besarPinjaman).' rupiah';
         $data = [

@@ -30,6 +30,11 @@ class Pinjaman extends Model
         return $this->belongsTo(Pengajuan::class, 'kode_pengajuan_pinjaman');
     }
 
+    public function statusPinjaman()
+    {
+        return $this->belongsTo(StatusPinjaman::class, 'id_status_pinjaman');
+    }
+
     public function listAngsuran()
     {
         return $this->hasMany(Angsuran::class, 'kode_pinjam');
