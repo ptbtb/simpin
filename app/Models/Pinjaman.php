@@ -34,4 +34,9 @@ class Pinjaman extends Model
     {
         return $query->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS);
     }
+
+    public function scopePaid($query)
+    {
+        return $query->where('id_status_pinjaman', STATUS_PINJAMAN_LUNAS);
+    }
 }
