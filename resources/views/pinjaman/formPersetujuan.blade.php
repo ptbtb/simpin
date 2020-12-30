@@ -97,7 +97,7 @@
             <tr>
                 <td>Gaji Bersih</td>
                 <td>:</td>
-                <td id="gaji">{{ "Rp " . number_format($anggota->penghasilan->gaji_bulanan,0,',','.') }}</td>
+                <td id="gaji">{{ "Rp " . number_format($anggota->penghasilan->gaji_bulanan,2,',','.') }}</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -108,7 +108,7 @@
     <div>
         <ol>
             <li>
-                Mengajukan pinjaman sebesar {{ "Rp " . number_format($besarPinjaman,0,',','.') }}. Terbilang : {{ $besarPinjamanTerbilang }} <br>
+                Mengajukan pinjaman sebesar {{ "Rp " . number_format($besarPinjaman,2,',','.') }}. Terbilang : {{ $besarPinjamanTerbilang }} <br>
                 Untuk Keperluan : .................<br>
                 Jangka Waktu / Tenor Pinjaman : {{ $lamaAngsuran }} ( {{ $lamaAngsuranTerbilang }} ) bulan.
             </li>
@@ -159,7 +159,7 @@
             <td>1.</td>
             <td style="width: 25%">Simpanan Pokok</td>
             <td>:</td>
-            <td style="width: 25%">{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_POKOK)->first()->besar_tabungan,0,',','.') }}</td>
+            <td style="width: 25%">{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_POKOK)->first()->besar_tabungan,2,',','.') }}</td>
         </tr>
         <tr>
             <td>2.</td>
@@ -169,7 +169,7 @@
             <td>2.</td>
             <td>Simpanan Wajib</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_WAJIB)->first()->besar_tabungan,0,',','.') }}</td>
+            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_WAJIB)->first()->besar_tabungan,2,',','.') }}</td>
         </tr>
         <tr>
             <td>3.</td>
@@ -179,7 +179,7 @@
             <td>3.</td>
             <td>Simpanan Sukarela</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_SUKARELA)->first()->besar_tabungan,0,',','.') }}</td>
+            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_SUKARELA)->first()->besar_tabungan,2,',','.') }}</td>
         </tr>
         <tr>
             <td>4.</td>
@@ -189,7 +189,7 @@
             <td>4.</td>
             <td>Simpanan Khusus</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_KHUSUS)->first()->besar_tabungan,0,',','.') }}</td>
+            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_KHUSUS)->first()->besar_tabungan,2,',','.') }}</td>
         </tr>
         <tr>
             <td>5.</td>
@@ -199,7 +199,7 @@
             <td></td>
             <td>Jumlah Simpanan</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($anggota->tabungan->whereIn('kode_trans',[JENIS_SIMPANAN_KHUSUS,JENIS_SIMPANAN_SUKARELA,JENIS_SIMPANAN_POKOK,JENIS_SIMPANAN_WAJIB])->sum('besar_tabungan'),0,',','.') }}</td>
+            <td>{{ "Rp " . number_format($anggota->tabungan->whereIn('kode_trans',[JENIS_SIMPANAN_KHUSUS,JENIS_SIMPANAN_SUKARELA,JENIS_SIMPANAN_POKOK,JENIS_SIMPANAN_WAJIB])->sum('besar_tabungan'),2,',','.') }}</td>
         </tr>
         <tr>
             <td>6.</td>
@@ -236,7 +236,7 @@
             <td>1.</td>
             <td>Asuransi</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($asuransi,0,',','.') }}</td>
+            <td>{{ "Rp " . number_format($asuransi,2,',','.') }}</td>
         </tr>
         <tr>
             <td>10.</td>
@@ -246,7 +246,7 @@
             <td>2.</td>
             <td>Provisi</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($provisi,0,',','.') }}</td>
+            <td>{{ "Rp " . number_format($provisi,2,',','.') }}</td>
         </tr>
         <tr>
             <td>11.</td>
@@ -256,7 +256,7 @@
             <td>3.</td>
             <td>Administrasi</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($biayaAdministrasi,0,',','.') }}<td>
+            <td>{{ "Rp " . number_format($biayaAdministrasi,2,',','.') }}<td>
         </tr>
         <tr>
             <td>12.</td>
@@ -266,7 +266,7 @@
             <td>4.</td>
             <td>Angsuran Pokok</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($angsuranPokok,0,',','.') }}<td>
+            <td>{{ "Rp " . number_format($angsuranPokok,2,',','.') }}<td>
         </tr>
         <tr>
             <td></td>
@@ -276,7 +276,7 @@
             <td>5.</td>
             <td>Jasa</td>
             <td>:</td>
-            <td>{{ "Rp " . number_format($jasa,0,',','.') }}</td>
+            <td>{{ "Rp " . number_format($jasa,2,',','.') }}</td>
         </tr>
     </table>
     {{-- <hr>

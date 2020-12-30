@@ -16,7 +16,7 @@ class PinjamanManager
         try
         {
             $jenisPinjaman = $pengajuan->jenisPinjaman;
-            $angsuranPerbulan = ceil($pengajuan->besar_pinjam/$jenisPinjaman->lama_angsuran);
+            $angsuranPerbulan = round($pengajuan->besar_pinjam/$jenisPinjaman->lama_angsuran,2);
             // $bungaPerbulan = $angsuranPerbulan*$jenisPinjaman->bunga/100;
             $jasaPerbulan = $pengajuan->besar_pinjam*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
             if ($pengajuan->besar_pinjam > 100000000 && $jenisPinjaman->lama_angsuran > 3)
@@ -31,16 +31,16 @@ class PinjamanManager
             {
                 $asuransi = $asuransiPinjaman->besar_asuransi/100;
             }
-            $asuransi = ceil($pengajuan->besar_pinjam*$asuransi);
+            $asuransi = round($pengajuan->besar_pinjam*$asuransi,2);
             $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan;
             $provisi = 0;
             if ($jenisPinjaman->isDanaLain())
             {
                 $provisi = 0.01;
             }
-            $provisi = ceil($pengajuan->besar_pinjam * $provisi);
+            $provisi = round($pengajuan->besar_pinjam * $provisi,2);
             $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
-            $jasaPerbulan = ceil($jasaPerbulan);
+            $jasaPerbulan = round($jasaPerbulan,2);
            
             $pinjaman = new Pinjaman();
             $kodeAnggota = $pengajuan->kode_anggota;

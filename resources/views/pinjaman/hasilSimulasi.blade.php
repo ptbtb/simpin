@@ -54,7 +54,7 @@
                             <td>{{ ucwords(strtolower($anggota->status)) }}</td>
                             <th>Gaji</th>
                             <th>:</th>
-                            <td id="gaji"></td>
+                            <td id="gaji">{{ "Rp " . number_format($anggota->penghasilan->gaji_bulanan,2,',','.') }}</td>
                         </tr>
                     </table>
                 </div>
@@ -79,34 +79,34 @@
                         <tr>
                             <th>Besar Pinjaman</th>
                             <th>:</th>
-                            <td id="besarPinjaman"></td>
+                            <td id="besarPinjaman">{{ "Rp " . number_format($besarPinjaman,2,',','.') }}</td>
                             <th>Maksimal Pinjaman</th>
                             <th>:</th>
-                            <td id="maksimalPinjaman"></td>
+                            <td id="maksimalPinjaman">{{ "Rp " . number_format($maksimalBesarPinjaman,2,',','.') }}</td>
                         </tr>
                         <tr>
                             <th>Biaya Administrasi</th>
                             <th>:</th>
-                            <td id="biayaAdministrasi"></td>
+                            <td id="biayaAdministrasi">{{ "Rp " . number_format($biayaAdministrasi,2,',','.') }}</td>
                             <th>Provisi</th>
                             <th>:</th>
-                            <td id="provisi"></td>
+                            <td id="provisi">{{ "Rp " . number_format($provisi,2,',','.') }}</td>
                         </tr>
                         <tr>
                             <th>Asuransi</th>
                             <th>:</th>
-                            <td id="asuransi"></td>
+                            <td id="asuransi">{{ "Rp " . number_format($asuransi,2,',','.') }}</td>
                             <th>Jasa</th>
                             <th>:</th>
-                            <td id="jasa"></td>
+                            <td id="jasa">{{ "Rp " . number_format($jasa,2,',','.') }}</td>
                         </tr>
                         <tr>
                             <th>Angsuran Pokok</th>
                             <th>:</th>
-                            <td id="angsuranPokok"></td>
+                            <td id="angsuranPokok">{{ "Rp " . number_format($angsuranPokok,2,',','.') }}</td>
                             <th>Besar Angsuran</th>
                             <th>:</th>
-                            <td id="besarAngsuran"></td>
+                            <td id="besarAngsuran">{{ "Rp " . number_format($angsuranPerbulan,2,',','.') }}</td>
                         </tr>
                     </table>
                 </div>
@@ -132,49 +132,4 @@
             padding: 8px;
         }
     </style>
-@endsection
-
-@section('js')
-    <script>
-        var gaji = besarPinjaman = maksimalPinjaman = biayaAdministrasi = provisi = asuransi = jasa = angsuranPokok = besarAngsuran = 0;
-
-        $(document).ready(function ()
-        {
-            gaji = {{ $anggota->penghasilan->gaji_bulanan }};
-            besarPinjaman = {{ $besarPinjaman }};
-            maksimalPinjaman = {{ $maksimalBesarPinjaman }};
-            biayaAdministrasi = {{ $biayaAdministrasi }};
-            provisi = {{ $provisi }};
-            asuransi = {{ $asuransi }};
-            jasa = {{ $jasa }};
-            angsuranPokok = {{ $angsuranPokok }};
-            besarAngsuran = {{ $angsuranPerbulan }};
-
-            $('#gaji').text(toRupiah(gaji));
-            $('#besarPinjaman').text(toRupiah(besarPinjaman));
-            $('#maksimalPinjaman').text(toRupiah(maksimalPinjaman));
-            $('#biayaAdministrasi').text(toRupiah(biayaAdministrasi));
-            $('#provisi').text(toRupiah(provisi));
-            $('#asuransi').text(toRupiah(asuransi));
-            $('#jasa').text(toRupiah(jasa));
-            $('#angsuranPokok').text(toRupiah(angsuranPokok));
-            $('#besarAngsuran').text(toRupiah(besarAngsuran));
-        });
-        function toRupiah(number)
-        {
-            var stringNumber = number.toString();
-            var length = stringNumber.length;
-            var temp = length;
-            var res = "Rp ";
-            for (let i = 0; i < length; i++) {
-                res = res + stringNumber.charAt(i);
-                temp--;
-                if (temp%3 == 0 && temp > 0)
-                {
-                    res = res + ".";
-                }
-            }
-            return res;
-        }
-    </script>
 @endsection
