@@ -332,6 +332,11 @@ class PinjamanController extends Controller
                 $pengajuan->save();
                 event(new PengajuanApproved($pengajuan));
             }
+            elseif ($request->action == KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN)
+            {
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
+                $pengajuan->save();
+            }
             else
             {
                 $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITOLAK;

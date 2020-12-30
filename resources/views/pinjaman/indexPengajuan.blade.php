@@ -137,7 +137,8 @@
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguPembayaran())
-                                            <b style="color: blue !important"><i class="fas fa-clock"></i></b>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval">Konfirmasi Pembayaran</a>
+                                            <!-- <b style="color: blue !important"><i class="fas fa-clock"></i></b> -->
                                         @elseif($pengajuan->diterima())
                                             <b style="color: green !important"><i class="fas fa-check"></i></b>
                                         @else

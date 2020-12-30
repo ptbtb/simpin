@@ -245,6 +245,7 @@ class UserController extends Controller
     {
 		$user = Auth::user();
 		$listPenghasilanTertentu = JenisPenghasilanTertentu::show()->get();
+		$data['penghasilan'] = null;
 
 		if (is_null($user->anggota))
 		{
@@ -258,12 +259,13 @@ class UserController extends Controller
 			{
 				$data['valuePenghasilanTertentu'] = $penghasilanTertentu;
 			}
+			$data['penghasilan'] = $user->anggota->penghasilan;
+
 		}
 
     	$data['title'] = 'Edit Profile';
     	$data['user'] = $user;
 		$data['classList'] = $classList;
-		$data['penghasilan'] = $user->anggota->penghasilan;
 		$data['listPenghasilanTertentu'] = $listPenghasilanTertentu;
     	return view('user.profile', $data);
     }
