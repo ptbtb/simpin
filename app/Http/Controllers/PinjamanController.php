@@ -593,9 +593,15 @@ class PinjamanController extends Controller
 		return $hasil;
     }
     
-    public function detailPembayaran($idPinjaman)
+    public function detailPembayaran($id)
     {
-        $pinjaman = Pinjaman::find($idPinjaman);
+        $pengajuan = Pengajuan::find($id);
+        if (is_null($pengajuan))
+        {
+            return response()->json(['message' => 'Pengajuan Not Found'], 404);
+        }
+
+        $pinjaman = $pengajuan->pinjaman;
         if (is_null($pinjaman))
         {
             return response()->json(['message' => 'Pinjaman Not Found'], 404);
