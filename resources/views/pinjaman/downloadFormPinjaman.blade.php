@@ -64,7 +64,7 @@
                     <label>Lama Angsuran</label>
                     <input type="text" name="lama_angsuran" class="form-control" placeholder="Lama Angsuran" readonly id="lamaAngsuran">
                 </div>
-                <div class="col-md-6 form-group">
+                {{-- <div class="col-md-6 form-group">
                     <label>Upload Form Persetujuan Atasan</label>
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="formPersetujuan" name="form_persetujuan"  accept="application/pdf" style="cursor: pointer" required>
@@ -77,7 +77,7 @@
                         <input type="file" class="custom-file-input" name="surat_penghasilan_tertentu"  accept="application/pdf" style="cursor: pointer">
                         <label class="custom-file-label" for="customFile">Choose Document</label>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-12">
                     <button type="submit" name="ajukan_pinjaman" id="submit" class="btn btn-success btn-sm"><i class="fas fa-paper-plane"></i> Simulasi</button>
                 </div>

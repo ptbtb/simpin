@@ -139,8 +139,8 @@
             maksimalPinjaman = {{ $maksimalBesarPinjaman }};
             biayaAdministrasi = {{ $biayaAdministrasi }};
             provisi = {{ $provisi }};
-            asuransi = {{ $asuransiPerbulan }};
-            jasa = {{ $jasaPerbulan }};
+            asuransi = {{ $asuransi }};
+            jasa = {{ $jasa }};
             angsuranPokok = {{ $angsuranPokok }};
             besarAngsuran = {{ $angsuranPerbulan }};
 

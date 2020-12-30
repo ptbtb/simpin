@@ -439,20 +439,21 @@ class PinjamanController extends Controller
                                                 ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
                                                 ->first();
 
-        $angsuranPokok = $besarPinjaman/$lamaAngsuran;
+        $angsuranPokok = ceil( $besarPinjaman/$lamaAngsuran);
         $asuransi = 0;
         if ($asuransiPinjaman)
         {
             $asuransi = $asuransiPinjaman->besar_asuransi/100;
         }
-        $asuransiPerbulan = $angsuranPokok*$asuransi;
+        $asuransi = $besarPinjaman*$asuransi;
 
-        $jasaPerbulan = $angsuranPokok*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
+        $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3)
         {
-            $jasaPerbulan = $angsuranPokok*3/100;
+            $jasa = $besarPinjaman*3/100;
         }
-        $angsuranPerbulan = $angsuranPokok + $asuransiPerbulan + $jasaPerbulan;
+        $jasa = ceil($jasa);
+        $angsuranPerbulan = $angsuranPokok + $asuransi + $jasa;
         $collection = [
             'anggota' => $anggota,
             'saldo'=> $saldo,
@@ -462,8 +463,8 @@ class PinjamanController extends Controller
             'lamaAngsuran'=> $lamaAngsuran,
             'biayaAdministrasi'=> $biayaAdministrasi,
             'provisi'=> $provisi,
-            'asuransiPerbulan'=> $asuransiPerbulan,
-            'jasaPerbulan'=> $jasaPerbulan,
+            'asuransi'=> $asuransi,
+            'jasa'=> $jasa,
             'angsuranPerbulan'=> $angsuranPerbulan,
             'angsuranPokok'=> $angsuranPokok,
         ];
@@ -492,20 +493,21 @@ class PinjamanController extends Controller
                                                 ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
                                                 ->first();
 
-        $angsuranPokok = $besarPinjaman/$lamaAngsuran;
+        $angsuranPokok = ceil( $besarPinjaman/$lamaAngsuran);
         $asuransi = 0;
         if ($asuransiPinjaman)
         {
             $asuransi = $asuransiPinjaman->besar_asuransi/100;
         }
-        $asuransiPerbulan = $angsuranPokok*$asuransi;
+        $asuransi = $besarPinjaman*$asuransi;
 
-        $jasaPerbulan = $angsuranPokok*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
+        $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3)
         {
-            $jasaPerbulan = $angsuranPokok*3/100;
+            $jasa = $besarPinjaman*3/100;
         }
-        $angsuranPerbulan = $angsuranPokok + $asuransiPerbulan + $jasaPerbulan;
+        $jasa = ceil($jasa);
+        $angsuranPerbulan = $angsuranPokok + $asuransi + $jasa;
         $terbilang = self::terbilang($besarPinjaman).' rupiah';
         $data = [
             'anggota' => $anggota,
@@ -518,8 +520,8 @@ class PinjamanController extends Controller
             'lamaAngsuranTerbilang' => self::terbilang($lamaAngsuran),
             'biayaAdministrasi'=> $biayaAdministrasi,
             'provisi'=> $provisi,
-            'asuransiPerbulan'=> $asuransiPerbulan,
-            'jasaPerbulan'=> $jasaPerbulan,
+            'asuransi'=> $asuransi,
+            'jasa'=> $jasa,
             'angsuranPerbulan'=> $angsuranPerbulan,
             'angsuranPokok'=> $angsuranPokok,
         ];
@@ -531,7 +533,7 @@ class PinjamanController extends Controller
         // download PDF file with download method
         $filename = 'form_persetujuan_atasan'.Carbon::now()->format('d M Y').'.pdf';
         return $pdf->download($filename);
-        
+
         return view('pinjaman.formPersetujuan', $data);
     }
 
