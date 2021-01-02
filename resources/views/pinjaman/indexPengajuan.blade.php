@@ -73,6 +73,7 @@
                         <th>Nama Anggota</th>
                         <th>Jenis Pinjaman</th>
                         <th>Besar Pinjaman</th>
+                        <th>Form Persetujuan</th>
                         <th>Status</th>
                         <th>Tanggal Acc</th>
                         <th>Diajukan Oleh</th>
@@ -95,6 +96,7 @@
                             </td>
                             <td>{{ ucwords(strtolower($pengajuan->jenisPinjaman->nama_pinjaman)) }}</td>
                             <td>Rp. {{ number_format($pengajuan->besar_pinjam,0,",",".") }}</td>
+                            <td><a class="btn btn-warning btn-sm" onclick="window.open('{{ url(ucfirst($pengajuan->form_persetujuan)) }}')" ><i class="fa fa-file"></i></a></td>
                             <td class="str-to">{{ ucfirst($pengajuan->statusPengajuan->name) }}</td>
                             <td>
                                 @if ($pengajuan->tgl_acc)
@@ -134,9 +136,24 @@
                                 @else    
                                     @can('approve pengajuan pinjaman')
                                         @if ($pengajuan->menungguKonfirmasi())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ VERIFIKASI_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
-                                        @elseif($pengajuan->menungguPembayaran())
+                                        @endif @if($pengajuan->menungguApprovalSpv())
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_SPV }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                        @endif @if($pengajuan->menungguApprovalAsman())
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_ASMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                        @endif @if($pengajuan->menungguApprovalManager())
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_MANAGER }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                        @endif @if($pengajuan->menungguApprovalBendahara())
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_BENDAHARA}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                        @endif @if($pengajuan->menungguApprovalKetua())
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_KETUA}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                        @endif @if($pengajuan->menungguPembayaran())
                                             @can('bayar pengajuan pinjaman')
                                                 <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
                                             @endcan

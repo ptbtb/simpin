@@ -64,6 +64,10 @@
                     <label>Lama Angsuran</label>
                     <input type="text" name="lama_angsuran" class="form-control" placeholder="Lama Angsuran" readonly id="lamaAngsuran">
                 </div>
+                <div class="col-md-6 form-group">
+                    <label>Keperluan</label>
+                    <input type="text" name="keperluan" class="form-control" placeholder="Keperluan"  id="keperluan">
+                </div>
                 {{-- <div class="col-md-6 form-group">
                     <label>Upload Form Persetujuan Atasan</label>
                     <div class="custom-file">

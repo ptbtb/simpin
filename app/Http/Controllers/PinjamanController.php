@@ -282,6 +282,7 @@ class PinjamanController extends Controller
             $pengajuan->kode_anggota = $request->kode_anggota;
             $pengajuan->kode_jenis_pinjam = $request->jenis_pinjaman;
             $pengajuan->besar_pinjam = $besarPinjaman;
+            $pengajuan->keperluan = $request->keperluan;
             $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
             $pengajuan->created_by = $user->id;
 
@@ -337,21 +338,61 @@ class PinjamanController extends Controller
             {
                 return response()->json(['message' => 'not found'], 404);
             }
-            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN)
+            if ($request->action == VERIFIKASI_PENGAJUAN_PINJAMAN)
             {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV;
+                $pengajuan->tgl_acc = Carbon::now();
+                $pengajuan->approved_by = $user->id;
+                $pengajuan->save();
+//                event(new PengajuanApproved($pengajuan));
+            }
+            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_SPV)
+            {
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN;
+                $pengajuan->tgl_acc = Carbon::now();
+                $pengajuan->approved_by = $user->id;
+                $pengajuan->save();
+//                event(new PengajuanApproved($pengajuan));
+            }
+            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_ASMAN)
+            {
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER;
+                $pengajuan->tgl_acc = Carbon::now();
+                $pengajuan->approved_by = $user->id;
+                $pengajuan->save();
+//                event(new PengajuanApproved($pengajuan));
+            }
+            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_MANAGER)
+            {
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA;
+                $pengajuan->tgl_acc = Carbon::now();
+                $pengajuan->approved_by = $user->id;
+                $pengajuan->save();
+//                event(new PengajuanApproved($pengajuan));
+            }
+            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_BENDAHARA)
+            {
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA;
                 $pengajuan->tgl_acc = Carbon::now();
                 $pengajuan->approved_by = $user->id;
                 $pengajuan->save();
                 event(new PengajuanApproved($pengajuan));
             }
-            elseif ($request->action == KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN)
+            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_KETUA)
+            {
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                $pengajuan->tgl_acc = Carbon::now();
+                $pengajuan->approved_by = $user->id;
+                $pengajuan->save();
+            }
+            if ($request->action == KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN)
             {
                 $pengajuan->paid_by_cashier = $user->id;
                 $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
                 $pengajuan->save();
+               
             }
-            else
+            if ($request->action == REJECT_PENGAJUAN_PINJAMAN)
             {
                 $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITOLAK;
                 $pengajuan->save();
@@ -447,6 +488,7 @@ class PinjamanController extends Controller
         $besarPinjaman = filter_var($request->besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
         $maksimalBesarPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
         $lamaAngsuran = $request->lama_angsuran;
+        $keperluan = $request->keperluan;
         $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
         $provisi = 0;
 
@@ -477,7 +519,7 @@ class PinjamanController extends Controller
             $jasa = $besarPinjaman*3/100;
         }
         $jasa = round($jasa,2);
-        $angsuranPerbulan = $angsuranPokok + $asuransi + $jasa;
+        $angsuranPerbulan = $angsuranPokok  + $jasa;
         $collection = [
             'anggota' => $anggota,
             'saldo'=> $saldo,
@@ -491,6 +533,7 @@ class PinjamanController extends Controller
             'jasa'=> $jasa,
             'angsuranPerbulan'=> $angsuranPerbulan,
             'angsuranPokok'=> $angsuranPokok,
+            'keperluan'=> $keperluan,
             'potonganGaji' => $potonganGaji
         ];
 
@@ -509,6 +552,7 @@ class PinjamanController extends Controller
         $maksimalBesarPinjaman = filter_var($request->maksimalBesarPinjaman, FILTER_SANITIZE_NUMBER_INT);
         $lamaAngsuran = $request->lamaAngsuran;
         $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
+        $keperluan = $request->keperluan;
         $provisi = 0;
         if ($jenisPinjaman->isDanaLain())
         {
@@ -533,7 +577,7 @@ class PinjamanController extends Controller
             $jasa = $besarPinjaman*3/100;
         }
         $jasa = round($jasa,2);
-        $angsuranPerbulan = $angsuranPokok + $asuransi + $jasa;
+        $angsuranPerbulan = $angsuranPokok  + $jasa;
         $terbilang = self::terbilang($besarPinjaman).' rupiah';
         $data = [
             'anggota' => $anggota,
@@ -548,6 +592,7 @@ class PinjamanController extends Controller
             'provisi'=> $provisi,
             'asuransi'=> $asuransi,
             'jasa'=> $jasa,
+            'keperluan'=> $keperluan,
             'angsuranPerbulan'=> $angsuranPerbulan,
             'angsuranPokok'=> $angsuranPokok,
         ];
@@ -654,6 +699,10 @@ class PinjamanController extends Controller
                     $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
                     $pinjaman->save();
                     break;
+                }
+                if ($pinjaman->sisa_pinjaman <= 0) {
+                    $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+                    $pinjaman->save();
                 }
             }
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');

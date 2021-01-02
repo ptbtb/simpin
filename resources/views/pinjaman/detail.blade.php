@@ -108,11 +108,11 @@
                             <th>Angsuran Pokok</th>
                             <th>Jasa</th>
                             <th>Total Angsuran</th>
-                            <th>Denda</th>
+                            <th>Periode Pembayaran</th>
                             <th>Besar Pembayaran</th>
                             <th>Dibayar Pada Tanggal</th>
-                            <th>Diupdate Oleh</th>
                             <th>Status</th>
+                            <th>Diupdate Oleh</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,11 +122,11 @@
                                 <td>Rp. {{ number_format($angsuran->besar_angsuran,0,",",".") }}</td>
                                 <td>Rp. {{ number_format($angsuran->jasa,0,",",".") }}</td>
                                 <td>Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}</td>
-                                <td>Rp. {{ number_format($angsuran->denda,0,",",".") }}</td>
+                                <td>{{ $angsuran->jatuh_tempo->format('m-Y') }}</td>
                                 <td>Rp. {{ number_format($angsuran->besar_pembayaran,0,",",".") }}</td>
                                 <td>{{($angsuran->paid_at)?  $angsuran->paid_at->format('d M Y'):'-' }}</td>
-                                <td>{{ ($angsuran->paid_at)? $angsuran->u_entry:'-' }}</td>
                                 <td>{{ $angsuran->statusAngsuran->name }}</td>
+                                <td>{{ ($angsuran->paid_at)? $angsuran->u_entry:'-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

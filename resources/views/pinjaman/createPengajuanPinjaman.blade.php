@@ -90,6 +90,10 @@
                         <label class="custom-file-label" for="customFile">Choose Document</label>
                     </div>
                 </div>
+                <div class="col-md-6 form-group">
+                    <label>Keperluan</label>
+                    <input type="text" name="keperluan" class="form-control" placeholder="Keperluan"  id="keperluan">
+                </div>
                 <div id="suratPenghasilanTertentu" class="col-md-6 form-group" style="display: none">
                     <label>Upload Surat Mendapatkan Penghasilan Tertentu</label>
                     <div class="custom-file">

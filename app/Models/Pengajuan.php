@@ -59,6 +59,26 @@ class Pengajuan extends Model
     {
         return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
     }
+    public function menungguApprovalSpv()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV;
+    }
+    public function menungguApprovalAsman()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN;
+    }
+    public function menungguApprovalManager()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER;
+    }
+    public function menungguApprovalBendahara()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA;
+    }
+    public function menungguApprovalKetua()
+    {
+        return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA;
+    }
 
     public function menungguPembayaran()
     {

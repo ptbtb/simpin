@@ -109,7 +109,7 @@
         <ol>
             <li>
                 Mengajukan pinjaman sebesar {{ "Rp " . number_format($besarPinjaman,2,',','.') }}. Terbilang : {{ $besarPinjamanTerbilang }} <br>
-                Untuk Keperluan : .................<br>
+                Untuk Keperluan : {{ $keperluan }}<br>
                 Jangka Waktu / Tenor Pinjaman : {{ $lamaAngsuran }} ( {{ $lamaAngsuranTerbilang }} ) bulan.
             </li>
             <li>
@@ -352,6 +352,6 @@
         </tr>
     </table> --}}
     <br>
-    * Lampirkan FC KTP, SLIP Gaji, IP dan Jaminan untuk Pinjaman Jangaka Pendek <br>
-    ** Coret yang tidak perlu
+    * Lampirkan FC KTP, SLIP Gaji, IP dan Jaminan untuk Pinjaman Jangka Pendek <br>
+    
 </body>

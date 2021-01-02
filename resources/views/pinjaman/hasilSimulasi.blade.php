@@ -108,6 +108,14 @@
                             <th>:</th>
                             <td id="besarAngsuran">{{ "Rp " . number_format($angsuranPerbulan,2,',','.') }}</td>
                         </tr>
+                        <tr>
+                            <th>Keperluan</th>
+                            <th>:</th>
+                            <td id="keperluan">{{ ucwords(strtolower($keperluan)) }}</td>
+                            <th></th>
+                            <th></th>
+                            <td id="besarAngsuran"></td>
+                        </tr>
                     </table>
                 </div>
             </div>
