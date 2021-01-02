@@ -139,8 +139,10 @@
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ VERIFIKASI_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @endif @if($pengajuan->menungguApprovalSpv())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_SPV }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                            @can('approve pengajuan pinjaman spv')
+                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_SPV }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                            @endcan
                                         @endif @if($pengajuan->menungguApprovalAsman())
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ APPROVE_PENGAJUAN_PINJAMAN_ASMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-action="{{ REJECT_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>

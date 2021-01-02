@@ -31,6 +31,8 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('give-user-permission', [App\Http\Controllers\HomeController::class, 'index'])->name('give-user-permission');
+
 // anggota
 Route::group(['prefix' => 'anggota'], function ()
 {
@@ -116,6 +118,9 @@ Route::group(['prefix' => 'user'], function ()
         Route::get('/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->where('id', '[0-9]+')->name('user-edit');
         Route::post('/edit/{id}', [App\Http\Controllers\UserController::class, 'update'])->where('id', '[0-9]+')->name('user-edit');
         Route::delete('delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->where('id', '[0-9]+')->name('user-delete');
+
+        Route::get('/edit/permission/{id}', [App\Http\Controllers\UserController::class, 'editPermission'])->where('id', '[0-9]+')->name('user-edit-permission');
+        Route::post('/edit/permission/{id}', [App\Http\Controllers\UserController::class, 'updatePermission'])->where('id', '[0-9]+')->name('user-edit-permission');
         
 		Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user-profile');
         Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');

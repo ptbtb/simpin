@@ -53,7 +53,7 @@
                                         <div class="border p-2 h-100">
                                             <div class="font-weight-bold">{{ $permissionGroup->name }}</div>
                                             <hr class="my-1">
-                                            @foreach ($permissionGroup->permissions->sortBy('sequence')->values() as $permission)
+                                            @foreach ($permissionGroup->permissions->where('is_user_permission',0)->sortBy('sequence')->values() as $permission)
                                                 <div>
                                                     <input style="cursor: pointer" type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="{{ $permission->id }}"> <label style="cursor: pointer" for="{{ $permission->id }}" class="font-weight-normal">{{ $permission->name }}</label>
                                                 </div>
