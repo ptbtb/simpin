@@ -9,7 +9,7 @@ class MigrationController extends Controller
 {
     public function index()
     {
-        $user_id = 9807;
+        $user_id = 24;
         $user = User::find($user_id);
         $user->givePermissionTo('approve pengajuan pinjaman spv');
     }
