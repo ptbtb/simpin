@@ -22,9 +22,10 @@ class AnggotaCreated
      *
      * @return void
      */
-    public function __construct(Anggota $anggota)
+    public function __construct(Anggota $anggota, $password=null)
     {
         $this->anggota = $anggota;
+        $this->password = $password;
     }
 
     /**

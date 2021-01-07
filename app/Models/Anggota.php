@@ -16,8 +16,12 @@ class Anggota extends Model
     public $dates = ['tgl_lahir'];
     protected $fillable = ['kode_anggota',
         // 'kode_tabungan',
+        'company_id',
+        'id_jenis_anggota',
+        'kelas_company_id',
         'tgl_masuk',
         'nama_anggota',
+        'jenis_kelamin',
         'tempat_lahir',
         'tgl_lahir',
         'alamat_anggota',

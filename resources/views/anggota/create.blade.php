@@ -2,6 +2,7 @@
 
 @section('title', 'Tambah Data Anggota')
 @section('plugins.Datatables', true)
+@section('plugins.Select2', true)
 @section('content_header')
 <div class="row">
 	<div class="col-6"><h4>{{ $title }}</h4></div>
@@ -29,18 +30,39 @@
 						<div class="card-body pt-1">
 							<div class="row">
 								{{-- <div class="col-md-6"> --}}
-									<div class="col-md-12 form-group">
+									<div class="col-md-6 form-group">
 										<label>Kode Anggota</label>
 										{{-- <input type="text" name="kode_anggota" class="form-control" size="54px" value="{{$nomer}}" readonly title="Kode harus diisi" /> --}}
-										<input type="number" name="kode_anggota" class="form-control" size="54px" placeholder="kode_anggota" title="Kode harus diisi" />
+										<input type="number" name="kode_anggota" class="form-control" size="54px" placeholder="Kode Anggota" title="Kode harus diisi" />
+									</div>
+									<div class="col-md-6 form-group">
+										<label>Unit</label>
+										<select id="companyId" name="company" class="form-control">
+											<option value="">Pilih Satu</option>
+											@foreach ($companies as $company)
+												<option value="{{ $company->id }}">{{ $company->nama }}</option>
+											@endforeach
+											
+										</select>
 									</div>
 									<div class="col-md-6 form-group">
 										<label>Jenis Anggota</label>
-										<select name="jenis_anggota" class="form-control">
+										<select id="jenisAnggota" name="jenis_anggota" class="form-control">
 											<option value="">Pilih Satu</option>
 											@foreach ($jenisAnggotas as $jenisAnggota)
 												<option value="{{ $jenisAnggota->id_jenis_anggota }}">{{ $jenisAnggota->nama_jenis_anggota }}</option>
 											@endforeach
+										</select>
+									</div>
+									<div class="col-md-6 form-group">
+										<label>Kelas Unit</label>
+										<select id="kelasCompany" name="kelas_company" class="form-control" disabled>
+											<option value="">Pilih Satu</option>
+											@if($kelasCompany != "")
+												@foreach ($kelasCompany as $listKelasCompany)
+													<option value="{{ $listKelasCompany->id }}">{{ $listKelasCompany->nama }}</option>
+												@endforeach
+											@endif
 										</select>
 									</div>
 									<div class="col-md-6 form-group">
@@ -86,7 +108,7 @@
 										<input type="text" name="tgl_masuk" class="form-control" value="<?php echo date("Y-m-d"); ?>" placeholder="Tanggal Masuk" >
 									</div>
 									<div class="col-md-6 form-group">
-										<label>email</label>
+										<label>Email</label>
 										<input type="email" name="email" size="54" class="form-control" placeholder="Email"/>
 									</div>
 									<div class="col-md-6 form-group">
@@ -100,6 +122,10 @@
 									<div class="col-md-6 form-group">
 										<label>Nomer Rekening Mandiri</label>
 										<input type="text" name="no_rek" size="54" class="form-control"  placeholder="Nomor Rekening Mandiri"/>
+									</div>
+									<div class="col-md-6 form-group">
+										<label>Password</label>
+										<input type="password" name="password" placeholder="Your Password" class="form-control" value="{{ uniqid() }}" autocomplete="off" readonly>
 									</div>
 								{{-- </div> --}}
 							</div>
@@ -136,14 +162,21 @@
 @stop
 
 @section('js')
- <script src="{{ asset('vendor/jquery-validation/jquery.validate.js') }}"></script>
+<script src="{{ asset('js/collect.min.js') }}"></script>
+<script src="{{ asset('vendor/jquery-validation/jquery.validate.js') }}"></script>
 <script>
-    $(document).ready(function () {
+
+	var companyId;
+	var jenisAnggotaId;
+	var listKelasCompany = collect({!!$kelasCompany!!});
+    
+	$(document).ready(function () {
 //        $.validator.setDefaults({
 //            submitHandler: function () {
 //                alert("Form  submitted!");
 //            }
 //        });
+        initiateSelect2();
         $('#anggota_form').validate({
 			rules: {
 			email: {
@@ -222,5 +255,67 @@
 			}
 		});
     });
+
+	$('#companyId').on('change', function(){
+		if($(this).children("option:selected").val() != companyId){
+			companyId = $(this).children("option:selected").val();
+			$('#kelasCompany').val('');
+			getKelasCompany(companyId, jenisAnggotaId);
+		}
+	})
+	$('#jenisAnggota').on('change', function(){
+		if($(this).children("option:selected").val() != jenisAnggotaId){
+			jenisAnggotaId = $(this).children("option:selected").val();
+			$('#kelasCompany').val('');
+			getKelasCompany(companyId, jenisAnggotaId);
+		}
+	})
+
+	function initiateSelect2()
+	{
+		 $("#kelasCompany").select2({
+            ajax: {
+                url: '{{ route('anggota-ajax-getKelasCompany') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                     	companyId : companyId,
+						jenisAnggotaId : jenisAnggotaId
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+	}
+
+
+	function getKelasCompany(companyId, jenisAnggotaId){
+		return $.ajax({
+            url: '{{ route('anggota-ajax-getKelasCompany') }}',
+            dataType: 'json',
+            data: {
+                'companyId' : companyId,
+				'jenisAnggotaId' : jenisAnggotaId
+            },
+            success: function (response) {
+				if(response.length !== 0){
+					$('#kelasCompany').prop('disabled', false);
+					$('#kelasCompany').val(response);
+					$('#kelasCompany').val("").change();
+				} else {
+					$('#kelasCompany').prop('disabled', true);
+					$('#kelasCompany').val("").change();
+
+				}
+            }  
+        })
+	}
 </script>
 @stop

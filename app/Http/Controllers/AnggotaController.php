@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Events\Anggota\AnggotaCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 use App\Exports\AnggotaExport;
 use App\Imports\AnggotaImport;
 use App\Models\Anggota;
+use App\Models\Company;
 use App\Models\JenisAnggota;
+use App\Models\KelasCompany;
 
 use Auth;
 use Excel;
@@ -21,6 +24,7 @@ class AnggotaController extends Controller {
     public function index(Request $request)
     {
         $this->authorize('view anggota', Auth::user());
+        $data['companies'] = Company::all();
         $data['jenisAnggotas'] = JenisAnggota::all();
         $data['request'] = $request;
         $data['title'] = 'List Anggota';
@@ -50,7 +54,9 @@ class AnggotaController extends Controller {
         $nomer = Anggota::max('kode_anggota');
         $data['title'] = 'Tambah Anggota';
         $data['nomer'] = $nomer + 1;
+        $data['companies'] = Company::all();
         $data['jenisAnggotas'] = JenisAnggota::all();
+        $data['kelasCompany'] = "";
         return view('/anggota/create', $data);
     }
 
@@ -77,12 +83,18 @@ class AnggotaController extends Controller {
                 return redirect()->back()->withError($message);
             }
 
+            
             DB::transaction(function () use ($request)
             {
+                $companyId = Company::find($request->company);
+                $jenisAnggotaId = JenisAnggota::find($request->jenis_anggota);
+                $kelasCompanyId = KelasCompany::find($request->kelas_company);
                 $anggota = Anggota::create([
                     'kode_anggota' => $request->kode_anggota,
                     // 'kode_tabungan' =>  $request->kode_anggota,
-                    'id_jenis_anggota' => $request->jenis_anggota,
+                    'company_id' => $companyId->id,
+                    'id_jenis_anggota' => $jenisAnggotaId->id_jenis_anggota,
+                    'kelas_company_id' => $kelasCompanyId->id,
                     'tgl_masuk' => $request->tgl_masuk,
                     'nama_anggota' => $request->nama_anggota,
                     'jenis_kelamin' => $request->jenis_kelamin,
@@ -97,10 +109,10 @@ class AnggotaController extends Controller {
                     'no_rek' => $request->no_rek,
                     'email' => $request->email,
                     'emergency_kontak' => $request->emergency_kontak,
-                    'status' => 'aktif',
+                    'status' => 'aktif'
                 ]);
-
-                event(new AnggotaCreated($anggota));
+                $password =  Hash::make($request->password);
+                event(new AnggotaCreated($anggota, $password));
             });
             // alihkan halaman tambah buku ke halaman books
 
@@ -202,6 +214,23 @@ class AnggotaController extends Controller {
                 ->first();
 
         return response()->json($anggota, 200);
+    }
+    
+    public function getKelasCompany(Request $request){
+        $companyId = $request->companyId;
+        $jenisAnggotaId = $request->jenisAnggotaId;
+
+        $kelasCompany = KelasCompany::orderby('nama','asc')->select('id', 'nama')->where('company_id', $companyId)
+                                            ->where('id_jenis_anggota', $jenisAnggotaId)->get();
+        $response = $kelasCompany->map(function ($kelasComp)
+        {
+            return [
+                'id' => $kelasComp->id,
+                'text' => strtoupper($kelasComp->nama)
+            ];
+        });
+
+        return response()->json($response, 200);
     }
 
     // Generate PDF

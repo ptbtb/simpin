@@ -50,6 +50,7 @@ Route::group(['prefix' => 'anggota'], function ()
         Route::get('ajax/search', [App\Http\Controllers\AnggotaController::class, 'search'])->name('anggota-ajax-search');
         Route::get('ajax/search/{id}', [App\Http\Controllers\AnggotaController::class, 'searchId'])->where('id', '[0-9]+')->name('anggota-ajax-searchid');
         Route::get('ajax/detailAnggota', [App\Http\Controllers\AnggotaController::class, 'getDetail'])->name('anggota-ajax-getDetail');
+        Route::get('ajax/getKelasCompany', [App\Http\Controllers\AnggotaController::class, 'getKelasCompany'])->name('anggota-ajax-getKelasCompany');
 
         Route::get('download/pdf', [App\Http\Controllers\AnggotaController::class, 'createPDF'])->name('anggota-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\AnggotaController::class, 'createExcel'])->name('anggota-download-excel');        
@@ -239,3 +240,4 @@ Route::group(['prefix' => 'penarikan'], function ()
         Route::post('import/excel', [App\Http\Controllers\PenarikanController::class, 'storeImportExcel'])->name('penarikan-import-excel');
 	});
 });
+
