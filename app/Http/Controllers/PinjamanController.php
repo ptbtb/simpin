@@ -320,7 +320,6 @@ class PinjamanController extends Controller
     {
         try
         {
-            Log::info($request);
             $user = Auth::user();
             $check = Hash::check($request->password, $user->password);
             if (!$check)
@@ -349,6 +348,29 @@ class PinjamanController extends Controller
             if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DITERIMA)
             {
                 $pengajuan->paid_by_cashier = $user->id;
+                $file = $request->bukti_pembayaran;
+
+                if ($file)
+                {
+                    $config['disk'] = 'upload';
+                    $config['upload_path'] = '/pinjaman/pengajuan/'.$pengajuan->kode_pengajuan.'/bukti-pembayaran/'; 
+                    $config['public_path'] = env('APP_URL') . '/upload/pinjaman/pengajuan/'.$pengajuan->kode_pengajuan.'/bukti-pembayaran/';
+
+                    // create directory if doesn't exist
+                    if (!Storage::disk($config['disk'])->has($config['upload_path']))
+                    {
+                        Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                    }
+
+                    // upload file if valid
+                    if ($file->isValid())
+                    {
+                        $filename = uniqid() .'.'. $file->getClientOriginalExtension();
+
+                        Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                        $pengajuan->bukti_pembayaran = $config['disk'].$config['upload_path'].'/'.$filename;
+                    }
+                }
             }
             
             $pengajuan->save();
