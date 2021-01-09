@@ -4,6 +4,7 @@ namespace App\Managers;
 use App\Events\Pinjaman\PengajuanApproved;
 use App\Mail\PengajuanPinjamanApproved;
 use App\Mail\PengajuanPinjamanCreated;
+use App\Mail\PengajuanPinjamanPayment;
 use App\Mail\PengajuanPinjamanUpdated;
 use App\Mail\RegistrationCompleted;
 use App\Models\Pengajuan;
@@ -64,22 +65,79 @@ class MailManager
         }
         elseif($pengajuan->menungguApprovalAsman())
         {
-        }
-        elseif($pengajuan->menungguApprovalSpv())
-        {
+            $users = User::asman()->get();
+            foreach ($users as $user)
+            {
+                $email = $user->email;
+                $details = [
+                    'subject' => 'Approval Pengajuan Pinjaman',
+                    'pengajuan' => $pengajuan,
+                    'user' => $user
+                ];
+
+                Mail::to($email)->send(new PengajuanPinjamanUpdated($details));
+            }
         }
         elseif($pengajuan->menungguApprovalManager())
         {
+            $users = User::manager()->get();
+            foreach ($users as $user)
+            {
+                $email = $user->email;
+                $details = [
+                    'subject' => 'Approval Pengajuan Pinjaman',
+                    'pengajuan' => $pengajuan,
+                    'user' => $user
+                ];
+
+                Mail::to($email)->send(new PengajuanPinjamanUpdated($details));
+            }
         }
         elseif($pengajuan->menungguApprovalBendahara())
         {
+            $users = User::bendahara()->get();
+            foreach ($users as $user)
+            {
+                $email = $user->email;
+                $details = [
+                    'subject' => 'Approval Pengajuan Pinjaman',
+                    'pengajuan' => $pengajuan,
+                    'user' => $user
+                ];
+
+                Mail::to($email)->send(new PengajuanPinjamanUpdated($details));
+            }
         }
         elseif($pengajuan->menungguApprovalKetua())
         {
+            $users = User::ketua()->get();
+            foreach ($users as $user)
+            {
+                $email = $user->email;
+                $details = [
+                    'subject' => 'Approval Pengajuan Pinjaman',
+                    'pengajuan' => $pengajuan,
+                    'user' => $user
+                ];
+
+                Mail::to($email)->send(new PengajuanPinjamanUpdated($details));
+            }
             event(new PengajuanApproved($pengajuan));
         }
         elseif($pengajuan->menungguPembayaran())
         {
+            $users = User::operatorSimpin()->get();
+            foreach ($users as $user)
+            {
+                $email = $user->email;
+                $details = [
+                    'subject' => 'Pengajuan Pinjaman Menunggu Pembayaran',
+                    'pengajuan' => $pengajuan,
+                    'user' => $user
+                ];
+
+                Mail::to($email)->send(new PengajuanPinjamanPayment($details));
+            }
         }
     }
 

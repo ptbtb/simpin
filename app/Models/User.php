@@ -119,4 +119,36 @@ class User extends Authenticatable
             return $q->where('id', ROLE_SPV);
         });
     }
+
+    public function scopeAsman($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_ASMAN);
+        });
+    }
+
+    public function scopeManager($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_MANAGER);
+        });
+    }
+
+    public function scopeBendahara($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_BENDAHARA);
+        });
+    }
+
+    public function scopeKetua($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_KETUA);
+        });
+    }
 }
