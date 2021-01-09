@@ -236,71 +236,64 @@
             var url = '{{ route("pengajuan-pinjaman-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
-            if(files.length > 0 )
-            {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    input: 'password',
-                    inputAttributes: {
-                        name: 'password',
-                        placeholder: 'Password',
-                        required: 'required',
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                },
+                validationMessage:'Password required',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    formData.append('_token', token);
+                    formData.append('id', id);
+                    formData.append('status', status);
+                    formData.append('bukti_pembayaran', files[0]);
+                    formData.append('password', password);
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,   
+                        contentType: false,
+                        processData: false,                     
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your has been changed',
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
                     },
-                    validationMessage:'Password required',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var password = result.value;
-                        var formData = new FormData();
-                        var token = "{{ csrf_token() }}";
-                        formData.append('_token', token);
-                        formData.append('id', id);
-                        formData.append('status', status);
-                        formData.append('bukti_pembayaran', files[0]);
-                        formData.append('password', password);
-                        $.ajax({
-                            type: 'post',
-                            url: url,
-                            data: formData,   
-                            contentType: false,
-                            processData: false,                     
-                        success: function(data) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Your has been changed',
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        },
-                        error: function(error){
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: error.responseJSON.message,
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        }
-                    });
+                    error: function(error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.responseJSON.message,
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
                     }
                 });
-            }
-            else
-            {
-                alert("Please select a file.");
-            }
+                }
+            });
         });
 
         $('.btn-konfirmasi').on('click', function ()
