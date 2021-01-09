@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Pinjaman\PengajuanCreated;
+use App\Models\Pengajuan;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -9,8 +11,10 @@ class MigrationController extends Controller
 {
     public function index()
     {
-        $user_id = 24;
-        $user = User::find($user_id);
-        $user->givePermissionTo('approve pengajuan pinjaman spv');
+        $operator = User::operatorSimpin()->get();
+        dd($operator);
+        $pengajuan = Pengajuan::orderBy('created_at','asc')->first();
+        event(new PengajuanCreated($pengajuan));
+        dd('a');
     }
 }

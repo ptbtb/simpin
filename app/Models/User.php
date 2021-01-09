@@ -103,4 +103,20 @@ class User extends Authenticatable
     {
         return $this->is_verified == 1;
     }
+
+    public function scopeOperatorSimpin($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_OPERATOR_SIMPIN);
+        });
+    }
+
+    public function scopeSpv($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_SPV);
+        });
+    }
 }

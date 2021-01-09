@@ -31,7 +31,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('give-user-permission', [App\Http\Controllers\MigrationController::class, 'index'])->name('give-user-permission');
+Route::get('testEvent', [App\Http\Controllers\MigrationController::class, 'index'])->name('test-event');
 
 // anggota
 Route::group(['prefix' => 'anggota'], function ()

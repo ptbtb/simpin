@@ -4,6 +4,9 @@ define('ROLE_ADMIN', 1);
 define('ROLE_OPERATOR', 2);
 define('ROLE_PENGURUS', 3);
 define('ROLE_ANGGOTA', 4);
+define('ROLE_OPERATOR_SIMPIN', 5);
+define('ROLE_CUSTOMER_SERVICE', 6);
+define('ROLE_SPV', 7);
 
 define('VERIFIKASI_PENGAJUAN_PINJAMAN', 1);
 define('APPROVE_PENGAJUAN_PINJAMAN_SPV', 2);
