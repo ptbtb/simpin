@@ -89,4 +89,9 @@ class Pengajuan extends Model
     {
         return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
     }
+
+    public function jkkPrinted()
+    {
+        return $this->status_jkk == 1;
+    }
 }

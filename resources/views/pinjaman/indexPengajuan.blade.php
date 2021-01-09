@@ -157,7 +157,11 @@
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguPembayaran())
                                             @can('bayar pengajuan pinjaman')
-                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
+                                                @if ($pengajuan->jkkPrinted())
+                                                    <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
+                                                @else
+                                                    JKK Belum di Print
+                                                @endif
                                             @endcan
                                             <!-- <b style="color: blue !important"><i class="fas fa-clock"></i></b> -->
                                         @elseif($pengajuan->diterima())
