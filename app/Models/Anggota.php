@@ -13,7 +13,7 @@ class Anggota extends Model
     protected $primaryKey = 'kode_anggota';
     protected $appends = ['kode_anggota_prefix'];
     public $incrementing = false;
-    public $dates = ['tgl_lahir'];
+    public $dates = ['tgl_lahir', 'tgl_masuk'];
     protected $fillable = ['kode_anggota',
         // 'kode_tabungan',
         'company_id',

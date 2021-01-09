@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use DB;
 use Excel;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
@@ -319,14 +320,16 @@ class PinjamanController extends Controller
     {
         try
         {
+            Log::info($request);
             $user = Auth::user();
             $check = Hash::check($request->password, $user->password);
             if (!$check)
             {
                 return response()->json(['message' => 'Wrong Password'], 412);
             }
+
             $pengajuan = Pengajuan::find($request->id);
-            if($request->action == CANCEL_PENGAJUAN_PINJAMAN)
+            if($request->status == STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN)
             {
                 $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN;
                 $pengajuan->save();
@@ -338,64 +341,21 @@ class PinjamanController extends Controller
             {
                 return response()->json(['message' => 'not found'], 404);
             }
-            if ($request->action == VERIFIKASI_PENGAJUAN_PINJAMAN)
-            {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV;
-                $pengajuan->tgl_acc = Carbon::now();
-                $pengajuan->approved_by = $user->id;
-                $pengajuan->save();
-//                event(new PengajuanApproved($pengajuan));
-            }
-            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_SPV)
-            {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN;
-                $pengajuan->tgl_acc = Carbon::now();
-                $pengajuan->approved_by = $user->id;
-                $pengajuan->save();
-//                event(new PengajuanApproved($pengajuan));
-            }
-            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_ASMAN)
-            {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER;
-                $pengajuan->tgl_acc = Carbon::now();
-                $pengajuan->approved_by = $user->id;
-                $pengajuan->save();
-//                event(new PengajuanApproved($pengajuan));
-            }
-            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_MANAGER)
-            {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA;
-                $pengajuan->tgl_acc = Carbon::now();
-                $pengajuan->approved_by = $user->id;
-                $pengajuan->save();
-//                event(new PengajuanApproved($pengajuan));
-            }
-            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_BENDAHARA)
-            {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA;
-                $pengajuan->tgl_acc = Carbon::now();
-                $pengajuan->approved_by = $user->id;
-                $pengajuan->save();
-                event(new PengajuanApproved($pengajuan));
-            }
-            if ($request->action == APPROVE_PENGAJUAN_PINJAMAN_KETUA)
-            {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
-                $pengajuan->tgl_acc = Carbon::now();
-                $pengajuan->approved_by = $user->id;
-                $pengajuan->save();
-            }
-            if ($request->action == KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN)
+
+            $pengajuan->id_status_pengajuan = $request->status;
+            $pengajuan->tgl_acc = Carbon::now();
+            $pengajuan->approved_by = $user->id;
+
+            if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DITERIMA)
             {
                 $pengajuan->paid_by_cashier = $user->id;
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
-                $pengajuan->save();
-               
             }
-            if ($request->action == REJECT_PENGAJUAN_PINJAMAN)
+            
+            $pengajuan->save();
+
+            if ($pengajuan->menungguApprovalKetua())
             {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITOLAK;
-                $pengajuan->save();
+                event(new PengajuanApproved($pengajuan));
             }
             return response()->json(['message' => 'success'], 200);
         }
@@ -489,35 +449,26 @@ class PinjamanController extends Controller
         $maksimalBesarPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
         $lamaAngsuran = $request->lama_angsuran;
         $keperluan = $request->keperluan;
-        $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
-        $provisi = 0;
+        $biayaAdministrasi = $jenisPinjaman->biaya_admin;
 
         //check gaji
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)->first()->gaji_bulanan;
         $potonganGaji = 0.65*$gaji;
 
-        if ($jenisPinjaman->isDanaLain())
-        {
-            $provisi = 0.01;
-        }
+        $provisi = $jenisPinjaman->provisi;
         $provisi = round($besarPinjaman * $provisi,2);
-        $asuransiPinjaman = AsuransiPinjaman::where('lama_pinjaman', $jenisPinjaman->lama_angsuran)
-                                                ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
-                                                ->first();
 
         $angsuranPokok = round($besarPinjaman/$lamaAngsuran,2);
-        $asuransi = 0;
-        if ($asuransiPinjaman)
-        {
-            $asuransi = $asuransiPinjaman->besar_asuransi/100;
-        }
+
+        $asuransi = $jenisPinjaman->asuransi;
         $asuransi = round($besarPinjaman*$asuransi,2);
 
-        $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
+        $jasa = $jenisPinjaman->jasa;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek())
         {
-            $jasa = $besarPinjaman*3/100;
+            $jasa = 0.03;
         }
+        $jasa = $besarPinjaman*$jasa;
         $jasa = round($jasa,2);
         $angsuranPerbulan = $angsuranPokok  + $jasa;
         $collection = [
@@ -553,29 +504,21 @@ class PinjamanController extends Controller
         $lamaAngsuran = $request->lamaAngsuran;
         $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
         $keperluan = $request->keperluan;
-        $provisi = 0;
-        if ($jenisPinjaman->isDanaLain())
-        {
-            $provisi = 0.01;
-        }
-        $provisi = round($besarPinjaman * $provisi,2);
-        $asuransiPinjaman = AsuransiPinjaman::where('lama_pinjaman', $jenisPinjaman->lama_angsuran)
-                                                ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
-                                                ->first();
 
-        $angsuranPokok = round( $besarPinjaman/$lamaAngsuran,2);
-        $asuransi = 0;
-        if ($asuransiPinjaman)
-        {
-            $asuransi = $asuransiPinjaman->besar_asuransi/100;
-        }
+        $provisi = $jenisPinjaman->provisi;
+        $provisi = round($besarPinjaman * $provisi,2);
+
+        $asuransi = $jenisPinjaman->asuransi;
         $asuransi = round($besarPinjaman*$asuransi,2);
 
-        $jasa = $besarPinjaman*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
+        $angsuranPokok = round( $besarPinjaman/$lamaAngsuran,2);
+
+        $jasa = $jenisPinjaman->jasa;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek())
         {
             $jasa = $besarPinjaman*3/100;
         }
+        $jasa = $besarPinjaman*$jasa;
         $jasa = round($jasa,2);
         $angsuranPerbulan = $angsuranPokok  + $jasa;
         $terbilang = self::terbilang($besarPinjaman).' rupiah';

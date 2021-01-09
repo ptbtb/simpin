@@ -18,29 +18,22 @@ class PinjamanManager
             $jenisPinjaman = $pengajuan->jenisPinjaman;
             $angsuranPerbulan = round($pengajuan->besar_pinjam/$jenisPinjaman->lama_angsuran,2);
             // $bungaPerbulan = $angsuranPerbulan*$jenisPinjaman->bunga/100;
-            $jasaPerbulan = $pengajuan->besar_pinjam*$jenisPinjaman->kategoriJenisPinjaman->jasa/100;
+            $jasaPerbulan = $pengajuan->besar_pinjam*$jenisPinjaman->jasa;
             if ($pengajuan->besar_pinjam > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek())
             {
-                $jasaPerbulan = $pengajuan->besar_pinjam*3/100;
+                $jasaPerbulan = $pengajuan->besar_pinjam*0.03;
             }
-            $asuransiPinjaman = AsuransiPinjaman::where('lama_pinjaman', $jenisPinjaman->lama_angsuran)
-                                                ->where('kategori_jenis_pinjaman_id', $jenisPinjaman->kategori_jenis_pinjaman_id)
-                                                ->first();
-            $asuransi = 0;
-            if ($asuransiPinjaman)
-            {
-                $asuransi = $asuransiPinjaman->besar_asuransi/100;
-            }
-            $asuransi = round($pengajuan->besar_pinjam*$asuransi,2);
-            $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan;
-            $provisi = 0;
-            if ($jenisPinjaman->isDanaLain())
-            {
-                $provisi = 0.01;
-            }
-            $provisi = round($pengajuan->besar_pinjam * $provisi,2);
-            $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
             $jasaPerbulan = round($jasaPerbulan,2);
+
+            $asuransi = $jenisPinjaman->asuransi;
+            $asuransi = round($pengajuan->besar_pinjam*$asuransi,2);
+
+            $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan;
+
+            $provisi = $jenisPinjaman->provisi;
+            $provisi = round($pengajuan->besar_pinjam * $provisi,2);
+
+            $biayaAdministrasi = $jenisPinjaman->biaya_admin;
            
             $pinjaman = new Pinjaman();
             $kodeAnggota = $pengajuan->kode_anggota;
@@ -69,7 +62,7 @@ class PinjamanManager
         }
         catch (\Exception $e)
         {
-            \Log::info($e);
+            \Log::error($e);
         }
     }
 }
