@@ -248,7 +248,7 @@ class UserController extends Controller
 												->orderBy('sequence','asc')
 												->get();
 		$anggota = Anggota::find($user->anggota->kode_anggota);
-		$data['penghasilan'] = null;
+		$data['listPenghasilan'] = null;
 
 		if (is_null($user->anggota))
 		{
