@@ -280,8 +280,8 @@ class UserController extends Controller
     		return redirect()->back()->witError('User not found');
 		}
 		
-		DB::transaction(function () use ($user, $request)
-		{
+		// DB::transaction(function () use ($user, $request)
+		// {
 			$user->name = $request->name;
 			$file = $request->photo;
 
@@ -331,17 +331,18 @@ class UserController extends Controller
 			$anggota->kelas_company_id = $request->kelas_company;
 			$anggota->save();
 
-			$requestPenghasilan = $request->penghasilan;			
+			$requestPenghasilan = $request->penghasilan;		
 			foreach ($requestPenghasilan as $key => $value)
 			{
-				$penghasilan = $anggota->listPenghasilan->where('id_jenis_penghasilan', $key)->first();
+				$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)
+											->where('kode_anggota', $anggota->kode_anggota)
+											->first();
 				if (is_null($penghasilan))
 				{
 					$penghasilan = new Penghasilan();
 					$penghasilan->id_jenis_penghasilan = $key;
 					$penghasilan->kode_anggota = $anggota->kode_anggota;
 				}
-				
 				$val = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				if ($val)
 				{
@@ -357,7 +358,10 @@ class UserController extends Controller
 			{
 				foreach ($fileRequestPenghasilan as $key => $value)
 				{
-					$penghasilan = $anggota->listPenghasilan->where('id_jenis_penghasilan', $key)->first();
+					$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)
+												->where('kode_anggota', $anggota->kode_anggota)
+												->first();
+
 					if (is_null($penghasilan))
 					{
 						$penghasilan = new Penghasilan();
@@ -387,7 +391,7 @@ class UserController extends Controller
 				}
 			}
 
-		});
+		// });
     	return redirect()->back()->withSuccess('Update profile success');
 	}
 	
