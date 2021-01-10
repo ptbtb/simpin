@@ -38,7 +38,7 @@
                             <td>{{ ucwords(strtolower($anggota->nama_anggota)) }}</td>
                             <th>Kelas</th>
                             <th>:</th>
-                            <td>{{ $anggota->penghasilan->kelasCompany->nama }}</td>
+                            <td>{{ $anggota->kelasCompany->nama }}</td>
                         </tr>
                         <tr>
                             <th>Jenis Kelamin</th>
@@ -54,7 +54,7 @@
                             <td>{{ ucwords(strtolower($anggota->status)) }}</td>
                             <th>Gaji</th>
                             <th>:</th>
-                            <td id="gaji">{{ "Rp " . number_format($anggota->penghasilan->gaji_bulanan,2,',','.') }}</td>
+                            <td id="gaji">{{ "Rp " . number_format($anggota->listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->value,2,',','.') }}</td>
                         </tr>
                     </table>
                 </div>

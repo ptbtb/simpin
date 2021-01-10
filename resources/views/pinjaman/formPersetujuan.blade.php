@@ -97,7 +97,7 @@
             <tr>
                 <td>Gaji Bersih</td>
                 <td>:</td>
-                <td id="gaji">{{ "Rp " . number_format($anggota->penghasilan->gaji_bulanan,2,',','.') }}</td>
+                <td id="gaji">{{ "Rp " . number_format($anggota->listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->value,2,',','.') }}</td>
                 <td></td>
                 <td></td>
                 <td></td>

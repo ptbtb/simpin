@@ -263,7 +263,10 @@ class PinjamanController extends Controller
         }
 
          //check gaji
-         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)->first()->gaji_bulanan;
+         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
+                            ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
+                            ->first()
+                            ->value;
          $potonganGaji = 0.65*$gaji;
          $angsuranPerbulan = $besarPinjaman/$request->lama_angsuran;
          //dd([$potonganGaji,$angsuranPerbulan]);die;
@@ -443,7 +446,9 @@ class PinjamanController extends Controller
         }
         elseif($jenisPinjaman->isJangkaPendek())
         {
-            $penghasilanTertentu = $anggota->listPenghasilanTertentu;
+            $penghasilanTertentu = Penghasilan::where('kode_anggota', $anggota->kode_anggota)
+                                                ->penghasilanTertentu()
+                                                ->get();
             if (!$penghasilanTertentu->count())
             {
                 return response()->json(['message' => 'Tidak memiliki penghasilan tertentu'], 412);
@@ -479,7 +484,11 @@ class PinjamanController extends Controller
         $biayaAdministrasi = $jenisPinjaman->biaya_admin;
 
         //check gaji
-        $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)->first()->gaji_bulanan;
+        $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
+                            ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
+                            ->first()
+                            ->value;
+                            
         $potonganGaji = 0.65*$gaji;
 
         $provisi = $jenisPinjaman->provisi;
