@@ -486,13 +486,17 @@ class PinjamanController extends Controller
         $lamaAngsuran = $request->lama_angsuran;
         $keperluan = $request->keperluan;
         $biayaAdministrasi = $jenisPinjaman->biaya_admin;
-
+          
         //check gaji
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
                             ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
-                            ->first()
-                            ->value;
-                            
+                            ->first();
+
+        if (is_null($gaji))
+        {
+            return redirect()->back()->withError($anggota->nama_anggota.' tidak memiliki gaji bulanan');
+        }
+        $gaji = $gaji->value;
         $potonganGaji = 0.65*$gaji;
 
         $provisi = $jenisPinjaman->provisi;
