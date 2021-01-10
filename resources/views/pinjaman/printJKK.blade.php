@@ -47,24 +47,32 @@
             <th>Debited Account</th>
             <th>Debited Amount</th>
         </tr>
+        @php
+            $totalcredited = 0;
+            $totaldebited = 0;
+        @endphp
         @foreach ($listPengajuan as $pengajuan)
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $pengajuan->kode_pengajuan }}</td>
                 <td>{{ strtoupper($pengajuan->anggota->nama_anggota) }}</td>
                 <td>{{ strtoupper($settings[COMPANY_SETTING_BANK_NAME]) }}</td>
-                <td>{{ "Rp " . number_format($pengajuan->besar_pinjam,2,',','.') }}</td>
+                <td>{{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}</td>
                 <td>{{ strtoupper($pengajuan->jenisPinjaman->nama_pinjaman) }}</td>
                 <td>{{ $settings[COMPANY_SETTING_BANK_ACCOUNT] }}</td>
-                <td>{{ "Rp " . number_format($pengajuan->besar_pinjam,2,',','.') }}</td>
+                <td>{{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}</td>
             </tr>
+            @php
+                $totalcredited += $pengajuan->pinjaman->pinjamanDitransfer;
+                $totaldebited += $pengajuan->pinjaman->pinjamanDitransfer;
+            @endphp
         @endforeach
         <tr>
             <td></td>
             <td colspan="3">JUMLAH</td>
-            <td>{{ "Rp " . number_format($listPengajuan->sum('besar_pinjam'),2,',','.') }}</td>
+            <td>{{ "Rp " . number_format($totalcredited,2,',','.') }}</td>
             <td colspan="2"></td>
-            <td>{{ "Rp " . number_format($listPengajuan->sum('besar_pinjam'),2,',','.') }}</td>
+            <td>{{ "Rp " . number_format($totaldebited,2,',','.') }}</td>
         </tr>
     </table>
     <br><br><br>
