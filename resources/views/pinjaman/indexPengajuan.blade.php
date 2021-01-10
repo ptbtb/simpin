@@ -99,7 +99,7 @@
                             </td>
                             <td>{{ ucwords(strtolower($pengajuan->jenisPinjaman->nama_pinjaman)) }}</td>
                             <td>Rp. {{ number_format($pengajuan->besar_pinjam,0,",",".") }}</td>
-                            <td><a class="btn btn-warning btn-sm" onclick="window.open('{{ url(ucfirst($pengajuan->form_persetujuan)) }}')" ><i class="fa fa-file"></i></a></td>
+                            <td><a class="btn btn-warning btn-sm" href="{{ asset($pengajuan->form_persetujuan) }}" target="_blank"><i class="fa fa-file"></i></a></td>
                             <td class="str-to">{{ ucfirst($pengajuan->statusPengajuan->name) }}</td>
                             <td>
                                 @if ($pengajuan->tgl_acc)
