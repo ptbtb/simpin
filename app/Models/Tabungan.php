@@ -10,7 +10,9 @@ class Tabungan extends Model
     use HasFactory;
 
     protected $table = "t_tabungan";
-    protected $primaryKey = "kode_tabungan";
+    protected $primaryKey = "id";
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $dates = ['tgl_mulai'];
 
     public function anggota()
