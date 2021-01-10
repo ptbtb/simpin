@@ -9,6 +9,7 @@ use App\Events\Pinjaman\PengajuanUpdated;
 use App\Exports\PinjamanExport;
 
 use App\Models\Anggota;
+use App\Models\JenisPenghasilan;
 use App\Models\Pengajuan;
 use App\Models\Pinjaman;
 use App\Models\JenisPinjaman;
@@ -150,6 +151,7 @@ class PinjamanController extends Controller
         $this->authorize('download form pinjaman', $user);
         $data['title'] = 'Download Form Pinjaman';
         $data['listJenisPinjaman'] = JenisPinjaman::all();
+        $data['sumberDana'] = JenisPenghasilan::orderBy('sequence','asc')->get();
         return view('pinjaman.downloadFormPinjaman', $data);
     }
 
@@ -223,6 +225,7 @@ class PinjamanController extends Controller
         $this->authorize('add pengajuan pinjaman', $user);
         $data['title'] = 'Buat Pengajuan Pinjaman';
         $data['listJenisPinjaman'] = JenisPinjaman::all();
+        $data['sumberDana'] = JenisPenghasilan::orderBy('sequence','asc')->get();
         return view('pinjaman.createPengajuanPinjaman', $data);
     }
 
@@ -290,6 +293,7 @@ class PinjamanController extends Controller
             $pengajuan->besar_pinjam = $besarPinjaman;
             $pengajuan->keperluan = $request->keperluan;
             $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
+            $pengajuan->sumber_dana = $request->sumber_dana;
             $pengajuan->created_by = $user->id;
 
             $file = $request->form_persetujuan;

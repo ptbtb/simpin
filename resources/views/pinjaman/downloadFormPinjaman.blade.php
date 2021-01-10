@@ -52,6 +52,14 @@
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
+                    <label>Sumber Dana</label>
+                    <select name="sumber_dana" class="form-control" required id="sumberDana">
+                        @foreach ($sumberDana as $sumber)
+                            <option value="{!! $sumber->id !!}">{{ $sumber->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
                     <label>Besar Pinjaman</label>
                     <input type="text" name="besar_pinjaman" class="form-control" placeholder="Besar Pinjaman"required id="besarPinjaman" readonly>
                     <label id="warningBesarPinjaman" style="color: red; font-size: 12px; font-weight: normal; display: none">Besar pinjaman melebihi maksimal pinjaman</label>
