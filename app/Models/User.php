@@ -103,4 +103,52 @@ class User extends Authenticatable
     {
         return $this->is_verified == 1;
     }
+
+    public function scopeOperatorSimpin($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_OPERATOR_SIMPIN);
+        });
+    }
+
+    public function scopeSpv($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_SPV);
+        });
+    }
+
+    public function scopeAsman($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_ASMAN);
+        });
+    }
+
+    public function scopeManager($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_MANAGER);
+        });
+    }
+
+    public function scopeBendahara($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_BENDAHARA);
+        });
+    }
+
+    public function scopeKetua($query)
+    {
+        return $query->whereHas('roles', function ($q)
+        {
+            return $q->where('id', ROLE_KETUA);
+        });
+    }
 }

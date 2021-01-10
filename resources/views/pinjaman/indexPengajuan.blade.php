@@ -187,10 +187,24 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <div class="form-detail"></div>
+                    <hr>
+                    <form enctype="multipart/form-data" id="formKonfirmasi">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>Upload Bukti Pembayaran</label>
+                                <input type="file" name="bukti_pembayaran" id="buktiPembayaran" class="form-control">
+                                {{-- <div class="custom-file">
+									<input type="file" class="custom-file-input" id="buktiPembayaran" name="bukti_pembayaran" style="cursor: pointer">
+									<label class="custom-file-label" for="customFile">Choose File</label>
+								</div> --}}
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     @if (isset($pengajuan))
-                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ KONFIRMASI_PEMBAYARAN_PENGAJUAN_PINJAMAN }}" class="text-white btn btn-sm btn-success btn-approval">Bayar</a>
+                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm btn-success btn-approval">Bayar</a>
                     @endif
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
@@ -220,7 +234,8 @@
             var id = $(this).data('id');
             var status = $(this).data('status');
             var url = '{{ route("pengajuan-pinjaman-update-status") }}';
-            
+
+            var files = $('#buktiPembayaran')[0].files;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -239,15 +254,19 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    formData.append('_token', token);
+                    formData.append('id', id);
+                    formData.append('status', status);
+                    formData.append('bukti_pembayaran', files[0]);
+                    formData.append('password', password);
                     $.ajax({
-                        type: 'get',
+                        type: 'post',
                         url: url,
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            "id": id,
-                            "status": status,
-                            "password": password
-                    },                        
+                        data: formData,   
+                        contentType: false,
+                        processData: false,                     
                     success: function(data) {
                         Swal.fire({
                             icon: 'success',
@@ -284,7 +303,7 @@
             var url = baseURL + '/pinjaman/detail-pembayaran/'+id;
             
             $.get(url, function( data ) {
-                $('#my-modal .modal-body').html(data);
+                $('#my-modal .form-detail').html(data);
                 $('#my-modal').modal({
                     backdrop: false 
                 });

@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Events\Pinjaman\PengajuanApproved;
+use App\Events\Pinjaman\PengajuanCreated;
+use App\Events\Pinjaman\PengajuanUpdated;
 use App\Exports\PinjamanExport;
 
-use App\Managers\PinjamanManager;
 use App\Models\Anggota;
-use App\Models\AsuransiPinjaman;
 use App\Models\Pengajuan;
 use App\Models\Pinjaman;
 use App\Models\JenisPinjaman;
@@ -272,11 +271,14 @@ class PinjamanController extends Controller
          {
               return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas 65 % gaji Anda.');
          }
-
-        DB::transaction(function () use ($request, $besarPinjaman, $user)
+        
+         
+        $pengajuan = null;
+        DB::transaction(function () use ($request, $besarPinjaman, $user, &$pengajuan)
         {
             $kodeAnggota = $request->kode_anggota;
             $kodePengajuan = str_replace('.','',$request->jenis_pinjaman).'-'.$kodeAnggota.'-'.Carbon::now()->format('dmYHis');
+            
             $pengajuan = new Pengajuan();
             $pengajuan->kode_pengajuan = $kodePengajuan;
             $pengajuan->tgl_pengajuan = Carbon::now();
@@ -312,19 +314,24 @@ class PinjamanController extends Controller
             
             $pengajuan->save(); 
         });
+
+        if ($pengajuan)
+        {
+            event(new PengajuanCreated($pengajuan));
+        }
         
-        return redirect()->route('pengajuan-pinjaman-add')->withSuccess('Pengajuan pinjaman telah dibuat dan menunggu persetujuan.');
+        return redirect()->route('pengajuan-pinjaman-list')->withSuccess('Pengajuan pinjaman telah dibuat dan menunggu persetujuan.');
     }
 
     public function updateStatusPengajuanPinjaman(Request $request)
     {
         try
         {
-            Log::info($request);
             $user = Auth::user();
             $check = Hash::check($request->password, $user->password);
             if (!$check)
             {
+                Log::error('Wrong Password');
                 return response()->json(['message' => 'Wrong Password'], 412);
             }
 
@@ -349,19 +356,39 @@ class PinjamanController extends Controller
             if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DITERIMA)
             {
                 $pengajuan->paid_by_cashier = $user->id;
+                $file = $request->bukti_pembayaran;
+
+                if ($file)
+                {
+                    $config['disk'] = 'upload';
+                    $config['upload_path'] = '/pinjaman/pengajuan/'.$pengajuan->kode_pengajuan.'/bukti-pembayaran/'; 
+                    $config['public_path'] = env('APP_URL') . '/upload/pinjaman/pengajuan/'.$pengajuan->kode_pengajuan.'/bukti-pembayaran/';
+
+                    // create directory if doesn't exist
+                    if (!Storage::disk($config['disk'])->has($config['upload_path']))
+                    {
+                        Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                    }
+
+                    // upload file if valid
+                    if ($file->isValid())
+                    {
+                        $filename = uniqid() .'.'. $file->getClientOriginalExtension();
+
+                        Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                        $pengajuan->bukti_pembayaran = $config['disk'].$config['upload_path'].'/'.$filename;
+                    }
+                }
             }
             
             $pengajuan->save();
+            event(new PengajuanUpdated($pengajuan));
 
-            if ($pengajuan->menungguApprovalKetua())
-            {
-                event(new PengajuanApproved($pengajuan));
-            }
             return response()->json(['message' => 'success'], 200);
         }
         catch (\Exception $e)
         {
-            \Log::error($e);
+            Log::error($e);
             $message = $e->getMessage();
             return response()->json(['message' => $message], 500);
         }

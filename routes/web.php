@@ -31,7 +31,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('give-user-permission', [App\Http\Controllers\MigrationController::class, 'index'])->name('give-user-permission');
+Route::get('testEvent', [App\Http\Controllers\MigrationController::class, 'index'])->name('test-event');
 
 // anggota
 Route::group(['prefix' => 'anggota'], function ()
@@ -186,7 +186,7 @@ Route::group(['prefix' => 'pinjaman'], function ()
             Route::get('maxPinjaman', [App\Http\Controllers\PinjamanController::class, 'calculateMaxPinjaman'])->name('pengajuan-pinjaman-calculate-max-pinjaman');
             Route::post('create', [App\Http\Controllers\PinjamanController::class, 'storePengajuanPinjaman'])->name('pengajuan-pinjaman-add');
             Route::get('calculate-angsuran', [App\Http\Controllers\PinjamanController::class, 'calculateAngsuran'])->name('pengajuan-pinjaman-calculate-angsuran');
-            Route::get('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
+            Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
         });
 	});
 });
