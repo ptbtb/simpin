@@ -90,11 +90,11 @@
             </td>
             <td style="text-align: right">
                 Verifikator <i style="color: transparent">..</i><br><br><br><br><br>
-                ({{ \Auth::user()->name }})
+                (...................)
             </td>
             <td>
                 Maker <br><br><br><br><br>
-                (....................)
+                ({{ \Auth::user()->name }})
             </td>
         </tr>
     </table>
