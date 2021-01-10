@@ -82,6 +82,7 @@
                         <th>Diajukan Oleh</th>
                         <th>Dikonfirmasi Oleh</th>
                         <th>Pembayaran Oleh</th>
+                        <th>Bukti Pembayaran</th>
                         <th style="width: 20%">Action</th>
                     </tr>
                 </thead>
@@ -125,6 +126,13 @@
                             <td>
                                 @if ($pengajuan->paidByCashier)
                                     {{ $pengajuan->paidByCashier->name }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if ($pengajuan->bukti_pembayaran)
+                                    <a class="btn btn-warning btn-sm" href="{{ asset($pengajuan->bukti_pembayaran) }}" target="_blank"><i class="fa fa-file"></i></a>
                                 @else
                                     -
                                 @endif
