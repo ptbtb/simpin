@@ -245,6 +245,7 @@ class UserController extends Controller
     {
 		$user = Auth::user();
 		$listPenghasilanTertentu = JenisPenghasilanTertentu::show()->get();
+		$anggota = Anggota::find($user->anggota->kode_anggota);
 		$data['penghasilan'] = null;
 
 		if (is_null($user->anggota))
@@ -267,6 +268,7 @@ class UserController extends Controller
     	$data['user'] = $user;
 		$data['classList'] = $classList;
 		$data['listPenghasilanTertentu'] = $listPenghasilanTertentu;
+		$data['anggota'] = $anggota;
     	return view('user.profile', $data);
     }
 
@@ -309,85 +311,88 @@ class UserController extends Controller
 
 			// ambil data penghasilan
 			$anggota = $user->anggota;
-			$penghasilan = $anggota->penghasilan;
-			
-			$salary = filter_var($request->salary, FILTER_SANITIZE_NUMBER_INT);
 
-			// jika null, buat row baru. 1 anggota punya 1 row penghasilan
-			if (is_null($penghasilan))
-			{
-				$penghasilan = new Penghasilan();
-				$penghasilan->kode_anggota = $anggota->kode_anggota;
-			}
-
-			$penghasilan->gaji_bulanan = $salary;
-			$penghasilan->kelas_company_id = $request->kelas_company;
-			$file_ktp = $request->ktp_photo;
-			$file_salary = $request->salary_slip;
-			
-			if ($file_ktp)
-			{
-				$config['disk'] = 'upload';
-				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
-				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
-
-				// create directory if doesn't exist
-				if (!Storage::disk($config['disk'])->has($config['upload_path']))
-				{
-					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-				}
-
-				// upload file if valid
-				if ($file_ktp->isValid())
-				{
-					$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
-
-					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
-					$penghasilan->foto_ktp = $config['disk'].$config['upload_path'].'/'.$filename;
-				}
-			}
-			
-			if ($file_salary)
-			{
-				$config['disk'] = 'upload';
-				$config['upload_path'] = '/user/'.$user->id.'/salary'; 
-				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/salary';
-
-				// create directory if doesn't exist
-				if (!Storage::disk($config['disk'])->has($config['upload_path']))
-				{
-					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-				}
-
-				// upload file if valid
-				if ($file_salary->isValid())
-				{
-					$filename = uniqid() .'.'. $file_salary->getClientOriginalExtension();
-
-					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_salary, $filename);
-					$penghasilan->slip_gaji = $config['disk'].$config['upload_path'].'/'.$filename;
-				}
-			}
-
-			$penghasilan->save();
-
-			$requestPenghasilanTertentu = $request->penghasilan_tertentu;
+			$requestPenghasilanTertentu = $request->penghasilan_tertentu;			
 			foreach ($requestPenghasilanTertentu as $key => $value)
 			{
 				$penghasilanTertentuAnggota = $anggota->listPenghasilanTertentu->where('jenis_penghasilan_tertentu_id', $key)->first();
+				$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)->first();
 				if (is_null($penghasilanTertentuAnggota))
 				{
 					$penghasilanTertentuAnggota = new PenghasilanTertentu();
 					$penghasilanTertentuAnggota->jenis_penghasilan_tertentu_id = $key;
 					$penghasilanTertentuAnggota->kode_anggota = $anggota->kode_anggota;
 				}
+				
+				// jika null, buat row baru. 1 anggota punya 1 row penghasilan
+				if (is_null($penghasilan))
+				{
+					$penghasilan = new Penghasilan();
+					$penghasilan->kode_anggota = $anggota->kode_anggota;
+					$penghasilan->id_jenis_penghasilan = $key;
+				}
+				
 				$val = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				if ($val)
 				{
-					$penghasilanTertentuAnggota->value = $val;
+					$penghasilanTertentuAnggota->value = $penghasilan->value = $val;
 				}
+				$penghasilan->kelas_company_id = $request->kelas_company;
 				$penghasilanTertentuAnggota->save();
+				$penghasilan->save();
 			}
+			
+			
+			// for file upload
+			$fileRequestPenghasilanTertentu = $request->file_penghasilan_tertentu;	
+			if(!is_null($fileRequestPenghasilanTertentu))
+			{
+				foreach ($fileRequestPenghasilanTertentu as $key => $value)
+				{
+					$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)->first();
+					$config['disk'] = 'upload';
+					$config['upload_path'] = '/user/'.$user->id.'/file_path'; 
+					$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/file_path';
+					
+					// create directory if doesn't exist
+					if (!Storage::disk($config['disk'])->has($config['upload_path']))
+					{
+						Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+					}
+
+					// upload file if valid
+					if ($value->isValid())
+					{
+						$filename = uniqid() .'.'. $value->getClientOriginalExtension();
+
+						Storage::disk($config['disk'])->putFileAs($config['upload_path'], $value, $filename);
+						$penghasilan->file_path = $config['disk'].$config['upload_path'].'/'.$filename;
+					}
+					$penghasilan->save();
+				}
+			}
+
+
+    		$currentAnggota = Anggota::find($anggota->kode_anggota);
+			$file_ktp = $request->ktp_photo;
+			if ($file_ktp)
+			{
+				$config['disk'] = 'upload';
+				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
+				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
+				if (!Storage::disk($config['disk'])->has($config['upload_path']))
+				{
+					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+				}
+				if ($file_ktp->isValid())
+				{
+					$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
+
+					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
+					$currentAnggota->foto_ktp = $config['disk'].$config['upload_path'].'/'.$filename;
+				}
+			}
+			$currentAnggota->save();
 		});
     	return redirect()->back()->withSuccess('Update profile success');
 	}

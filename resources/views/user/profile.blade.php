@@ -65,14 +65,6 @@
 								@endif
 							</div>
 							@endif
-							<div class="col-md-6 form-group">
-								<label>Salary</label>
-								<input type="text" id="salary" onkeypress="return isNumberKey(event)" name="salary" placeholder="Your Salary" 
-								@if ($penghasilan && $penghasilan->gaji_bulanan)
-									value="{{ $penghasilan->gaji_bulanan }}"
-								@endif 
-								class="form-control toRupiah">
-							</div>
 
 							@foreach ($listPenghasilanTertentu as $penghasilanTertentu)
 								<div class="col-md-6 form-group">
@@ -83,18 +75,18 @@
 									@endif 
 									onkeypress="return isNumberKey(event)">
 								</div>
-							@endforeach
-							<div class="col-md-6 form-group">
-								<label>Salary Slip</label>
-								<div class="custom-file">
-									<input type="file" class="custom-file-input" id="salary_slip" name="salary_slip"  accept="application/pdf" style="cursor: pointer">
-									@if($penghasilan && $penghasilan->slip_gaji)
-										<label class="custom-file-label" for="customFile">{{ $penghasilan->slip_gaji }}</label>
-									@else
-										<label class="custom-file-label" for="customFile">Choose Document</label>
-									@endif
+								<div class="col-md-6 form-group">
+									<label>Dokumen {{ $penghasilanTertentu->name }}</label>
+									<div class="custom-file">
+									<input type="file" class="custom-file-input"  id="file_penghasilanTertentu{{ $penghasilanTertentu->id }}" name="file_penghasilan_tertentu[{{ $penghasilanTertentu->id }}]"  accept="application/pdf" style="cursor: pointer">
+										@if($penghasilan && $penghasilan->file_path)
+											<label class="custom-file-label" for="customFile">{{ $penghasilan->where('id_jenis_penghasilan', $penghasilanTertentu->id)->first()->file_path }}</label>
+										@else
+											<label class="custom-file-label" for="customFile">Choose Document</label>
+										@endif
+									</div>
 								</div>
-							</div>
+							@endforeach
 						</div>
 						<div class="form-group">
 							<button type="submit" class="form-control btn btn-sm btn-success"><i class="fa fa-save"></i> Update</button>
@@ -117,13 +109,12 @@
 								</div>
 							</div>
 						</div>
-						<hr>
 						<div class="form-group text-center">
 							<label>KTP Photo</label>
 							<div class="form-group">
 								<div class="col-md-12 text-center" id="photoKtpButton">
-									@if(isset($penghasilan) && $penghasilan->foto_ktp)
-										<img class="img-fit" id="ktpPreview" src="{{ asset($penghasilan->foto_ktp) }}"/>
+									@if(isset($anggota) && $anggota->foto_ktp)
+										<img class="img-fit" id="ktpPreview" src="{{ secure_asset($anggota->foto_ktp) }}"/>
 									@else
 										<img class="img-fit" id="ktpPreview" src="{{ asset('img/no_image_available.jpeg') }}">
 									@endif
@@ -134,6 +125,7 @@
 							</div>
 						</div>
 					</div>
+					
 				</div>
 			</form>
 		</div>
