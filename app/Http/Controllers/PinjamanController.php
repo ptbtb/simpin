@@ -22,6 +22,7 @@ use Excel;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use PDF;
 
 class PinjamanController extends Controller
@@ -566,6 +567,27 @@ class PinjamanController extends Controller
         $jasa = round($jasa,2);
         $angsuranPerbulan = $angsuranPokok  + $jasa;
         $terbilang = self::terbilang($besarPinjaman).' rupiah';
+        
+
+        $sisaPinjaman = json_decode ("{}");
+        $japan = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                            ->where('kode_jenis_pinjam', 'like', Str::of(JENIS_PINJAM_JAPAN)->append('%'))
+                            ->sum('sisa_pinjaman');
+        $japen = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                                ->where('kode_jenis_pinjam', 'like',  Str::of(JENIS_PINJAM_JAPEN)->append('%'))
+                                ->sum('sisa_pinjaman');
+        $kredit_barang = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                                ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_BARANG)
+                                ->sum('sisa_pinjaman');
+        $kredit_motor = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                                ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_MOTOR)
+                                ->sum('sisa_pinjaman');
+
+        $sisaPinjaman->japan = $japan;
+        $sisaPinjaman->japen = $japen;
+        $sisaPinjaman->kredit_barang = $kredit_motor;
+        $sisaPinjaman->kredit_motor = $kredit_motor;
+        
         $data = [
             'anggota' => $anggota,
             'saldo'=> $saldo,
@@ -582,8 +604,8 @@ class PinjamanController extends Controller
             'keperluan'=> $keperluan,
             'angsuranPerbulan'=> $angsuranPerbulan,
             'angsuranPokok'=> $angsuranPokok,
+            'sisaPinjaman'=> $sisaPinjaman,
         ];
-
         view()->share('data',$data);
         PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
         $pdf = PDF::loadView('pinjaman.formPersetujuan', $data)->setPaper('a4', 'portrait');

@@ -163,9 +163,9 @@
         </tr>
         <tr>
             <td>2.</td>
-            <td>Saldo Pinjaman Gaji</td>
+            <td>Saldo Pinjaman Japan</td>
             <td>:</td>
-            <td>Rp ....................</td>
+            <td style="width: 25%">{{ "Rp " . number_format($sisaPinjaman->japan) }}</td>
             <td>2.</td>
             <td>Simpanan Wajib</td>
             <td>:</td>
@@ -173,83 +173,33 @@
         </tr>
         <tr>
             <td>3.</td>
-            <td>Saldo Pinjaman IP/Insentif</td>
-            <td>:</td>
-            <td>Rp ....................</td>
-            <td>3.</td>
-            <td>Simpanan Sukarela</td>
-            <td>:</td>
-            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_SUKARELA)->first()->besar_tabungan,2,',','.') }}</td>
-        </tr>
-        <tr>
-            <td>4.</td>
-            <td>Saldo Pinjaman Mobilitas</td>
-            <td>:</td>
-            <td>Rp ....................</td>
-            <td>4.</td>
-            <td>Simpanan Khusus</td>
-            <td>:</td>
-            <td>{{ "Rp " . number_format($anggota->tabungan->where('kode_trans',JENIS_SIMPANAN_KHUSUS)->first()->besar_tabungan,2,',','.') }}</td>
-        </tr>
-        <tr>
-            <td>5.</td>
-            <td>Saldo Pinjaman Shift</td>
-            <td>:</td>
-            <td>Rp ....................</td>
-            <td></td>
-            <td>Jumlah Simpanan</td>
-            <td>:</td>
-            <td>{{ "Rp " . number_format($anggota->tabungan->whereIn('kode_trans',[JENIS_SIMPANAN_KHUSUS,JENIS_SIMPANAN_SUKARELA,JENIS_SIMPANAN_POKOK,JENIS_SIMPANAN_WAJIB])->sum('besar_tabungan'),2,',','.') }}</td>
-        </tr>
-        <tr>
-            <td>6.</td>
-            <td>Saldo Pinjaman Transport</td>
-            <td>:</td>
-            <td>Rp ....................</td>
-            <td>5.</td>
-            <td>Kekurangan Pagu Simpanan</td>
-            <td>:</td>
-            <td>Rp ....................</td>
-        </tr>
-        <tr>
-            <td>7.</td>
-            <td>Saldo Pinjaman Fungsional</td>
-            <td>:</td>
-            <td>Rp ....................</td>
-            <td>6.</td>
-            <td>...............</td>
-            <td>:</td>
-            <td>Rp ....................</td>
-        </tr>
-        <tr>
-            <td>8.</td>
             <td>Saldo Pinjaman Japen</td>
             <td>:</td>
-            <td>Rp ....................</td>
+            <td style="width: 25%">{{ "Rp " . number_format($sisaPinjaman->japen) }}</td>
             <td colspan="4"><h5 style="text-decoration: underline; margin: 0">BIAYA PINJAMAN</h5></td>
         </tr>
         <tr>
-            <td>9.</td>
+            <td>4.</td>
             <td>Saldo Kredit Barang</td>
             <td>:</td>
-            <td>Rp ....................</td>
+            <td style="width: 25%">{{ "Rp " . number_format($sisaPinjaman->kredit_barang) }}</td>
             <td>1.</td>
             <td>Asuransi</td>
             <td>:</td>
             <td>{{ "Rp " . number_format($asuransi,2,',','.') }}</td>
         </tr>
         <tr>
-            <td>10.</td>
+            <td>5.</td>
             <td>Saldo Kredit Motor</td>
             <td>:</td>
-            <td>Rp ....................</td>
+            <td style="width: 25%">{{ "Rp " . number_format($sisaPinjaman->kredit_motor) }}</td>
             <td>2.</td>
             <td>Provisi</td>
             <td>:</td>
             <td>{{ "Rp " . number_format($provisi,2,',','.') }}</td>
         </tr>
         <tr>
-            <td>11.</td>
+            <td>6.</td>
             <td>Saldo Japen "B"</td>
             <td>:</td>
             <td>Rp ....................</td>
@@ -259,7 +209,7 @@
             <td>{{ "Rp " . number_format($biayaAdministrasi,2,',','.') }}<td>
         </tr>
         <tr>
-            <td>12.</td>
+            <td>7.</td>
             <td>Saldo Japan "B"</td>
             <td>:</td>
             <td>Rp ....................</td>
