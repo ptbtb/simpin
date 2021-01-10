@@ -18,4 +18,9 @@ class JenisSimpanan extends Model
     {
         return strtoupper($this->nama_simpanan);
     }
+
+    public function scopeRequired($query)
+    {
+        return $query->where('is_required',1);
+    }
 }

@@ -3,6 +3,7 @@ namespace App\Managers;
 
 use App\Models\Anggota;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Carbon\Carbon;
 use App\Events\User\UserCreated;
 
@@ -22,6 +23,11 @@ class UserManager
             $user->save();
             
             $user->activation_code = uniqid().$user->id;
+            $user->save();
+
+            // assign role anggota to user as default
+            $role = Role::where('id',ROLE_ANGGOTA)->first();
+            $user->assignRole($role->name);
             $user->save();
             
             event(new UserCreated($user, $user->password));
