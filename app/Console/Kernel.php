@@ -26,7 +26,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('telescope:prune')->daily();
-        $schedule->command('tabungan:updatebatch')->hourly();
+        
+        // Run the task on the first day of every year at 00:00
+        $schedule->command('tabungan:updatebatch')->yearly();
     }
 
     /**
