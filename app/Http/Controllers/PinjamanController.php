@@ -719,7 +719,7 @@ class PinjamanController extends Controller
                 {
                     $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
                 }
-                if ($pembayaran > $angsuran->totalAngsuran)
+                if ($pembayaran >= $angsuran->totalAngsuran)
                 {
                     $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
                     $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
