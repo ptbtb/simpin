@@ -14,6 +14,7 @@ use App\Models\Pengajuan;
 use App\Models\Pinjaman;
 use App\Models\JenisPinjaman;
 use App\Models\Penghasilan;
+use App\Models\StatusPengajuan;
 use App\Models\View\ViewSaldo;
 use Auth;
 use Carbon\Carbon;
@@ -357,7 +358,35 @@ class PinjamanController extends Controller
                 return response()->json(['message' => 'not found'], 404);
             }
 
-            $pengajuan->id_status_pengajuan = $request->status;
+            if ($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA)
+            {
+                $statusPengajuanSekarang = $pengajuan->statusPengajuan;
+                if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan)
+                {
+                    $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                }
+                else
+                {
+                    $pengajuan->id_status_pengajuan = $request->status;
+                }
+            }
+            elseif($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA)
+            {
+                $statusPengajuanSekarang = $pengajuan->statusPengajuan;
+                if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan)
+                {
+                    $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                }
+                else
+                {
+                    $pengajuan->id_status_pengajuan = $request->status;
+                }
+            }
+            else
+            {
+                $pengajuan->id_status_pengajuan = $request->status;
+            }
+
             $pengajuan->tgl_acc = Carbon::now();
             $pengajuan->approved_by = $user->id;
 
