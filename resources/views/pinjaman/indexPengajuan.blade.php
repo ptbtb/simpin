@@ -62,6 +62,9 @@
         <div class="card-header text-right">
             {{-- <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
             <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a> --}}
+            @can('print jkk')
+                <a href="{{ route('pengajuan-pinjaman-print-jkk') }}" class="btn btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
+            @endcan
             <a href="{{ route('pengajuan-pinjaman-add') }}" class="btn btn-sm btn-success"><i class="fas fa-plus"></i> Buat Pengajuan Pinjaman</a>
         </div>
         <div class="card-body table-responsive">

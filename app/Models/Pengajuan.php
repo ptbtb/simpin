@@ -55,6 +55,16 @@ class Pengajuan extends Model
         return $query->whereIn('id_status_pengajuan', [STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI, STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN]);
     }
 
+    public function scopeNeedPrintJkk($query)
+    {
+        return $query->where('status_jkk', 0);
+    }
+
+    public function scopeMenungguPembayaran($query)
+    {
+        return $query->where('id_status_pengajuan', STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN);
+    }
+
     public function menungguKonfirmasi()
     {
         return $this->id_status_pengajuan == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;

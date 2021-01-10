@@ -182,6 +182,8 @@ Route::group(['prefix' => 'pinjaman'], function ()
         Route::group(['prefix' => 'pengajuan'], function ()
         {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
+            Route::get('print-jkk', [App\Http\Controllers\PengajuanController::class, 'indexJkk'])->name('pengajuan-pinjaman-print-jkk');
+            Route::post('print-jkk', [App\Http\Controllers\PengajuanController::class, 'printJkk'])->name('pengajuan-pinjaman-print-jkk');
             Route::get('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add')->middleware(['pinjaman']);
             Route::get('maxPinjaman', [App\Http\Controllers\PinjamanController::class, 'calculateMaxPinjaman'])->name('pengajuan-pinjaman-calculate-max-pinjaman');
             Route::post('create', [App\Http\Controllers\PinjamanController::class, 'storePengajuanPinjaman'])->name('pengajuan-pinjaman-add');
