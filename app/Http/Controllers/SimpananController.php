@@ -489,8 +489,8 @@ class SimpananController extends Controller
             $anggota = Anggota::with('tabungan')->findOrFail($kodeAnggota);
 
             // get this year
-            // $thisYear = Carbon::now()->year;
-            $thisYear = 2020;
+            $thisYear = Carbon::now()->year;
+            // $thisYear = 2020;
 
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)

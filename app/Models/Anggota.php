@@ -41,9 +41,9 @@ class Anggota extends Model
         return $this->hasOne(User::class, 'kode_anggota', 'kode_anggota');
     } 
 
-    public function penghasilan()
+    public function listPenghasilan()
     {
-        return $this->hasOne(Penghasilan::class, 'kode_anggota');
+        return $this->hasMany(Penghasilan::class, 'kode_anggota');
     }
     
     public function jenisAnggota()
@@ -60,10 +60,10 @@ class Anggota extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
-
-    public function listPenghasilanTertentu()
+    
+    public function kelasCompany()
     {
-        return $this->hasMany(PenghasilanTertentu::class,'kode_anggota');
+        return $this->belongsTo(KelasCompany::class, 'kelas_company_id', 'id');
     }
 
     public function listPinjaman()

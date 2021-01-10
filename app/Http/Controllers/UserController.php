@@ -12,7 +12,7 @@ use Spatie\Permission\Models\Role;
 
 use App\Models\User;
 use App\Models\Anggota;
-use App\Models\JenisPenghasilanTertentu;
+use App\Models\JenisPenghasilan;
 use App\Models\KelasCompany;
 use App\Models\Penghasilan;
 use App\Models\PenghasilanTertentu;
@@ -244,7 +244,9 @@ class UserController extends Controller
     public function profile()
     {
 		$user = Auth::user();
-		$listPenghasilanTertentu = JenisPenghasilanTertentu::show()->get();
+		$listJenisPenghasilan = JenisPenghasilan::show()
+												->orderBy('sequence','asc')
+												->get();
 		$anggota = Anggota::find($user->anggota->kode_anggota);
 		$data['penghasilan'] = null;
 
@@ -255,19 +257,17 @@ class UserController extends Controller
 		else
 		{
 			$classList = KelasCompany::where('company_id', $user->anggota->company_id)->get();
-			$penghasilanTertentu = $user->anggota->listPenghasilanTertentu;
-			if ($penghasilanTertentu->count())
+			$listPenghasilan = $user->anggota->listPenghasilan;
+			if ($listPenghasilan->count())
 			{
-				$data['valuePenghasilanTertentu'] = $penghasilanTertentu;
+				$data['listPenghasilan'] = $listPenghasilan;
 			}
-			$data['penghasilan'] = $user->anggota->penghasilan;
-
 		}
 
     	$data['title'] = 'Edit Profile';
     	$data['user'] = $user;
 		$data['classList'] = $classList;
-		$data['listPenghasilanTertentu'] = $listPenghasilanTertentu;
+		$data['listJenisPenghasilan'] = $listJenisPenghasilan;
 		$data['anggota'] = $anggota;
     	return view('user.profile', $data);
     }
@@ -306,53 +306,68 @@ class UserController extends Controller
 					$user->photo_profile_path = $config['disk'].$config['upload_path'].'/'.$filename;
 				}
 			}
-
 			$user->save();
 
 			// ambil data penghasilan
 			$anggota = $user->anggota;
-
-			$requestPenghasilanTertentu = $request->penghasilan_tertentu;			
-			foreach ($requestPenghasilanTertentu as $key => $value)
+			$file_ktp = $request->ktp_photo;
+			if ($file_ktp)
 			{
-				$penghasilanTertentuAnggota = $anggota->listPenghasilanTertentu->where('jenis_penghasilan_tertentu_id', $key)->first();
-				$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)->first();
-				if (is_null($penghasilanTertentuAnggota))
+				$config['disk'] = 'upload';
+				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
+				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
+				if (!Storage::disk($config['disk'])->has($config['upload_path']))
 				{
-					$penghasilanTertentuAnggota = new PenghasilanTertentu();
-					$penghasilanTertentuAnggota->jenis_penghasilan_tertentu_id = $key;
-					$penghasilanTertentuAnggota->kode_anggota = $anggota->kode_anggota;
+					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
 				}
-				
-				// jika null, buat row baru. 1 anggota punya 1 row penghasilan
+				if ($file_ktp->isValid())
+				{
+					$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
+
+					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
+					$anggota->foto_ktp = $config['disk'].$config['upload_path'].'/'.$filename;
+				}
+			}
+			$anggota->kelas_company_id = $request->kelas_company;
+			$anggota->save();
+
+			$requestPenghasilan = $request->penghasilan;			
+			foreach ($requestPenghasilan as $key => $value)
+			{
+				$penghasilan = $anggota->listPenghasilan->where('id_jenis_penghasilan', $key)->first();
 				if (is_null($penghasilan))
 				{
 					$penghasilan = new Penghasilan();
-					$penghasilan->kode_anggota = $anggota->kode_anggota;
 					$penghasilan->id_jenis_penghasilan = $key;
+					$penghasilan->kode_anggota = $anggota->kode_anggota;
 				}
 				
 				$val = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				if ($val)
 				{
-					$penghasilanTertentuAnggota->value = $penghasilan->value = $val;
+					$penghasilan->value = $val;
 				}
-				$penghasilan->kelas_company_id = $request->kelas_company;
-				$penghasilanTertentuAnggota->save();
 				$penghasilan->save();
 			}
 			
 			
 			// for file upload
-			$fileRequestPenghasilanTertentu = $request->file_penghasilan_tertentu;	
-			if(!is_null($fileRequestPenghasilanTertentu))
+			$fileRequestPenghasilan = $request->file_penghasilan;	
+			if(!is_null($fileRequestPenghasilan))
 			{
-				foreach ($fileRequestPenghasilanTertentu as $key => $value)
+				foreach ($fileRequestPenghasilan as $key => $value)
 				{
-					$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)->first();
+					$penghasilan = $anggota->listPenghasilan->where('id_jenis_penghasilan', $key)->first();
+					if (is_null($penghasilan))
+					{
+						$penghasilan = new Penghasilan();
+						$penghasilan->id_jenis_penghasilan = $key;
+						$penghasilan->kode_anggota = $anggota->kode_anggota;
+					}
+					
 					$config['disk'] = 'upload';
-					$config['upload_path'] = '/user/'.$user->id.'/file_path'; 
-					$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/file_path';
+					$config['upload_path'] = '/user/'.$user->id.'/penghasilan'; 
+					$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/penghasilan';
 					
 					// create directory if doesn't exist
 					if (!Storage::disk($config['disk'])->has($config['upload_path']))
@@ -372,27 +387,6 @@ class UserController extends Controller
 				}
 			}
 
-
-    		$currentAnggota = Anggota::find($anggota->kode_anggota);
-			$file_ktp = $request->ktp_photo;
-			if ($file_ktp)
-			{
-				$config['disk'] = 'upload';
-				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
-				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
-				if (!Storage::disk($config['disk'])->has($config['upload_path']))
-				{
-					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-				}
-				if ($file_ktp->isValid())
-				{
-					$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
-
-					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
-					$currentAnggota->foto_ktp = $config['disk'].$config['upload_path'].'/'.$filename;
-				}
-			}
-			$currentAnggota->save();
 		});
     	return redirect()->back()->withSuccess('Update profile success');
 	}

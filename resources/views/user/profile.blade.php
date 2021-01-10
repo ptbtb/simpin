@@ -44,14 +44,14 @@
 							<div class="col-md-6 form-group">
 								<label>Company Class</label>
 								@if (\Auth::user()->isAnggota())
-									@if ($penghasilan && $penghasilan->kelas_company_id)
-										<input type="text" name="kelas_company_name" class="form-control" value="{{ $penghasilan->kelasCompany->nama }}" readonly>
-										<input type="hidden" name="kelas_company" class="form-control" value="{{ $penghasilan->kelasCompany->id }}" readonly>
+									@if ($anggota && $anggota->kelas_company_id)
+										<input type="text" name="kelas_company_name" class="form-control" value="{{ $anggota->kelasCompany->nama }}" readonly>
+										<input type="hidden" name="kelas_company" class="form-control" value="{{ $anggota->kelasCompany->id }}" readonly>
 									@else
 										<select name="kelas_company" class="form-control">
 											<option value="">Choose One</option>
 											@foreach($classList as $itemClass)
-												<option value="{{ $itemClass->id }}" {{ ($penghasilan && $penghasilan->kelas_company_id == $itemClass->id)? 'selected':'' }}>{{ $itemClass->nama }}</option>
+												<option value="{{ $itemClass->id }}" {{ ($anggota && $anggota->kelas_company_id == $itemClass->id)? 'selected':'' }}>{{ $itemClass->nama }}</option>
 											@endforeach
 										</select>
 									@endif
@@ -66,21 +66,21 @@
 							</div>
 							@endif
 
-							@foreach ($listPenghasilanTertentu as $penghasilanTertentu)
+							@foreach ($listJenisPenghasilan as $jenisPenghasilan)
 								<div class="col-md-6 form-group">
-									<label>{{ $penghasilanTertentu->name }}</label>
-									<input type="text" id="penghasilanTertentu{{ $penghasilanTertentu->id }}" name="penghasilan_tertentu[{{ $penghasilanTertentu->id }}]" class="form-control toRupiah" placeholder="{{ $penghasilanTertentu->name }}" 
-									@if (isset($valuePenghasilanTertentu))
-										value="{{ $valuePenghasilanTertentu->where('jenis_penghasilan_tertentu_id', $penghasilanTertentu->id)->first()->value }}"
+									<label>{{ $jenisPenghasilan->name }}</label>
+									<input type="text" id="penghasilanTertentu{{ $jenisPenghasilan->id }}" name="penghasilan[{{ $jenisPenghasilan->id }}]" class="form-control toRupiah" placeholder="{{ $jenisPenghasilan->name }}" 
+									@if ($listPenghasilan)
+										value="{{ $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->value }}"
 									@endif 
 									onkeypress="return isNumberKey(event)">
 								</div>
 								<div class="col-md-6 form-group">
-									<label>Dokumen {{ $penghasilanTertentu->name }}</label>
+									<label>Dokumen {{ $jenisPenghasilan->name }}</label>
 									<div class="custom-file">
-									<input type="file" class="custom-file-input"  id="file_penghasilanTertentu{{ $penghasilanTertentu->id }}" name="file_penghasilan_tertentu[{{ $penghasilanTertentu->id }}]"  accept="application/pdf" style="cursor: pointer">
-										@if($penghasilan && $penghasilan->file_path)
-											<label class="custom-file-label" for="customFile">{{ $penghasilan->where('id_jenis_penghasilan', $penghasilanTertentu->id)->first()->file_path }}</label>
+									<input type="file" class="custom-file-input"  id="file_penghasilanTertentu{{ $jenisPenghasilan->id }}" name="file_penghasilan[{{ $jenisPenghasilan->id }}]"  accept="application/pdf" style="cursor: pointer">
+										@if($listPenghasilan && $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->file_path)
+											<label class="custom-file-label" for="customFile">{{ $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->file_path }}</label>
 										@else
 											<label class="custom-file-label" for="customFile">Choose Document</label>
 										@endif
@@ -114,7 +114,7 @@
 							<div class="form-group">
 								<div class="col-md-12 text-center" id="photoKtpButton">
 									@if(isset($anggota) && $anggota->foto_ktp)
-										<img class="img-fit" id="ktpPreview" src="{{ secure_asset($anggota->foto_ktp) }}"/>
+										<img class="img-fit" id="ktpPreview" src="{{ asset($anggota->foto_ktp) }}"/>
 									@else
 										<img class="img-fit" id="ktpPreview" src="{{ asset('img/no_image_available.jpeg') }}">
 									@endif

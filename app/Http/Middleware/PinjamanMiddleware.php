@@ -22,11 +22,16 @@ class PinjamanMiddleware
         if ($user->isAnggota())
         {
             $anggota = $user->anggota;
-            $penghasilan = $anggota->penghasilan;
+            $listPenghasilan = $anggota->listPenghasilan;
             $data = [];
-            if ($penghasilan)
+            if ($listPenghasilan)
             {
-                $data = $penghasilan->toArray();
+                $data = [
+                    'kelas_company_id' => $anggota->kelas_company_id,
+                    'gaji_bulanan' => ($listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first())? $listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->value:null,
+                    'slip_gaji' => ($listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first())? $listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->file_path:null,
+                    'foto_ktp' => $anggota->foto_ktp
+                ];
             }
             $rule=[
                 'kelas_company_id' => 'required',

@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JenisPenghasilanTertentu extends Model
+class JenisPenghasilan extends Model
 {
     use HasFactory;
 
-    protected $table = 'jenis_penghasilan_tertentu';
+    protected $table = 'jenis_penghasilan';
     protected $appends = ['input_name'];
 
     public function scopeShow($query)
