@@ -103,16 +103,16 @@ class Anggota extends Model
 
     public function isAnggotaBiasa()
     {
-        return $this->id_jenis_anggota = JENIS_ANGGOTA_BIASA;
+        return $this->id_jenis_anggota == JENIS_ANGGOTA_BIASA;
     }
 
     public function isAnggotaLuarBiasa()
     {
-        return $this->id_jenis_anggota = JENIS_ANGGOTA_LUAR_BIASA;
+        return $this->id_jenis_anggota == JENIS_ANGGOTA_LUAR_BIASA;
     }
 
     public function isPensiunan()
     {
-        return $this->id_jenis_anggota = JENIS_ANGGOTA_PENSIUNAN;
+        return $this->id_jenis_anggota == JENIS_ANGGOTA_PENSIUNAN;
     }
 }
