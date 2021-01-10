@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Pinjaman\PengajuanApproved;
 use Illuminate\Http\Request;
 
 use App\Events\Pinjaman\PengajuanCreated;
@@ -419,6 +420,10 @@ class PinjamanController extends Controller
             }
             
             $pengajuan->save();
+            if ($pengajuan->menungguPembayaran() && is_null($pengajuan->pinjaman))
+            {
+                event(new PengajuanApproved($pengajuan));
+            }
             event(new PengajuanUpdated($pengajuan));
 
             return response()->json(['message' => 'success'], 200);

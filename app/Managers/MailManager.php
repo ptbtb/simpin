@@ -122,7 +122,6 @@ class MailManager
 
                 Mail::to($email)->send(new PengajuanPinjamanUpdated($details));
             }
-            event(new PengajuanApproved($pengajuan));
         }
         elseif($pengajuan->menungguPembayaran())
         {
