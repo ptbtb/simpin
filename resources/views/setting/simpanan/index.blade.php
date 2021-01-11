@@ -9,7 +9,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <a class="btn btn-success" href="/setting/simpanan/create"><i class="glyphicon glyphicon-subtitles"></i> +</a>
+        <a class="btn btn-success" href="{{ route('jenis-simpanan-add') }}"><i class="glyphicon glyphicon-subtitles"></i> + Add Jenis Simpanan</a>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
@@ -48,7 +48,7 @@
                     <td class="text-right">{{$simpanan->tgl_tagih}}</td>
                     <td class="text-right">{{$simpanan->hari_jatuh_tempo}}</td>
                     <td >
-                        <a class="btn btn-info" href="/setting/simpanan/edit/{{$simpanan->kode_jenis_simpan}}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
+                        <a class="btn btn-info" href="{{ route('jenis-simpanan-edit', ['id'=>$simpanan->kode_jenis_simpan]) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
                         <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="/setting/simpanan/destroy/{{$simpanan->kode_jenis_simpan}}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
                     </td>
 

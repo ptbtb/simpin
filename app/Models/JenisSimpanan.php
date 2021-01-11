@@ -13,6 +13,16 @@ class JenisSimpanan extends Model
     protected $keyType = 'string';
     protected $dates = ['tgl_entri'];
     protected $appends = ['view_nama'];
+    public $timestamps = false;
+    protected $fillable= [
+        'kode_jenis_simpan',
+        'nama_simpanan',
+        'besar_simpanan',
+        'tgl_tagih',
+        'hari_jatuh_tempo',
+        'u_entry',
+        'tgl_entri'
+    ];
 
     public function getViewNamaAttribute()
     {

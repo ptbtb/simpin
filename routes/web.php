@@ -64,12 +64,12 @@ Route::group(['prefix' => 'anggota'], function ()
 Route::group(['prefix' => 'setting'], function ()
 {
         //simpanan
-    Route::get('/simpanan', [App\Http\Controllers\SettingSimpananController::class, 'index']);
-    Route::get('/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'edit']);
+    Route::get('/simpanan', [App\Http\Controllers\SettingSimpananController::class, 'index'])->name('jenis-simpanan-list');
+    Route::get('/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'edit'])->name('jenis-simpanan-edit');
     Route::post('/simpanan/update', [App\Http\Controllers\SettingSimpananController::class, 'update']);
     Route::get('/simpanan/destroy/{id}', [App\Http\Controllers\SettingSimpananController::class, 'destroy']);
-    Route::get('/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'create']);
-    Route::post('/simpanan/store', [App\Http\Controllers\SettingSimpananController::class, 'store']);
+    Route::get('/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'create'])->name('jenis-simpanan-add');
+    Route::post('/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'store'])->name('jenis-simpanan-add');
     Route::get('/simpanan/jenis/search', [App\Http\Controllers\JenisSimpananController::class, 'search'])->name('jenis-simpanan-search');
     Route::get('/simpanan/jenis/search/{id}', [App\Http\Controllers\JenisSimpananController::class, 'searchId'])->name('jenis-simpanan-searchId');
     Route::get('/simpanan/jenis/searchByUser', [App\Http\Controllers\JenisSimpananController::class, 'searchSimpananByUser'])->name('jenis-simpanan-searchByUser');
