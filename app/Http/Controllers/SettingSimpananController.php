@@ -119,8 +119,10 @@ class SettingSimpananController extends Controller
     public function edit($id)
     {
         $this->authorize('edit jenis simpanan', Auth::user());
-         $simpanan = DB::table('t_jenis_simpan')->where('kode_jenis_simpan', $id)->first();
-        return view('/setting/simpanan/edit', ['simpanan' => $simpanan]);
+        $simpanan = DB::table('t_jenis_simpan')->where('kode_jenis_simpan', $id)->first();
+        $data['simpanan'] = $simpanan;
+        $data['title'] = 'Edit Jenis Simpanan';
+        return view('setting.simpanan.edit', $data);
     }
 
     /**
@@ -130,21 +132,32 @@ class SettingSimpananController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
         $this->authorize('edit jenis simpanan', Auth::user());
-         DB::table('t_jenis_simpan') 
-                 ->where('kode_jenis_simpan', $request -> kode_jenis_simpan)
-                -> update([
-        'nama_simpanan' => $request -> nama_simpanan,
-        'besar_simpanan' => $request -> besar_simpanan,
-        'tgl_tagih' => $request -> tgl_tagih,
-        'hari_jatuh_tempo' => $request -> hari_jatuh_tempo,
-        'u_entry' => $request -> u_entry,
-        'tgl_entri' => $request -> tgl_entri,
-        
-    ]);
-        return redirect('/setting/simpanan') -> with('status', 'Data Berhasil Di Update');
+        $jenisSimpanan = JenisSimpanan::find($request->kode_jenis_simpan);
+        if (is_null($jenisSimpanan))
+    	{
+    		return redirect()->back()->withMessage('Jenis Simpanan not found');
+		}
+        try {
+            $jenisSimpanan->nama_simpanan = $request->nama_simpanan;
+            $jenisSimpanan->besar_simpanan = filter_var($request->besar_simpanan, FILTER_SANITIZE_NUMBER_INT);
+            $jenisSimpanan->tgl_tagih = $request->tgl_tagih;
+            $jenisSimpanan->hari_jatuh_tempo = $request->hari_jatuh_tempo;
+            $jenisSimpanan->u_entry = $request->u_entry;
+            $jenisSimpanan->tgl_entri = Carbon::now();
+            $jenisSimpanan->save();
+            
+            return redirect()->route('jenis-simpanan-list')->withSuccess('Update Jenis Simpanan Success');
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+			if (isset($e->errorInfo[2]))
+			{
+                $message = $e->errorInfo[2];
+			}
+			return redirect()->back()->withError($message);
+        }
     }
 
     /**
