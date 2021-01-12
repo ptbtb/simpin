@@ -138,7 +138,7 @@ class SettingSimpananController extends Controller
         $jenisSimpanan = JenisSimpanan::find($request->kode_jenis_simpan);
         if (is_null($jenisSimpanan))
     	{
-    		return redirect()->back()->withMessage('Jenis Simpanan not found');
+    		return redirect()->back()->withError('Jenis Simpanan not found');
 		}
         try {
             $jenisSimpanan->nama_simpanan = $request->nama_simpanan;
