@@ -55,7 +55,7 @@
                                 <input type="text" class="form-control" name="u_entry" size="54" value="{{ Auth::user()->name }}" readonly />
                             </div>
                             <div class="col-md-12 form-group">
-                                <button type="submit" class="form-control btn btn-sm btn-success"><i class="fa fa-save"></i> Update Jenis Simpanan</button>
+                                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Update Jenis Simpanan</button>
                             </div> 
                        </div>
                     </div>
