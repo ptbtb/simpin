@@ -46,7 +46,7 @@
                     <td >{{$pinjaman->nama_pinjaman}}</td>
                     <td class="text-right">{{$pinjaman->lama_angsuran}}</td>
                     <td class="text-right">{{$pinjaman->maks_pinjam}}</td>
-                    <td class="text-right">{{$pinjaman->bunga}}</td>
+                    <td class="text-right">{{$pinjaman->jasa}}</td>
                     <td >
                         <a class="btn btn-info" href="{{ route('jenis-pinjaman-edit', ['id'=>$pinjaman->kode_jenis_pinjam]) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
                         <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="/setting/pinjaman/destroy/{{$pinjaman->kode_jenis_pinjam}}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>

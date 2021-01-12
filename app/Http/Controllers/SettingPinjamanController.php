@@ -64,7 +64,7 @@ class SettingPinjamanController extends Controller {
             $jenisPinjaman->kategori_jenis_pinjaman_id = $request->kategori_jenis_pinjaman_id;
             $jenisPinjaman->nama_pinjaman = $request->nama_pinjaman;
             $jenisPinjaman->lama_angsuran = $request->lama_angsuran;
-            $jenisPinjaman->maks_pinjam = filter_var($request->maks_pinjam, FILTER_SANITIZE_NUMBER_INT);
+            $jenisPinjaman->maks_pinjam = $request->maks_pinjam;
             $jenisPinjaman->bunga = $request->bunga;
             $jenisPinjaman->asuransi = $request->asuransi;
             $jenisPinjaman->biaya_admin = filter_var($request->biaya_admin, FILTER_SANITIZE_NUMBER_INT);
@@ -161,7 +161,7 @@ class SettingPinjamanController extends Controller {
             $jenisPinjaman->kategori_jenis_pinjaman_id = $request->kategori_jenis_pinjaman_id;
             $jenisPinjaman->nama_pinjaman = $request->nama_pinjaman;
             $jenisPinjaman->lama_angsuran = $request->lama_angsuran;
-            $jenisPinjaman->maks_pinjam = filter_var($request->maks_pinjam, FILTER_SANITIZE_NUMBER_INT);
+            $jenisPinjaman->maks_pinjam = $request->maks_pinjam;
             $jenisPinjaman->bunga = $request->bunga;
             $jenisPinjaman->asuransi = $request->asuransi;
             $jenisPinjaman->biaya_admin = filter_var($request->biaya_admin, FILTER_SANITIZE_NUMBER_INT);
@@ -172,7 +172,7 @@ class SettingPinjamanController extends Controller {
             $jenisPinjaman->u_entry = $request->u_entry;
             $jenisPinjaman->tgl_entri = Carbon::now();
             $jenisPinjaman->save();
-            
+            // dd($jenisPinjaman);
             return redirect()->route('jenis-pinjaman-list')->withSuccess('Update Jenis Pinjaman Success');
             
         } catch (\Exception $e) {
