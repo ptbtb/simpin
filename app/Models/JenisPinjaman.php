@@ -14,7 +14,25 @@ class JenisPinjaman extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     protected $dates = ['tgl_entry'];
-    
+    public $timestamps = false;
+    protected $fillable= [
+        'kode_jenis_pinjam',
+        'tipe_jenis_pinjaman_id',
+        'kategori_jenis_pinjaman_id',
+        'nama_pinjaman',
+        'lama_angsuran',
+        'maks_pinjam',
+        'bunga',
+        'asuransi',
+        'biaya_admin',
+        'provisi',
+        'jasa',
+        'jasa_pelunasan_dipercepat',
+        'minimal_angsur_pelunasan',
+        'u_entry',
+        'tgl_entri'
+    ];
+
     public function kategoriJenisPinjaman()
     {
         return $this->belongsTo(KategoriJenisPinjaman::class, 'kategori_jenis_pinjaman_id');

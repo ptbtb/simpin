@@ -67,7 +67,7 @@ Route::group(['prefix' => 'setting'], function ()
     Route::get('/simpanan', [App\Http\Controllers\SettingSimpananController::class, 'index'])->name('jenis-simpanan-list');
     Route::get('/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'edit'])->name('jenis-simpanan-edit');
     Route::post('/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'update'])->name('jenis-simpanan-edit');
-    Route::get('/simpanan/destroy/{id}', [App\Http\Controllers\SettingSimpananController::class, 'destroy']);
+    Route::get('/simpanan/destroy/{id}', [App\Http\Controllers\SettingSimpananController::class, 'destroy'])->name('jenis-simpanan-delete');
     Route::get('/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'create'])->name('jenis-simpanan-add');
     Route::post('/simpanan/create', [App\Http\Controllers\SettingSimpananController::class, 'store'])->name('jenis-simpanan-add');
     Route::get('/simpanan/jenis/search', [App\Http\Controllers\JenisSimpananController::class, 'search'])->name('jenis-simpanan-search');
@@ -75,12 +75,12 @@ Route::group(['prefix' => 'setting'], function ()
     Route::get('/simpanan/jenis/searchByUser', [App\Http\Controllers\JenisSimpananController::class, 'searchSimpananByUser'])->name('jenis-simpanan-searchByUser');
 
         //pinjaman
-    Route::get('/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index']);
-    Route::get('/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'edit']);
-    Route::post('/pinjaman/update', [App\Http\Controllers\SettingPinjamanController::class, 'update']);
-    Route::get('/pinjaman/destroy/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'destroy']);
-    Route::get('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'create']);
-    Route::post('/pinjaman/store', [App\Http\Controllers\SettingPinjamanController::class, 'store']);
+    Route::get('/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index'])->name('jenis-pinjaman-list');
+    Route::get('/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'edit'])->name('jenis-pinjaman-edit');
+    Route::post('/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'update'])->name('jenis-pinjaman-edit');
+    Route::get('/pinjaman/destroy/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'destroy'])->name('jenis-pinjaman-delete');
+    Route::get('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'create'])->name('jenis-pinjaman-add');
+    Route::post('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'store'])->name('jenis-pinjaman-add');
 
         //codetrans
     Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index']);

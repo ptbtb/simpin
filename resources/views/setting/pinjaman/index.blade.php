@@ -9,7 +9,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <a class="btn btn-success" href="/setting/pinjaman/create"><i class="glyphicon glyphicon-subtitles"></i> +</a>
+        <a class="btn btn-success" href="{{ route('jenis-pinjaman-add') }}"><i class="glyphicon glyphicon-subtitles"></i> + Add Jenis Pinjaman</a>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
@@ -48,16 +48,14 @@
                     <td class="text-right">{{$pinjaman->maks_pinjam}}</td>
                     <td class="text-right">{{$pinjaman->bunga}}</td>
                     <td >
-                        <a class="btn btn-info" href="/setting/pinjaman/edit/{{$pinjaman->kode_jenis_pinjam}}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
+                        <a class="btn btn-info" href="{{ route('jenis-pinjaman-edit', ['id'=>$pinjaman->kode_jenis_pinjam]) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
                         <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="/setting/pinjaman/destroy/{{$pinjaman->kode_jenis_pinjam}}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
                     </td>
 
                 </tr>   
                 <?php $i++; ?>
                 @endforeach
-            </tbody> </table>
-        
-
+            </tbody> </table>        
     </div>
 
 </div>
