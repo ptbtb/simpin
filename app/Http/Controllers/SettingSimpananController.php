@@ -169,7 +169,9 @@ class SettingSimpananController extends Controller
     public function destroy($id)
     {
         $this->authorize('delete jenis simpanan', Auth::user());
-        DB::table('t_jenis_simpan')->where('kode_jenis_simpan', '=', $id)->delete();
-         return redirect('/setting/simpanan') -> with('status', 'Data Berhasil Dihapus');
+
+        $jenisSimpanan = JenisSimpanan::findOrFail($id);
+        $jenisSimpanan->delete();
+        return redirect()->route('jenis-simpanan-list')->withSuccess('Delete Jenis Simpanan Success');
     }
 }

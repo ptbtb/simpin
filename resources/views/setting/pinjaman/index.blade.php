@@ -49,7 +49,7 @@
                     <td class="text-right">{{$pinjaman->jasa}}</td>
                     <td >
                         <a class="btn btn-info" href="{{ route('jenis-pinjaman-edit', ['id'=>$pinjaman->kode_jenis_pinjam]) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
-                        <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="/setting/pinjaman/destroy/{{$pinjaman->kode_jenis_pinjam}}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
+                        <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="{{ route('jenis-pinjaman-delete', ['id'=>$pinjaman->kode_jenis_pinjam]) }}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
                     </td>
 
                 </tr>   

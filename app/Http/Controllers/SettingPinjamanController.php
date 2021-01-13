@@ -193,8 +193,11 @@ class SettingPinjamanController extends Controller {
      */
     public function destroy($id) {
         $this->authorize('delete jenis pinjaman', Auth::user());
-        DB::table('t_jenis_pinjam')->where('kode_jenis_pinjam', '=', $id)->delete();
-        return redirect('/setting/pinjaman')->with('status', 'Data Berhasil Dihapus');
+        
+        $jenisPinjaman = JenisPinjaman::findOrFail($id);
+        $jenisPinjaman->delete();
+        return redirect()->route('jenis-pinjaman-list')->withSuccess('Delete Jenis Pinjaman Success');
+        
     }
 
 }
