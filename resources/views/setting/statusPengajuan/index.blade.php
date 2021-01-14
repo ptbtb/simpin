@@ -12,9 +12,9 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header">
+    {{-- <div class="card-header">
         <a class="btn btn-success" href="{{ route('status-pengajuan-add') }}"><i class="glyphicon glyphicon-subtitles"></i> + Add Status Pengajuan</a>
-    </div>
+    </div> --}}
     <div class="card-body">
         <div class="col-6">
             @if (session('status'))
@@ -49,7 +49,7 @@
                     </td>
                     <td >
                         <a class="btn btn-info" href="{{ route('status-pengajuan-edit', ['id'=>$statusPengajuan->id]) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
-                        <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="{{ route('status-pengajuan-delete', ['id'=>$statusPengajuan->id]) }}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
+                        {{-- <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="{{ route('status-pengajuan-delete', ['id'=>$statusPengajuan->id]) }}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a> --}}
                     </td>
                 </tr>   
                 <?php $i++; ?>

@@ -108,9 +108,9 @@ Route::group(['prefix' => 'setting'], function ()
     Route::get('/status-pengajuan', [App\Http\Controllers\SettingStatusPengajuanController::class, 'index'])->name('status-pengajuan-list');
     Route::get('/status-pengajuan/edit/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'edit'])->where('id', '[0-9]+')->name('status-pengajuan-edit');
     Route::post('/status-pengajuan/edit/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'update'])->where('id', '[0-9]+')->name('status-pengajuan-edit');
-    Route::get('/status-pengajuan/destroy/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'destroy'])->name('status-pengajuan-delete');
-    Route::get('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'create'])->name('status-pengajuan-add');
-    Route::post('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'store'])->name('status-pengajuan-add');
+    // Route::get('/status-pengajuan/destroy/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'destroy'])->name('status-pengajuan-delete');
+    // Route::get('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'create'])->name('status-pengajuan-add');
+    // Route::post('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'store'])->name('status-pengajuan-add');
 
 });
 
