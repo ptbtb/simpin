@@ -365,7 +365,12 @@ return [
                     'url' => '/simpanan/list',
                     'icon' => 'fas fa-file-invoice-dollar nav-icon',
                     'can'  => ['view simpanan'],
-                    'active' => ['/simpanan/create']
+                ],
+                [
+                    'text' => 'Buat Simpanan',
+                    'url' => '/simpanan/create',
+                    'icon' => 'fas fa-plus nav-icon',
+                    'can'  => ['add simpanan'],
                 ],
                 [
                     'text' => 'History Simpanan',
