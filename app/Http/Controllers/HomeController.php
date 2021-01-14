@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\View\ViewSaldo;
 use App\Models\Pinjaman;
+use App\Models\Tabungan;
 
 use Auth;
 
@@ -55,6 +56,9 @@ class HomeController extends Controller
             if ($request->search)
             {
                 $result = Anggota::find($request->kw_kode_anggota);
+                $result->tabungan = Tabungan::where('kode_anggota',$request->kw_kode_anggota)->get();
+                $result->sumtabungan = Tabungan::where('kode_anggota',$request->kw_kode_anggota)->sum('besar_tabungan');
+                
                 if(is_null($result))
                 {
                     return redirect()->back()->withError('Anggota tidak ditemukan');

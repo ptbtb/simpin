@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Wildside\Userstamps\Userstamps;
+
 
 class Tabungan extends Model
 {
     use HasFactory;
+    use Userstamps;
 
     protected $table = "t_tabungan";
     protected $primaryKey = "id";

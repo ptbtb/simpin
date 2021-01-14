@@ -252,3 +252,17 @@ Route::group(['prefix' => 'penarikan'], function ()
 	});
 });
 
+// Tabungan
+    Route::group(['prefix' => 'tabungan'], function ()
+    {
+        Route::group(['middleware' => ['auth', 'check']], function ()
+        {
+            Route::get('list', [App\Http\Controllers\TabunganController::class, 'index'])->name('tabungan-list');
+            Route::get('create', [App\Http\Controllers\TabunganController::class, 'create'])->name('tabungan-create');
+            Route::post('create', [App\Http\Controllers\TabunganController::class, 'store'])->name('tabungan-create');
+            Route::get('edit/{id}', [App\Http\Controllers\TabunganController::class, 'edit'])->where('id', '[0-9]+')->name('tabungan-edit');
+            Route::post('edit/{id}', [App\Http\Controllers\TabunganController::class, 'update'])->where('id', '[0-9]+')->name('tabungan-edit');
+            Route::delete('delete/{id}', [App\Http\Controllers\TabunganController::class, 'delete'])->where('id', '[0-9]+')->name('tabungan-delete');
+        });
+    });
+

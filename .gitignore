@@ -12,3 +12,8 @@ npm-debug.log
 yarn-error.log
 
 storage/
+composer.lock
+composer.lock
+log.csv
+nbproject/private/private.xml
+nbproject/project.properties
