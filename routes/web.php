@@ -81,8 +81,8 @@ Route::group(['prefix' => 'setting'], function ()
     Route::get('/pinjaman/destroy/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'destroy'])->name('jenis-pinjaman-delete');
     Route::get('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'create'])->name('jenis-pinjaman-add');
     Route::post('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'store'])->name('jenis-pinjaman-add');
-
-        //codetrans
+    
+    //codetrans
     Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index']);
     Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit']);
     Route::post('/codetrans/update', [App\Http\Controllers\SettingCodeTransController::class, 'update']);
@@ -103,6 +103,15 @@ Route::group(['prefix' => 'setting'], function ()
             Route::delete('delete/{id}', [App\Http\Controllers\JenisAnggotaController::class, 'delete'])->where('id', '[0-9]+')->name('jenis-anggota-delete');
         });
     });
+
+    // Status Pengajuan
+    Route::get('/status-pengajuan', [App\Http\Controllers\SettingStatusPengajuanController::class, 'index'])->name('status-pengajuan-list');
+    Route::get('/status-pengajuan/edit/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'edit'])->where('id', '[0-9]+')->name('status-pengajuan-edit');
+    Route::post('/status-pengajuan/edit/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'update'])->where('id', '[0-9]+')->name('status-pengajuan-edit');
+    Route::get('/status-pengajuan/destroy/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'destroy'])->name('status-pengajuan-delete');
+    Route::get('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'create'])->name('status-pengajuan-add');
+    Route::post('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'store'])->name('status-pengajuan-add');
+
 });
 
 // user

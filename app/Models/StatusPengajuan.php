@@ -10,4 +10,8 @@ class StatusPengajuan extends Model
     use HasFactory;
 
     protected $table = 't_status_pengajuan';
+    protected $fillable = [
+        'id'
+    ];
+
 }

@@ -278,6 +278,13 @@ return [
                     'can'  => ['view jenis anggota'],
                     'active' => ['/setting/jenis-anggota/list', '/setting/jenis-anggota/create', 'regex:@^setting/jenis-anggota/edit/[0-9]+$@'],
                 ],
+                [
+                    'text' => 'Status Pengajuan',
+                    'url' => '/setting/status-pengajuan',
+                    'icon' => 'fas fa-check-circle nav-icon',
+                    'can'  => ['view status pengajuan'],
+                    'active' => ['/setting/status-pengajuan/list', '/setting/status-pengajuan/create', 'regex:@^setting/status-pengajuan/edit/[0-9]+$@'],
+                ],
             ],
         ],
         ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan','import penarikan']],
