@@ -64,8 +64,13 @@ class AnggotaController extends Controller {
         $this->authorize('edit anggota', Auth::user());
         $anggota = Anggota::find($id);
         $data['title'] = 'Tambah Anggota';
-        $data['anggota'] = $anggota;
+        $data['companies'] = Company::all();
         $data['jenisAnggotas'] = JenisAnggota::all();
+        // $data['kelasCompany'] = '';
+        $data['kelasCompany'] = KelasCompany::where('company_id', $anggota->company_id)
+                                            ->where('id_jenis_anggota', $anggota->id_jenis_anggota)
+                                            ->get();
+        $data['anggota'] = $anggota;
         return view('/anggota/edit', $data);
     }
 
@@ -134,13 +139,15 @@ class AnggotaController extends Controller {
         try
         {
             $Anggota = Anggota::find($id);
+            $Anggota->company_id= $request->company;
+            $Anggota->id_jenis_anggota = $request->jenis_anggota;
+            $Anggota->kelas_company_id = $request->kelas_company;
             $Anggota->tgl_masuk = $request->tgl_masuk;
             $Anggota->nama_anggota = $request->nama_anggota;
-            $Anggota->id_jenis_anggota = $request->jenis_anggota;
+            $Anggota->jenis_kelamin = $request->jenis_kelamin;
             $Anggota->tempat_lahir = $request->tmp_lahir;
             $Anggota->tgl_lahir = $request->tgl_lahir;
             $Anggota->alamat_anggota = $request->alamat_anggota;
-            $Anggota->jenis_kelamin = $request->jenis_kelamin;
             $Anggota->telp = $request->telp;
             $Anggota->lokasi_kerja = $request->lokasi_kerja;
             $Anggota->u_entry = $request->u_entry;

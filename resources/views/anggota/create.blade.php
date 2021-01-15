@@ -20,7 +20,7 @@
 <div class="card">
 	<div class="card-body">
 		<form action="{{ route('anggota-create') }}" method="post" id="anggota_form" role="form" enctype="multipart/form-data">
-			@csrf
+			{{ csrf_field() }}
 			<div class="row">
 				<div class="col-md-8">
 					<div class="card box-custom">
@@ -29,105 +29,99 @@
 						</div>
 						<div class="card-body pt-1">
 							<div class="row">
-								{{-- <div class="col-md-6"> --}}
-									<div class="col-md-6 form-group">
-										<label>Kode Anggota</label>
-										{{-- <input type="text" name="kode_anggota" class="form-control" size="54px" value="{{$nomer}}" readonly title="Kode harus diisi" /> --}}
-										<input type="number" name="kode_anggota" class="form-control" size="54px" placeholder="Kode Anggota" title="Kode harus diisi" />
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Unit</label>
-										<select id="companyId" name="company" class="form-control">
-											<option value="">Pilih Satu</option>
-											@foreach ($companies as $company)
-												<option value="{{ $company->id }}">{{ $company->nama }}</option>
+								<div class="col-md-6 form-group">
+									<label>Kode Anggota</label>
+									<input type="number" name="kode_anggota" class="form-control" size="54px" placeholder="Kode Anggota" title="Kode harus diisi" />
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Unit</label>
+									<select id="companyId" name="company" class="form-control">
+										<option value="">Pilih Satu</option>
+										@foreach ($companies as $company)
+											<option value="{{ $company->id }}">{{ $company->nama }}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Jenis Anggota</label>
+									<select id="jenisAnggota" name="jenis_anggota" class="form-control">
+										<option value="">Pilih Satu</option>
+										@foreach ($jenisAnggotas as $jenisAnggota)
+											<option value="{{ $jenisAnggota->id_jenis_anggota }}">{{ $jenisAnggota->nama_jenis_anggota }}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Kelas Unit</label>
+									<select id="kelasCompany" name="kelas_company" class="form-control" disabled>
+										<option value="">Pilih Satu</option>
+										@if($kelasCompany != "")
+											@foreach ($kelasCompany as $listKelasCompany)
+												<option value="{{ $listKelasCompany->id }}">{{ $listKelasCompany->nama }}</option>
 											@endforeach
-											
-										</select>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Jenis Anggota</label>
-										<select id="jenisAnggota" name="jenis_anggota" class="form-control">
-											<option value="">Pilih Satu</option>
-											@foreach ($jenisAnggotas as $jenisAnggota)
-												<option value="{{ $jenisAnggota->id_jenis_anggota }}">{{ $jenisAnggota->nama_jenis_anggota }}</option>
-											@endforeach
-										</select>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Kelas Unit</label>
-										<select id="kelasCompany" name="kelas_company" class="form-control" disabled>
-											<option value="">Pilih Satu</option>
-											@if($kelasCompany != "")
-												@foreach ($kelasCompany as $listKelasCompany)
-													<option value="{{ $listKelasCompany->id }}">{{ $listKelasCompany->nama }}</option>
-												@endforeach
-											@endif
-										</select>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>NIPP</label>
-										<input type="text" name="nipp" size="54" class="form-control" placeholder="NIPP"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Nama Lengkap</label>
-										<input type="text" name="nama_anggota" class="form-control" size="54" class="required" title="Nama harus diisi"  placeholder="Nama Anggota" />
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Tempat Lahir</label>
-										<input type="text" name="tmp_lahir" size="54" class="form-control" placeholder="Tempat Lahir"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Tanggal Lahir</label>
-										<input type="date" class="form-control" name="tgl_lahir" class="required" title="Tanggal Lahir harus diisi" placeholder="Tanggla Lahir">
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Jenis Kelamin</label>
-										<select name="jenis_kelamin" class="form-control">
-											<option value="">Pilih Satu</option>
-											<option value="L">Laki - laki</option>
-											<option value="P">Perempuan</option>
-										</select>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Alamat Anggota</label>
-										<input type="text" name="alamat_anggota" class="form-control" id="alamat_anggota" rows="5" cols="41" class="required" title="Alamat harus diisi" placeholder="Alamat Anggota"/>
-									</div>
-								{{-- </div> --}}
-								{{-- <div class="col-md-6"> --}}
-									<div class="col-md-6 form-group">
-										<label>KTP</label>
-										<input type="text" name="ktp" size="54" class="form-control" placeholder="KTP"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Lokasi Kerja</label>
-										<input type="text" name="lokasi_kerja" size="54" class="form-control" placeholder="Lokasi Kerja"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Tanggal Masuk</label>
-										<input type="text" name="tgl_masuk" class="form-control" value="<?php echo date("Y-m-d"); ?>" placeholder="Tanggal Masuk" >
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Email</label>
-										<input type="email" name="email" size="54" class="form-control" placeholder="Email"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Telepon</label>
-										<input type="text" name="telp" size="54" class="form-control" placeholder="Telepon"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Emergency Kontak</label>
-										<input type="text" name="emergency_kontak" size="54" class="form-control" placeholder="Emergency Kontak"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Nomer Rekening Mandiri</label>
-										<input type="text" name="no_rek" size="54" class="form-control"  placeholder="Nomor Rekening Mandiri"/>
-									</div>
-									<div class="col-md-6 form-group">
-										<label>Password</label>
-										<input type="password" name="password" placeholder="Your Password" class="form-control" value="{{ uniqid() }}" autocomplete="off" readonly>
-									</div>
-								{{-- </div> --}}
+										@endif
+									</select>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>NIPP</label>
+									<input type="text" name="nipp" size="54" class="form-control" placeholder="NIPP"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Nama Lengkap</label>
+									<input type="text" name="nama_anggota" class="form-control" size="54" class="required" title="Nama harus diisi"  placeholder="Nama Anggota" />
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Tempat Lahir</label>
+									<input type="text" name="tmp_lahir" size="54" class="form-control" placeholder="Tempat Lahir"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Tanggal Lahir</label>
+									<input type="date" class="form-control" name="tgl_lahir" class="required" title="Tanggal Lahir harus diisi" placeholder="Tanggla Lahir">
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Jenis Kelamin</label>
+									<select name="jenis_kelamin" class="form-control">
+										<option value="">Pilih Satu</option>
+										<option value="L">Laki - laki</option>
+										<option value="P">Perempuan</option>
+									</select>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Alamat Anggota</label>
+									<input type="text" name="alamat_anggota" class="form-control" id="alamat_anggota" rows="5" cols="41" class="required" title="Alamat harus diisi" placeholder="Alamat Anggota"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>KTP</label>
+									<input type="text" name="ktp" size="54" class="form-control" placeholder="KTP"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Lokasi Kerja</label>
+									<input type="text" name="lokasi_kerja" size="54" class="form-control" placeholder="Lokasi Kerja"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Tanggal Masuk</label>
+									<input type="date" name="tgl_masuk" class="form-control" value="<?php echo date("Y-m-d"); ?>" placeholder="Tanggal Masuk" >
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Email</label>
+									<input type="email" name="email" size="54" class="form-control" placeholder="Email"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Telepon</label>
+									<input type="text" name="telp" size="54" class="form-control" placeholder="Telepon"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Emergency Kontak</label>
+									<input type="text" name="emergency_kontak" size="54" class="form-control" placeholder="Emergency Kontak"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Nomer Rekening Mandiri</label>
+									<input type="text" name="no_rek" size="54" class="form-control"  placeholder="Nomor Rekening Mandiri"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Password</label>
+									<input type="password" name="password" placeholder="Your Password" class="form-control" value="{{ uniqid() }}" autocomplete="off" readonly>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -162,8 +156,8 @@
 @stop
 
 @section('js')
-<script src="{{ asset('js/collect.min.js') }}"></script>
-<script src="{{ asset('vendor/jquery-validation/jquery.validate.js') }}"></script>
+	<script src="{{ asset('js/collect.min.js') }}"></script>
+	<script src="{{ asset('vendor/jquery-validation/jquery.validate.js') }}"></script>
 <script>
 
 	var companyId;
