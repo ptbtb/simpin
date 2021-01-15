@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Wildside\Userstamps\Userstamps;
 
 class Angsuran extends Model
 {
     use HasFactory;
+    use Userstamps;
 
     protected $table = "t_angsur";
     protected $primaryKey = "kode_angsur";
