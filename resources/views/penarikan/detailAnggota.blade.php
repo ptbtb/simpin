@@ -37,6 +37,6 @@
         <td>{{ ($anggota->status)? $anggota->status:'-' }}</td>
         <td>Saldo</td>
         <td>:</td>
-        <td>{{ ($anggota->tabungan)? 'Rp. '. number_format($anggota->tabungan->besar_tabungan,0,",","."):'Belum Punya Tabungan' }}</td>
+        <td>{{ $saldoTabungan ? 'Rp. '. number_format($saldoTabungan,0,",","."):'Belum Punya Tabungan' }}</td>
     </tr>
 </table>
