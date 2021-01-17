@@ -176,6 +176,7 @@ Route::group(['prefix' => 'pinjaman'], function ()
 	Route::group(['middleware' => ['auth', 'check']], function ()
 	{
         Route::get('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
+        Route::get('list/{id}', [App\Http\Controllers\PinjamanController::class, 'index'])->where('id', '[0-9]+')->name('pinjaman-list');
         Route::post('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
         Route::get('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');
         Route::post('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');

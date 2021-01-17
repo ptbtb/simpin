@@ -51,6 +51,8 @@ class HomeController extends Controller
         {
             $anggota = DB::table('t_anggota')->where('status', 'aktif')->count();
             $data['anggota']=$anggota;
+            $Simpanan = ViewSaldo::sum('jumlah');
+            $data['simpanan']=$Simpanan;
 
             // if search
             if ($request->search)
