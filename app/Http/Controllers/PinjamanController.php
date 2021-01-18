@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PDF;
+use Validator;
 
 class PinjamanController extends Controller {
 
@@ -243,8 +244,13 @@ class PinjamanController extends Controller {
         //check gaji
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
                         ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
-                        ->first()
-                ->value;
+                        ->first();
+
+        if (is_null($gaji))
+        {
+            return redirect()->back()->withError('Belum memilik penghasilan.');
+        }
+        $gaji = $gaji->value;
         $potonganGaji = 0.65 * $gaji;
         $angsuranPerbulan = $besarPinjaman / $request->lama_angsuran;
         //dd([$potonganGaji,$angsuranPerbulan]);die;
@@ -653,6 +659,44 @@ class PinjamanController extends Controller {
                     $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                     $pinjaman->save();
                 }
+            }
+            return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            $message = $e->getMessage();
+            return redirect()->back()->withError('gagal melakukan pembayaran');
+        }
+    }
+
+    public function bayarAngsuranDipercepat(Request $request, $id) {
+        try {
+            $rule['besar_pembayaran'] = 'required';
+            
+            $validator = Validator::make($request->toArray(), $rule);
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+                return redirect()->back()->withErrors($errors);
+            }
+
+            $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
+
+            if ($pembayaran < $request->total_bayar || $pembayaran > $request->total_bayar)
+            {
+                return redirect()->back()->withError('Besar pembayaran harus sama dengan total bayar');
+            }
+            $pinjaman = Pinjaman::findOrFail($id);
+            $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
+            foreach ($listAngsuran as $angsuran) {
+                $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
+                $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
+                $angsuran->paid_at = Carbon::now();
+                $angsuran->u_entry = Auth::user()->name;
+                $angsuran->save();
+
+                $pinjaman->sisa_angsuran = 0;
+                $pinjaman->sisa_pinjaman = 0;
+                $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+                $pinjaman->save();
             }
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {

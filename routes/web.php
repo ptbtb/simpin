@@ -190,6 +190,7 @@ Route::group(['prefix' => 'pinjaman'], function ()
         Route::post('download-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'simulasiPinjaman'])->name('download-form-pinjaman')->middleware(['pinjaman']);
         Route::get('generate-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'generateFormPinjaman'])->name('generate-form-pinjaman')->middleware(['pinjaman']);
         Route::post('bayar-angsuran/{id}', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuran'])->name('pinjaman-bayar-angsuran');
+        Route::post('bayar-angsuran/{id}/dipercepat', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuranDipercepat'])->name('pinjaman-bayar-angsuran-dipercepat');
 
         Route::group(['prefix' => 'pengajuan'], function ()
         {
