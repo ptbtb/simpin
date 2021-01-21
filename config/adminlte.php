@@ -266,7 +266,19 @@ return [
                     'can'  => ['view jenis simpanan'],
                 ],
                 [
+                    'text' => 'Import Saldo Simpanan',
+                    'url' => '/setting/simpanan',
+                    'icon' => 'fa fa-money-bill nav-icon',
+                    'can'  => ['view jenis simpanan'],
+                ],
+                [
                     'text' => 'Jenis Pinjaman',
+                    'url' => '/setting/pinjaman',
+                    'icon' => 'fa fa-money-check-alt nav-icon',
+                    'can'  => ['view jenis pinjaman'],
+                ],
+                [
+                    'text' => 'Import Saldo Pinjaman',
                     'url' => '/setting/pinjaman',
                     'icon' => 'fa fa-money-check-alt nav-icon',
                     'can'  => ['view jenis pinjaman'],
