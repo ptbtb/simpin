@@ -763,7 +763,7 @@ class PinjamanController extends Controller {
                     $angsuran->sisa_pinjam = $sisaPinjaman;
                     $angsuran->tgl_entri = Carbon::now();
                     $angsuran->jatuh_tempo = $jatuhTempo;
-                    $angsuran->u_entry = 'Administrator';
+                    $angsuran->u_entry = Auth::user()->name;
 //                 dd($angsuran);die;
                     $angsuran->save();
                 }
