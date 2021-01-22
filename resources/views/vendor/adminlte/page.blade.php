@@ -17,6 +17,50 @@
 
 @section('body_data', $layoutHelper->makeBodyData())
 
+@section('content_top_nav_right')
+     <!-- Notifications: style can be found in dropdown.less -->
+     <li class="dropdown notifications-menu">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-bell"></i>
+          <span class="label label-danger">10</span>
+        </a>
+        <ul class="dropdown-menu">
+          <li class="header">You have 10 notifications</li>
+          <li class="notification-content">
+            <!-- inner menu: contains the actual data -->
+            <ul class="menu">
+              <li>
+                <a href="#">
+                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="footer text-center"><a href="#">View all</a></li>
+        </ul>
+      </li>
+@endsection
+
 @section('body')
     <div class="wrapper">
 
