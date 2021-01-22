@@ -16,15 +16,16 @@ use App\Models\Penghasilan;
 use App\Models\StatusPengajuan;
 use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
+use App\Imports\PinjamanImport;
 use App\Models\Angsuran;
 use Auth;
 use Carbon\Carbon;
-use DB;
-use Excel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use Validator;
 
@@ -770,6 +771,29 @@ class PinjamanController extends Controller {
             }
         }
         return redirect()->route('home', ['kw_kode_anggota' => $request->kode_anggota])->withSuccess("Saldo Tersimpan");
+    }
+
+    public function importPinjaman()
+    {
+        $data['title'] = "Import Saldo Pinjaman";
+        return view('pinjaman.importSaldo', $data);
+    }
+
+    public function storeImportPinjaman(Request $request)
+    {
+        try
+        {
+            DB::transaction(function () use ($request)
+            {
+                Excel::import(new PinjamanImport, $request->file); 
+            });
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
     }
 
 }

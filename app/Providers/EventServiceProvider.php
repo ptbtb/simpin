@@ -16,20 +16,20 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'App\Events\User\UserCreated' => [
-            'App\Listeners\EmailListener@onUserCreated',
+            // 'App\Listeners\EmailListener@onUserCreated',
         ],
         'App\Events\Penarikan\PenarikanCreated' => [
             'App\Listeners\PenarikanListener@onPenarikanCreated',
         ],
         'App\Events\Pinjaman\PengajuanCreated' => [
-            'App\Listeners\EmailListener@onPengajuanCreated',
+            // 'App\Listeners\EmailListener@onPengajuanCreated',
         ],
         'App\Events\Pinjaman\PengajuanUpdated' => [
-            'App\Listeners\EmailListener@onPengajuanUpdated',
+            // 'App\Listeners\EmailListener@onPengajuanUpdated',
         ],
         'App\Events\Pinjaman\PengajuanApproved' => [
             'App\Listeners\PinjamanListener@onPengajuanApproved',
-            'App\Listeners\EmailListener@onPengajuanApproved',
+            // 'App\Listeners\EmailListener@onPengajuanApproved',
         ],
         'App\Events\Pinjaman\PinjamanCreated' => [
             'App\Listeners\AngsuranListener@onPinjamanCreated',

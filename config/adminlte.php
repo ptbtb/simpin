@@ -267,7 +267,7 @@ return [
                 ],
                 [
                     'text' => 'Import Saldo Simpanan',
-                    'url' => '/setting/simpanan',
+                    'url' => '/tabungan/import',
                     'icon' => 'fa fa-money-bill nav-icon',
                     'can'  => ['view jenis simpanan'],
                 ],
@@ -279,7 +279,7 @@ return [
                 ],
                 [
                     'text' => 'Import Saldo Pinjaman',
-                    'url' => '/setting/pinjaman',
+                    'url' => '/pinjaman/import',
                     'icon' => 'fa fa-money-check-alt nav-icon',
                     'can'  => ['view jenis pinjaman'],
                 ],

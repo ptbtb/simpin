@@ -182,6 +182,10 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::post('bayar-angsuran/{id}', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuran'])->name('pinjaman-bayar-angsuran');
         Route::post('bayar-angsuran/{id}/dipercepat', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuranDipercepat'])->name('pinjaman-bayar-angsuran-dipercepat');
 
+        // import batch saldo pinjaman
+        Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');
+        Route::post('import', [App\Http\Controllers\PinjamanController::class, 'storeImportPinjaman'])->name('pinjaman-import');
+
         Route::group(['prefix' => 'pengajuan'], function () {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
             Route::get('print-jkk', [App\Http\Controllers\PengajuanController::class, 'indexJkk'])->name('pengajuan-pinjaman-print-jkk');
@@ -249,6 +253,8 @@ Route::group(['prefix' => 'tabungan'], function () {
         Route::get('edit/{id}', [App\Http\Controllers\TabunganController::class, 'edit'])->where('id', '[0-9]+')->name('tabungan-edit');
         Route::post('edit/{id}', [App\Http\Controllers\TabunganController::class, 'update'])->where('id', '[0-9]+')->name('tabungan-edit');
         Route::delete('delete/{id}', [App\Http\Controllers\TabunganController::class, 'delete'])->where('id', '[0-9]+')->name('tabungan-delete');
+        Route::get('import', [App\Http\Controllers\TabunganController::class, 'importTabungan'])->name('tabungan-import');
+        Route::post('import', [App\Http\Controllers\TabunganController::class, 'storeImportTabungan'])->name('tabungan-import');
     });
 });
 

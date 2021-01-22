@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\TabunganImport;
 use Illuminate\Http\Request;
 use Auth;
 use Carbon\Carbon;
 use App\Models\Tabungan;
 use App\Models\JenisSimpanan;
 use App\Models\Anggota;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TabunganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -68,48 +63,26 @@ class TabunganController extends Controller
         
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function importTabungan()
     {
-        //
+        $data['title'] = "Import Saldo Simpanan";
+        return view('tabungan.import', $data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function storeImportTabungan(Request $request)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        try
+        {
+            DB::transaction(function () use ($request)
+            {
+                Excel::import(new TabunganImport, $request->file); 
+            });
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
     }
 }
