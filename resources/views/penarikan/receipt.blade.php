@@ -39,7 +39,7 @@
             <div class="col-md-12 mt-3">Penarikan : Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</div>
         </div>
         <div class="row">
-            <div class="col-md-12">Sisa Saldo : Rp. {{ number_format($penarikan->tabungan->besar_tabungan,0,",",".") }}</div>
+            <div class="col-md-12">Sisa Saldo : Rp. {{ number_format($tabungan->besar_tabungan,0,",",".") }}</div>
         </div>
         <div class="row">
             <div class="col-12 text-center mt-3">
