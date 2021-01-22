@@ -33,7 +33,7 @@
                 <form action="{{ route('pinjaman-import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <a href="{{ asset('template-excel/SaldoAwalPinjaman.xlsx') }}">Download Template Excel Here</a>
+                        <a href="{{ asset('template-excel/saldoAwalPinjaman.xlsx') }}">Download Template Excel Here</a>
                     </div>
                     <div class="form-group ">
                         <label>Choose File</label><br>
