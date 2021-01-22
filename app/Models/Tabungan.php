@@ -27,4 +27,9 @@ class Tabungan extends Model
     {
         return $this->hasMany(Anggota::class, 'kode_tabungan');
     }
+
+    public function jenisSimpanan()
+    {
+        return $this->belongsTo(JenisSimpanan::class, 'kode_trans' ,'kode_jenis_simpan');
+    }
 }

@@ -104,7 +104,7 @@ class PenarikanController extends Controller
         $this->authorize('add penarikan', $user);
 
         $anggota = Anggota::with('tabungan')->find($id);
-        $saldoTabungan = Tabungan::where('kode_anggota', $id)->sum('besar_tabungan');
+        $saldoTabungan = Tabungan::where('kode_anggota', $id)->get();
         $data['anggota'] = $anggota;
         $data['saldoTabungan'] = $saldoTabungan;
         return view('penarikan.detailAnggota', $data);
