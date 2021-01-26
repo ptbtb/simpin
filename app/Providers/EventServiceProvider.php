@@ -23,16 +23,19 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\Pinjaman\PengajuanCreated' => [
             'App\Listeners\EmailListener@onPengajuanCreated',
+            'App\Listeners\NotificationListener@onApprovalPengajuanCreated'
         ],
         'App\Events\Pinjaman\PengajuanUpdated' => [
             'App\Listeners\EmailListener@onPengajuanUpdated',
+            'App\Listeners\NotificationListener@onApprovalPengajuanCreated'
         ],
         'App\Events\Pinjaman\PengajuanApproved' => [
-            'App\Listeners\PinjamanListener@onPengajuanApproved',
             'App\Listeners\EmailListener@onPengajuanApproved',
+            'App\Listeners\PinjamanListener@onUpdatePengajuanCreated',
         ],
         'App\Events\Pinjaman\PinjamanCreated' => [
             'App\Listeners\AngsuranListener@onPinjamanCreated',
+            'App\Listeners\NotificationListener@onPengajuanApproved'
         ],
         'App\Events\Anggota\AnggotaCreated' => [
             'App\Listeners\TabunganListener@onAnggotaCreated',

@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Providers;
+use App\Models\Notification;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +29,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // $notification = Notification::all();
+        // $notification = Auth::user()->isAdmin();
+        // View::share('allNotification', $notification);
+        
+        //compose all the views....
+        View::composer('*', function ($view) 
+        {
+            if(Auth::user())
+            {
+                $role = Auth::user()->roles->first();
+                $allNotif = Notification::all()->where('role_id', $role->id);
+                $notification['all_notification'] = $allNotif;
+                $notification['count'] = $allNotif->count();
+                // dd($role);
+                $view->with('notification', $notification );
+            }
+        }); 
     }
 }

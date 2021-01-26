@@ -53,7 +53,7 @@ and open the template in the editor.
 .dropdown.notifications-menu a span {
     position: absolute;
     top: 4px;
-    right: -8px;
+    left: 20px;
     text-align: center;
     font-size: 12px;
     padding: 3px 4px;
@@ -130,3 +130,19 @@ and open the template in the editor.
     font-size: 12px;
     margin-right: 2px;
 }
+
+li.unread {
+    position: relative;
+    background-color: rgba(29, 161, 242, 0.1);
+}
+
+/* li.unread::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: rgb(29, 161, 242);
+    position: absolute;
+    top: 40%;
+    right: 15px;
+    border-radius: 50%;
+} */

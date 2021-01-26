@@ -20,43 +20,29 @@
 @section('content_top_nav_right')
      <!-- Notifications: style can be found in dropdown.less -->
      <li class="dropdown notifications-menu">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-bell"></i>
-          <span class="label label-danger">10</span>
+       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+         <i class="fa fa-bell"></i>
+         @if($notification['count'])
+          <span class="label label-danger">{{ $notification['count'] }}</span>
+         @endif
         </a>
+        
         <ul class="dropdown-menu">
-          <li class="header">You have 10 notifications</li>
-          <li class="notification-content">
-            <!-- inner menu: contains the actual data -->
-            <ul class="menu">
-              <li>
-                <a href="#">
-                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="fa fa-users"></i> Anggota <strong>Endang H</strong> melakukan penarikan
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="footer text-center"><a href="#">View all</a></li>
+            <li class="header">You have {{ $notification['count'] ? $notification['count'] : 'no' }} notifications</li>
+            <li class="notification-content">
+              <!-- inner menu: contains the actual data -->
+              <ul class="menu">
+                @foreach ($notification['all_notification'] as $notif)
+                  <li class="{{ $notif->has_read ? '' : 'unread'}} d-flex justify-content-center align-items-center">
+                    <i class="fas fa-hand-holding-usd pr-3 text-info"></i> 
+                    <a href="#" >
+                      {{ $notif->informasi_notifikasi }}
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
+            </li>
+            <li class="footer text-center"><a href="#">View all</a></li>
         </ul>
       </li>
 @endsection
