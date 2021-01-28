@@ -43,7 +43,7 @@
                 @endforeach
               </ul>
             </li>
-            <li class="footer text-center"><a href="#">View all</a></li>
+            <li class="footer text-center"><a href={{ route('notifications')}}>View all</a></li>
         </ul>
       </li>
 @endsection

@@ -9,9 +9,19 @@ use Auth;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        
+        $user = Auth::user();
+        $role = $user->roles->first();
+        if (is_null($role))
+        {
+            abort(403);
+        }
+        $allNotif = Notification::all()->where('receiver', Auth::user()->name)
+                                                ->where('role_id', $role->id);
+        $data['notifications'] = $allNotif;
+        $data['role'] = $role;
+        return view('notification', $data);
     }
     
     public function updateStatus(Request $request)
