@@ -42,7 +42,6 @@ class AppServiceProvider extends ServiceProvider
                 $allNotif = Notification::all()->where('role_id', $role->id);
                 $notification['all_notification'] = $allNotif;
                 $notification['count'] = $allNotif->count();
-                // dd($role);
                 $view->with('notification', $notification );
             }
         }); 

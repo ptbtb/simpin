@@ -35,7 +35,7 @@
                 @foreach ($notification['all_notification'] as $notif)
                   <li class="{{ $notif->has_read ? '' : 'unread'}} d-flex justify-content-center align-items-center">
                     <i class="fas fa-hand-holding-usd pr-3 text-info"></i> 
-                    <a href="#" >
+                    <a href={{ $notif->url }} >
                       {{ $notif->informasi_notifikasi }}
                     </a>
                   </li>

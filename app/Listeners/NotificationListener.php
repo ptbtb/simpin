@@ -14,7 +14,7 @@ class NotificationListener
         NotificationManager::sendNotificationApprovalPengajuanPinjaman($event->pengajuan);
     }
     
-    public function onUpdatePengajuanCreated($event)
+    public function onPengajuanUpdated($event)
     {
         NotificationManager::sendNotificationUpdatePengajuanPinjaman($event->pengajuan);
     }
