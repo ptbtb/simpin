@@ -20,11 +20,12 @@
 @section('content_top_nav_right')
      <!-- Notifications: style can be found in dropdown.less -->
      <li class="dropdown notifications-menu">
-       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-         <i class="fa fa-bell"></i>
-         @if($notification['count'])
-          <span class="label label-danger">{{ $notification['count'] }}</span>
-         @endif
+         @csrf
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-bell"></i>
+            @if($notification['count'])
+                <span class="label label-danger">{{ $notification['count'] }}</span>
+            @endif
         </a>
         
         <ul class="dropdown-menu">
@@ -35,7 +36,7 @@
                 @foreach ($notification['all_notification'] as $notif)
                   <li class="{{ $notif->has_read ? '' : 'unread'}} d-flex justify-content-center align-items-center">
                     <i class="fas fa-hand-holding-usd pr-3 text-info"></i> 
-                    <a href={{ $notif->url }} >
+                    <a href={{ $notif->url }} data={{ $notif->id }} id="update-notif" >
                       {{ $notif->informasi_notifikasi }}
                     </a>
                   </li>
@@ -98,4 +99,31 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
+    <script>
+        $(document).ready(function() {
+            $("#update-notif").click(function(event) {
+                var notifId = $(this).attr('data');
+                if(notifId){
+                    updateNotifStatus(notifId);
+                }
+                // event.preventDefault();
+            });
+        });
+
+        function updateNotifStatus(notifId){
+            return $.ajax({
+                url: '{{ route('notification-status-update') }}',
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    'notifId' : notifId,
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (response) {
+                   console.log(response);
+                }
+            })
+        }
+
+    </script>
 @stop

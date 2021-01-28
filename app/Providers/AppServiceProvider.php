@@ -39,7 +39,9 @@ class AppServiceProvider extends ServiceProvider
             if(Auth::user())
             {
                 $role = Auth::user()->roles->first();
-                $allNotif = Notification::all()->where('role_id', $role->id);
+                $allNotif = Notification::all()->where('receiver', Auth::user()->name)
+                                                ->where('role_id', $role->id)
+                                                ->where('has_read', 0);
                 $notification['all_notification'] = $allNotif;
                 $notification['count'] = $allNotif->count();
                 $view->with('notification', $notification );

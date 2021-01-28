@@ -267,4 +267,13 @@ Route::group(['prefix' => 'penarikan'], function ()
             Route::delete('delete/{id}', [App\Http\Controllers\TabunganController::class, 'delete'])->where('id', '[0-9]+')->name('tabungan-delete');
         });
     });
-
+    
+    // Notifikasi
+    Route::group(['prefix' => 'notifikasi'], function()
+    {
+        Route::group(['middleware' => ['auth', 'check']], function ()
+        {
+            Route::post('update-status-notif', [App\Http\Controllers\NotificationController::class, 'updateStatus'])->name('notification-status-update');
+        });
+        
+    });
