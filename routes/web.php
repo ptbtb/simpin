@@ -5,15 +5,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+  |--------------------------------------------------------------------------
+  | Web Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register web routes for your application. These
+  | routes are loaded by the RouteServiceProvider within a group which
+  | contains the "web" middleware group. Now create something great!
+  |
+ */
 
 //Route::get('/', function () {
 //    return view('welcome');
@@ -36,10 +36,8 @@ Route::post('/notifications', [App\Http\Controllers\NotificationController::clas
 Route::get('testEvent', [App\Http\Controllers\MigrationController::class, 'index'])->name('test-event');
 
 // anggota
-Route::group(['prefix' => 'anggota'], function ()
-{
-    Route::group(['middleware' => ['auth', 'check']], function ()
-    {
+Route::group(['prefix' => 'anggota'], function () {
+    Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('list', [App\Http\Controllers\AnggotaController::class, 'index'])->name('anggota-list');
         Route::post('list', [App\Http\Controllers\AnggotaController::class, 'index'])->name('anggota-list');
         Route::get('list/data', [App\Http\Controllers\AnggotaController::class, 'indexAjax'])->name('anggota-list-ajax');
@@ -55,7 +53,7 @@ Route::group(['prefix' => 'anggota'], function ()
         Route::get('ajax/getKelasCompany', [App\Http\Controllers\AnggotaController::class, 'getKelasCompany'])->name('anggota-ajax-getKelasCompany');
 
         Route::get('download/pdf', [App\Http\Controllers\AnggotaController::class, 'createPDF'])->name('anggota-download-pdf');
-        Route::get('download/excel', [App\Http\Controllers\AnggotaController::class, 'createExcel'])->name('anggota-download-excel');        
+        Route::get('download/excel', [App\Http\Controllers\AnggotaController::class, 'createExcel'])->name('anggota-download-excel');
 
         Route::get('import/excel', [App\Http\Controllers\AnggotaController::class, 'importExcel'])->name('anggota-import-excel');
         Route::post('import/excel', [App\Http\Controllers\AnggotaController::class, 'storeImportExcel'])->name('anggota-import-excel');
@@ -63,9 +61,8 @@ Route::group(['prefix' => 'anggota'], function ()
 });
 
 // setting
-Route::group(['prefix' => 'setting'], function ()
-{
-        //simpanan
+Route::group(['prefix' => 'setting'], function () {
+    //simpanan
     Route::get('/simpanan', [App\Http\Controllers\SettingSimpananController::class, 'index'])->name('jenis-simpanan-list');
     Route::get('/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'edit'])->name('jenis-simpanan-edit');
     Route::post('/simpanan/edit/{id}', [App\Http\Controllers\SettingSimpananController::class, 'update'])->name('jenis-simpanan-edit');
@@ -75,15 +72,19 @@ Route::group(['prefix' => 'setting'], function ()
     Route::get('/simpanan/jenis/search', [App\Http\Controllers\JenisSimpananController::class, 'search'])->name('jenis-simpanan-search');
     Route::get('/simpanan/jenis/search/{id}', [App\Http\Controllers\JenisSimpananController::class, 'searchId'])->name('jenis-simpanan-searchId');
     Route::get('/simpanan/jenis/searchByUser', [App\Http\Controllers\JenisSimpananController::class, 'searchSimpananByUser'])->name('jenis-simpanan-searchByUser');
-
-        //pinjaman
+    Route::get('/simpanan/import/excel', [App\Http\Controllers\SettingSimpananController::class, 'importExcel'])->name('saldosimpanan-import-excel');
+    Route::post('/simpanan/import/excel', [App\Http\Controllers\SettingSimpananController::class, 'storeImportExcel'])->name('saldosimpanan-import-excel');
+   
+    //pinjaman
     Route::get('/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index'])->name('jenis-pinjaman-list');
     Route::get('/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'edit'])->name('jenis-pinjaman-edit');
     Route::post('/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'update'])->name('jenis-pinjaman-edit');
     Route::get('/pinjaman/destroy/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'destroy'])->name('jenis-pinjaman-delete');
     Route::get('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'create'])->name('jenis-pinjaman-add');
     Route::post('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'store'])->name('jenis-pinjaman-add');
-    
+    Route::get('/pinjaman/import/excel', [App\Http\Controllers\SettingPinjamanController::class, 'importExcel'])->name('saldopinjaman-import-excel');
+    Route::post('/pinjaman/import/excel', [App\Http\Controllers\SettingPinjamanController::class, 'storeImportExcel'])->name('saldopinjaman-import-excel');
+   
     //codetrans
     Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index']);
     Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit']);
@@ -93,10 +94,8 @@ Route::group(['prefix' => 'setting'], function ()
     Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store']);
 
     // Jenis Anggota
-    Route::group(['prefix' => 'jenis-anggota'], function ()
-    {
-        Route::group(['middleware' => ['auth', 'check']], function ()
-        {
+    Route::group(['prefix' => 'jenis-anggota'], function () {
+        Route::group(['middleware' => ['auth', 'check']], function () {
             Route::get('list', [App\Http\Controllers\JenisAnggotaController::class, 'index'])->name('jenis-anggota-list');
             Route::get('create', [App\Http\Controllers\JenisAnggotaController::class, 'create'])->name('jenis-anggota-create');
             Route::post('create', [App\Http\Controllers\JenisAnggotaController::class, 'store'])->name('jenis-anggota-create');
@@ -113,15 +112,12 @@ Route::group(['prefix' => 'setting'], function ()
     // Route::get('/status-pengajuan/destroy/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'destroy'])->name('status-pengajuan-delete');
     // Route::get('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'create'])->name('status-pengajuan-add');
     // Route::post('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'store'])->name('status-pengajuan-add');
-
 });
 
 // user
-Route::group(['prefix' => 'user'], function ()
-{
+Route::group(['prefix' => 'user'], function () {
     Route::get('validation/{validation_id}', [App\Http\Controllers\UserController::class, 'validation'])->name('user-validation');
-	Route::group(['middleware' => ['auth', 'check']], function ()
-	{
+    Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('list', [App\Http\Controllers\UserController::class, 'index'])->name('user-list');
         Route::post('list', [App\Http\Controllers\UserController::class, 'index'])->name('user-list');
         Route::get('list/data', [App\Http\Controllers\UserController::class, 'indexAjax'])->name('user-list-ajax');
@@ -133,51 +129,46 @@ Route::group(['prefix' => 'user'], function ()
 
         Route::get('/edit/permission/{id}', [App\Http\Controllers\UserController::class, 'editPermission'])->where('id', '[0-9]+')->name('user-edit-permission');
         Route::post('/edit/permission/{id}', [App\Http\Controllers\UserController::class, 'updatePermission'])->where('id', '[0-9]+')->name('user-edit-permission');
-        
-		Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user-profile');
+
+        Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user-profile');
         Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('user-profile');
-        
+
         Route::get('change-password', [App\Http\Controllers\UserController::class, 'changePassword'])->name('user-change-password');
         Route::post('change-password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('user-change-password');
-        
+
         Route::get('import/excel', [App\Http\Controllers\UserController::class, 'importExcel'])->name('user-import-excel');
         Route::post('import/excel', [App\Http\Controllers\UserController::class, 'storeImportExcel'])->name('user-import-excel');
         Route::get('download/excel', [App\Http\Controllers\UserController::class, 'createExcel'])->name('user-download-excel');
-	});
+    });
 });
 
 // role
-Route::group(['prefix' => 'role'], function ()
-{
-	Route::group(['middleware' => ['auth', 'check']], function ()
-	{
+Route::group(['prefix' => 'role'], function () {
+    Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('list', [App\Http\Controllers\RoleController::class, 'index'])->name('role-list');
         Route::get('create', [App\Http\Controllers\RoleController::class, 'create'])->name('role-create');
         Route::post('create', [App\Http\Controllers\RoleController::class, 'store'])->name('role-create');
         Route::get('/edit/{id}', [App\Http\Controllers\RoleController::class, 'edit'])->where('id', '[0-9]+')->name('role-edit');
         Route::post('/edit/{id}', [App\Http\Controllers\RoleController::class, 'update'])->where('id', '[0-9]+')->name('role-edit');
         Route::delete('/delete/{id}', [App\Http\Controllers\RoleController::class, 'delete'])->where('id', '[0-9]+')->name('role-delete');
-	});
+    });
 });
 
 // transaksi
-Route::group(['prefix' => 'transaksi'], function ()
-{
-	Route::group(['middleware' => ['auth', 'check']], function ()
-	{
+Route::group(['prefix' => 'transaksi'], function () {
+    Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('', [App\Http\Controllers\TransaksiController::class, 'listTransaksiAnggota'])->name('transaksi-list-anggota');
         Route::post('', [App\Http\Controllers\TransaksiController::class, 'listTransaksiAnggota'])->name('transaksi-list-anggota');
         Route::get('download/pdf', [App\Http\Controllers\TransaksiController::class, 'createPDF'])->name('transaksi-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\TransaksiController::class, 'createExcel'])->name('transaksi-download-excel');
-	});
+    });
 });
 
 // pinjaman
-Route::group(['prefix' => 'pinjaman'], function ()
-{
-	Route::group(['middleware' => ['auth', 'check']], function ()
-	{
+Route::group(['prefix' => 'pinjaman'], function () {
+    Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
+        Route::get('list/{id}', [App\Http\Controllers\PinjamanController::class, 'index'])->where('id', '[0-9]+')->name('pinjaman-list');
         Route::post('list', [App\Http\Controllers\PinjamanController::class, 'index'])->name('pinjaman-list');
         Route::get('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');
         Route::post('history', [App\Http\Controllers\PinjamanController::class, 'history'])->name('pinjaman-history');
@@ -191,9 +182,13 @@ Route::group(['prefix' => 'pinjaman'], function ()
         Route::post('download-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'simulasiPinjaman'])->name('download-form-pinjaman')->middleware(['pinjaman']);
         Route::get('generate-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'generateFormPinjaman'])->name('generate-form-pinjaman')->middleware(['pinjaman']);
         Route::post('bayar-angsuran/{id}', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuran'])->name('pinjaman-bayar-angsuran');
+        Route::post('bayar-angsuran/{id}/dipercepat', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuranDipercepat'])->name('pinjaman-bayar-angsuran-dipercepat');
 
-        Route::group(['prefix' => 'pengajuan'], function ()
-        {
+        // import batch saldo pinjaman
+        Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');
+        Route::post('import', [App\Http\Controllers\PinjamanController::class, 'storeImportPinjaman'])->name('pinjaman-import');
+
+        Route::group(['prefix' => 'pengajuan'], function () {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
             Route::get('print-jkk', [App\Http\Controllers\PengajuanController::class, 'indexJkk'])->name('pengajuan-pinjaman-print-jkk');
             Route::post('print-jkk', [App\Http\Controllers\PengajuanController::class, 'printJkk'])->name('pengajuan-pinjaman-print-jkk');
@@ -203,15 +198,13 @@ Route::group(['prefix' => 'pinjaman'], function ()
             Route::get('calculate-angsuran', [App\Http\Controllers\PinjamanController::class, 'calculateAngsuran'])->name('pengajuan-pinjaman-calculate-angsuran');
             Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
         });
-	});
+    });
 });
 
 
 //simpanan
-Route::group(['prefix' => 'simpanan'], function ()
-{
-    Route::group(['middleware' => ['auth', 'check']], function ()
-    {
+Route::group(['prefix' => 'simpanan'], function () {
+    Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('list', [App\Http\Controllers\SimpananController::class, 'index'])->name('simpanan-list');
         Route::post('list', [App\Http\Controllers\SimpananController::class, 'index'])->name('simpanan-list');
         Route::get('list/data', [App\Http\Controllers\SimpananController::class, 'indexAjax'])->name('simpanan-list-ajax');
@@ -227,21 +220,18 @@ Route::group(['prefix' => 'simpanan'], function ()
         Route::post('import/excel', [App\Http\Controllers\SimpananController::class, 'storeImportExcel'])->name('simpanan-import-excel');
         Route::get('ajax/payment-value', [App\Http\Controllers\SimpananController::class, 'paymentValue'])->name('ajax-simpanan-payment-value');
 
-        Route::group(['prefix' => 'card'], function ()
-        {
-            Route::get('', [App\Http\Controllers\SimpananController::class, 'indexCard'])->name('simpanan-index-card'); 
-            Route::get('view/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'showCard'])->name('simpanan-show-card'); 
-            Route::get('download/pdf/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadPDFCard'])->name('simpanan-download-pdf-card'); 
-            Route::get('download/excel/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadExcelCard'])->name('simpanan-download-pdf-card'); 
+        Route::group(['prefix' => 'card'], function () {
+            Route::get('', [App\Http\Controllers\SimpananController::class, 'indexCard'])->name('simpanan-index-card');
+            Route::get('view/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'showCard'])->name('simpanan-show-card');
+            Route::get('download/pdf/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadPDFCard'])->name('simpanan-download-pdf-card');
+            Route::get('download/excel/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadExcelCard'])->name('simpanan-download-pdf-card');
         });
     });
 });
 
 // penarikan
-Route::group(['prefix' => 'penarikan'], function ()
-{
-	Route::group(['middleware' => ['auth', 'check']], function ()
-	{
+Route::group(['prefix' => 'penarikan'], function () {
+    Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('create', [App\Http\Controllers\PenarikanController::class, 'create'])->name('penarikan-create');
         Route::post('create', [App\Http\Controllers\PenarikanController::class, 'store'])->name('penarikan-create');
         Route::get('history', [App\Http\Controllers\PenarikanController::class, 'history'])->name('penarikan-history');
@@ -253,21 +243,20 @@ Route::group(['prefix' => 'penarikan'], function ()
         Route::get('download/excel', [App\Http\Controllers\PenarikanController::class, 'createExcel'])->name('penarikan-download-excel');
         Route::get('import/excel', [App\Http\Controllers\PenarikanController::class, 'importExcel'])->name('penarikan-import-excel');
         Route::post('import/excel', [App\Http\Controllers\PenarikanController::class, 'storeImportExcel'])->name('penarikan-import-excel');
-	});
+    });
 });
 
 // Tabungan
-    Route::group(['prefix' => 'tabungan'], function ()
-    {
-        Route::group(['middleware' => ['auth', 'check']], function ()
-        {
-            Route::get('list', [App\Http\Controllers\TabunganController::class, 'index'])->name('tabungan-list');
-            Route::get('create', [App\Http\Controllers\TabunganController::class, 'create'])->name('tabungan-create');
-            Route::post('create', [App\Http\Controllers\TabunganController::class, 'store'])->name('tabungan-create');
-            Route::get('edit/{id}', [App\Http\Controllers\TabunganController::class, 'edit'])->where('id', '[0-9]+')->name('tabungan-edit');
-            Route::post('edit/{id}', [App\Http\Controllers\TabunganController::class, 'update'])->where('id', '[0-9]+')->name('tabungan-edit');
-            Route::delete('delete/{id}', [App\Http\Controllers\TabunganController::class, 'delete'])->where('id', '[0-9]+')->name('tabungan-delete');
-        });
+Route::group(['prefix' => 'tabungan'], function () {
+    Route::group(['middleware' => ['auth', 'check']], function () {
+        Route::get('list', [App\Http\Controllers\TabunganController::class, 'index'])->name('tabungan-list');
+        Route::get('create', [App\Http\Controllers\TabunganController::class, 'create'])->name('tabungan-create');
+        Route::post('create', [App\Http\Controllers\TabunganController::class, 'store'])->name('tabungan-create');
+        Route::get('edit/{id}', [App\Http\Controllers\TabunganController::class, 'edit'])->where('id', '[0-9]+')->name('tabungan-edit');
+        Route::post('edit/{id}', [App\Http\Controllers\TabunganController::class, 'update'])->where('id', '[0-9]+')->name('tabungan-edit');
+        Route::delete('delete/{id}', [App\Http\Controllers\TabunganController::class, 'delete'])->where('id', '[0-9]+')->name('tabungan-delete');
+        Route::get('import', [App\Http\Controllers\TabunganController::class, 'importTabungan'])->name('tabungan-import');
+        Route::post('import', [App\Http\Controllers\TabunganController::class, 'storeImportTabungan'])->name('tabungan-import');
     });
     
     // Notifikasi

@@ -10,9 +10,8 @@ use Illuminate\Support\Facades\Log;
 
 class TabunganManager 
 {
-    static function updateSaldo(Penarikan $penarikan)
+    static function updateSaldo(Penarikan $penarikan, Tabungan $tabungan)
     {
-        $tabungan = $penarikan->tabungan;
         $saldoAwal = $tabungan->besar_tabungan;
         $saldoAkhir = $saldoAwal - $penarikan->besar_ambil;
         $tabungan->besar_tabungan = $saldoAkhir;

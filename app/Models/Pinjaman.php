@@ -49,4 +49,42 @@ class Pinjaman extends Model {
         return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi - $this->biaya_asuransi;
     }
 
+    public function getLamaAngsuranBelumLunasAttribute() {
+        return $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->count();
+    }
+
+    public function getTotalDendaAttribute() {
+        return $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sum('denda');
+    }
+
+    public function getTotalAngsuranAttribute() {
+        return $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sum('besar_angsuran');
+    }
+
+    public function getJasaPelunasanDipercepatAttribute() {
+        return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
+    }
+
+    public function getTotalbayarPelunasanDipercepatAttribute()
+    {
+        return $this->totalAngsuran + $this->totalDenda + $this->jasaPelunasanDipercepat + $this->tunggakan;
+    }
+
+    public function getTunggakanAttribute() {
+        // ambil tunggakan angsuran
+        $tunggakan = $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->where('besar_pembayaran', '>', 0)->first();
+        if ($tunggakan)
+        {            
+            return $tunggakan->besar_angsuran + $tunggakan->jasa - $tunggakan->besar_pembayaran;
+        }
+        return 0;
+    }
+
+    public function canPercepatPelunasan()
+    {
+        $minimalAngsuranLunas = $this->minimal_angsur_pelunasan;
+        $angsuranLunas = $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)->count();
+        return $angsuranLunas >= $minimalAngsuranLunas;
+    }
+
 }

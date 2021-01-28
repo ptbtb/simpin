@@ -44,6 +44,14 @@
 							</select>
 						</div>
 						<div class="col-md-12 form-group">
+							<label>Jenis Simpanan</label>
+							<select name="jenis_simpanan" class="form-control">
+								@foreach ($jenisSimpanan as $jenis)
+									<option value="{{ $jenis->kode_jenis_simpan }}">{{ $jenis->nama_simpanan }}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="col-md-12 form-group">
 							<label>Besar Penarikan</label>
 							<input type="text" name="besar_penarikan" class="form-control penarikan" placeholder="Besar Penarikan" autocomplete="off" required>
 						</div>

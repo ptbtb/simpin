@@ -80,7 +80,21 @@
                     <div class="icon">
                         <i class="fa fa-user-plus"></i>
                     </div>
-                    <a href="/anggota" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="/anggota/list" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ number_format($simpanan,0,",",".") }}</h3>
+
+                        <p>Total Simpanan </p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <a href="/simpanan/list" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             @endif
@@ -180,20 +194,23 @@
                     </table>
                 </div>
             </div>
+            
+            
+            <div class="col-md-2">
+                <a href="anggota/edit/{{$searchResult->kode_anggota}}" class="btn btn-default btn-sm w-100 mt-1"><i class="fa fa-money-bill"></i> Edit Anggota</a>
+                <a href="{{ route('simpanan-add', ['kode_anggota'=>$searchResult->kode_anggota]) }}" class="btn btn-success btn-sm w-100 mt-1"><i class="fa fa-money-bill"></i> Simpanan</a>
+                <a href="pinjaman/list/{{$searchResult->kode_anggota}}" class="btn btn-info btn-sm w-100 mt-1"><i class="fas fa-hand-holding-usd"></i> Pinjaman</a>
+            </div>
             @if($searchResult->tabungan->isNotEmpty())
             <div class="col-md-2">
-                <a href="{{ route('simpanan-add', ['kode_anggota'=>$searchResult->kode_anggota]) }}" class="btn btn-success btn-sm w-100"><i class="fa fa-money-bill"></i> Simpanan</a>
-                <a href="" class="btn btn-info btn-sm w-100 mt-1"><i class="fas fa-hand-holding-usd"></i> Pinjaman</a>
-            </div>
-            <div class="col-md-2">
-                <a href="{{ route('simpanan-index-card', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-warning btn-sm w-100"><i class="fas fa-clipboard"></i> Kartu Simpanan</a>
+                <a href="{{ route('simpanan-index-card', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-warning btn-sm w-100 mt-1"><i class="fas fa-clipboard"></i> Kartu Simpanan</a>
                 @if($searchResult->pinjaman->isEmpty())
-                <a href="{{ route('pinjaman-create', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-primary btn-sm w-100"><i class="fas fa-clipboard"></i> Set Saldo Pinjaman</a>
+                <a href="{{ route('pinjaman-create', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-primary btn-sm w-100 mt-1"><i class="fas fa-clipboard"></i> Set Saldo Pinjaman</a>
                 @endif
             </div>
             @else
             <div class="col-md-2">
-                <a href="{{ route('tabungan-create', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-primary btn-sm w-100"><i class="fas fa-clipboard"></i> Set Saldo Awal Anggota</a>
+                <a href="{{ route('tabungan-create', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-primary btn-sm w-100 mt-1"><i class="fas fa-clipboard"></i> Saldo Awal Simpanan</a>
             </div>
 
             @endif

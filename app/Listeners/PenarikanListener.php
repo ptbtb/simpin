@@ -13,6 +13,6 @@ class PenarikanListener
 {
     public function onPenarikanCreated($event)
     {
-        TabunganManager::updateSaldo($event->penarikan);
+        TabunganManager::updateSaldo($event->penarikan, $event->tabungan);
     }
 }

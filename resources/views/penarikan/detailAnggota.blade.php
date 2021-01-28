@@ -37,6 +37,10 @@
         <td>{{ ($anggota->status)? $anggota->status:'-' }}</td>
         <td>Saldo</td>
         <td>:</td>
-        <td>{{ $saldoTabungan ? 'Rp. '. number_format($saldoTabungan,0,",","."):'Belum Punya Tabungan' }}</td>
+        <td>
+            @foreach ($saldoTabungan as $tabungan)
+                {{ ucwords(strtolower($tabungan->jenisSimpanan->nama_simpanan)) }} : {{ 'Rp. '. number_format($tabungan->besar_tabungan,0,",",".") }} <br>
+            @endforeach
+        </td>
     </tr>
 </table>

@@ -343,8 +343,9 @@ class SimpananController extends Controller
 
             $anggota = DB::table('t_anggota')
                     ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
-                    ->select('t_penghasilan.gaji_bulanan as penghasilan')
+                    ->select('t_penghasilan.value as penghasilan')
                     ->where('t_anggota.kode_anggota', '=', $anggotaId)
+                    ->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
                     ->first();
             $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', '502.01.000')->first();
             $attribute = $latestAngsur;

@@ -16,7 +16,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'App\Events\User\UserCreated' => [
-            'App\Listeners\EmailListener@onUserCreated',
+            // 'App\Listeners\EmailListener@onUserCreated',
         ],
         'App\Events\Penarikan\PenarikanCreated' => [
             'App\Listeners\PenarikanListener@onPenarikanCreated',

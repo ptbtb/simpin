@@ -29,6 +29,11 @@
             border: 1px solid black;
             border-radius: 0;
         }
+
+        #pelunasanDipercepat th, #pelunasanDipercepat td{
+            padding-left: .4rem !important;
+            padding-right: .4rem !important;
+        }
     </style>
 @endsection
 
@@ -96,8 +101,11 @@
         <div class="mt-3 p-2 box-custom">
             <div class="d-flex">
                 <h6 style="font-weight: 600">Angsuran</h6>
+                @if ($pinjaman->canPercepatPelunasan())
+                    <a class="btn btn-sm btn-info ml-auto mb-2 btn-pelunasanDipercepat text-white"><i class="fas fa-handshake"></i> Pelunasan Dipercepat</a>
+                @endif
                 @can('bayar angsuran pinjaman')
-                    <a class="btn btn-sm btn-success ml-auto mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
+                    <a class="btn btn-sm btn-success ml-2 mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
                 @endcan
             </div>
             <div class="table-responsive">
@@ -135,39 +143,101 @@
         </div>
     </div>
 </div>
-@can('bayar angsuran pinjaman')
-<div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <form action="{{ route('pinjaman-bayar-angsuran', ['id'=>$pinjaman->kode_pinjam]) }}" method="POST">
-        @csrf
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5>Pembayaran Angsuran</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Bulan</label>
-                        <input type="text" name="bulan" class="form-control" value="{{ ($tagihan->jatuh_tempo)? $tagihan->jatuh_tempo->format('d-m-Y'):'' }}" readonly>
+@if ($tagihan)
+    @can('bayar angsuran pinjaman')
+        <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <form action="{{ route('pinjaman-bayar-angsuran', ['id'=>$pinjaman->kode_pinjam]) }}" method="POST">
+                @csrf
+                <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5>Pembayaran Angsuran</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Bulan</label>
+                                <input type="text" name="bulan" class="form-control" value="{{ ($tagihan->jatuh_tempo)? $tagihan->jatuh_tempo->format('d-m-Y'):'' }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Total Angsuran</label>
+                                <input type="text" name="total_angsuran" class="form-control" value="Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Besar Pembayaran</label>
+                                <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Total Angsuran</label>
-                        <input type="text" name="total_angsuran" class="form-control" value="Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Besar Pembayaran</label>
-                        <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
+            </form>
         </div>
-    </form>
-</div>
-@endcan
+    @endcan
+
+    @if ($pinjaman->canPercepatPelunasan())
+        <div id="my-modal1" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <form action="{{ route('pinjaman-bayar-angsuran-dipercepat', ['id'=>$pinjaman->kode_pinjam]) }}" method="POST">
+                @csrf
+                <div class="modal-dialog" role="document" style="max-width: 750px">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5>Pelunasan Dipercepat</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="pelunasanDipercepat">
+                                    <tr>
+                                        <th style="width: 15%">Bulan</th>
+                                        <th>:</th>
+                                        <td style="width: 20%">{{ $tagihan->jatuh_tempo->format('M Y') }} - {{ $pinjaman->listAngsuran->sortByDesc('jatuh_tempo')->first()->jatuh_tempo->format('M Y') }}</td>
+                                        <th style="width: 15%">Total Angsuran</th>
+                                        <th>:</th>
+                                        <td style="width: 20%">Rp. {{ number_format($pinjaman->totalAngsuran,0,",",".") }}</td>
+                                        <th style="width: 15%">Denda</th>
+                                        <th>:</th>
+                                        <td style="width: 20%">Rp. {{ number_format($pinjaman->total_denda,0,",",".") }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Lama Angsuran</th>
+                                        <th>:</th>
+                                        <td>{{ $pinjaman->LamaAngsuranBelumLunas }} Bulan</td>
+                                        <th>Jasa</th>
+                                        <th>:</th>
+                                        <td>Rp. {{ number_format($pinjaman->jasaPelunasanDipercepat,0,",",".") }}</td>
+                                        <th>Tunggakan</th>
+                                        <th>:</th>
+                                        <td>Rp. {{ number_format($pinjaman->tunggakan,0,",",".") }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6"></td>
+                                        <th>Total Bayar</th>
+                                        <th>:</th>
+                                        <td><b>Rp. {{ number_format($pinjaman->totalbayarPelunasanDipercepat,0,",",".") }}</b><input type="hidden" name="total_bayar" value="{{ $pinjaman->totalbayarPelunasanDipercepat }}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <hr>
+                            <div class="form-group mt-2">
+                                <label>Besar Pembayaran</label>
+                                <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    @endif
+@endif
+
 @endsection
 
 @section('js')
@@ -178,6 +248,14 @@
                 backdrop: false 
             });
             $('#my-modal').modal('show');
+        });
+
+        $('.btn-pelunasanDipercepat').on('click', function ()
+        {
+            $('#my-modal1').modal({
+                backdrop: false 
+            });
+            $('#my-modal1').modal('show');
         });
     </script>
 @endsection

@@ -9,6 +9,7 @@ use App\Exports\PenarikanExport;
 use App\Imports\PenarikanImport;
 use App\Managers\PenarikanManager;
 use App\Models\Anggota;
+use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
 use App\Models\Tabungan;
 
@@ -16,6 +17,7 @@ use Auth;
 use Carbon\Carbon;
 use DB;
 use Excel;
+use Facade\Ignition\Tabs\Tab;
 use Hash;
 use PDF;
 
@@ -29,6 +31,7 @@ class PenarikanController extends Controller
             $this->authorize('add penarikan', $user);
 
             $data['title'] = "Buat Penarikan";
+            $data['jenisSimpanan'] = JenisSimpanan::all();
             return view('penarikan.create', $data);
         }
         catch (\Exception $e)
@@ -57,7 +60,7 @@ class PenarikanController extends Controller
             }
 
             $anggota = Anggota::with('tabungan')->find($request->kode_anggota);
-            $tabungan = $anggota->tabungan;
+            $tabungan = $anggota->tabungan->where('kode_trans', $request->jenis_simpanan)->first();
             $besarPenarikan = filter_var($request->besar_penarikan, FILTER_SANITIZE_NUMBER_INT);
 
             if (is_null($tabungan))
@@ -75,12 +78,13 @@ class PenarikanController extends Controller
                 $penarikan->kode_anggota = $anggota->kode_anggota;
                 $penarikan->kode_tabungan = $tabungan->kode_tabungan;
                 $penarikan->besar_ambil = $besarPenarikan;
+                $penarikan->code_trans = $tabungan->kode_trans;
                 $penarikan->tgl_ambil = Carbon::now();
                 $penarikan->u_entry = $user->name;
                 $penarikan->save();
             });
 
-            event(new PenarikanCreated($penarikan));
+            event(new PenarikanCreated($penarikan, $tabungan));
             return redirect()->route('penarikan-receipt', ['id' => $penarikan->kode_ambil])->withSuccess("Penarikan berhasil");
         }
         catch (\Exception $e)
@@ -100,7 +104,7 @@ class PenarikanController extends Controller
         $this->authorize('add penarikan', $user);
 
         $anggota = Anggota::with('tabungan')->find($id);
-        $saldoTabungan = Tabungan::where('kode_anggota', $id)->sum('besar_tabungan');
+        $saldoTabungan = Tabungan::where('kode_anggota', $id)->get();
         $data['anggota'] = $anggota;
         $data['saldoTabungan'] = $saldoTabungan;
         return view('penarikan.detailAnggota', $data);
@@ -113,7 +117,11 @@ class PenarikanController extends Controller
 
         $data['title'] = 'Bukti Pengambilan Tunai';
         $penarikan = Penarikan::findOrFail($id);
+        $tabungan = Tabungan::where('kode_anggota', $penarikan->kode_anggota)
+                            ->where('kode_trans', $penarikan->code_trans)
+                            ->first();
         $data['penarikan'] = $penarikan;
+        $data['tabungan'] = $tabungan;
         return view('penarikan.receipt', $data);
     }
 
@@ -123,6 +131,10 @@ class PenarikanController extends Controller
         $this->authorize('add penarikan', $user);
 
         $penarikan = Penarikan::findOrFail($id);
+        $tabungan = Tabungan::where('kode_anggota', $penarikan->kode_anggota)
+                            ->where('kode_trans', $penarikan->code_trans)
+                            ->first();
+        $penarikan->tabungan = $tabungan;
         // share data to view
         view()->share('penarikan',$penarikan);
         $pdf = PDF::loadView('penarikan.receiptpdf', $penarikan)->setPaper('a4', 'portrait');
