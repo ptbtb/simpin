@@ -16,15 +16,16 @@ class NotificationManager
        try {
            $receiver = User::operatorSimpin()->get();
            $roleReceiver = $receiver->first()->roles;
-            $jenisPinjaman = JenisPinjaman::where('kode_jenis_pinjam', $pengajuan->kode_jenis_pinjam)->get()->first()->nama_pinjaman;
-            
-            foreach ($receiver as $user)
-            {
+           $jenisPinjaman = JenisPinjaman::where('kode_jenis_pinjam', $pengajuan->kode_jenis_pinjam)->get()->first()->nama_pinjaman;
+           $namaPeminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->name;
+           
+           foreach ($receiver as $user)
+           {
                 $notifikasi = new Notification();
                 $notifikasi->role_id=$roleReceiver->first()->id;
-                $notifikasi->receiver=$user->name;
-                $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->name;
-                $notifikasi->informasi_notifikasi = $notifikasi->peminjam . ' telah melakukan pengajuan pinjaman ' . $jenisPinjaman . ' sebesar Rp ' . number_format($pengajuan->besar_pinjam,0,",",".");
+                $notifikasi->receiver=$user->id;
+                $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->id;
+                $notifikasi->informasi_notifikasi = $namaPeminjam. ' telah melakukan pengajuan pinjaman ' . $jenisPinjaman . ' sebesar Rp ' . number_format($pengajuan->besar_pinjam,0,",",".");
                 $notifikasi->has_read = 0;
                 $notifikasi->keterangan = 'Konfirmasi Persetujuan Pengajuan Pinjaman';
                 $notifikasi->url=route('pengajuan-pinjaman-list');
@@ -58,14 +59,15 @@ class NotificationManager
 
             $roleReceiver = $receiver->first()->roles;
             $jenisPinjaman = JenisPinjaman::where('kode_jenis_pinjam', $pengajuan->kode_jenis_pinjam)->get()->first()->nama_pinjaman;
+            $namaPeminjam =  User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->name;
 
             foreach ($receiver as $user)
             {
                 $notifikasi = new Notification();
                 $notifikasi->role_id=$roleReceiver->first()->id;
-                $notifikasi->receiver=$user->name;
-                $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->name;
-                $notifikasi->informasi_notifikasi = $notifikasi->peminjam . ' telah melakukan pengajuan pinjaman ' .$jenisPinjaman. ' sebesar Rp ' . number_format($pengajuan->besar_pinjam,0,",",".");
+                $notifikasi->receiver=$user->id;
+                $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->id;
+                $notifikasi->informasi_notifikasi = $namaPeminjam. ' telah melakukan pengajuan pinjaman ' .$jenisPinjaman. ' sebesar Rp ' . number_format($pengajuan->besar_pinjam,0,",",".");
                 $notifikasi->has_read = 0;
                 $notifikasi->keterangan = 'Persetujuan Pengajuan Pinjaman oleh ' . $roleReceiver->first()->name;
                 $notifikasi->url=route('pengajuan-pinjaman-list');

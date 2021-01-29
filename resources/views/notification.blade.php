@@ -26,7 +26,7 @@
 @section('content')
 <div class="col-lg-12">
     <div class="d-flex">
-        <table class="table table-notifications table-responsive">
+        <table class="table table-notifications">
             <thead>
                 <tr>
                     <td>#</td>
@@ -36,21 +36,29 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($notifications as $notif)
-                    <tr data-href={{$notif->url}}  data={{ $notif->id }} class={{$notif->has_read ? '' : 'tr-unread'}}>
-                        <td class="d-flex justify-content-center align-items-center">
-                            @if(!$notif->has_read)
-                                <div class="tag-unread"></div>
-                            @endif
+                @if(!empty($notifications))
+                    @foreach ($notifications as $notif)
+                        <tr data-href={{$notif->url}}  data={{ $notif->id }} class={{$notif->has_read ? '' : 'tr-unread'}}>
+                            <td class="d-flex justify-content-center align-items-center">
+                                @if(!$notif->has_read)
+                                    <div class="tag-unread"></div>
+                                @endif
+                            </td>
+                            <td class="">
+                                {{-- <i class="fas fa-hand-holding-usd pr-3 text-info"></i>  --}}
+                                {{ $notif->informasi_notifikasi }}
+                            </td>
+                            <td>{{ date_format($notif->created_at, "Y/m/d") }}</td>
+                            <td>{{ date_format($notif->created_at, "H:i:s") }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <div class="text-disabled">You have No Notifications</div>
                         </td>
-                        <td class="">
-                             {{-- <i class="fas fa-hand-holding-usd pr-3 text-info"></i>  --}}
-                            {{ $notif->informasi_notifikasi }}
-                        </td>
-                        <td>{{ date_format($notif->created_at, "Y/m/d") }}</td>
-                        <td>{{ date_format($notif->created_at, "H:i:s") }}</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
         </table>
     </div>

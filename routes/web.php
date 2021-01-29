@@ -30,8 +30,7 @@ Route::get('/clear-cache', function() {
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications');
-Route::post('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications');
+
 
 Route::get('testEvent', [App\Http\Controllers\MigrationController::class, 'index'])->name('test-event');
 
@@ -257,14 +256,14 @@ Route::group(['prefix' => 'tabungan'], function () {
         Route::delete('delete/{id}', [App\Http\Controllers\TabunganController::class, 'delete'])->where('id', '[0-9]+')->name('tabungan-delete');
         Route::get('import', [App\Http\Controllers\TabunganController::class, 'importTabungan'])->name('tabungan-import');
         Route::post('import', [App\Http\Controllers\TabunganController::class, 'storeImportTabungan'])->name('tabungan-import');
+    }); 
+});
+
+// Notifikasi
+Route::group(['prefix' => 'notifications'], function() {
+    Route::group(['middleware' => ['auth', 'check']], function () {
+        Route::get('/', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications');
+        Route::post('/', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications');
+        Route::post('update-status-notif', [App\Http\Controllers\NotificationController::class, 'updateStatus'])->name('notification-status-update');
     });
-    
-    // Notifikasi
-    Route::group(['prefix' => 'notifikasi'], function()
-    {
-        Route::group(['middleware' => ['auth', 'check']], function ()
-        {
-            Route::post('update-status-notif', [App\Http\Controllers\NotificationController::class, 'updateStatus'])->name('notification-status-update');
-        });
-        
-    });
+});
