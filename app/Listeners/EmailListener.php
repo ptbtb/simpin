@@ -19,13 +19,28 @@ class EmailListener
         MailManager::sendEmailApprovalPengajuanPinjaman($event->pengajuan);
     }
 
+    public function onPenarikanCreated($event)
+    {
+        MailManager::sendEmailApprovalPenarikan($event->penarikan);
+    }
+
     public function onPengajuanUpdated($event)
     {
         MailManager::sendEmailUpdatePengajuanPinjaman($event->pengajuan);
     }
 
+    public function onPenarikanUpdated($event)
+    {
+        MailManager::sendEmailUpdatePenarikan($event->penarikan);
+    }
+
     public function onPengajuanApproved($event)
     {
         MailManager::sendEmailPengajuanPinjamanApproved($event->pengajuan);
+    }
+
+    public function onPenarikanApproved($event)
+    {
+        MailManager::sendEmailPenarikanApproved($event->penarikan);
     }
 }

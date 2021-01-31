@@ -231,17 +231,30 @@ Route::group(['prefix' => 'simpanan'], function () {
 // penarikan
 Route::group(['prefix' => 'penarikan'], function () {
     Route::group(['middleware' => ['auth', 'check']], function () {
+        Route::get('list', [App\Http\Controllers\PenarikanController::class, 'index'])->name('penarikan-index');
+
         Route::get('create', [App\Http\Controllers\PenarikanController::class, 'create'])->name('penarikan-create');
         Route::post('create', [App\Http\Controllers\PenarikanController::class, 'store'])->name('penarikan-create');
+
         Route::get('history', [App\Http\Controllers\PenarikanController::class, 'history'])->name('penarikan-history');
         Route::post('history', [App\Http\Controllers\PenarikanController::class, 'history'])->name('penarikan-history');
+
         Route::get('receipt/{id}', [App\Http\Controllers\PenarikanController::class, 'receipt'])->where('id', '[0-9]+')->name('penarikan-receipt');
         Route::get('receipt/download/{id}', [App\Http\Controllers\PenarikanController::class, 'downloadReceipt'])->where('id', '[0-9]+')->name('penarikan-receipt-download');
+    
         Route::get('anggota/detail/{id}', [App\Http\Controllers\PenarikanController::class, 'detailAnggota'])->where('id', '[0-9]+')->name('penarikan-detail-anggota');
         Route::get('download/pdf', [App\Http\Controllers\PenarikanController::class, 'createPDF'])->name('penarikan-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\PenarikanController::class, 'createExcel'])->name('penarikan-download-excel');
+
         Route::get('import/excel', [App\Http\Controllers\PenarikanController::class, 'importExcel'])->name('penarikan-import-excel');
         Route::post('import/excel', [App\Http\Controllers\PenarikanController::class, 'storeImportExcel'])->name('penarikan-import-excel');
+
+        Route::post('update-status', [App\Http\Controllers\PenarikanController::class, 'updateStatus'])->name('penarikan-update-status');
+        
+        Route::get('print-jkk', [App\Http\Controllers\PenarikanController::class, 'printJkk'])->name('penarikan-print-jkk');
+        Route::post('print-jkk', [App\Http\Controllers\PenarikanController::class, 'storePrintJkk'])->name('penarikan-print-jkk');
+
+        Route::get('detail-transfer/{id}', [App\Http\Controllers\PenarikanController::class, 'detailTransfer'])->name('penarikan-detail-transfer');
     });
 });
 

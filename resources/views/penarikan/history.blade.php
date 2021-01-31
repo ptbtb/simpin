@@ -43,10 +43,12 @@
             <form action="{{ route('penarikan-history') }}" method="post">
                 @csrf
                 <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label>Nama Anggota</label>
-                        <select name="kode_anggota" id="namaAnggota" class="form-control"></select>
-                    </div>
+                    @if (!Auth::user()->isAnggota())
+                        <div class="col-md-4 form-group">
+                            <label>Nama Anggota</label>
+                            <select name="kode_anggota" id="namaAnggota" class="form-control"></select>
+                        </div>
+                    @endif
                     <div class="col-md-4 form-group">
                         <label>From</label>
                         <input id="from" type="text" name="from" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->from)? $request->from:'' }}">
@@ -75,6 +77,7 @@
                         <th>Nama Anggota</th>
                         <th>Tanggal Penarikan</th>
                         <th>Besar Penarikan</th>
+                        <th>Status Penarikan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,6 +87,7 @@
                             <td>{{ $penarikan->anggota->nama_anggota }}</td>
                             <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
                             <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
+                            <td>{{ $penarikan->anggota->nama_anggota }}</td>
                         </tr>
                     @endforeach
                 </tbody> 
@@ -112,8 +116,10 @@
 
             $('.table').DataTable();
 
-            select2Anggota();
-            updateSelectedAnggota();
+            @if (!Auth::user()->isAnggota())
+                select2Anggota();
+                updateSelectedAnggota();
+            @endif
         });
 
         function select2Anggota()

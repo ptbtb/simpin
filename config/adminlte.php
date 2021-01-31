@@ -325,6 +325,12 @@ return [
                     'can'  => ['add penarikan'],
                     'active'  => ['/penarikan/create', 'regex:@^penarikan/receipt/[0-9]+$@'],
                 ],
+                [
+                    'text' => 'List Penarikan',
+                    'url' => '/penarikan/list',
+                    'icon' => 'fas fa-file-invoice-dollar nav-icon',
+                    'can'  => ['view penarikan'],
+                ],
             ],
         ],        
         // ['header' => 'ANGGOTA'],

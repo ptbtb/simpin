@@ -37,12 +37,20 @@
 			<div class="row">
 				<div class="col-md-4">
 					<div class="row">
-						<div class="col-md-12 form-group" id="anggotaSelect2">
-							<label for="anggotaName">Nama Anggota</label>
-							<select name="kode_anggota" id="anggotaName" class="form-control" required>
-                                <option value="">Pilih Salah Satu</option>
-							</select>
-						</div>
+						@if (Auth::user()->isAnggota())
+							<div class="col-md-12 form-group" id="anggotaSelect2">
+								<label for="anggotaName">Nama Anggota</label>
+								<input type="text" name="nama_anggota" id="namaAnggota" class="form-control" value="{{ Auth::user()->anggota->nama_anggota }}" readonly>
+								<input type="hidden" name="kode_anggota" id="kodeAnggota" value="{{ Auth::user()->anggota->kode_anggota }}">
+							</div>
+						@else
+							<div class="col-md-12 form-group" id="anggotaSelect2">
+								<label for="anggotaName">Nama Anggota</label>
+								<select name="kode_anggota" id="anggotaName" class="form-control" required>
+									<option value="">Pilih Salah Satu</option>
+								</select>
+							</div>
+						@endif
 						<div class="col-md-12 form-group">
 							<label>Jenis Simpanan</label>
 							<select name="jenis_simpanan" class="form-control">
@@ -77,11 +85,22 @@
 @section('js')
 	<script src="{{ asset('js/cleave.min.js') }}"></script>
 	<script>
+		var baseURL = {!! json_encode(url('/')) !!};
 		var cleave = new Cleave('.penarikan', {
 			numeral: true,
 			prefix: 'Rp ',
 			noImmediatePrefix: true,
 			numeralThousandsGroupStyle: 'thousand'
+		});
+
+		$(document).ready(function ()
+		{
+			@if(Auth::user()->isAnggota())
+				var kode_anggota = $('#kodeAnggota').val();
+				$.get(baseURL + "/penarikan/anggota/detail/" + kode_anggota, function( data ) {
+					$('#detailAnggota').html(data);
+				});
+			@endif
 		});
 
         $("#anggotaName").select2({
@@ -107,7 +126,6 @@
 		$('#anggotaName').on('change', function ()
 		{
 			var selectedValue = $(this).children("option:selected").val();
-			var baseURL = {!! json_encode(url('/')) !!};
 			$.get(baseURL + "/penarikan/anggota/detail/" + selectedValue, function( data ) {
 				$('#detailAnggota').html(data);
 			});
