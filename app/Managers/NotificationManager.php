@@ -122,7 +122,8 @@ class NotificationManager
            
            $notifikasi = new Notification();
            $notifikasi->role_id=$roleReceiver->first()->id;
-           $notifikasi->receiver= $notifikasi->peminjam = $receiver->id;
+           $notifikasi->receiver = $receiver->id;
+           $notifikasi->peminjam = $receiver->id;
            $notifikasi->informasi_notifikasi = 'Selamat !!! Pengajuan pinjaman ' . $jenisPinjaman . ' sebesar Rp ' . number_format($pengajuan->besar_pinjam,0,",","."). "oleh anda telah diterima";
            $notifikasi->has_read = 0;
            $notifikasi->keterangan = 'Pengajuan Pinjaman Diterima';
