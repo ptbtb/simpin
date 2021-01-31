@@ -31,11 +31,11 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\Pinjaman\PengajuanApproved' => [
             // 'App\Listeners\EmailListener@onPengajuanApproved',
+            'App\Listeners\NotificationListener@onPengajuanApproved',
             'App\Listeners\PinjamanListener@onPengajuanApproved',
         ],
         'App\Events\Pinjaman\PinjamanCreated' => [
             'App\Listeners\AngsuranListener@onPinjamanCreated',
-            // 'App\Listeners\NotificationListener@onPengajuanApproved'
         ],
         'App\Events\Anggota\AnggotaCreated' => [
             'App\Listeners\TabunganListener@onAnggotaCreated',
