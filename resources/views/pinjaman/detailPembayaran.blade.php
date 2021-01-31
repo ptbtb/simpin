@@ -41,12 +41,20 @@
             <td>{{ "Rp " . number_format($pinjaman->biaya_provisi,2,',','.') }}</td>
         </tr>
         <tr>
+            <td>Total Topup Pinjaman</td>
+            <td>:</td>
+            <td>{{ "Rp " . number_format($pinjaman->totalPinjamanTopup,2,',','.') }}</td>
             <td>Total Biaya di Transfer</td>
             <td>:</td>
             <td>{{ "Rp " . number_format($pinjaman->pinjamanDitransfer,2,',','.') }}</td>
+        </tr>
+        <tr>
             <td>Status</td>
             <td>:</td>
             <td>{{ $pinjaman->pengajuan->statusPengajuan->name }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
     </table>
 </div>

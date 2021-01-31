@@ -108,7 +108,7 @@
                             <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
                             <td>{{ ucwords($pinjaman->status) }}</td>
                             <td>
-                                <a data-id="{{ $pinjaman->kode_pinjam }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a>
+                                <a href="{{ route('pinjaman-detail', ['id'=>$pinjaman->kode_pinjam]) }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a>
                             </td>
                         </tr>
                     @endforeach
@@ -147,17 +147,5 @@
             format: 'yyyy-mm-dd'
         });
         $('.table').DataTable();
-
-        $('.table').on('click', 'a', function ()
-        {
-            var data_id = $(this).data('id');
-            $.get(baseURL + "/pinjaman/detail/" + data_id, function( data ) {
-                $('#my-modal .modal-body').html(data);
-                $('#my-modal').modal({
-                    backdrop: false 
-                });
-                $('#my-modal').modal('show');
-            });
-        });
     </script>
 @endsection

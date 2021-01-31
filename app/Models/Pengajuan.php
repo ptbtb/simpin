@@ -50,6 +50,11 @@ class Pengajuan extends Model
         return $this->belongsTo(StatusPengajuan::class, 'id_status_pengajuan');
     }
 
+    public function pengajuanTopup()
+    {
+        return $this->hasMany(PengajuanTopup::class, 'kode_pengajuan');
+    }
+
     public function scopeNotApproved($query)
     {
         return $query->whereIn('id_status_pengajuan', [STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI, STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN]);
