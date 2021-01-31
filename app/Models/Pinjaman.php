@@ -45,8 +45,21 @@ class Pinjaman extends Model {
         return $query->where('id_status_pinjaman', STATUS_PINJAMAN_LUNAS);
     }
 
+    public function scopeJapan($query)
+    {
+        return $query->whereHas('jenisPinjaman', function ($q)
+        {
+            return $q->japan();
+        });
+    }
+
     public function getPinjamanDiTransferAttribute() {
-        return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi - $this->biaya_asuransi;
+        return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi - $this->biaya_asuransi - $this->totalPinjamanTopup;
+    }
+
+    public function getTotalPinjamanTopupAttribute()
+    {
+        return $this->pengajuan->pengajuanTopup->sum('biaya_pelunasan_dipercepat');
     }
 
     public function getLamaAngsuranBelumLunasAttribute() {

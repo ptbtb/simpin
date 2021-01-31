@@ -8,6 +8,7 @@ use App\Models\Pengajuan;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PinjamanManager 
 {
@@ -63,6 +64,30 @@ class PinjamanManager
         catch (\Exception $e)
         {
             \Log::error($e);
+        }
+    }
+
+    static function pembayaranPinjamanDipercepat(Pinjaman $pinjaman)
+    {
+        try
+        {
+            $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
+            foreach ($listAngsuran as $angsuran) {
+                $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
+                $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
+                $angsuran->paid_at = Carbon::now();
+                $angsuran->u_entry = Auth::user()->name;
+                $angsuran->save();
+
+                $pinjaman->sisa_angsuran = 0;
+                $pinjaman->sisa_pinjaman = 0;
+                $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+                $pinjaman->save();
+            }
+        }
+        catch (\Throwable $e)
+        {
+            Log::error($e);
         }
     }
 }

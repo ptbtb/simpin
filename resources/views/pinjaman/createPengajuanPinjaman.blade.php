@@ -61,6 +61,23 @@
                         </select>
                     </div>
                 @endif
+                @if ($listPinjaman && $listPinjaman->count() > 0)
+                    <div class="col-md-12 form-group">
+                        <label>Jenis Pengajuan</label>
+                        <select name="jenis_pengajuan" class="form-control" id="jenisPengajuan">
+                            <option value="0">Pengajuan Pinjaman</option>
+                            <option value="1">Top Up</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12 form-group" style="display: none" id="panelTopup">
+                        <label>Topup Pinjaman</label>
+                        <select name="topup_pinjaman[]" class="form-control select2" id="topupPinjaman" multiple>
+                            @foreach ($listPinjaman as $pinjaman)
+                                <option value="{{ $pinjaman->kode_pinjam }}">{{ $pinjaman->jenisPinjaman->nama_pinjaman }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
                 <div class="col-md-6 form-group">
                     <label>Jenis Pinjaman</label>
                     <select name="jenis_pinjaman" class="form-control" required id="jenisPinjaman">
@@ -205,6 +222,25 @@
                 }
                 updateInfo(selectedId, kode_anggota);
             });
+
+            $('#jenisPengajuan').on('change', function ()
+            {
+                var selected = $('#jenisPengajuan').find(":selected").val();
+                if (selected == 1)
+                {
+                    $('#panelTopup').show('slow');
+                    $('.select2').select2({
+                        placeholder: "Select one",
+                    });
+                }
+                else
+                {
+                    $('#panelTopup').hide('slow');
+                    $('.select2').select2({
+                        placeholder: "Select one",
+                    });
+                }
+            });
        }
 
        function initiateSelect2()
@@ -292,6 +328,19 @@
             var persentaseBunga = angsuranBulan*bunga/100;
             var angsuran = angsuranBulan + persentaseBunga;
             // var b = $('#besarAngsuran').val(angsuran);
+        }
+
+        function initiateOnLoad()
+        {
+            var selected = $('#jenisPengajuan').find(":selected").val();
+            if (selected == 1)
+            {
+                $('#panelTopup').show('slow');
+            }
+            else
+            {
+                $('#panelTopup').hide('slow');
+            }
         }
     </script>
 @endsection

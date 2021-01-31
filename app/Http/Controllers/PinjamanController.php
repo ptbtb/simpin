@@ -17,6 +17,7 @@ use App\Models\StatusPengajuan;
 use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
 use App\Imports\PinjamanImport;
+use App\Managers\PengajuanManager;
 use App\Models\Angsuran;
 use Auth;
 use Carbon\Carbon;
@@ -101,9 +102,9 @@ class PinjamanController extends Controller {
             }
 
             $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                    ->where('status', 'lunas');
+                    ->paid();
         } else {
-            $listPinjaman = Pinjaman::where('status', 'lunas');
+            $listPinjaman = Pinjaman::paid();
         }
 
         if ($request->from) {
@@ -204,8 +205,18 @@ class PinjamanController extends Controller {
     public function createPengajuanPinjaman() {
         $user = Auth::user();
         $this->authorize('add pengajuan pinjaman', $user);
+        $listPinjaman = null;
+        if ($user->isAnggota())
+        {
+            $listPinjaman = Pinjaman::japan()
+                                    ->where('kode_anggota', $user->anggota->kode_anggota)
+                                    ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                                    ->get();
+        }
+        
         $data['title'] = 'Buat Pengajuan Pinjaman';
         $data['listJenisPinjaman'] = JenisPinjaman::all();
+        $data['listPinjaman'] = $listPinjaman;
         $data['sumberDana'] = JenisPenghasilan::orderBy('sequence', 'asc')->get();
         return view('pinjaman.createPengajuanPinjaman', $data);
     }
@@ -213,6 +224,9 @@ class PinjamanController extends Controller {
     public function storePengajuanPinjaman(Request $request) {
         $user = Auth::user();
         $this->authorize('add pengajuan pinjaman', $user);
+
+        $besarPinjaman = filter_var($request->besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
+        $maksimalPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
 
         //  chek pengajuan yang belum accepted
         $jenisPinjaman = JenisPinjaman::find($request->jenis_pinjaman);
@@ -225,18 +239,31 @@ class PinjamanController extends Controller {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda sudah pernah mengajukan pinjaman untuk jenis pinjaman ' . $jenisPinjaman->nama_pinjaman);
         }
 
-        // check pinjaman yang belum lunas
-        $checkPinjaman = Pinjaman::whereraw("SUBSTRING(kode_jenis_pinjam,1,6)=" . substr($jenisPinjaman->kode_jenis_pinjam, 0, 6) . " ")
-                ->notPaid()
-                ->where('kode_anggota', $request->kode_anggota)
-                ->get();
-
-        if ($checkPinjaman->count()) {
-            return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda masih memiliki pinjaman dengan jenis pinjaman ' . $jenisPinjaman->nama_pinjaman . ' yang belum lunas');
+        
+        // check if topup
+        $listTopupPinjaman = collect([]);
+        if ($request->jenis_pengajuan == JENIS_PENGAJUAN_TOPUP)
+        {
+            // kalkulasi semua sisa pinjamannya
+            $listTopupPinjaman = Pinjaman::whereIn('kode_pinjam', $request->topup_pinjaman)->get();
+            $totalPinjaman = $listTopupPinjaman->sum('totalBayarPelunasanDipercepat');
+            if ($besarPinjaman < $totalPinjaman)
+            {
+                return redirect()->back()->withError('Besar pinjaman lebih kecil dari total sisa pinjaman yang di topup');
+            }
         }
-
-        $besarPinjaman = filter_var($request->besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
-        $maksimalPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
+        else
+        {
+            // check pinjaman yang belum lunas
+            $checkPinjaman = Pinjaman::whereraw("SUBSTRING(kode_jenis_pinjam,1,6)=" . substr($jenisPinjaman->kode_jenis_pinjam, 0, 6) . " ")
+                    ->notPaid()
+                    ->where('kode_anggota', $request->kode_anggota)
+                    ->get();
+    
+            if ($checkPinjaman->count()) {
+                return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda masih memiliki pinjaman dengan jenis pinjaman ' . $jenisPinjaman->nama_pinjaman . ' yang belum lunas');
+            }
+        }
 
         if ($maksimalPinjaman < $besarPinjaman) {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas maksimal peminjaman.');
@@ -254,7 +281,7 @@ class PinjamanController extends Controller {
         $gaji = $gaji->value;
         $potonganGaji = 0.65 * $gaji;
         $angsuranPerbulan = $besarPinjaman / $request->lama_angsuran;
-        //dd([$potonganGaji,$angsuranPerbulan]);die;
+        
         if ($angsuranPerbulan > $potonganGaji) {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas 65 % gaji Anda.');
         }
@@ -299,7 +326,12 @@ class PinjamanController extends Controller {
             $pengajuan->save();
         });
 
-        if ($pengajuan) {
+        if ($pengajuan)
+        {
+            if ($request->jenis_pengajuan == JENIS_PENGAJUAN_TOPUP)
+            {
+                PengajuanManager::createPengajuanTopup($pengajuan, $listTopupPinjaman);
+            }
             event(new PengajuanCreated($pengajuan));
         }
 

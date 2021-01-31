@@ -67,4 +67,9 @@ class JenisPinjaman extends Model
     {
         return $this->kategori_jenis_pinjaman_id == KATEGORI_JENIS_PINJAMAN_JANGKA_PANJANG;
     }
+
+    public function scopeJapan($query)
+    {
+        return $query->where('kategori_jenis_pinjaman_id', KATEGORI_JENIS_PINJAMAN_JANGKA_PANJANG);
+    }
 }

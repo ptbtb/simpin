@@ -30,9 +30,10 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\NotificationListener@onPengajuanUpdated'
         ],
         'App\Events\Pinjaman\PengajuanApproved' => [
+            'App\Listeners\PinjamanListener@onPengajuanApproved',
+            'App\Listeners\PengajuanTopupListener@onPengajuanApproved',
             // 'App\Listeners\EmailListener@onPengajuanApproved',
             'App\Listeners\NotificationListener@onPengajuanApproved',
-            'App\Listeners\PinjamanListener@onPengajuanApproved',
         ],
         'App\Events\Pinjaman\PinjamanCreated' => [
             'App\Listeners\AngsuranListener@onPinjamanCreated',

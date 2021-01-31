@@ -48,7 +48,7 @@ class PengajuanController extends Controller
             $pdf = PDF::loadView('pinjaman.printJKK', $data)->setPaper('a4', 'landscape');
 
             // download PDF file with download method
-            $filename = $request->no_jkk.'.pdf';
+            $filename = $request->no_jkk.'-'.Carbon::now()->toDateString().'.pdf';
             return $pdf->download($filename);
 
             // return view('pinjaman.printJKK', $data);
