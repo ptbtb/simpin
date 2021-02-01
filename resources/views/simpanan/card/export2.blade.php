@@ -147,6 +147,9 @@
         <tr>
             <td colspan="8" style="text-align: right" class="border-top-0">
                 {{ number_format($value->final_balance,0) }}
+                @php
+                    $jumlahSimpanan = $jumlahSimpanan + $value->final_balance;
+                @endphp
             </td>
             <td colspan="2" class="border-top-0 border-right-0"></td>
             <td colspan="2" class="border-top-0 border-left-0"></td>

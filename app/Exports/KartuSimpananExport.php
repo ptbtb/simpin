@@ -36,7 +36,7 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
        $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
        // kode_jenis_simpan yang wajib ada
-       $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->take(3);
+       $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc');
        $requiredKey = $jenisSimpanan->pluck('kode_jenis_simpan');
        $requiredKeyIndex = $jenisSimpanan->pluck('sequence','kode_jenis_simpan');
 
