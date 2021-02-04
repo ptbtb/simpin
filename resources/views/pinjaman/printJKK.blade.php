@@ -42,7 +42,7 @@
             <th>Trx Reference</th>
             <th>Credited Account Name</th>
             <th>Bank Name Country</th>
-            <th>Credited Transfer</th>
+            <th colspan="2">Credited Transfer</th>
             <th>Remark</th>
             <th>Debited Account</th>
             <th>Debited Amount</th>
@@ -57,7 +57,7 @@
                 <td>{{ $pengajuan->kode_pengajuan }}</td>
                 <td>{{ strtoupper($pengajuan->anggota->nama_anggota) }}</td>
                 <td>{{ strtoupper($settings[COMPANY_SETTING_BANK_NAME]) }}</td>
-                <td>{{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}</td>
+                <td colspan="2">{{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}</td>
                 <td>{{ strtoupper($pengajuan->jenisPinjaman->nama_pinjaman) }}</td>
                 <td>{{ $settings[COMPANY_SETTING_BANK_ACCOUNT] }}</td>
                 <td>{{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}</td>
@@ -68,11 +68,28 @@
             @endphp
         @endforeach
         <tr>
-            <td></td>
-            <td colspan="3">JUMLAH</td>
-            <td>{{ "Rp " . number_format($totalcredited,2,',','.') }}</td>
-            <td colspan="2"></td>
-            <td>{{ "Rp " . number_format($totaldebited,2,',','.') }}</td>
+            <td rowspan="5"></td>
+            <td colspan="3" rowspan="5">JUMLAH</td>
+            <td>Besar Pinjaman</td>
+            <td>{{ $pengajuan->viewBesarPinjaman }}</td>
+            <td colspan="2" rowspan="5"></td>
+            <td rowspan="5">{{ "Rp " . number_format($totaldebited,2,',','.') }}</td>
+        </tr>
+        <tr>
+            <td>Jasa</td>
+            <td>{{ $pengajuan->viewJasa }}</td>
+        </tr>
+        <tr>
+            <td>Asuransi</td>
+            <td>{{ $pengajuan->viewAsuransi }}</td>
+        </tr>
+        <tr>
+            <td>Provisi</td>
+            <td>{{ $pengajuan->viewProvisi }}</td>
+        </tr>
+        <tr>
+            <td>Biaya Admin</td>
+            <td>{{ $pengajuan->viewBiayaAdmin }}</td>
         </tr>
     </table>
     <br><br><br>
