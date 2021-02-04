@@ -109,4 +109,32 @@ class Pengajuan extends Model
     {
         return $this->status_jkk == 1;
     }
+
+    public function getViewJasaAttribute()
+    {
+        $value = round($this->jenisPinjaman->jasa*$this->besar_pinjam, 2);
+        return 'Rp '.number_format($value, '2', ',', '.');
+    }
+
+    public function getViewAsuransiAttribute()
+    {
+        $value = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        return 'Rp '.number_format($value, '2', ',', '.');
+    }
+
+    public function getViewProvisiAttribute()
+    {
+        $value = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        return 'Rp '.number_format($value, '2', ',', '.');
+    }
+
+    public function getViewBesarPinjamanAttribute()
+    {
+        return 'Rp '.number_format($this->besar_pinjam, '2', ',', '.');
+    }
+
+    public function getViewBiayaAdminAttribute()
+    {
+        return 'Rp '.number_format($this->jenisPinjaman->biaya_admin, '2', ',', '.');
+    }
 }
