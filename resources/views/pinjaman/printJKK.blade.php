@@ -69,11 +69,11 @@
         @endforeach
         <tr>
             <td rowspan="5"></td>
-            <td colspan="3" rowspan="5">JUMLAH</td>
+            <td colspan="3" rowspan="5">DETAIL</td>
             <td>Besar Pinjaman</td>
             <td>{{ $pengajuan->viewBesarPinjaman }}</td>
             <td colspan="2" rowspan="5"></td>
-            <td rowspan="5">{{ "Rp " . number_format($totaldebited,2,',','.') }}</td>
+            <td rowspan="5"></td>
         </tr>
         <tr>
             <td>Jasa</td>
@@ -90,6 +90,13 @@
         <tr>
             <td>Biaya Admin</td>
             <td>{{ $pengajuan->viewBiayaAdmin }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="3">JUMLAH</td>
+            <td colspan="2">{{ "Rp " . number_format($totalcredited,2,',','.') }}</td>
+            <td colspan="2"></td>
+            <td>{{ "Rp " . number_format($totaldebited,2,',','.') }}</td>
         </tr>
     </table>
     <br><br><br>
