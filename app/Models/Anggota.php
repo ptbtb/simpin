@@ -68,7 +68,7 @@ class Anggota extends Model
 
     public function listPinjaman()
     {
-        return $this->hasMany(Pinjam::class, 'kode_anggota');
+        return $this->hasMany(Pinjaman::class, 'kode_anggota');
     }
 
     public function listPenarikan()

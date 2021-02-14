@@ -50,6 +50,11 @@ class EventServiceProvider extends ServiceProvider
             // 'App\Listeners\SimpananListener@onPenarikanApproved',
             'App\Listeners\EmailListener@onPenarikanApproved',
         ],
+
+        'App\Events\Invoice\InvoiceCreated' => [
+            'App\Listeners\NotificationListener@onInvoiceCreated',
+            'App\Listeners\EmailListener@onInvoiceCreated',
+        ],
     ];
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace App\Managers;
 
+use App\Models\Invoice;
 use App\Models\Notification;
 use App\Models\Pinjaman;
 use App\Models\Pengajuan;
@@ -9,6 +10,7 @@ use App\Models\JenisPinjaman;
 use Spatie\Permission\Models\Role;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class NotificationManager 
 {
@@ -139,5 +141,28 @@ class NotificationManager
 			return redirect()->back()->withError($message);
        }
 
-    }    
+    }  
+    
+    static function sendNotificationInvoiceCreated(Invoice $invoice)
+    {
+        try
+        {
+            $user = $invoice->anggota->user;
+            $roleReceiver = $user->roles;
+            
+            $notifikasi = new Notification();
+            $notifikasi->role_id = $roleReceiver->first()->id;
+            $notifikasi->receiver = $user->id;
+            $notifikasi->informasi_notifikasi = $invoice->description.' telah terbit.';
+            $notifikasi->has_read = 0;
+            $notifikasi->keterangan = 'Invoice Created';
+            $notifikasi->url=route('invoice-detail', [$invoice->id]);
+            $notifikasi->save();
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+        }
+    }
 }

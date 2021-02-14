@@ -11,4 +11,14 @@ class KelasCompany extends Model
 
     protected $table = "t_kelas_company";
     protected $primaryKey = "id";
+
+    /**
+     * Get the Company that owns the KelasCompany
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function Company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }

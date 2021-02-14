@@ -99,7 +99,7 @@
 							<div class="form-group">
 								<div class="col-md-12 text-center" id="photoButton">
 									@if(isset($user) && $user->photo_profile_path)
-										<img class="img-fit" id="photoPreview" src="{{ secure_asset($user->photo_profile_path) }}"/>
+										<img class="img-fit" id="photoPreview" src="{{ asset($user->photo_profile_path) }}"/>
 									@else
 										<img class="img-fit" id="photoPreview" src="{{ asset('img/no_image_available.jpeg') }}">
 									@endif

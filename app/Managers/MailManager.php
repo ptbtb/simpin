@@ -2,6 +2,7 @@
 namespace App\Managers;
 
 use App\Events\Pinjaman\PengajuanApproved;
+use App\Mail\InvoiceMail;
 use App\Mail\PenarikanApproved;
 use App\Mail\PenarikanCreated;
 use App\Mail\PenarikanPayment;
@@ -11,6 +12,7 @@ use App\Mail\PengajuanPinjamanCreated;
 use App\Mail\PengajuanPinjamanPayment;
 use App\Mail\PengajuanPinjamanUpdated;
 use App\Mail\RegistrationCompleted;
+use App\Models\Invoice;
 use App\Models\Penarikan;
 use App\Models\Pengajuan;
 use App\Models\User;
@@ -281,5 +283,18 @@ class MailManager
         ];
 
         Mail::to($email)->send(new PenarikanApproved($details));
+    }
+
+    static function sendEmailInvoiceCreated(Invoice $invoice)
+    {
+        $anggota = $invoice->anggota;
+        $email = $anggota->email;
+        $details = [
+            'subject' => $invoice->description,
+            'invoice' => $invoice,
+            'anggota' => $anggota
+        ];
+
+        Mail::to($email)->send(new InvoiceMail($details));
     }
 }

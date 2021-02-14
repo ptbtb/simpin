@@ -411,6 +411,13 @@ return [
                 ],
             ],
         ],
+        [
+            'text' => 'Invoice',
+            'icon' => 'fa fa-money-bill nav-icon',
+            'route' => 'invoice-list',
+            'can'  => ['view invoice'],
+            'active'  => ['/invoice', 'regex:@^invoice/[0-9]+$@'],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

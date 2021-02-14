@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Wildside\Userstamps\Userstamps;
@@ -93,11 +94,28 @@ class Pinjaman extends Model {
         return 0;
     }
 
+    public function getAngsuranBulanIniAttribute()
+    {
+        return $this->listAngsuran->filter(function ($angsuran)
+        {
+            return $angsuran->jatuh_tempo->format('m') == Carbon::now()->format('m');
+        })->first();
+    }
+
+    public function getListTunggakanAngsuranAttribute()
+    {
+        $tunggakan = $this->listAngsuran
+                        ->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)
+                        ->where('besar_pembayaran', '>', 0)
+                        ->values();
+        
+        return $tunggakan;
+    }
+
     public function canPercepatPelunasan()
     {
         $minimalAngsuranLunas = $this->minimal_angsur_pelunasan;
         $angsuranLunas = $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)->count();
         return $angsuranLunas >= $minimalAngsuranLunas;
     }
-
 }

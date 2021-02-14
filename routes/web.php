@@ -280,3 +280,13 @@ Route::group(['prefix' => 'notifications'], function() {
         Route::post('update-status-notif', [App\Http\Controllers\NotificationController::class, 'updateStatus'])->name('notification-status-update');
     });
 });
+
+// Invoice
+Route::group(['prefix' => 'invoice'], function() {
+    Route::group(['middleware' => ['auth', 'check']], function () {
+        Route::get('', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice-list');
+        Route::post('', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice-list');
+        Route::get('data', [App\Http\Controllers\InvoiceController::class, 'indexAjax'])->name('invoice-list-ajax');
+        Route::get('{id}', [App\Http\Controllers\InvoiceController::class, 'show'])->where('id', '[0-9]+')->name('invoice-detail');
+    });
+});

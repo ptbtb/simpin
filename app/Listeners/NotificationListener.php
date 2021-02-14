@@ -23,4 +23,9 @@ class NotificationListener
     {
         NotificationManager::sendNotificationPengajuanApproved($event->pengajuan);
     }
+
+    public function onInvoiceCreated($event)
+    {
+        NotificationManager::sendNotificationInvoiceCreated($event->invoice);
+    }
 }

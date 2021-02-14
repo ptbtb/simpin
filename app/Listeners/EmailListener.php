@@ -43,4 +43,9 @@ class EmailListener
     {
         MailManager::sendEmailPenarikanApproved($event->penarikan);
     }
+
+    public function onInvoiceCreated($event)
+    {
+        MailManager::sendEmailInvoiceCreated($event->invoice);
+    }
 }
