@@ -1,23 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\JenisPinjaman;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Log;
-class UserController extends Controller
+
+class JenisPinjamanController extends Controller
 {
-    public function getUser(Request $request)
+    public function index()
     {
         try
         {
-            $user = $request->user('api');
-            $anggota = $user->anggota;
-            $user->anggota = $anggota;
+            $listJenisPinjaman = JenisPinjaman::get();
+            $data = $listJenisPinjaman->map(function ($jenisPinjaman)
+            {
+                return [
+                    'kode' => $jenisPinjaman->kode_jenis_pinjam,
+                    'nama' => $jenisPinjaman->nama_pinjaman,
+                    'lama_angsuran' => $jenisPinjaman->lama_angsuran
+                ];
+            });
 
             $response['message'] = null;
-            $response['data'] = $user;
+            $response['data'] = $data;
             return response()->json($response, 200);
         }
         catch (\Throwable $e)
@@ -28,12 +35,5 @@ class UserController extends Controller
             $response['message'] = API_DEFAULT_ERROR_MESSAGE;
             return response()->json($response, 500);
         }
-    }
-
-    public function logout(Request $request)
-    {
-        $userToken = $request->user()->token();
-        $userToken->revoke();
-        return response()->json(['message' => 'Logged out'], 200);
     }
 }

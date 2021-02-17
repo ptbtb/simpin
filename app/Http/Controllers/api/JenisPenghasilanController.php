@@ -1,23 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\JenisPenghasilan;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Log;
-class UserController extends Controller
+
+class JenisPenghasilanController extends Controller
 {
-    public function getUser(Request $request)
+    public function index()
     {
         try
         {
-            $user = $request->user('api');
-            $anggota = $user->anggota;
-            $user->anggota = $anggota;
+            $listJenisPenghasilan = JenisPenghasilan::get();
+            $data = $listJenisPenghasilan->map(function ($jenisPenghasilan)
+            {
+                return [
+                    'id' => $jenisPenghasilan->id,
+                    'nama' => $jenisPenghasilan->name,
+                ];
+            });
 
             $response['message'] = null;
-            $response['data'] = $user;
+            $response['data'] = $data;
             return response()->json($response, 200);
         }
         catch (\Throwable $e)
@@ -28,12 +34,5 @@ class UserController extends Controller
             $response['message'] = API_DEFAULT_ERROR_MESSAGE;
             return response()->json($response, 500);
         }
-    }
-
-    public function logout(Request $request)
-    {
-        $userToken = $request->user()->token();
-        $userToken->revoke();
-        return response()->json(['message' => 'Logged out'], 200);
     }
 }

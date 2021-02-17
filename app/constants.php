@@ -91,3 +91,5 @@ define('INVOICE_STATUS_CANCELLED', 4);
 
 define('INVOICE_TYPE_PINJAMAN', 1);
 define('INVOICE_TYPE_SIMPANAN', 1);
+
+define('API_DEFAULT_ERROR_MESSAGE', 'Terjadi kesalahan, silahkan kontak admin');
