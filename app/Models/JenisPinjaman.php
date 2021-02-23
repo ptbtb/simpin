@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\View\ViewSaldo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class JenisPinjaman extends Model
 {
@@ -71,5 +73,56 @@ class JenisPinjaman extends Model
     public function scopeJapan($query)
     {
         return $query->where('kategori_jenis_pinjaman_id', KATEGORI_JENIS_PINJAMAN_JANGKA_PANJANG);
+    }
+
+    public function maxPinjaman(User $user)
+    {
+        $jenisPinjaman = $this;
+        $anggota = $user->anggota;
+        if(is_null($anggota))
+        {
+            return 0;
+        }
+
+        if ($jenisPinjaman->isJangkaPanjang()) {
+            if ($anggota->isPensiunan()) {
+                $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+                return $saldo->jumlah * 0.75;
+            } elseif ($anggota->isAnggotaBiasa()) {
+                if ($jenisPinjaman->isDanaKopegmar()) {
+                    $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+                    return $saldo->jumlah * 5;
+                } elseif ($jenisPinjaman->isDanaLain()) {
+                    $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+                    return $saldo->jumlah * 8;
+                }
+            } elseif ($anggota->isAnggotaLuarBiasa()) {
+                $company = $anggota->company;
+                if ($company->isKopegmarGroup()) {
+                    return 30000000;
+                }
+                if ($company->isKojaGroup()) {
+                    $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+                    return $saldo->jumlah * 5;
+                }
+            }
+        } elseif ($jenisPinjaman->isJangkaPendek()) {
+            $penghasilanTertentu = Penghasilan::where('kode_anggota', $anggota->kode_anggota)
+                    ->penghasilanTertentu()
+                    ->get();
+            if (!$penghasilanTertentu->count()) {
+                return response()->json(['message' => 'Tidak memiliki penghasilan tertentu'], 412);
+            }
+            
+            if ($anggota->isAnggotaBiasa()) {
+                return 100000000;
+            } elseif ($anggota->isAnggotaLuarBiasa()) {
+                return 100000000;
+            } elseif ($anggota->isPensiunan()) {
+                $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+                return $saldo->jumlah * 0.75;
+            }
+        }
+        return 0;
     }
 }

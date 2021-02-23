@@ -9,17 +9,24 @@ use Illuminate\Support\Facades\Log;
 
 class JenisPinjamanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try
         {
             $listJenisPinjaman = JenisPinjaman::get();
-            $data = $listJenisPinjaman->map(function ($jenisPinjaman)
+            $data = $listJenisPinjaman->map(function ($jenisPinjaman) use ($request)
             {
+                $maxPinjaman = 0;
+                $user = $request->user('api');
+                if ($user)
+                {
+                    $maxPinjaman = $jenisPinjaman->maxPinjaman($user);
+                }
                 return [
                     'kode' => $jenisPinjaman->kode_jenis_pinjam,
                     'nama' => $jenisPinjaman->nama_pinjaman,
-                    'lama_angsuran' => $jenisPinjaman->lama_angsuran
+                    'lama_angsuran' => $jenisPinjaman->lama_angsuran,
+                    'max_pinjaman' => $maxPinjaman
                 ];
             });
 
