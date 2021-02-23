@@ -82,7 +82,76 @@ class PengajuanPinjamanController extends Controller
             return response()->json($response, 500);
         }
     }
-    
+
+    public function show(Request $request, $kode_pengajuan)
+    {
+        try
+        {
+            $user = $request->user('api');
+            if (is_null($user))
+            {
+                $response = [
+                    'message' => 'User tidak ditemukan'
+                ];
+
+                return response()->json($response, 404);
+            }
+
+            $anggota = $user->anggota;
+            if (is_null($anggota))
+            {
+                $response = [
+                    'message' => 'Hanya anggota yang dapat mengakses menu ini'
+                ];
+
+                return response()->json($response, 403);
+            }
+
+            $pengajuan = Pengajuan::with('anggota','jenisPinjaman','statusPengajuan','jenisPenghasilan', 'approvedBy')
+                                ->where('kode_anggota', $anggota->kode_anggota)
+                                ->where('kode_pengajuan', $kode_pengajuan)
+                                ->first();
+            
+            if(is_null($pengajuan))
+            {
+                $response = [
+                    'message' => 'Pengajuan pinjaman tidak ditemukan'
+                ];
+
+                return response()->json($response, 404);
+            }
+
+            $data = [
+                'kode_pengajuan' => $pengajuan->kode_pengajuan,
+                'tgl_pengajuan' => $pengajuan->tgl_pengajuan->toDateString(),
+                'anggota' => $pengajuan->anggota->only('kode_anggota','nama_anggota'),
+                'jenis_pinjaman' => [
+                                        'kode' => $pengajuan->jenisPinjaman->kode_jenis_pinjam,
+                                        'nama' => $pengajuan->jenisPinjaman->nama_pinjaman
+                                    ],
+                'besar_pinjaman' => $pengajuan->besar_pinjam,
+                'form_persetujuan' => asset($pengajuan->form_persetujuan),
+                'status_pengajuan' => $pengajuan->statusPengajuan->only('id','name'),
+                'jenis_penghasilan' => $pengajuan->jenisPenghasilan->only('id','name')
+            ];
+
+            $response = [
+                'message' => null,
+                'data' => $data
+            ];
+
+            return response()->json($response, 200);
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+
+            $response['message'] = API_DEFAULT_ERROR_MESSAGE;
+            return response()->json($response, 500);
+        }
+    }
+
     public function store(Request $request)
     {
         try
