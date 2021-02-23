@@ -30,4 +30,5 @@ Route::group(['prefix' => 'pengajuan-pinjaman', 'middleware' => 'auth:api'], fun
     Route::get('list', 'App\Http\Controllers\api\PengajuanPinjamanController@index')->name('api-list-pengajuan-pinjaman');
     Route::get('detail/{kode_pengajuan}', 'App\Http\Controllers\api\PengajuanPinjamanController@show')->name('api-detail-pengajuan-pinjaman');
     Route::post('store', 'App\Http\Controllers\api\PengajuanPinjamanController@store')->name('api-store-pengajuan-pinjaman');
+    Route::post('simulasi', 'App\Http\Controllers\api\PengajuanPinjamanController@simulasi')->name('api-simulasi-pengajuan-pinjaman');
 });

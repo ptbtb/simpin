@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\Pinjaman\PengajuanCreated;
 use App\Http\Controllers\Controller;
+use App\Managers\PengajuanManager;
 use App\Models\Anggota;
 use App\Models\JenisPinjaman;
 use App\Models\Pengajuan;
 use App\Models\Penghasilan;
 use App\Models\Pinjaman;
+use App\Models\View\ViewSaldo;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class PengajuanPinjamanController extends Controller
 {
@@ -140,6 +144,197 @@ class PengajuanPinjamanController extends Controller
                 'data' => $data
             ];
 
+            return response()->json($response, 200);
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+
+            $response['message'] = API_DEFAULT_ERROR_MESSAGE;
+            return response()->json($response, 500);
+        }
+    }
+
+    public function simulasi(Request $request)
+    {
+        try
+        {
+            $response = [];
+            $rules = [
+                'kode_anggota' => 'required',
+                'id_jenis_pinjaman' => 'required',
+                'id_jenis_penghasilan' => 'required',
+                'besar_pinjaman' => 'required',
+                'form_persetujuan_atasan' => 'required',
+                'max_pinjaman' => 'required',
+                'lama_angsuran' => 'required',
+                'keperluan' => 'required'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails())
+            {
+                $fields = array_keys($validator->errors()->toArray());
+                $response = [
+                    'message' => implode(', ', $fields). ' field are required'
+                ];
+
+                return response()->json($response, 404);
+            }
+
+            $user = $request->user('api');
+            $anggota = Anggota::where('kode_anggota', $request->kode_anggota)
+                                ->whereHas('user', function ($query) use ($user)
+                                {
+                                    return $query->where('id', $user->id);
+                                })
+                                ->first();
+
+            if(is_null($anggota))
+            {
+                $response = [
+                    'message' => 'Anggota not found'
+                ];
+
+                return response()->json($response, 404);
+            }
+
+            //  chek pengajuan yang belum accepted
+            $jenisPinjaman = JenisPinjaman::find($request->id_jenis_pinjaman);
+            
+            $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+            $besarPinjaman = filter_var($request->besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
+            $maksimalBesarPinjaman = filter_var($request->max_pinjaman, FILTER_SANITIZE_NUMBER_INT);
+            $lamaAngsuran = $request->lama_angsuran;
+            $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
+            $keperluan = $request->keperluan;
+
+            $provisi = $jenisPinjaman->provisi;
+            Log::info('besar pinjaman : '. $besarPinjaman. ', provisi : '. $provisi);
+            $provisi = round($besarPinjaman * $provisi, 2);
+
+            $asuransi = $jenisPinjaman->asuransi;
+            $asuransi = round($besarPinjaman * $asuransi, 2);
+
+            $angsuranPokok = round($besarPinjaman / $lamaAngsuran, 2);
+
+            $jasa = $jenisPinjaman->jasa;
+            if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek()) {
+                $jasa = $besarPinjaman * 3 / 100;
+            }
+            $jasa = $besarPinjaman * $jasa;
+            $jasa = round($jasa, 2);
+            $angsuranPerbulan = $angsuranPokok + $jasa;
+            $terbilang = PengajuanManager::terbilang($besarPinjaman) . ' rupiah';
+
+
+            $sisaPinjaman = json_decode("{}");
+            $japan = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                    ->where('kode_jenis_pinjam', 'like', Str::of(JENIS_PINJAM_JAPAN)->append('%'))
+                    ->sum('sisa_pinjaman');
+            $japen = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                    ->where('kode_jenis_pinjam', 'like', Str::of(JENIS_PINJAM_JAPEN)->append('%'))
+                    ->sum('sisa_pinjaman');
+            $kredit_barang = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                    ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_BARANG)
+                    ->sum('sisa_pinjaman');
+            $kredit_motor = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                    ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_MOTOR)
+                    ->sum('sisa_pinjaman');
+
+            $sisaPinjaman->japan = $japan;
+            $sisaPinjaman->japen = $japen;
+            $sisaPinjaman->kredit_barang = $kredit_motor;
+            $sisaPinjaman->kredit_motor = $kredit_motor;
+
+            $datapdf = [
+                'anggota' => $anggota,
+                'saldo' => $saldo,
+                'jenisPinjaman' => $jenisPinjaman,
+                'besarPinjaman' => $besarPinjaman,
+                'besarPinjamanTerbilang' => $terbilang,
+                'maksimalBesarPinjaman' => $maksimalBesarPinjaman,
+                'lamaAngsuran' => $lamaAngsuran,
+                'lamaAngsuranTerbilang' => PengajuanManager::terbilang($lamaAngsuran),
+                'biayaAdministrasi' => $biayaAdministrasi,
+                'provisi' => $provisi,
+                'asuransi' => $asuransi,
+                'jasa' => $jasa,
+                'keperluan' => $keperluan,
+                'angsuranPerbulan' => $angsuranPerbulan,
+                'angsuranPokok' => $angsuranPokok,
+                'sisaPinjaman' => $sisaPinjaman,
+            ];
+
+            view()->share('data', $datapdf);
+            PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
+            $pdf = PDF::loadView('pinjaman.formPersetujuan', $datapdf)->setPaper('a4', 'portrait');
+
+            // download PDF file with download method
+            $filename = 'form_persetujuan_atasan'. $anggota->kode_anggota. '-' . Carbon::now()->format('d M Y') . '.pdf';
+            $config['disk'] = 'pdftemp';
+            $config['upload_path'] = '/';
+            $config['public_path'] = env('APP_URL') . 'pdftemp';
+
+            // create directory if doesn't exist
+            if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
+                Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+            }
+
+            $pdfPath = public_path('pdftemp/'). $filename;
+            $pdf->save($pdfPath);
+
+            $data = [
+                'anggota' => [
+                    'kode_anggota' => $anggota->kode_anggota,
+                    'nama_anggota' => $anggota->nama_anggota,
+                    'jenis_kelmain' => $anggota->jenis_kelamin,
+                    'unit_kerja' => [
+                        'id' => $anggota->company->id,
+                        'nama' => $anggota->company->nama,
+                        'kelas' => [
+                            'id' => $anggota->kelasCompany->id,
+                            'nama' => $anggota->kelasCompany->nama
+                        ]
+                    ],
+                    'jenis_anggota' => [
+                        'id' => $anggota->jenisAnggota->id_jenis_anggota,
+                        'nama' => $anggota->jenisAnggota->nama_jenis_anggota
+                    ],
+                    'gaji' => $anggota->listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->value,
+                ],
+                'jenis_pinjaman' => [
+                    'kode' => $jenisPinjaman->kode_jenis_pinjam,
+                    'nama' => $jenisPinjaman->nama_pinjaman,
+                    'kategori_jenis_pinjaman' => [
+                        'id' => $jenisPinjaman->kategoriJenisPinjaman->id,
+                        'nama' => $jenisPinjaman->kategoriJenisPinjaman->name
+                    ],
+                    'tipe_jenis_pinjaman' => [
+                        'id' => $jenisPinjaman->tipeJenisPinjaman->id,
+                        'nama' => $jenisPinjaman->tipeJenisPinjaman->name
+                    ]
+                ],
+                'besarPinjaman' => $besarPinjaman,
+                'besarPinjamanTerbilang' => $terbilang,
+                'maksimalBesarPinjaman' => $maksimalBesarPinjaman,
+                'lamaAngsuran' => $lamaAngsuran,
+                'lamaAngsuranTerbilang' => PengajuanManager::terbilang($lamaAngsuran),
+                'biayaAdministrasi' => $biayaAdministrasi,
+                'provisi' => $provisi,
+                'asuransi' => $asuransi,
+                'jasa' => $jasa,
+                'keperluan' => $keperluan,
+                'angsuranPerbulan' => $angsuranPerbulan,
+                'angsuranPokok' => $angsuranPokok,
+                'form_pengajuan_path' => asset('pdftemp/'.$filename)
+            ];
+
+            $response = [
+                'message' => null,
+                'data' => $data
+            ];
             return response()->json($response, 200);
         }
         catch (\Throwable $e)
