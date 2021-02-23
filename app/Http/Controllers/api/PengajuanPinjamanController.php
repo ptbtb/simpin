@@ -18,6 +18,71 @@ use Illuminate\Support\Facades\Validator;
 
 class PengajuanPinjamanController extends Controller
 {
+    public function index(Request $request)
+    {
+        try
+        {
+            $user = $request->user('api');
+            if (is_null($user))
+            {
+                $response = [
+                    'message' => 'User tidak ditemukan'
+                ];
+
+                return response()->json($response, 404);
+            }
+
+            $anggota = $user->anggota;
+            if (is_null($anggota))
+            {
+                $response = [
+                    'message' => 'Hanya anggota yang dapat mengakses menu ini'
+                ];
+
+                return response()->json($response, 403);
+            }
+
+            $listPengajuan = Pengajuan::with('anggota','jenisPinjaman','statusPengajuan','jenisPenghasilan', 'approvedBy')
+                                        ->where('kode_anggota', $anggota->kode_anggota)
+                                        ->get();
+
+            $message = null;
+            if ($listPengajuan->count() == 0)
+            {
+                $message = 'List pengajuan pinjaman kososng';
+            }
+
+            $data = $listPengajuan->map(function ($pengajuan)
+            {
+                return [
+                    'kode_pengajuan' => $pengajuan->kode_pengajuan,
+                    'tgl_pengajuan' => $pengajuan->tgl_pengajuan->toDateString(),
+                    'jenis_pinjaman' => [
+                                            'kode' => $pengajuan->jenisPinjaman->kode_jenis_pinjam,
+                                            'nama' => $pengajuan->jenisPinjaman->nama_pinjaman
+                                        ],
+                    'besar_pinjaman' => $pengajuan->besar_pinjam,
+                    'status_pengajuan' => $pengajuan->statusPengajuan->only('id','name')
+                ];
+            });
+
+            $response = [
+                'message' => $message,
+                'data' => $data
+            ];
+
+            return response()->json($response, 200);
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+
+            $response['message'] = API_DEFAULT_ERROR_MESSAGE;
+            return response()->json($response, 500);
+        }
+    }
+    
     public function store(Request $request)
     {
         try
@@ -186,7 +251,7 @@ class PengajuanPinjamanController extends Controller
                                             'kode' => $pengajuan->jenisPinjaman->kode_jenis_pinjam,
                                             'nama' => $pengajuan->jenisPinjaman->nama_pinjaman
                                         ],
-                    'besar_pinjaman' => $pengajuan->besar_pinjaman,
+                    'besar_pinjaman' => $pengajuan->besar_pinjam,
                     'form_persetujuan' => asset($pengajuan->form_persetujuan),
                     'status_pengajuan' => $pengajuan->statusPengajuan->only('id','name'),
                     'jenis_penghasilan' => $pengajuan->jenisPenghasilan->only('id','name')
