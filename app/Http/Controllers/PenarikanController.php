@@ -9,6 +9,7 @@ use App\Events\Penarikan\PenarikanCreated;
 use App\Events\Penarikan\PenarikanUpdated;
 use App\Exports\PenarikanExport;
 use App\Imports\PenarikanImport;
+use App\Managers\JurnalManager;
 use App\Managers\PenarikanManager;
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
@@ -367,17 +368,22 @@ class PenarikanController extends Controller
             }
 
             $penarikan->save();
-            if ($penarikan->menungguPembayaran()) {
+            if ($penarikan->menungguPembayaran())
+            {
                 event(new PenarikanApproved($penarikan));
             }
+            elseif ($penarikan->diterima())
+            {
+                JurnalManager::createJurnalPenarikan($penarikan);
+            }
             event(new PenarikanUpdated($penarikan));
-
+            
             return response()->json(['message' => 'success'], 200);
         }
         catch (\Exception $e)
         {
-            Log::error($e);
-            $message = $e->getMessage();
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
             return response()->json(['message' => $message], 500);
         }
     }

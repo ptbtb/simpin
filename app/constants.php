@@ -93,3 +93,8 @@ define('INVOICE_TYPE_PINJAMAN', 1);
 define('INVOICE_TYPE_SIMPANAN', 1);
 
 define('API_DEFAULT_ERROR_MESSAGE', 'Terjadi kesalahan, silahkan kontak admin');
+
+define('TIPE_JURNAL_JKM', 1);
+define('TIPE_JURNAL_JKK', 2);
+
+define('COA_BANK_MANDIRI', '403.04.000');
