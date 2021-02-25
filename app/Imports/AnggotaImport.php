@@ -63,7 +63,7 @@ class AnggotaImport implements OnEachRow
         }
 
         $anggota = Anggota::create($fields);
-
-        event(new AnggotaCreated($anggota));
+        $password =  Hash::make($request->password);
+        event(new AnggotaCreated($anggota,$password));
     }
 }
