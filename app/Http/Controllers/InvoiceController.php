@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Invoice;
 use App\Models\InvoiceStatus;
 use App\Models\InvoiceType;
@@ -16,6 +17,11 @@ class InvoiceController extends Controller
     {
         try
         {
+            $user = Auth::user();
+            if ($user->can('filter invoice by company'))
+            {
+                $data['company'] = Company::orderBy('nama', 'asc')->get()->pluck('nama','id');
+            }
             $data['title'] = 'List Invoice';
             $data['invoiceStatus'] = InvoiceStatus::get()->pluck('name','id');
             $data['invoiceType'] = InvoiceType::get()->pluck('name','id');
@@ -34,7 +40,7 @@ class InvoiceController extends Controller
         try
         {
             $user = Auth::user();
-            $invoices = Invoice::with('anggota', 'invoiceStatus', 'invoiceType');
+            $invoices = Invoice::with('anggota.company', 'invoiceStatus', 'invoiceType');
 
             if ($request->invoice_status_id)
             {
@@ -44,6 +50,14 @@ class InvoiceController extends Controller
             if ($request->invoice_type_id)
             {
                 $invoices = $invoices->where('invoice_type_id', $request->invoice_type_id);
+            }
+
+            if ($request->company_id)
+            {
+                $invoices = $invoices->whereHas('anggota', function ($query) use ($request)
+                {
+                    return $query->where('company_id', $request->company_id);
+                });
             }
 
             if($user->isAnggota())
@@ -68,4 +82,5 @@ class InvoiceController extends Controller
         $data['title'] = 'Detail Invoice';
         return view('invoice.detail', $data);
     }
+
 }

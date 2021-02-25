@@ -18,6 +18,7 @@
 
 @section('plugins.Datatables', true)
 @section('plugins.SweetAlert2', true)
+@section('plugins.Select2', true)
 
 @section('css')
     <style>
@@ -36,13 +37,19 @@
             <form action="{{ route('invoice-list') }}" method="post">
                 @csrf
                 <div class="row">
+                    @can('filter invoice by company')
+                        <div class="col-md-4 form-group">
+                            <label>Unit Kerja</label>
+                            {!! Form::select('company_id', $company, $request->company_id, ['class' => 'form-control select2', 'placeholder' => 'All']) !!}
+                        </div>
+                    @endcan
                     <div class="col-md-4 form-group">
                         <label>Invoice Type</label>
-                        {!! Form::select('invoice_type_id', $invoiceType, $request->invoice_type_id, ['class' => 'form-control', 'placeholder' => 'Choose one']) !!}
+                        {!! Form::select('invoice_type_id', $invoiceType, $request->invoice_type_id, ['class' => 'form-control', 'placeholder' => 'All']) !!}
                     </div>
                     <div class="col-md-4 form-group">
                         <label>Invoice Status</label>
-                        {!! Form::select('invoice_status_id', $invoiceStatus, $request->invoice_status_id, ['class' => 'form-control', 'placeholder' => 'Choose one']) !!}
+                        {!! Form::select('invoice_status_id', $invoiceStatus, $request->invoice_status_id, ['class' => 'form-control', 'placeholder' => 'All']) !!}
                     </div>
                     <div class="col-md-12 form-group text-center">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
@@ -60,6 +67,7 @@
                         <th>Type</th>
                         <th>Kode Anggota</th>
                         <th>Nama Anggota</th>
+                        <th>Unit Kerja</th>
                         <th>Besar Tagihan</th>
                         <th>Keterangan</th>
                         <th>Tanggal Invoice</th>
@@ -77,6 +85,7 @@
         $(document).ready(function ()
         {
             initiateDatatables();
+            initiateSelect2();
         });
         function initiateDatatables()
         {
@@ -90,6 +99,7 @@
                     data: function(data){
                         @if(isset($request->invoice_status_id)) data.invoice_status_id = '{{ $request->invoice_status_id }}'; @endif
                         @if(isset($request->invoice_type_id)) data.invoice_type_id = '{{ $request->invoice_type_id }}'; @endif
+                        @if(isset($request->company_id)) data.company_id = '{{ $request->company_id }}'; @endif
                     }
                 },
                 aoColumns: [
@@ -100,13 +110,18 @@
                     { 
                         mData: 'invoice_type.name', sType: "string", 
                         className: "dt-body-center", "name": "invoice_type.name"						
-                    },{ 
+                    },
+                    { 
                         mData: 'anggota.kode_anggota', sType: "string", 
                         className: "dt-body-center", "name": "anggota.kode_anggota"				
                     },
                     { 
                         mData: 'anggota.nama_anggota', sType: "string", 
                         className: "dt-body-center", "name": "anggota.nama_anggota"				
+                    },
+                    { 
+                        mData: 'anggota.company.nama', sType: "string", 
+                        className: "dt-body-center", "name": "anggota.company.nama"				
                     },
                     { 
                         mData: 'final_amount', sType: "string", 
@@ -130,6 +145,11 @@
                     },
                 ]
             });
+        }
+
+        function initiateSelect2()
+        {
+            $('.select2').select2();
         }
     </script>
 @endsection
