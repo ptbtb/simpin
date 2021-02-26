@@ -4,6 +4,7 @@ namespace App\Managers;
 use App\Models\Angsuran;
 use App\Models\Jurnal;
 use App\Models\Penarikan;
+use App\Models\Pinjaman;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,6 +24,22 @@ class JurnalManager
         $jurnal->updated_by = Auth::user()->id;
         $jurnal->save();
     }
+
+    public static function createJurnalPinjaman(Pinjaman $pinjaman)
+    {
+        $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+        $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_kredit = $pinjaman->kode_jenis_pinjam;
+        $jurnal->kredit = $pinjaman->besar_pinjam;
+        $jurnal->akun_debet = COA_BANK_MANDIRI;
+        $jurnal->debet = $pinjaman->besar_pinjam;
+        $jurnal->keterangan = 'Pinjaman '. strtolower($pinjaman->jenisPinjaman->nama_pinjaman) .' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+        $jurnal->created_by = Auth::user()->id;
+        $jurnal->updated_by = Auth::user()->id;
+        $jurnal->save();
+    }
+
     public static function createJurnalAngsuran(Angsuran $angsuran)
     {
         $jurnal = new Jurnal();
