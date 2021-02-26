@@ -23,6 +23,14 @@ class Jurnal extends Model
         ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['view_created_at'];
+
+
+    /**
      * Get the tipeJurnal that owns the Jurnal
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -30,5 +38,20 @@ class Jurnal extends Model
     public function tipeJurnal()
     {
         return $this->belongsTo(TipeJurnal::class, 'id_tipe_jurnal');
+    }
+
+    /**
+     * Get the updatedBy that owns the Jurnal
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function getViewCreatedAtAttribute()
+    {
+        return $this->created_at->format('d F Y');
     }
 }

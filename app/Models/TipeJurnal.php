@@ -14,5 +14,5 @@ class TipeJurnal extends Model
      *
      * @var string
      */
-    protected $table = 'tipe_jurnal';
+    protected $table = 't_tipe_jurnal';
 }

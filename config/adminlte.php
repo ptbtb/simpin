@@ -332,7 +332,7 @@ return [
                     'can'  => ['view penarikan'],
                 ],
             ],
-        ],        
+        ], 
         // ['header' => 'ANGGOTA'],
         [
             'text' => 'Transaksi',
@@ -417,7 +417,13 @@ return [
             'route' => 'invoice-list',
             'can'  => ['view invoice'],
             'active'  => ['/invoice', 'regex:@^invoice/[0-9]+$@'],
-        ],
+        ],    
+        [
+            'text' => 'Jurnal',
+            'url' => '/jurnal',
+            'icon' => 'fas fa-book nav-icon',
+            'can'  => ['view jurnal'],
+        ],   
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

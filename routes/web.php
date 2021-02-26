@@ -290,3 +290,12 @@ Route::group(['prefix' => 'invoice'], function() {
         Route::get('{id}', [App\Http\Controllers\InvoiceController::class, 'show'])->where('id', '[0-9]+')->name('invoice-detail');
     });
 });
+
+// jurnal
+Route::group(['prefix' => 'jurnal'], function() {
+    Route::group(['middleware' => ['auth']], function () {
+        Route::get('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
+        Route::get('data', [App\Http\Controllers\JurnalController::class, 'indexAjax'])->name('jurnal-list-ajax');
+        Route::post('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
+    });
+});
