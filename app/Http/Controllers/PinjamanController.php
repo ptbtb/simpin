@@ -17,6 +17,7 @@ use App\Models\StatusPengajuan;
 use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
 use App\Imports\PinjamanImport;
+use App\Managers\JurnalManager;
 use App\Managers\PengajuanManager;
 use App\Models\Angsuran;
 use Auth;
@@ -405,8 +406,13 @@ class PinjamanController extends Controller {
             }
 
             $pengajuan->save();
-            if ($pengajuan->menungguPembayaran() && is_null($pengajuan->pinjaman)) {
+            if ($pengajuan->menungguPembayaran() && is_null($pengajuan->pinjaman))
+            {
                 event(new PengajuanApproved($pengajuan));
+            }
+            elseif($pengajuan->diterima())
+            {
+                JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
             }
             event(new PengajuanUpdated($pengajuan));
 
@@ -682,6 +688,9 @@ class PinjamanController extends Controller {
                 $angsuran->paid_at = Carbon::now();
                 $angsuran->u_entry = Auth::user()->name;
                 $angsuran->save();
+
+                // create JKM angsuran
+                JurnalManager::createJurnalAngsuran($angsuran);
 
                 if ($pembayaran <= 0) {
                     $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
