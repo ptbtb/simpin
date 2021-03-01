@@ -62,7 +62,13 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
-                            <td>{{ $penarikan->anggota->nama_anggota }}</td>
+                            <td>
+                                @if ($penarikan->anggota)
+                                    {{ $penarikan->anggota->nama_anggota }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>{{ "Rp ". number_format($penarikan->besar_ambil,0,",",".") }}</td>
                             <td>{{ $penarikan->statusPenarikan->name }}</td>
                             <td>

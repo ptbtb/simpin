@@ -55,9 +55,10 @@
                         <th>Nomor</th>
                         <th>Tipe Jurnal</th>
                         <th>Akun Kredit</th>
-                        <th>Kredit</th>
+                        <th style="width: 10%">Kredit</th>
                         <th>Akun Debet</th>
-                        <th>Debet</th>
+                        <th style="width: 10%">Debet</th>
+                        <th>Keterangan</th>
                         <th>Created At</th>
                         <th>Updated By</th>
                     </tr>
@@ -105,7 +106,12 @@
                     },
                     { 
                         mData: 'kredit', sType: "string", 
-                        className: "dt-body-center", "name": "kredit"				
+                        className: "dt-body-center", "name": "kredit",
+                        mRender: function(data, type, full) 
+                        {
+                            var kredit = toRupiah(data);
+                            return kredit;
+                        }			
                     },
                     { 
                         mData: 'akun_debet', sType: "string", 
@@ -113,7 +119,16 @@
                     },
                     { 
                         mData: 'debet', sType: "string", 
-                        className: "dt-body-center", "name": "debet",				
+                        className: "dt-body-center", "name": "debet",
+                        mRender: function(data, type, full) 
+                        {
+                            var debet = toRupiah(data);
+                            return debet;
+                        }			
+                    },
+                    { 
+                        mData: 'keterangan', sType: "string", 
+                        className: "dt-body-center", "name": "keterangan",				
                     },
                     { 
                         mData: 'view_created_at', sType: "string", 
@@ -132,6 +147,24 @@
                     cell.innerHTML = i+1;
                 } );
             }).draw();
+        }
+
+        
+        function toRupiah(number)
+        {
+            var stringNumber = number.toString();
+            var length = stringNumber.length;
+            var temp = length;
+            var res = "Rp ";
+            for (let i = 0; i < length; i++) {
+                res = res + stringNumber.charAt(i);
+                temp--;
+                if (temp%3 == 0 && temp > 0)
+                {
+                    res = res + ".";
+                }
+            }
+            return res;
         }
     </script>
 @endsection
