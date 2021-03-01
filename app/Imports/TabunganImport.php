@@ -19,8 +19,12 @@ class TabunganImport implements OnEachRow
         }
 
         $id = $row[0].str_replace('.','',$row[1]);
-        $tabungan = new Tabungan();
-        $tabungan->id = $id;
+        $tabungan = Tabungan::find($id);
+        if (is_null($tabungan))
+        {
+            $tabungan = new Tabungan();
+            $tabungan->id = $id;
+        }
         $tabungan->kode_tabungan = $row[0];
         $tabungan->kode_anggota = $row[0];
         $tabungan->batch = $row[3];
