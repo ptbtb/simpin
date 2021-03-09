@@ -298,4 +298,14 @@ Route::group(['prefix' => 'jurnal'], function() {
         Route::get('data', [App\Http\Controllers\JurnalController::class, 'indexAjax'])->name('jurnal-list-ajax');
         Route::post('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
     });
+});// jurnal umum
+Route::group(['prefix' => 'jurnal-umum'], function() {
+    Route::group(['middleware' => ['auth']], function () {
+        Route::get('list', [App\Http\Controllers\JurnalUmumController::class, 'index'])->name('jurnal-umum-list');
+        Route::get('list/data', [App\Http\Controllers\JurnalUmumController::class, 'indexAjax'])->name('jurnal-umum-list-ajax');
+        Route::get('create', [App\Http\Controllers\JurnalUmumController::class, 'create'])->name('jurnal-umum-create');
+        Route::post('create', [App\Http\Controllers\JurnalUmumController::class, 'store'])->name('jurnal-umum-create');
+        Route::get('/edit/{id}', [App\Http\Controllers\JurnalUmumController::class, 'edit'])->where('id', '[0-9]+')->name('jurnal-umum-edit');
+        Route::post('/edit/{id}', [App\Http\Controllers\JurnalUmumController::class, 'update'])->where('id', '[0-9]+')->name('jurnal-umum-edit');
+    });
 });

@@ -96,5 +96,9 @@ define('API_DEFAULT_ERROR_MESSAGE', 'Terjadi kesalahan, silahkan kontak admin');
 
 define('TIPE_JURNAL_JKM', 1);
 define('TIPE_JURNAL_JKK', 2);
+define('TIPE_JURNAL_JU', 3);
 
 define('COA_BANK_MANDIRI', '403.04.000');
+
+define('NORMAL_BALANCE_DEBET', 1);
+define('NORMAL_BALANCE_KREDIT', 2);
