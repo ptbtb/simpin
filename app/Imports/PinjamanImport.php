@@ -21,7 +21,7 @@ class PinjamanImport implements OnEachRow
         }
         
         $besar_pinjam = 3;
-        if ($besar_pinjam > 0)
+        if ($besar_pinjam > 0 && $row[2] > 0)
         {
             $pinjaman = new Pinjaman();
             $kodeAnggota = $row[1];
