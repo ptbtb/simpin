@@ -424,6 +424,26 @@ return [
             'icon' => 'fas fa-book nav-icon',
             'can'  => ['view jurnal'],
         ],   
+        [
+            'text' => 'Jurnal Umum',
+            'url' => '/jurnal-umum',
+            'icon' => 'fas fa-book nav-icon',
+            'can'  => ['view jurnal umum', 'add jurnal umum', 'edit jurnal umum'],
+            'submenu' => [
+                [
+                    'text' => 'List Jurnal Umum',
+                    'url' => '/jurnal-umum/list',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view jurnal umum'],
+                ],
+                [
+                    'text' => 'Buat Jurnal Umum',
+                    'url' => '/jurnal-umum/create',
+                    'icon' => 'fas fa-plus nav-icon',
+                    'can'  => ['add jurnal umum'],
+                ],
+            ],
+        ],   
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

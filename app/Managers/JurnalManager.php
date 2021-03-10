@@ -5,6 +5,8 @@ use App\Models\Angsuran;
 use App\Models\Jurnal;
 use App\Models\Penarikan;
 use App\Models\Pinjaman;
+use App\Models\JurnalUmum;
+use App\Models\Code;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,5 +55,73 @@ class JurnalManager
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
         $jurnal->save();
+    }
+
+    public static function createJurnalUmum(JurnalUmum $jurnalUmum)
+    {
+        $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JU;
+        $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+
+        if ($jurnalUmum->code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+        {
+            $jurnal->akun_debet = $jurnalUmum->code->CODE;
+            $jurnal->debet = $jurnalUmum->nominal;
+            $jurnal->akun_kredit = 0;
+            $jurnal->kredit = 0;
+        }
+        else if($jurnalUmum->code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+        {
+            $jurnal->akun_debet = 0;
+            $jurnal->debet = 0;
+            $jurnal->akun_kredit = $jurnalUmum->code->CODE;
+            $jurnal->kredit = $jurnalUmum->nominal;
+        }
+
+        $jurnal->keterangan = 'Jurnal Umum';
+        $jurnal->created_by = Auth::user()->id;
+        $jurnal->updated_by = Auth::user()->id;
+        $jurnal->save();
+    }
+
+    public static function updateJurnalUmum(JurnalUmum $jurnalUmum)
+    {
+        // get jurnal data
+        $jurnal = Jurnal::where('id_tipe_jurnal', TIPE_JURNAL_JU);
+
+        // cek updated code is debet/kredit
+        $code = Code::find($jurnalUmum->getOriginal()['code_id']);
+
+        // if debet
+        if ($code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+        {
+            $jurnal = $jurnal->where('akun_debet', $code->CODE)->first();
+        }
+        // if kredit
+        else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+        {
+            $jurnal = $jurnal->where('akun_kredit', $code->CODE)->first();
+        }
+        // if jurnal exist
+        if($jurnal)
+        {
+            if ($code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+            {
+                $jurnal->akun_debet = $jurnalUmum->code->CODE;
+                $jurnal->debet = $jurnalUmum->nominal;
+                $jurnal->akun_kredit = 0;
+                $jurnal->kredit = 0;
+            }
+            else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+            {
+                $jurnal->akun_debet = 0;
+                $jurnal->debet = 0;
+                $jurnal->akun_kredit = $jurnalUmum->code->CODE;
+                $jurnal->kredit = $jurnalUmum->nominal;
+            }
+
+            $jurnal->updated_by = Auth::user()->id;
+            $jurnal->save();
+        }
     }
 }
