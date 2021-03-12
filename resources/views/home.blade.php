@@ -20,6 +20,10 @@
         font-weight: bold;
         font-size: 16px;
     }
+
+    .small-box h3{
+        font-size: 1.5rem !important;
+    }
 </style>
 @endsection
 
@@ -28,76 +32,76 @@
     <div class="form-panel">
         <div class="row">
             @if ($role->id == ROLE_ANGGOTA)
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner" style="min-height: 123px;">
-                        <h3 style="font-size: 1.5rem"><a href="{{ route('simpanan-index-card') }}" class="link-dashboard">Rp. {{ number_format($saldo->jumlah,0,",",".") }}</a></h3>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner" style="min-height: 123px;">
+                            <h3><a href="{{ route('simpanan-index-card') }}" class="link-dashboard">Rp. {{ number_format($saldo->jumlah,0,",",".") }}</a></h3>
 
-                        <p class="font-weight-bold">Saldo </p>
+                            <p class="font-weight-bold">Saldo </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-money-check-alt"></i>
+                        </div>
+                        <a href="{{ route('simpanan-index-card') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-money-check-alt"></i>
-                    </div>
-                    <a href="{{ route('simpanan-index-card') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner" style="min-height: 123px;">
-                        <h3><a href="{{ route('transaksi-list-anggota') }}" class="link-dashboard">Transaksi</a></h3>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner" style="min-height: 123px;">
+                            <h3><a href="{{ route('transaksi-list-anggota') }}" class="link-dashboard">Transaksi</a></h3>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <a href="{{ route('transaksi-list-anggota') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-exchange-alt"></i>
-                    </div>
-                    <a href="{{ route('transaksi-list-anggota') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-            <div class="col-lg-3 col-6 d-none">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner" style="min-height: 123px;">
-                        <h3 style="font-size: 1.5rem"><a href="{{ route('pinjaman-list') }}" class="link-dashboard">Rp. {{ number_format($listPinjaman->sum('sisa_pinjaman'),0,",",".") }}</a></h3>
-
-                        <p class="font-weight-bold">Sisa Pinjaman </p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-hand-holding-usd"></i>
-                    </div>
-                    <a href="{{ route('pinjaman-list') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
             @else
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{$anggota}}</h3>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{$anggota}}</h3>
 
-                        <p>Anggota Aktif </p>
+                            <p>Anggota Aktif </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-user-plus"></i>
+                        </div>
+                        <a href="/anggota/list" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                    <div class="icon">
-                        <i class="fa fa-user-plus"></i>
-                    </div>
-                    <a href="/anggota/list" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{ number_format($simpanan,0,",",".") }}</h3>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ number_format($simpanan,0,",",".") }}</h3>
 
-                        <p>Total Simpanan </p>
+                            <p>Total Simpanan </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-money-check-alt"></i>
+                        </div>
+                        <a href="/simpanan/list" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            @endif
+            <div class="col-lg-4 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ number_format($sisaPinjaman,0,",",".") }}</h3>
+
+                        <p>Sisa Pinjaman </p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-money-check-alt"></i>
                     </div>
-                    <a href="/simpanan/list" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            @endif
         </div>
     </div>
 </div>
