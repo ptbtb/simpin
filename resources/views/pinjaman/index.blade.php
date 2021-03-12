@@ -102,7 +102,13 @@
                                 </td>
                             @endif
                             <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
-                            <td>{{ $pinjaman->jenisPinjaman->nama_pinjaman }}</td>
+                            <td>
+                                @if ($pinjaman->jenisPinjaman)
+                                    {{ $pinjaman->jenisPinjaman->nama_pinjaman }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
                             <td>Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
                             <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
