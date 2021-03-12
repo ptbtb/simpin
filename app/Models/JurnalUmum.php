@@ -4,26 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JurnalUmum extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = "t_jurnal_umum";
-    protected $fillable = ['code_id', 'nominal'];
-    protected $appends = ['nominal_rupiah'];
+    protected $dates = ['tgl_transaksi'];
+    protected $appends = ['view_tgl_transaksi'];
 
-    public function code()
+    public function jurnalUmumItems()
     {
-        return $this->belongsTo(Code::class, 'code_id');
+        return $this->hasMany(JurnalUmumItem::class);
     }
 
-    public function getNominalRupiahAttribute()
+    public function getViewTglTransaksiAttribute()
     {
-        if ($this->nominal)
-        {
-            return 'Rp.' . number_format($this->nominal,0,",",".");
-        }
-        return $this->nominal;
+        return $this->tgl_transaksi->format('d F Y');
     }
 }

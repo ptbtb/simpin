@@ -24,5 +24,9 @@ class Code extends Model
     {
         return $this->hasMany(SaldoAwal::class);
     }
+
+    public function jurnalUmumItems()
+    {
+        return $this->hasMany(JurnalUmumItem::class);
     }
 }
