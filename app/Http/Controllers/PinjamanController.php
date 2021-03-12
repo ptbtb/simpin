@@ -180,7 +180,7 @@ class PinjamanController extends Controller {
             $listPinjaman = $listPinjaman->where('tgl_entri', '<=', $request->to);
         }
         if ($request->status) {
-            $listPinjaman = $listPinjaman->where('status', $request->status);
+            $listPinjaman = $listPinjaman->where('id_status_pinjaman', $request->status);
         }
 
         $listPinjaman = $listPinjaman->get();

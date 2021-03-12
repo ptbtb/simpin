@@ -20,7 +20,7 @@ class PinjamanImport implements OnEachRow
             return null;
         }
         
-        $besar_pinjam = 3;
+        $besar_pinjam = $row[3];
         if ($besar_pinjam > 0 && $row[2] > 0)
         {
             $pinjaman = new Pinjaman();

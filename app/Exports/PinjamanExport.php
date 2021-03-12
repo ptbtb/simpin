@@ -31,7 +31,7 @@ class PinjamanExport implements FromView
         }
         if ($this->request->status)
         {
-            $listPinjaman = $listPinjaman->where('status', $this->request->status);
+            $listPinjaman = $listPinjaman->where('id_status_pinjaman', $this->request->status);
         }
         $listPinjaman = $listPinjaman->get();
         return view('pinjaman.excel', [

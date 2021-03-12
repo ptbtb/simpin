@@ -60,8 +60,8 @@
     </div>
     <div class="card">
         <div class="card-header text-right">
-            <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
-            <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+            <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => STATUS_PINJAMAN_BELUM_LUNAS]) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
+            <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => STATUS_PINJAMAN_BELUM_LUNAS]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
         </div>
         <div class="card-body table-responsive">
             <table class="table table-striped">
