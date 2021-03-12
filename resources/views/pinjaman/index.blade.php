@@ -109,7 +109,9 @@
                             <td>{{ ucwords($pinjaman->statusPinjaman->name) }}</td>
                             <td>
                                 <a href="{{ route('pinjaman-detail', ['id'=>$pinjaman->kode_pinjam]) }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a>
-                                <a class="btn btn-sm btn-danger text-white btn-delete" style="cursor: pointer" data-id='{{ $pinjaman->kode_pinjam }}' data-token='{{ csrf_token() }}'><i class="fa fa-trash"></i> Delete</a>
+                                @can('delete pinjaman')
+                                    <a class="btn btn-sm btn-danger text-white btn-delete" style="cursor: pointer" data-id='{{ $pinjaman->kode_pinjam }}' data-token='{{ csrf_token() }}'><i class="fa fa-trash"></i> Delete</a>
+                                @endcan
                                 {{-- <a data-id="{{ $pinjaman->kode_pinjam }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a> --}}
                             </td>
                         </tr>
