@@ -20,8 +20,9 @@ class Code extends Model
         return $this->belongsTo(CodeCategory::class, 'code_category_id');
     }
 
-    public function jurnalUmums()
+    public function saldoAwals()
     {
-        return $this->hasMany(JurnalUmum::class);
+        return $this->hasMany(SaldoAwal::class);
+    }
     }
 }
