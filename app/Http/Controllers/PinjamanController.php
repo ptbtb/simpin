@@ -20,8 +20,8 @@ use App\Imports\PinjamanImport;
 use App\Managers\JurnalManager;
 use App\Managers\PengajuanManager;
 use App\Models\Angsuran;
-use Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -837,4 +837,39 @@ class PinjamanController extends Controller {
         }
     }
 
+    public function destroy($id, Request $request)
+    {
+        try
+        {
+            $user = Auth::user();
+            $this->authorize('delete pinjaman', $user);
+
+            // check password
+            $check = Hash::check($request->pw, $user->password);
+            if (!$check)
+            {
+                return response()->json(['message' => 'Wrong password'], 403);
+            }
+
+            $pinjaman = Pinjaman::find($id);
+            if (is_null($pinjaman))
+            {
+                return response()->json(['message' => 'Pinjaman not found'], 404);
+            }
+
+            $listAngsuran = $pinjaman->listAngsuran;
+            foreach ($listAngsuran as $angsuran)
+            {
+                $angsuran->delete();
+            }
+            
+            $pinjaman->delete();
+
+            return response()->json(['message' => 'Delete data success'], 200);
+        }
+        catch (\Throwable $e)
+        {
+            return response()->json(['message' => 'Terjadi Kesalahan'], 500);
+        }
+    }
 }

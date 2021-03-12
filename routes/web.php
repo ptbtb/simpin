@@ -186,6 +186,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
         // import batch saldo pinjaman
         Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');
         Route::post('import', [App\Http\Controllers\PinjamanController::class, 'storeImportPinjaman'])->name('pinjaman-import');
+        Route::delete('delete/{id}', [App\Http\Controllers\PinjamanController::class, 'destroy'])->name('pinjaman-delete');
 
         Route::group(['prefix' => 'pengajuan'], function () {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
