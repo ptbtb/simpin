@@ -444,6 +444,26 @@ return [
                 ],
             ],
         ],   
+        [
+            'text' => 'Saldo Awal',
+            'url' => '/saldo-awal',
+            'icon' => 'fas fa-book nav-icon',
+            'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal'],
+            'submenu' => [
+                [
+                    'text' => 'List Saldo Awal',
+                    'url' => '/saldo-awal/list',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view saldo awal'],
+                ],
+                [
+                    'text' => 'Buat Saldo Awal',
+                    'url' => '/saldo-awal/create',
+                    'icon' => 'fas fa-plus nav-icon',
+                    'can'  => ['add saldo awal'],
+                ],
+            ],
+        ],   
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
