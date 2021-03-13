@@ -2,6 +2,7 @@
 namespace App\Managers;
 
 use App\Events\Pinjaman\PinjamanCreated;
+use App\Managers\JurnalManager;
 use App\Models\AsuransiPinjaman;
 use App\Models\Pinjaman;
 use App\Models\Pengajuan;
