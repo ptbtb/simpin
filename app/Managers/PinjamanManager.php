@@ -60,6 +60,8 @@ class PinjamanManager
             // dd($pinjaman);
             $pinjaman->save();
             event(new PinjamanCreated($pinjaman));
+            
+            JurnalManager::createJurnalPinjaman($pinjaman);
         }
         catch (\Exception $e)
         {
