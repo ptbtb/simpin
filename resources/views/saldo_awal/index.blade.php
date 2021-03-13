@@ -10,8 +10,8 @@
 	<div class="col-6">
 		<ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="">Jurnal Umum</a></li>
-			<li class="breadcrumb-item active">List Jurnal Umum</li>
+            <li class="breadcrumb-item"><a href="">Saldo Awal</a></li>
+			<li class="breadcrumb-item active">List Saldo Awal</li>
 		</ol>
 	</div>
 </div>
@@ -40,9 +40,8 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Tgl. Transaksi</th>
-                        <th>Description</th>
-                        <th>Lampiran</th>
+                        <th>Code</th>
+                        <th>Nominal</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -64,7 +63,7 @@
         serverside: true,
         responsive: true,
         ajax: {
-            url: '{{ route('jurnal-umum-list-ajax') }}',
+            url: '{{ route("saldo-awal-list-ajax") }}',
             dataSrc: 'data',
             data: function(data){
             }
@@ -74,8 +73,8 @@
                 mData: null		
             },
             { 
-                mData: 'view_tgl_transaksi', sType: "string", 
-                className: "dt-body-center", "name": "view_tgl_transaksi",
+                mData: 'code.CODE', sType: "string", 
+                className: "dt-body-center", "name": "code.CODE",
                 mRender: function (data, type, full) {
                     if (data == null || data == '') {
                         return '-';
@@ -84,21 +83,8 @@
                 }					
             },
             { 
-                mData: 'deskripsi', sType: "string", 
-                className: "dt-body-center", "name": "deskripsi"		
-            },
-            { 
-                mData: 'lampiran', sType: "string", 
-                className: "dt-body-center", "name": "lampiran"	,	
-                mRender: function(data, type, full) 
-                {
-                    var markup = ''; 
-                    var baseURL = {!! json_encode(url('/')) !!};
-
-                    markup += '<a class="btn btn-warning btn-sm" href="' + baseURL + '/'+ data + '" target="_blank"><i class="fa fa-file"></i></a> '
-
-                    return markup;
-                }
+                mData: 'nominal_rupiah', sType: "string", 
+                className: "dt-body-center", "name": "nominal_rupiah"		
             },
             { 
                 mData: 'id', sType: "string", 
@@ -108,7 +94,7 @@
                     var markup = ''; 
                     var baseURL = {!! json_encode(url('/')) !!};
 
-                    markup += '<a href="' + baseURL + '/jurnal-umum/edit/' + data + '" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
+                    markup += '<a href="' + baseURL + '/saldo-awal/edit/' + data + '" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
 
                     return markup;
                 }

@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Anggota;
 use App\Models\Code;
 use App\Models\JurnalUmum;
+use App\Models\JurnalUmumItem;
 use App\Models\Jurnal;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File; 
 
 use Auth;
 use DB;
@@ -27,7 +31,7 @@ class JurnalUmumController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('code');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
 
         $data['title'] = "List Jurnal Umum";
@@ -40,7 +44,7 @@ class JurnalUmumController extends Controller
     public function indexAjax(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('code');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
         return DataTables::eloquent($listJurnalUmum)->make(true);
     }
@@ -53,13 +57,26 @@ class JurnalUmumController extends Controller
     public function create(Request $request)
     {
         $this->authorize('add jurnal umum', Auth::user());
-        $codes = Code::where('is_parent', 0)
-                        ->doesntHave('jurnalUmums')
-                        ->get();
+        $debetCodes = Code::where('is_parent', 0)
+                            ->where('CODE', 'not like', "411%")
+                            ->where('CODE', 'not like', "106%")
+                            ->where('CODE', 'not like', "502%")
+                            ->where('CODE', 'not like', "105%")
+                            ->where('normal_balance_id', NORMAL_BALANCE_DEBET)
+                            ->get();
+
+        $creditCodes = Code::where('is_parent', 0)
+                            ->where('CODE', 'not like', "411%")
+                            ->where('CODE', 'not like', "106%")
+                            ->where('CODE', 'not like', "502%")
+                            ->where('CODE', 'not like', "105%")
+                            ->where('normal_balance_id', NORMAL_BALANCE_KREDIT)
+                            ->get();
         
         $data['title'] = "Tambah Jurnal Umum";
         $data['request'] = $request;
-        $data['codes'] = $codes;
+        $data['debetCodes'] = $debetCodes;
+        $data['creditCodes'] = $creditCodes;
         return view('jurnal_umum.create', $data);
     }
 
@@ -81,33 +98,61 @@ class JurnalUmumController extends Controller
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
             
-            // loop every account
+            // get auth user
+            $user = Auth::user();
+
+            // save into jurnal umum
+            $jurnalUmum = new JurnalUmum();
+
+            // check file lampiran
+            $file = $request->lampiran;
+            if ($file) 
+            {
+                $config['disk'] = 'upload';
+                $config['upload_path'] = '/jurnalumum/' . $user->id;
+                $config['public_path'] = env('APP_URL') . '/upload/jurnalumum/' . $user->id;
+
+                // create directory if doesn't exist
+                if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
+                    Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                }
+
+                // upload file if valid
+                if ($file->isValid()) {
+                    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+                    Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                    $jurnalUmum->lampiran = $config['disk'] . $config['upload_path'] . '/' . $filename;
+                }
+            }
+
+            $jurnalUmum->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+            $jurnalUmum->deskripsi = $request->deskripsi;
+            $jurnalUmum->save();
+            
+            // loop every item
             for ($i=0; $i < count($request->code_id) ; $i++) 
             { 
                 $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
 
-                $jurnalUmumExisting = JurnalUmum::where('code_id',$request->code_id[$i])->first();
+                $jurnalUmumItem = new JurnalUmumItem();
+                $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
+                $jurnalUmumItem->code_id = $request->code_id[$i];
+                $jurnalUmumItem->nominal = $nominal;
+                $jurnalUmumItem->save();
+            }
 
-                // check if code id is exist
-                if(!$jurnalUmumExisting)
-                {
-                    $jurnalUmum = new JurnalUmum();
-                    $jurnalUmum->code_id = $request->code_id[$i];
-                    $jurnalUmum->nominal = $nominal;
-                    $jurnalUmum->save();
-                }
-
-                // call function for create Jurnal
-                if($jurnalUmum)
-                {
-                    JurnalManager::createJurnalUmum($jurnalUmum);
-                }
+            // call function for create Jurnal
+            if($jurnalUmum)
+            {
+                JurnalManager::createJurnalUmum($jurnalUmum);
             }
 
             return redirect()->route('jurnal-umum-list')->withSuccess('Berhasil menambah transaksi');
         }
         catch (\Throwable $th)
         {
+            \Log::error($th);
             return redirect()->back()->withError('Gagal menyimpan data');
         }
     }
@@ -132,15 +177,32 @@ class JurnalUmumController extends Controller
     public function edit($id)
     {
         $this->authorize('edit jurnal umum', Auth::user());
-        $jurnalUmum = JurnalUmum::find($id);
-        $codes = Code::where('is_parent', 0)
-                        ->doesntHave('jurnalUmums')
-                        ->orWhere('id', $jurnalUmum->code_id)
-                        ->get();
+        $jurnalUmum = JurnalUmum::with('jurnalUmumItems')->find($id);
+        $debetCodes = Code::where('is_parent', 0)
+                ->where('CODE', 'not like', "411%")
+                ->where('CODE', 'not like', "106%")
+                ->where('CODE', 'not like', "502%")
+                ->where('CODE', 'not like', "105%")
+                ->where('normal_balance_id', NORMAL_BALANCE_DEBET)
+                ->get();
+
+        $creditCodes = Code::where('is_parent', 0)
+                ->where('CODE', 'not like', "411%")
+                ->where('CODE', 'not like', "106%")
+                ->where('CODE', 'not like', "502%")
+                ->where('CODE', 'not like', "105%")
+                ->where('normal_balance_id', NORMAL_BALANCE_KREDIT)
+                ->get();
+
+        $itemDebets = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_DEBET);
+        $itemCredits = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_KREDIT);
 
         $data['title'] = "Edit Jurnal Umum";
-        $data['codes'] = $codes;
         $data['jurnalUmum'] = $jurnalUmum;
+        $data['debetCodes'] = $debetCodes;
+        $data['creditCodes'] = $creditCodes;
+        $data['itemDebets'] = $itemDebets;
+        $data['itemCredits'] = $itemCredits;
         return view('jurnal_umum.edit', $data);
     }
 
@@ -162,29 +224,87 @@ class JurnalUmumController extends Controller
             {
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
-            
-            $nominal = filter_var($request->nominal, FILTER_SANITIZE_NUMBER_INT);
 
+            // get auth user
+            $user = Auth::user();
+
+            // check into jurnal umum
             $jurnalUmum = JurnalUmum::find($id);
-            $oldJurnalUmum = $jurnalUmum;
 
-            // check if code id is exist
+            // check file lampiran
+            $file = $request->lampiran;
+            if ($file) 
+            {
+                $config['disk'] = 'upload';
+
+                // delete old file
+                File::delete($jurnalUmum->lampiran);
+                
+                $config['upload_path'] = '/jurnalumum/' . $user->id;
+                $config['public_path'] = env('APP_URL') . '/upload/jurnalumum/' . $user->id;
+
+                // create directory if doesn't exist
+                if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
+                    Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                }
+
+                // upload file if valid
+                if ($file->isValid()) {
+                    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+                    Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                    $jurnalUmum->lampiran = $config['disk'] . $config['upload_path'] . '/' . $filename;
+                }
+            }
+
+            $jurnalUmum->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+            $jurnalUmum->deskripsi = $request->deskripsi;
+            $jurnalUmum->save();
+
+            $jurnalUmumItems = $jurnalUmum->jurnalUmumItems;
+            
+            // loop every item
+            for ($i=0; $i < count($request->code_id) ; $i++) 
+            { 
+                // update item
+                if ($i < $jurnalUmumItems->count())
+                {
+                    $jurnalUmumItem = $jurnalUmumItems[$i];
+                }
+                else
+                {
+                    $jurnalUmumItem = new JurnalUmumItem();
+                }
+                
+                $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
+
+                $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
+                $jurnalUmumItem->code_id = $request->code_id[$i];
+                $jurnalUmumItem->nominal = $nominal;
+                $jurnalUmumItem->save();
+            }
+
+            // delete item if jurnal umum items less than request jurnal umum items
+            if (count($request->code_id) < $jurnalUmumItems->count())
+            {
+                for ($i=count($request->code_id); $i < $jurnalUmumItems->count(); $i++) { 
+                    $jurnalUmumItem = $jurnalUmumItems[$i];
+                    $jurnalUmumItem->delete();
+                }
+            }
+
+            // update jurnal
             if($jurnalUmum)
             {
-                $jurnalUmum->code_id = $request->code_id;
-                $jurnalUmum->nominal = $nominal;
-                
                 // update jurnal data
-                JurnalManager::updateJurnalUmum($jurnalUmum);
-
-                $jurnalUmum->save();
+                // JurnalManager::updateJurnalUmum($jurnalUmum);
             }
             
             return redirect()->route('jurnal-umum-list')->withSuccess('Berhasil merubah transaksi');
         }
         catch (\Throwable $th)
         {
-            dd($th);
+            \Log::error($th);
             return redirect()->back()->withError('Gagal menyimpan data');
         }
     }
@@ -198,105 +318,5 @@ class JurnalUmumController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function createPDF(Request $request)
-    {
-        $user = Auth::user();
-        $this->authorize('view history simpanan', $user);
-
-        if ($user->roles->first()->id == ROLE_ANGGOTA)
-        {
-            $anggota = $user->anggota;
-            if (is_null($anggota))
-            {
-                return redirect()->back()->withError('Your account has no members');
-            }
-            
-            $listSimpanan = Simpanan::where('kode_anggota', $anggota->kode_anggota);
-        }
-        else
-        {
-            $listSimpanan = Simpanan::with('anggota');
-        }
-
-        if ($request->from || $request->to)
-        {
-            if ($request->from)
-            {
-                $listSimpanan = $listSimpanan->where('tgl_entri','>=', $request->from);
-            }
-            if ($request->to)
-            {
-                $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
-            }
-        }
-        else
-        {
-            $from = Carbon::now()->addDays(-30)->format('Y-m-d');
-            $to = Carbon::now()->format('Y-m-d');
-            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $from)
-                                        ->where('tgl_entri','<=', $to);
-        }
-        if ($request->jenis_simpanan)
-        {
-            $listSimpanan = $listSimpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
-        }
-        
-        if ($request->kode_anggota)
-        {
-            $listSimpanan = $listSimpanan->where('kode_anggota', $request->kode_anggota);
-        }
-
-        // $listSimpanan = $listSimpanan->get();
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->get();
-
-        // share data to view
-        view()->share('listSimpanan',$listSimpanan);
-        $pdf = PDF::loadView('simpanan.excel', $listSimpanan)->setPaper('a4', 'landscape');
-  
-        // download PDF file with download method
-        $filename = 'export_simpanan_'.Carbon::now()->format('d M Y').'.pdf';
-        return $pdf->download($filename);
-    }
-
-    public function createExcel(Request $request)
-    {
-        $user = Auth::user();
-        $this->authorize('view history simpanan', $user);
-        if ($user->roles->first()->id == ROLE_ANGGOTA)
-        {
-            $anggota = $user->anggota;
-            $request->anggota = $anggota;
-        }
-        
-        $filename = 'export_simpanan_excel_'.Carbon::now()->format('d M Y').'.xlsx';
-        return Excel::download(new SimpananExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
-    }
-
-    public function importExcel()
-    {
-        $this->authorize('import simpanan', Auth::user());
-        $data['title'] = 'Import Transaksi Simpanan';
-        return view('simpanan.import', $data);
-    }
-
-    public function storeImportExcel(Request $request)
-    {
-        $this->authorize('import simpanan', Auth::user());
-        try
-        {
-            DB::transaction(function () use ($request)
-            {
-                Excel::import(new SimpananImport, $request->file); 
-            });
-            return redirect()->back()->withSuccess('Import data berhasil');
-        }
-        catch (\Throwable $e)
-        {
-            \Log::error($e);
-            return redirect()->back()->withError('Gagal import data');
-        }
-        
     }
 }
