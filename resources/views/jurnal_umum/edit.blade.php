@@ -21,6 +21,7 @@
 
 @section('css')
 @endsection
+@section('plugins.Sweetalert2', true)
 
 @section('content')
 <div class="card">
@@ -134,6 +135,12 @@
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
+    });
+
+    // form validation
+    $( "form" ).submit(function( event )  
+    {
+        checkBalance();
     });
 
     function toRupiah(number)
@@ -266,5 +273,42 @@
         delFormItemCredit('#formCreditBody');
     });
 
+    function checkBalance() 
+    {
+        // count form item
+        var totalDebetForm = $('#formDebetBody').data('form');
+        var totalCreditForm = $('#formCreditBody').data('form');
+        var totalDebet = 0;
+        var totalCredit = 0;
+        
+        // looping every debet item
+        for (let index = 1; index <= totalDebetForm; index++) 
+        {
+            var nominal = parseInt($('#nominalDebet' + index).val().replace(/[^\d]/g, "",''));
+            totalDebet += nominal;
+        }
+
+        // looping every credit item
+        for (let index = 1; index <= totalCreditForm; index++) 
+        {
+            var nominal = parseInt($('#nominalCredit' + index).val().replace(/[^\d]/g, "",''));
+            totalCredit += nominal;
+        }
+
+        // debet and credit must balance
+        if(parseInt(totalDebet) != parseInt(totalCredit))
+        {
+            event.preventDefault();
+
+            Swal.fire({
+                type: 'error',
+                title: 'Error!',
+                html: 'Total Debet dan Kredit harus balance. <br> Debet: Rp ' + new Intl.NumberFormat(['ban', 'id']).format(totalDebet) + '<br> Kredit: Rp '+ new Intl.NumberFormat(['ban', 'id']).format(totalCredit) ,
+                showConfirmButton: true
+            }).then((result) => {
+
+            });
+        }
+    }
 </script>
 @stop
