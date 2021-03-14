@@ -41,7 +41,7 @@ return [
       |
      */
     'logo' => '<b>Simpin</b>Kopegmar',
-    'logo_img' => 'img/new-logo.jpg',
+    'logo_img' => 'img/logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-2',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
