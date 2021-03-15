@@ -32,18 +32,24 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="tgl_transaksi">Tgl Transaksi</label>
-                        <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required>
+                        <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
                     </div>
                     <div class="form-group">
                         <label for="nominal1">Deskripsi</label>
                         <input type="text" maxlength="255" name="deskripsi" id="deskripsi" class="form-control" placeholder="Deskripsi" autocomplete="off" required>
                     </div>
-                    <div class="form-group">
-                        <label>Lampiran</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="lampiran" name="lampiran" accept="application/pdf" style="cursor: pointer" required>
-                            <label class="custom-file-label" for="customFile">Choose Document</label>
+                    <div id="formLampiranBody" data-form="1">
+                        <div class="form-group" id="formLampiran1">
+                            <label>Lampiran 1</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="lampiran1" name="lampiran[]" accept="application/pdf" style="cursor: pointer" required>
+                                <label class="custom-file-label" for="customFile">Choose Document</label>
+                            </div>
                         </div>
+                    </div>
+                    <div class="form-group text-right">
+                        <a class="btn btn-warning btn-sm" id="addLampiranBtn"><i class="fa fa-plus"></i> Tambah</a>
+                        <a class="btn btn-danger btn-sm" id="delLampiranBtn"><i class="fa fa-trash"></i> Hapus</a>
                     </div>
                 </div>
             </div>
@@ -287,6 +293,47 @@
             });
         }
     }
+
+    function addFormLampiran(sectionId) 
+    {
+        var dataForm = $(sectionId).data('form');
+        var formCounter = Number(dataForm)+1;
+
+        var element =   '<div class="form-group" id="formLampiran'+formCounter+'">'+
+                            '<label>Lampiran '+formCounter+'</label>'+
+                            '<div class="custom-file">'+
+                                '<input type="file" class="custom-file-input" id="lampiran'+formCounter+'" name="lampiran[]" accept="application/pdf" style="cursor: pointer" required>'+
+                                '<label class="custom-file-label" for="customFile">Choose Document</label>'+
+                            '</div>'+
+                        '</div>';
+
+        $(sectionId).data('form', formCounter);
+
+        // add new modal
+        $(sectionId).append(element);
+    }
+
+    function delFormLampiran(sectionId) {
+        var dataForm = $(sectionId).data('form');
+        if (dataForm > 1) {
+            $('#formLampiran'+dataForm).remove();
+            var formCounter = Number(dataForm)-1;
+            $(sectionId).data('form', formCounter)
+        }
+    }
+
+    $('#addLampiranBtn').on('click', function () {
+        addFormLampiran('#formLampiranBody');
+
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    });
+
+    $('#delLampiranBtn').on('click', function () {
+        delFormLampiran('#formLampiranBody');
+    });
 
 </script>
 @stop

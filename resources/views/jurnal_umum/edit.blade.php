@@ -38,15 +38,33 @@
                         <label for="nominal1">Deskripsi</label>
                         <input type="text" maxlength="255" name="deskripsi" id="deskripsi" class="form-control" placeholder="Deskripsi" autocomplete="off" value="{{ $jurnalUmum->deskripsi }}" required>
                     </div>
-                    <div class="form-group">
-                        <label>Lampiran</label>
-                        <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="lampiran" name="lampiran" accept="application/pdf" style="cursor: pointer">
-                            <label class="custom-file-label" for="customFile">Choose Document</label>
+                    <div id="formLampiranBody" data-form="{{ count($jurnalUmum->jurnalUmumLampirans) }}">
+                        @foreach ($jurnalUmum->jurnalUmumLampirans as $key => $jurnalUmumLampiran)
+                        <div class="row" id="formLampiran{{ $key + 1 }}">
+                            <div class="form-group col-md-11">
+                                <label>Lampiran {{ $key + 1 }}</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="lampiran{{ $key + 1 }}" name="lampiran[]" accept="application/pdf" style="cursor: pointer" >
+                                    <input type="hidden" name="lampiranCounts[]" value="1">
+                                    <label class="custom-file-label" for="customFile">Choose Document</label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1 mt-2">
+                                <br>
+                                <a class="btn btn-warning btn-sm" href="{{ asset($jurnalUmumLampiran->lampiran) }}" target="_blank"><i class="fa fa-file"></i></a>
+                            </div>
                         </div>
+                        @endforeach
                     </div>
+                    <div class="form-group text-right">
+                        <a class="btn btn-warning btn-sm" id="addLampiranBtn"><i class="fa fa-plus"></i> Tambah</a>
+                        <a class="btn btn-danger btn-sm" id="delLampiranBtn"><i class="fa fa-trash"></i> Hapus</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for=""></label>
                     <div class="form-group">
-                        <a class="btn btn-warning btn-sm" href="{{ asset($jurnalUmum->lampiran) }}" target="_blank"><i class="fa fa-file"></i></a>
+                        
                     </div>
                 </div>
             </div>
@@ -296,5 +314,48 @@
             });
         }
     }
+    
+    function addFormLampiran(sectionId) 
+    {
+        var dataForm = $(sectionId).data('form');
+        var formCounter = Number(dataForm)+1;
+
+        var element =   '<div class="form-group" id="formLampiran'+formCounter+'">'+
+                            '<label>Lampiran '+formCounter+'</label>'+
+                            '<div class="custom-file">'+
+                                '<input type="file" class="custom-file-input" id="lampiran'+formCounter+'" name="lampiran[]" accept="application/pdf" style="cursor: pointer" required>'+
+                                '<label class="custom-file-label" for="customFile">Choose Document</label>'+
+                                '<input type="hidden" name="lampiranCounts[]" value="1">'+
+                            '</div>'+
+                        '</div>';
+
+        $(sectionId).data('form', formCounter);
+
+        // add new modal
+        $(sectionId).append(element);
+    }
+
+    function delFormLampiran(sectionId) {
+        var dataForm = $(sectionId).data('form');
+        if (dataForm > 1) {
+            $('#formLampiran'+dataForm).remove();
+            var formCounter = Number(dataForm)-1;
+            $(sectionId).data('form', formCounter)
+        }
+    }
+
+    $('#addLampiranBtn').on('click', function () {
+        addFormLampiran('#formLampiranBody');
+
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    });
+
+    $('#delLampiranBtn').on('click', function () {
+        delFormLampiran('#formLampiranBody');
+    });
+
 </script>
 @stop
