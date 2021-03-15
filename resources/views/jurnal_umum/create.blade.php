@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="nominalDebet1">Besar Nominal</label>
-                        <input type="text" name="nominal[]" id="nominalDebet1" onkeypress="return isNumberKey(event)" data-type="Debet" data-form="1" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                        <input type="text" name="nominal[]" id="nominalDebet1" data-type="Debet" data-form="1" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="nominalCredit1">Besar Nominal</label>
-                        <input type="text" name="nominal[]" id="nominalCredit1" onkeypress="return isNumberKey(event)" data-type="Credit" data-form="1" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                        <input type="text" name="nominal[]" id="nominalCredit1" data-type="Credit" data-form="1" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                     </div>
                 </div>
             </div>
@@ -132,30 +132,21 @@
         checkBalance();
     });
 
-    function toRupiah(number)
+    function toRupiah(field)
     {
-        var stringNumber = number.toString();
-        var length = stringNumber.length;
-        var temp = length;
-        var res = "Rp ";
-        for (let i = 0; i < length; i++) {
-            res = res + stringNumber.charAt(i);
-            temp--;
-            if (temp % 3 == 0 && temp > 0)
-            {
-                res = res + ".";
-            }
-        }
-        return res;
+        new Cleave(field, {
+            numeralDecimalMark: ',',
+            delimiter: '.',
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+        });
     }
-    function isNumberKey(evt)
-    {
-        var charCode = (evt.which) ? evt.which : event.keyCode
-        if (charCode > 31 && (charCode < 48 || charCode > 57))
-            return false;
 
-        return true;
-    }
+    // formating thousand
+    $('.nominal').toArray().forEach(function(field){
+        toRupiah(field);
+    });
+
     function initiateSelect2()
     {
         $(".select2Akun").select2({
@@ -179,7 +170,7 @@
                             '</div>'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="nominalDebet'+formCounter+'">Besar Nominal</label>'+
-                                '<input type="text" name="nominal[]" id="nominalDebet'+formCounter+'" onkeypress="return isNumberKey(event)" data-type="Debet" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<input type="text" name="nominal[]" id="nominalDebet'+formCounter+'" data-type="Debet" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
@@ -188,6 +179,9 @@
 
         // add new modal
         $(sectionId).append(element);
+
+        // add thousand separator
+        toRupiah($('#formDebet'+formCounter+' .nominal'));
     }
 
     function delFormItemDebet(sectionId) {
@@ -215,7 +209,7 @@
                             '</div>'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="nominalCredit'+formCounter+'">Besar Nominal</label>'+
-                                '<input type="text" name="nominal[]" id="nominalCredit'+formCounter+'" onkeypress="return isNumberKey(event)" data-type="Credit" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<input type="text" name="nominal[]" id="nominalCredit'+formCounter+'" data-type="Credit" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
@@ -224,6 +218,9 @@
 
         // add new modal
         $(sectionId).append(element);
+
+        // add thousand separator
+        toRupiah($('#formCredit'+formCounter+' .nominal'));
     }
 
     function delFormItemCredit(sectionId) {
@@ -234,15 +231,6 @@
             $(sectionId).data('form', formCounter)
         }
     }
-
-    $(document).on('keyup', '.nominal', function () 
-    {
-        var nominal = $(this).val().toString();
-        var dataForm = $(this).data('form');
-        var dataType = $(this).data('type');
-        nominal = nominal.replace(/[^\d]/g, "",'');
-        $('#nominal'+ dataType + dataForm).val(toRupiah(nominal));
-    });
 
     $('#addDebetBtn').on('click', function () {
         addFormItemDebet('#formDebetBody');
@@ -292,7 +280,7 @@
             Swal.fire({
                 type: 'error',
                 title: 'Error!',
-                html: 'Total Debet dan Kredit harus balance. <br> Debet: Rp ' + new Intl.NumberFormat(['ban', 'id']).format(totalDebet) + '<br> Kredit: Rp '+ new Intl.NumberFormat(['ban', 'id']).format(totalCredit) ,
+                html: 'Total Debet dan Kredit harus balance. <br> Debet: ' + new Intl.NumberFormat(['ban', 'id']).format(totalDebet) + '<br> Kredit: '+ new Intl.NumberFormat(['ban', 'id']).format(totalCredit) ,
                 showConfirmButton: true
             }).then((result) => {
 
