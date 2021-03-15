@@ -84,7 +84,7 @@
             },
             { 
                 mData: 'nominal_rupiah', sType: "string", 
-                className: "dt-body-center", "name": "nominal_rupiah"		
+                className: "dt-body-center text-right", "name": "nominal_rupiah"		
             },
             { 
                 mData: 'id', sType: "string", 
