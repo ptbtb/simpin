@@ -23,7 +23,7 @@ class SaldoAwal extends Model
     {
         if ($this->nominal)
         {
-            return 'Rp.' . number_format($this->nominal,0,",",".");
+            return number_format($this->nominal,0,",",".");
         }
         return $this->nominal;
     }
