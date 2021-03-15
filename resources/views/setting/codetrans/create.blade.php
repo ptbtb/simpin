@@ -1,64 +1,86 @@
 @extends('adminlte::page')
 
-@section('title', 'Add Pinjaman')
+@section('title', 'Add Kode Transaksi')
 @section('plugins.Datatables', true)
 @section('content_header')
-<h1>Add Pinjaman</h1>
+<h1>Add Kode Transaksi</h1>
 @stop
+
+@section('plugins.Select2', true)
 
 @section('content')
 <div class="card">
-    <div class="card-header">
-
-    </div>
     <!-- /.card-header -->
-    <div class="card-body"><div class="row mt">
-            <div class="col-lg-12">
-                <div class="form-panel" style="width:50%;">
-                    <form action="/setting/pinjaman/store" method="post" id="form">
+    <div class="card-body">
+        <form action="{{ route('kode-transaksi-store') }}" method="post" id="form" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-panel">
                         {{csrf_field()}}
                         <div class="form-group">
-                            <label>Kode Simpanan</label>
-                            <input type="text" class="form-control" name="kode_jenis_pinjam" size="54" value="" />
+                            <label for="normalBalance">Normal Balance</label>
+                            <br>
+                            <select name="normal_balance" id="normalBalance" class="form-control select2Akun" required>
+                            @foreach ($normalBalances as $normalBalance)
+                                <option value="{{ $normalBalance->id }}">{{ $normalBalance->name }}</option>
+                            @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label>Jenis Simpanan</label>
-                            <input type="text" class="form-control" name="nama_pinjaman" size="54" value=""/>
+                            <label for="tipeAkun">Tipe</label>
+                            <br>
+                            <select name="code_type" id="tipeAkun" class="form-control select2Akun" required>
+                            @foreach ($codeTypes as $codeType)
+                                <option value="{{ $codeType->id }}">{{ $codeType->name }}</option>
+                            @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label>Lama Angsuran </label>
-                            <input type="text" class="form-control" name="lama_angsuran" >
+                            <label for="codeCategory">Kategori</label>
+                            <br>
+                            <select name="code_category" id="codeCategory" class="form-control select2Akun" required>
+                            @foreach ($codeCategories as $codeCategory)
+                                <option value="{{ $codeCategory->id }}">{{ $codeCategory->name }}</option>
+                            @endforeach
+                            </select>
                         </div>
-                        <script>
-                            function isNumberKey(evt)
-                            {
-                                var charCode = (evt.which) ? evt.which : event.keyCode
-                                if (charCode > 31 && (charCode < 48 || charCode > 57))
-                                    return false;
-                                return true;
-                            }
-                        </script>
-                        <div class="form-group">
-                            <label>Maksimal Pinman</label>
-                            <input type="text" class="form-control" onkeypress="return isNumberKey(event)" name="maks_pinjam" size="54" value=""/>
-                        </div>
-                        <div class="form-group">
-                            <label>Jasa(%)</label>
-                            <input type="text" class="form-control" name="bunga" >
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>User Entri</label>
-                            <input type="text" class="form-control" name="u_entry" size="54" value="{{ Auth::user()->name }}" readonly="">
-                        </div>
-                        <div class="form-group">
-                            <label>Tanggal Entri</label>
-                            <input type="date" class="form-control" name="tgl_entri" size="54" value="<?php echo date("Y-m-d"); ?>" readonly=""/>
-                        </div>
-                        <button class="btn btn-info"><span class='glyphicon glyphicon-pencil'></span> Submit</button>
-                    </form>
+                    </div>
                 </div>
-            </div></div>
+                <div class="col-lg-6">
+                    <div class="form-panel">
+                        <div class="form-group">
+                            <label for="code">Kode</label>
+                            <input type="text" name="code" id="code" class="form-control" placeholder="10.011.000" autocomplete="off" required maxlength="12">
+                        </div>
+                        <div class="form-group">
+                            <label for="namaTransaksi">Nama Transaksi</label>
+                            <input type="text" name="nama_transaksi" id="namaTransaksi" class="form-control" placeholder="KAS" autocomplete="off" required maxlength="45">
+                        </div>
+                        <div class="form-group">
+                            <label for="isParent">Summary</label>
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="kode_summary" id="kode_summary_induk" value="1" checked>
+                                <label class="form-check-label" for="kode_summary_induk">
+                                    Induk
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="kode_summary" id="kode_summary_anak" value="0">
+                                <label class="form-check-label" for="kode_summary_anak">
+                                    Anak
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button class="btn btn-info"><span class='glyphicon glyphicon-pencil'></span> Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
 
 </div><!-- /row -->
@@ -70,15 +92,14 @@
 @section('js')
 <script>
     $(document).ready(function () {
-        $("#table_work").DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
+        initiateSelect2();
     });
+    
+    function initiateSelect2()
+    {
+        $(".select2Akun").select2({
+            width: '100%',
+        });
+    }
 </script>
 @stop
