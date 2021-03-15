@@ -41,6 +41,7 @@
                     <tr>
                         <th>No</th>
                         <th>Code</th>
+                        <th>Nama Transaksi</th>
                         <th>Nominal</th>
                         <th>Action</th>
                     </tr>
@@ -75,6 +76,16 @@
             { 
                 mData: 'code.CODE', sType: "string", 
                 className: "dt-body-center", "name": "code.CODE",
+                mRender: function (data, type, full) {
+                    if (data == null || data == '') {
+                        return '-';
+                    }
+                    return data;
+                }					
+            },
+            { 
+                mData: 'code.NAMA_TRANSAKSI', sType: "string", 
+                className: "dt-body-center", "name": "code.NAMA_TRANSAKSI",
                 mRender: function (data, type, full) {
                     if (data == null || data == '') {
                         return '-';
