@@ -22,6 +22,8 @@
                 <th>Kode Anggota</th>
                 <th>Nama</th>
                 <th>Email</th>
+                <th>Created</th>
+                <th>By</th>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +39,8 @@
                     </td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->created_at }}</td>
+                    <td>{{ ($user->created_by)?$user->creator->name:'' }}</td>
                 </tr>
                 @if ($loop->iteration % 20 == 0)
                     <div class="page-break"></div>
