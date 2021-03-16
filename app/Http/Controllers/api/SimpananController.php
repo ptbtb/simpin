@@ -36,7 +36,7 @@ class SimpananController extends Controller
         {
             $user = $request->user('api');
             $anggota = $user->anggota;
-            $data['listSimpanan'] = \App\Models\Simpanan::where('kode_anggota', $anggota->kode_anggota);
+            $data['listSimpanan'] = \App\Models\Simpanan::where('kode_anggota', $anggota->kode_anggota)->get();
             
             $response['message'] = null;
             $response['data'] = $data;

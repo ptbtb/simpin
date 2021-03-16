@@ -37,7 +37,8 @@ class PinjamanController extends Controller
             $user = $request->user('api');
             $anggota = $user->anggota;
             $data['ListPinjaman'] = $listPinjaman = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                        ->notPaid();
+                        ->notPaid()
+                        ->get();
             
             $response['message'] = null;
             $response['data'] = $data;
