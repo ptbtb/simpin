@@ -54,6 +54,10 @@ Login
 						<a href="{{ url('/password/reset') }}">
 							Forgot password?
 						</a>
+						<br>
+						<a href="{{ route('resend-email-activation') }}">
+							Resend Email Activation
+						</a>
 					</div>
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">

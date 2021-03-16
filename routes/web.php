@@ -31,6 +31,8 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('resend-email-activation', [App\Http\Controllers\Auth\ResendEmailActivationController::class, 'create'])->name('resend-email-activation');
+Route::post('resend-email-activation', [App\Http\Controllers\Auth\ResendEmailActivationController::class, 'store'])->name('resend-email-activation');
 
 Route::get('testEvent', [App\Http\Controllers\MigrationController::class, 'index'])->name('test-event');
 
