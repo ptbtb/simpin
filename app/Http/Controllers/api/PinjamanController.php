@@ -29,6 +29,29 @@ class PinjamanController extends Controller
             return response()->json($response, 500);
         }
     }
+    
+    public function Detail(Request $request)
+    {
+        try
+        {
+            $user = $request->user('api');
+            $anggota = $user->anggota;
+            $data['ListPinjaman'] = $listPinjaman = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                        ->notPaid();
+            
+            $response['message'] = null;
+            $response['data'] = $data;
+            return response()->json($response, 200);
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+
+            $response['message'] = API_DEFAULT_ERROR_MESSAGE;
+            return response()->json($response, 500);
+        }
+    }
 
    
 }

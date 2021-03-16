@@ -27,6 +27,7 @@ Route::group(['prefix' => 'pinjaman'], function ()
 {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('saldo', 'App\Http\Controllers\api\PinjamanController@Saldo')->name('api-get-pinjaman-saldo');
+        Route::get('rincian', 'App\Http\Controllers\api\PinjamanController@Detail')->name('api-get-pinjaman-detail');
     });
 });
 
