@@ -40,6 +40,11 @@
 								<label>Name</label>
 								<input type="text" name="name" value="{{ $user->name }}" placeholder="Your Name" class="form-control">
 							</div>
+							<div class="col-md-6 form-group">
+								<label>Company</label>
+								<input type="text" name="company" class="form-control" value="{{ $anggota->company->nama }}" readonly>
+							</div>
+							
 							@if (!$classList == '')
 							<div class="col-md-6 form-group">
 								<label>Company Class</label>
@@ -65,7 +70,9 @@
 								@endif
 							</div>
 							@endif
-
+                                                        <div class="col-md-6 form-group">
+								
+							</div>
 							@foreach ($listJenisPenghasilan as $jenisPenghasilan)
 								<div class="col-md-6 form-group">
 									<label>{{ $jenisPenghasilan->name }}</label>

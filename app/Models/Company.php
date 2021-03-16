@@ -15,6 +15,10 @@ class Company extends Model
     {
         return $this->belongsTo(CompanyGroup::class, 'company_group_id', 'id');
     }
+    public function anggota()
+    {
+        return $this->hasMany(Anggota::class, 'company_id', 'id');
+    }
 
     public function isKopegmarGroup()
     {

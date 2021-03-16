@@ -247,7 +247,7 @@ class UserController extends Controller
 		$listJenisPenghasilan = JenisPenghasilan::show()
 												->orderBy('sequence','asc')
 												->get();
-		$anggota = Anggota::find($user->kode_anggota);
+		$anggota = Anggota::with('company')->find($user->kode_anggota);
 
 		$data['listPenghasilan'] = null;
 
