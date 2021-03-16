@@ -23,14 +23,14 @@ Route::group(['prefix' => 'user'], function ()
         Route::get('logout', 'App\Http\Controllers\api\UserController@logout')->name('api-get-user');
     });
 });
-Route::group(['prefix' => 'Pinjaman'], function ()
+Route::group(['prefix' => 'pinjaman'], function ()
 {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('saldo', 'App\Http\Controllers\api\PinjamanController@Saldo')->name('api-get-pinjaman-saldo');
     });
 });
 
-Route::group(['prefix' => 'Simpanan'], function ()
+Route::group(['prefix' => 'simpanan'], function ()
 {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('saldo', 'App\Http\Controllers\api\SimpananController@Saldo')->name('api-get-simpanan-saldo');
