@@ -7,6 +7,7 @@ use App\Models\Code;
 use App\Models\JurnalUmum;
 use App\Models\JurnalUmumItem;
 use App\Models\Jurnal;
+use App\Models\jurnalUmumLampiran;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
 
@@ -31,7 +32,7 @@ class JurnalUmumController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
 
         $data['title'] = "List Jurnal Umum";
@@ -44,7 +45,7 @@ class JurnalUmumController extends Controller
     public function indexAjax(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
         return DataTables::eloquent($listJurnalUmum)->make(true);
     }
@@ -103,29 +104,6 @@ class JurnalUmumController extends Controller
 
             // save into jurnal umum
             $jurnalUmum = new JurnalUmum();
-
-            // check file lampiran
-            $file = $request->lampiran;
-            if ($file) 
-            {
-                $config['disk'] = 'upload';
-                $config['upload_path'] = '/jurnalumum/' . $user->id;
-                $config['public_path'] = env('APP_URL') . '/upload/jurnalumum/' . $user->id;
-
-                // create directory if doesn't exist
-                if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
-                    Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-                }
-
-                // upload file if valid
-                if ($file->isValid()) {
-                    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-
-                    Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
-                    $jurnalUmum->lampiran = $config['disk'] . $config['upload_path'] . '/' . $filename;
-                }
-            }
-
             $jurnalUmum->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
             $jurnalUmum->deskripsi = $request->deskripsi;
             $jurnalUmum->save();
@@ -142,6 +120,37 @@ class JurnalUmumController extends Controller
                 $jurnalUmumItem->save();
             }
 
+            // loop every lampiran
+            for ($i=0; $i < count($request->lampiran) ; $i++) 
+            { 
+                $jurnalUmumLampiran = new JurnalUmumLampiran();
+                $jurnalUmumLampiran->jurnal_umum_id = $jurnalUmum->id;
+
+                // check file lampiran
+                $file = $request->lampiran[$i];
+                if ($file) 
+                {
+                    $config['disk'] = 'upload';
+                    $config['upload_path'] = '/jurnalumum/' . $jurnalUmum->id;
+                    $config['public_path'] = env('APP_URL') . '/upload/jurnalumum/' . $jurnalUmum->id;
+
+                    // create directory if doesn't exist
+                    if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
+                        Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                    }
+
+                    // upload file if valid
+                    if ($file->isValid()) {
+                        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+                        Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                        $jurnalUmumLampiran->lampiran = $config['disk'] . $config['upload_path'] . '/' . $filename;
+                    }
+                }
+                
+                $jurnalUmumLampiran->save();
+            }
+            
             // call function for create Jurnal
             if($jurnalUmum)
             {
@@ -177,7 +186,7 @@ class JurnalUmumController extends Controller
     public function edit($id)
     {
         $this->authorize('edit jurnal umum', Auth::user());
-        $jurnalUmum = JurnalUmum::with('jurnalUmumItems')->find($id);
+        $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans')->find($id);
         $debetCodes = Code::where('is_parent', 0)
                 ->where('CODE', 'not like', "411%")
                 ->where('CODE', 'not like', "106%")
@@ -230,33 +239,6 @@ class JurnalUmumController extends Controller
 
             // check into jurnal umum
             $jurnalUmum = JurnalUmum::find($id);
-
-            // check file lampiran
-            $file = $request->lampiran;
-            if ($file) 
-            {
-                $config['disk'] = 'upload';
-
-                // delete old file
-                File::delete($jurnalUmum->lampiran);
-                
-                $config['upload_path'] = '/jurnalumum/' . $user->id;
-                $config['public_path'] = env('APP_URL') . '/upload/jurnalumum/' . $user->id;
-
-                // create directory if doesn't exist
-                if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
-                    Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-                }
-
-                // upload file if valid
-                if ($file->isValid()) {
-                    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-
-                    Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
-                    $jurnalUmum->lampiran = $config['disk'] . $config['upload_path'] . '/' . $filename;
-                }
-            }
-
             $jurnalUmum->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
             $jurnalUmum->deskripsi = $request->deskripsi;
             $jurnalUmum->save();
@@ -293,6 +275,75 @@ class JurnalUmumController extends Controller
                 }
             }
 
+            $jurnalUmumLampirans = $jurnalUmum->jurnalUmumLampirans;
+            if($request->lampiran)
+            {
+                // loop every lampiran
+                for ($i=0; $i < count($request->lampiranCounts) ; $i++) 
+                { 
+                    // check if lampiran is exist
+                    if(isset($request->lampiran[$i]))
+                    {
+                        // update item
+                        if ( ($i + 1) < $jurnalUmumLampirans->count())
+                        {
+                            $jurnalUmumLampiran = $jurnalUmumLampirans[$i];
+                        }
+                        else
+                        {
+                            $jurnalUmumLampiran = new JurnalUmumLampiran();
+                            $jurnalUmumLampiran->jurnal_umum_id = $jurnalUmum->id;
+                        }
+
+                        // check file lampiran
+                        $file = $request->lampiran[$i];
+                        if ($file) 
+                        {
+                            $config['disk'] = 'upload';
+
+                            // delete if existing file is replaced
+                            if ( ($i + 1) < $jurnalUmumLampirans->count())
+                            {
+                                // delete old file
+                                File::delete($jurnalUmumLampirans[$i]->lampiran);
+                            }
+                            
+                            $config['upload_path'] = '/jurnalumum/' . $jurnalUmum->id;
+                            $config['public_path'] = env('APP_URL') . '/upload/jurnalumum/' . $jurnalUmum->id;
+
+                            // create directory if doesn't exist
+                            if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
+                                Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                            }
+
+                            // upload file if valid
+                            if ($file->isValid()) {
+                                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+                                Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                                $jurnalUmumLampiran->lampiran = $config['disk'] . $config['upload_path'] . '/' . $filename;
+                            }
+                        }
+
+                        $jurnalUmumLampiran->save();
+                    }
+                    
+                }
+            }
+
+            // delete item if jurnal umum lampirans less than request jurnal umum lampirans
+            if (count($request->lampiranCounts) < $jurnalUmumLampirans->count())
+            {
+                for ($i=count($request->lampiranCounts); $i < $jurnalUmumLampirans->count(); $i++) { 
+                    $jurnalUmumLampiran = $jurnalUmumLampirans[$i];
+
+                    // delete old file
+                    File::delete($jurnalUmumLampiran->lampiran);
+                    
+                    $jurnalUmumLampiran->delete();
+                }
+            }
+
             // update jurnal
             if($jurnalUmum)
             {
@@ -304,6 +355,7 @@ class JurnalUmumController extends Controller
         }
         catch (\Throwable $th)
         {
+            dd($th);
             \Log::error($th);
             return redirect()->back()->withError('Gagal menyimpan data');
         }

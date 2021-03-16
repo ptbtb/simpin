@@ -115,7 +115,7 @@
                             '</div>'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="nominal'+formCounter+'">Besar Nominal</label>'+
-                                '<input type="text" name="nominal[]" id="nominal'+formCounter+'" onkeypress="return isNumberKey(event)" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<input type="text" name="nominal[]" id="nominal'+formCounter+'" data-form="'+formCounter+'" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
@@ -124,6 +124,9 @@
 
         // add new modal
         $(sectionId).append(element);
+
+        // add thousand separator
+        toRupiah($('#form'+formCounter+' .nominal'));
     }
 
     function delFormItem(sectionId) {

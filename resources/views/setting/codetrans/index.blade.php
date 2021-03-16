@@ -9,7 +9,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <a class="btn btn-success" href="/setting/codetrans/create"><i class="glyphicon glyphicon-subtitles"></i> +</a>
+        <a class="btn btn-success" href="{{ route('kode-transaksi-create') }}"><i class="glyphicon glyphicon-subtitles"></i>+ Add Kode Transaksi</a>
     </div>
     <!-- /.card-header -->
     <div class="card-body">

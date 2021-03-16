@@ -38,15 +38,33 @@
                         <label for="nominal1">Deskripsi</label>
                         <input type="text" maxlength="255" name="deskripsi" id="deskripsi" class="form-control" placeholder="Deskripsi" autocomplete="off" value="{{ $jurnalUmum->deskripsi }}" required>
                     </div>
-                    <div class="form-group">
-                        <label>Lampiran</label>
-                        <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="lampiran" name="lampiran" accept="application/pdf" style="cursor: pointer">
-                            <label class="custom-file-label" for="customFile">Choose Document</label>
+                    <div id="formLampiranBody" data-form="{{ count($jurnalUmum->jurnalUmumLampirans) }}">
+                        @foreach ($jurnalUmum->jurnalUmumLampirans as $key => $jurnalUmumLampiran)
+                        <div class="row" id="formLampiran{{ $key + 1 }}">
+                            <div class="form-group col-md-11">
+                                <label>Lampiran {{ $key + 1 }}</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="lampiran{{ $key + 1 }}" name="lampiran[]" accept="application/pdf" style="cursor: pointer" >
+                                    <input type="hidden" name="lampiranCounts[]" value="1">
+                                    <label class="custom-file-label" for="customFile">Choose Document</label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1 mt-2">
+                                <br>
+                                <a class="btn btn-warning btn-sm" href="{{ asset($jurnalUmumLampiran->lampiran) }}" target="_blank"><i class="fa fa-file"></i></a>
+                            </div>
                         </div>
+                        @endforeach
                     </div>
+                    <div class="form-group text-right">
+                        <a class="btn btn-warning btn-sm" id="addLampiranBtn"><i class="fa fa-plus"></i> Tambah</a>
+                        <a class="btn btn-danger btn-sm" id="delLampiranBtn"><i class="fa fa-trash"></i> Hapus</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for=""></label>
                     <div class="form-group">
-                        <a class="btn btn-warning btn-sm" href="{{ asset($jurnalUmum->lampiran) }}" target="_blank"><i class="fa fa-file"></i></a>
+                        
                     </div>
                 </div>
             </div>
@@ -66,7 +84,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="nominalDebet{{ $loop->iteration }}">Besar Nominal</label>
-                            <input type="text" name="nominal[]" id="nominalDebet{{ $loop->iteration }}" value="{{ $itemDebet->nominal }}" onkeypress="return isNumberKey(event)" data-type="Debet" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                            <input type="text" name="nominal[]" id="nominalDebet{{ $loop->iteration }}" value="{{ $itemDebet->nominal }}" data-type="Debet" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                         </div>
                     </div>
                 @endforeach
@@ -92,7 +110,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="nominalCredit{{ $loop->iteration }}">Besar Nominal</label>
-                        <input type="text" name="nominal[]" id="nominalCredit{{ $loop->iteration }}" value="{{ $itemCredit->nominal }}" onkeypress="return isNumberKey(event)" data-type="Credit" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                        <input type="text" name="nominal[]" id="nominalCredit{{ $loop->iteration }}" value="{{ $itemCredit->nominal }}" data-type="Credit" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                     </div>
                 </div>
                 @endforeach
@@ -129,8 +147,6 @@
     {
         initiateSelect2();
 
-        $('.nominal').keyup();
-
         $(".custom-file-input").on("change", function() {
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
@@ -143,30 +159,21 @@
         checkBalance();
     });
 
-    function toRupiah(number)
+    function toRupiah(field)
     {
-        var stringNumber = number.toString();
-        var length = stringNumber.length;
-        var temp = length;
-        var res = "Rp ";
-        for (let i = 0; i < length; i++) {
-            res = res + stringNumber.charAt(i);
-            temp--;
-            if (temp % 3 == 0 && temp > 0)
-            {
-                res = res + ".";
-            }
-        }
-        return res;
+        new Cleave(field, {
+            numeralDecimalMark: ',',
+            delimiter: '.',
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+        });
     }
-    function isNumberKey(evt)
-    {
-        var charCode = (evt.which) ? evt.which : event.keyCode
-        if (charCode > 31 && (charCode < 48 || charCode > 57))
-            return false;
 
-        return true;
-    }
+    // formating thousand
+    $('.nominal').toArray().forEach(function(field){
+        toRupiah(field);
+    });
+
     function initiateSelect2()
     {
         $(".select2Akun").select2({
@@ -190,7 +197,7 @@
                             '</div>'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="nominalDebet'+formCounter+'">Besar Nominal</label>'+
-                                '<input type="text" name="nominal[]" id="nominalDebet'+formCounter+'" onkeypress="return isNumberKey(event)" data-type="Debet" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<input type="text" name="nominal[]" id="nominalDebet'+formCounter+'" data-type="Debet" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
@@ -199,6 +206,9 @@
 
         // add new modal
         $(sectionId).append(element);
+
+        // add thousand separator
+        toRupiah($('#formDebet'+formCounter+' .nominal'));
     }
 
     function delFormItemDebet(sectionId) {
@@ -226,7 +236,7 @@
                             '</div>'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="nominalCredit'+formCounter+'">Besar Nominal</label>'+
-                                '<input type="text" name="nominal[]" id="nominalCredit'+formCounter+'" onkeypress="return isNumberKey(event)" data-type="Credit" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<input type="text" name="nominal[]" id="nominalCredit'+formCounter+'" data-type="Credit" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
@@ -235,6 +245,9 @@
 
         // add new modal
         $(sectionId).append(element);
+
+        // add thousand separator
+        toRupiah($('#formCredit'+formCounter+' .nominal'));
     }
 
     function delFormItemCredit(sectionId) {
@@ -245,15 +258,6 @@
             $(sectionId).data('form', formCounter)
         }
     }
-
-    $(document).on('keyup', '.nominal', function () 
-    {
-        var nominal = $(this).val().toString();
-        var dataForm = $(this).data('form');
-        var dataType = $(this).data('type');
-        nominal = nominal.replace(/[^\d]/g, "",'');
-        $('#nominal'+ dataType + dataForm).val(toRupiah(nominal));
-    });
 
     $('#addDebetBtn').on('click', function () {
         addFormItemDebet('#formDebetBody');
@@ -310,5 +314,48 @@
             });
         }
     }
+    
+    function addFormLampiran(sectionId) 
+    {
+        var dataForm = $(sectionId).data('form');
+        var formCounter = Number(dataForm)+1;
+
+        var element =   '<div class="form-group" id="formLampiran'+formCounter+'">'+
+                            '<label>Lampiran '+formCounter+'</label>'+
+                            '<div class="custom-file">'+
+                                '<input type="file" class="custom-file-input" id="lampiran'+formCounter+'" name="lampiran[]" accept="application/pdf" style="cursor: pointer" required>'+
+                                '<label class="custom-file-label" for="customFile">Choose Document</label>'+
+                                '<input type="hidden" name="lampiranCounts[]" value="1">'+
+                            '</div>'+
+                        '</div>';
+
+        $(sectionId).data('form', formCounter);
+
+        // add new modal
+        $(sectionId).append(element);
+    }
+
+    function delFormLampiran(sectionId) {
+        var dataForm = $(sectionId).data('form');
+        if (dataForm > 1) {
+            $('#formLampiran'+dataForm).remove();
+            var formCounter = Number(dataForm)-1;
+            $(sectionId).data('form', formCounter)
+        }
+    }
+
+    $('#addLampiranBtn').on('click', function () {
+        addFormLampiran('#formLampiranBody');
+
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    });
+
+    $('#delLampiranBtn').on('click', function () {
+        delFormLampiran('#formLampiranBody');
+    });
+
 </script>
 @stop

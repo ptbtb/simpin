@@ -88,14 +88,19 @@
                 className: "dt-body-center", "name": "deskripsi"		
             },
             { 
-                mData: 'lampiran', sType: "string", 
-                className: "dt-body-center", "name": "lampiran"	,	
+                mData: 'jurnal_umum_lampirans', sType: "string", 
+                className: "dt-body-center", "name": "jurnal_umum_lampirans",	
                 mRender: function(data, type, full) 
                 {
                     var markup = ''; 
                     var baseURL = {!! json_encode(url('/')) !!};
+                    
+                    for (let index = 0; index < data.length; index++) 
+                    {
+                        markup += '<a class="btn btn-warning btn-sm" href="' + baseURL + '/'+ data[index].lampiran + '" target="_blank"><i class="fa fa-file"></i></a>';
+                        markup += '&nbsp';
 
-                    markup += '<a class="btn btn-warning btn-sm" href="' + baseURL + '/'+ data + '" target="_blank"><i class="fa fa-file"></i></a> '
+                    }
 
                     return markup;
                 }
