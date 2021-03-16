@@ -41,6 +41,7 @@
                     <tr>
                         <th>No</th>
                         <th>Code</th>
+                        <th>Nama Transaksi</th>
                         <th>Nominal</th>
                         <th>Action</th>
                     </tr>
@@ -83,8 +84,18 @@
                 }					
             },
             { 
+                mData: 'code.NAMA_TRANSAKSI', sType: "string", 
+                className: "dt-body-center", "name": "code.NAMA_TRANSAKSI",
+                mRender: function (data, type, full) {
+                    if (data == null || data == '') {
+                        return '-';
+                    }
+                    return data;
+                }					
+            },
+            { 
                 mData: 'nominal_rupiah', sType: "string", 
-                className: "dt-body-center", "name": "nominal_rupiah"		
+                className: "dt-body-center text-right", "name": "nominal_rupiah"		
             },
             { 
                 mData: 'id', sType: "string", 

@@ -87,12 +87,12 @@ Route::group(['prefix' => 'setting'], function () {
     Route::post('/pinjaman/import/excel', [App\Http\Controllers\SettingPinjamanController::class, 'storeImportExcel'])->name('saldopinjaman-import-excel');
    
     //codetrans
-    Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index']);
+    Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index'])->name('kode-transaksi-list');
     Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit']);
     Route::post('/codetrans/update', [App\Http\Controllers\SettingCodeTransController::class, 'update']);
     Route::get('/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy']);
-    Route::get('/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create']);
-    Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store']);
+    Route::get('/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create'])->name('kode-transaksi-create');
+    Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store'])->name('kode-transaksi-store');
 
     // Jenis Anggota
     Route::group(['prefix' => 'jenis-anggota'], function () {

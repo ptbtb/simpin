@@ -487,8 +487,8 @@ class SimpananController extends Controller
         try
         {
             // get anggota
-            $anggota = Anggota::with('tabungan')->findOrFail($kodeAnggota);
-
+            $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($kodeAnggota);
+            
             // get this year
             $thisYear = Carbon::now()->year;
             // $thisYear = 2020;
@@ -496,6 +496,7 @@ class SimpananController extends Controller
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
                                     ->where('kode_anggota', $anggota->kode_anggota)
+                                    ->whereraw("keterangan not like '%MUTASI%'")
                                     ->orderBy('tgl_entri','asc')
                                     ->get();
                                     
@@ -538,7 +539,7 @@ class SimpananController extends Controller
                 $jenisSimpanan = JenisSimpanan::find($key);
                 if ($jenisSimpanan)
                 {
-                    $tabungan = $anggota->tabungan->where('kode_trans',$key)->first();
+                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans',$key)->first();
                     $res['name'] = $jenisSimpanan->nama_simpanan;
                     $res['balance'] = ($tabungan)? $tabungan->besar_tabungan:0;
                     $res['list'] = $list;
@@ -576,15 +577,16 @@ class SimpananController extends Controller
         try
         {
             // get anggota
-            $anggota = Anggota::with('tabungan')->findOrFail($kodeAnggota);
+            $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($kodeAnggota);
 
             // get this year
             $thisYear = Carbon::now()->year;
-            $listTabungan = Tabungan::where('kode_anggota', $anggota->kode_anggota)
+            $listTabungan = \App\Models\View\ViewSimpanSaldoAwal::where('kode_anggota', $anggota->kode_anggota)
                                     ->get();
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
                                     ->where('kode_anggota', $anggota->kode_anggota)
+                                    ->whereraw("keterangan not like '%MUTASI%'")
                                     ->orderBy('tgl_entri','asc')
                                     ->get();                  
             // data di grouping berdasarkan kode jenis simpan
@@ -626,7 +628,7 @@ class SimpananController extends Controller
                 $jenisSimpanan = JenisSimpanan::find($key);
                 if ($jenisSimpanan)
                 {
-                    $tabungan = $anggota->tabungan->where('kode_trans',$key)->first();
+                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans',$key)->first();
                     $res['name'] = $jenisSimpanan->nama_simpanan;
                     $res['balance'] = $listTabungan->where('kode_trans',$key)->values()->sum('besar_tabungan');
                     $res['list'] = $list;

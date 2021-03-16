@@ -73,6 +73,8 @@
                         <th style="width: 5%">#</th>
                         <th style="width: 20%">Email</th>
                         <th>Name</th>
+                        <th>Created Date</th>
+                        <th>Created By</th>
                         <th style="width: 25%">Role</th>
                         @if (auth()->user()->can('edit user') || auth()->user()->can('delete user'))
                             <th style="width: 25%">Action</th>
@@ -110,6 +112,14 @@
                 { 
                     mData: 'name', sType: "string", 
                     className: "dt-body-center", "name": "name"				
+                },
+                { 
+                    mData: 'created_at', sType: "date", 
+                    className: "dt-body-center", "name": "created_at"				
+                },
+                { 
+                    mData: 'creator.name', sType: "string", 
+                    className: "dt-body-center", "name": "creator.name"				
                 },
                 { 
                     mData: 'roles', sType: "string", 

@@ -20,6 +20,11 @@ class JurnalUmum extends Model
         return $this->hasMany(JurnalUmumItem::class);
     }
 
+    public function jurnalUmumLampirans()
+    {
+        return $this->hasMany(JurnalUmumLampiran::class);
+    }
+
     public function getViewTglTransaksiAttribute()
     {
         return $this->tgl_transaksi->format('d F Y');

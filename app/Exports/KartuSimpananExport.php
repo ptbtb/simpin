@@ -21,7 +21,7 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
     public function view(): View
     {
        // get anggota
-       $anggota = Anggota::with('tabungan')->findOrFail($this->kodeAnggota);
+       $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($this->kodeAnggota);
 
        // get this year
        $thisYear = Carbon::now()->year;
@@ -29,6 +29,7 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
        // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
        $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
                                ->where('kode_anggota', $anggota->kode_anggota)
+                               ->whereraw("keterangan not like '%MUTASI%'")
                                ->orderBy('tgl_entri','asc')
                                ->get();
                                
@@ -71,7 +72,7 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
            $jenisSimpanan = JenisSimpanan::find($key);
            if ($jenisSimpanan)
            {
-               $tabungan = $anggota->tabungan->where('kode_trans',$key)->first();
+               $tabungan = $anggota->simpanSaldoAwal->where('kode_trans',$key)->first();
                $res['name'] = $jenisSimpanan->nama_simpanan;
                $res['balance'] = ($tabungan)? $tabungan->besar_tabungan:0;
                $res['list'] = $list;

@@ -13,7 +13,7 @@ class Code extends Model
 
     protected $table = "t_code";
     protected $primaryKey = "id";
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function codeCategory()
     {

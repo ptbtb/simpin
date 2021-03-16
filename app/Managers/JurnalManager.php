@@ -6,6 +6,7 @@ use App\Models\Jurnal;
 use App\Models\Penarikan;
 use App\Models\Pinjaman;
 use App\Models\JurnalUmumItem;
+use App\Models\JurnalUmum;
 use App\Models\SaldoAwal;
 use App\Models\Code;
 use Carbon\Carbon;

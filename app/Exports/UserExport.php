@@ -19,7 +19,7 @@ class UserExport implements FromView
     public function view(): View
     {
         $currentUser = Auth::user();
-        $users = User::with('anggota');
+        $users = User::with('anggota','creator');
         if ($this->request->role_id)
         {
             $roleId = $this->request->role_id;
