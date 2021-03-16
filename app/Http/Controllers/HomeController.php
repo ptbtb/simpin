@@ -23,7 +23,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('check');
-        $this->middleware('pinjaman');
+//        $this->middleware('pinjaman');
     }
 
     /**
