@@ -35,6 +35,7 @@ Route::group(['prefix' => 'simpanan'], function ()
 {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('saldo', 'App\Http\Controllers\api\SimpananController@Saldo')->name('api-get-simpanan-saldo');
+        Route::get('rincian', 'App\Http\Controllers\api\SimpananController@Detail')->name('api-get-simpanan-detail');
     });
 });
 
