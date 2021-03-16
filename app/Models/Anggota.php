@@ -55,6 +55,10 @@ class Anggota extends Model
     {
         return $this->hasMany(Tabungan::class, 'kode_anggota');
     }
+    public function simpanSaldoAwal()
+    {
+        return $this->hasMany(View\ViewSimpanSaldoAwal::class, 'kode_anggota');
+    }
 
     public function company()
     {
