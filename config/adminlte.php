@@ -447,18 +447,24 @@ return [
         [
             'text' => 'Saldo Awal',
             'url' => '/saldo-awal',
-            'icon' => 'fas fa-book nav-icon',
+            'icon' => 'fas fa-balance-scale nav-icon',
             'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal'],
             'submenu' => [
                 [
                     'text' => 'List Saldo Awal',
                     'url' => '/saldo-awal/list',
-                    'icon' => 'fas fa-book nav-icon',
+                    'icon' => 'fas fa-balance-scale nav-icon',
                     'can'  => ['view saldo awal'],
                 ],
                 [
                     'text' => 'Buat Saldo Awal',
                     'url' => '/saldo-awal/create',
+                    'icon' => 'fas fa-plus nav-icon',
+                    'can'  => ['add saldo awal'],
+                ],
+                [
+                    'text' => 'Import Saldo Awal',
+                    'url' => '/saldo-awal/import/excel',
                     'icon' => 'fas fa-plus nav-icon',
                     'can'  => ['add saldo awal'],
                 ],

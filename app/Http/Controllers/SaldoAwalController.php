@@ -9,6 +9,8 @@ use App\Models\Jurnal;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
 
+use App\Imports\SaldoAwalImport;
+
 use Auth;
 use DB;
 use Hash;
@@ -207,5 +209,31 @@ class SaldoAwalController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function importExcel()
+    {
+        $this->authorize('add saldo awal', Auth::user());
+        $data['title'] = 'Import Saldo Awal';
+        return view('saldo_awal.import', $data);
+    }
+
+    public function storeImportExcel(Request $request)
+    {
+        $this->authorize('import saldo awal', Auth::user());
+        try
+        {
+            DB::transaction(function () use ($request)
+            {
+                Excel::import(new SaldoAwalImport, $request->file); 
+            });
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
+        
     }
 }
