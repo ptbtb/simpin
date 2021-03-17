@@ -13,7 +13,7 @@ class JurnalUmum extends Model
 
     protected $table = "t_jurnal_umum";
     protected $dates = ['tgl_transaksi'];
-    protected $appends = ['view_tgl_transaksi'];
+    protected $appends = ['view_tgl_transaksi', 'total_nominal_debet_rupiah', 'total_nominal_kredit_rupiah'];
 
     public function jurnalUmumItems()
     {
@@ -28,5 +28,19 @@ class JurnalUmum extends Model
     public function getViewTglTransaksiAttribute()
     {
         return $this->tgl_transaksi->format('d F Y');
+    }
+
+    public function getTotalNominalDebetRupiahAttribute()
+    {
+        $totalDebet = $this->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_DEBET)->sum('nominal');
+        
+        return number_format($totalDebet,0,",",".");
+    }
+
+    public function getTotalNominalKreditRupiahAttribute()
+    {
+        $totalKredit = $this->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_KREDIT)->sum('nominal');
+        
+        return number_format($totalKredit,0,",",".");
     }
 }

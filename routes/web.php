@@ -312,6 +312,7 @@ Route::group(['prefix' => 'jurnal-umum'], function() {
         Route::post('create', [App\Http\Controllers\JurnalUmumController::class, 'store'])->name('jurnal-umum-create');
         Route::get('/edit/{id}', [App\Http\Controllers\JurnalUmumController::class, 'edit'])->where('id', '[0-9]+')->name('jurnal-umum-edit');
         Route::post('/edit/{id}', [App\Http\Controllers\JurnalUmumController::class, 'update'])->where('id', '[0-9]+')->name('jurnal-umum-edit');
+        Route::get('/detail/{id}', [App\Http\Controllers\JurnalUmumController::class, 'show'])->name('jurnal-umum-detail');
     });
 });
 

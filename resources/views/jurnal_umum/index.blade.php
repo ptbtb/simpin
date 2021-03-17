@@ -113,6 +113,8 @@
                     var markup = ''; 
                     var baseURL = {!! json_encode(url('/')) !!};
 
+                    markup += '<a href="' + baseURL + '/jurnal-umum/detail/' + data + '" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Detail</a> '
+
                     markup += '<a href="' + baseURL + '/jurnal-umum/edit/' + data + '" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
 
                     return markup;

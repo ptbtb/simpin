@@ -174,7 +174,21 @@ class JurnalUmumController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = Auth::user();
+        $this->authorize('view jurnal umum', $user);
+
+        $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans')
+                        ->find($id);
+
+        $itemDebets = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_DEBET);
+        $itemCredits = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_KREDIT);
+
+        $data['jurnalUmum'] = $jurnalUmum;
+        $data['itemDebets'] = $itemDebets;
+        $data['itemCredits'] = $itemCredits;
+        $data['title'] = 'Detail Jurnal Umum';
+
+        return view('jurnal_umum.detail', $data);
     }
 
     /**

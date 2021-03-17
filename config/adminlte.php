@@ -465,7 +465,7 @@ return [
                 [
                     'text' => 'Import Saldo Awal',
                     'url' => '/saldo-awal/import/excel',
-                    'icon' => 'fas fa-plus nav-icon',
+                    'icon' => 'fas fa-upload nav-icon',
                     'can'  => ['add saldo awal'],
                 ],
             ],
