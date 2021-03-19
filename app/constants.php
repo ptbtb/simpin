@@ -103,3 +103,8 @@ define('COA_BANK_MANDIRI', '403.04.000');
 
 define('NORMAL_BALANCE_DEBET', 1);
 define('NORMAL_BALANCE_KREDIT', 2);
+
+define('CODE_TYPE_ACTIVA', 1);
+define('CODE_TYPE_PASSIVA', 2);
+define('CODE_TYPE_RUGI', 3);
+define('CODE_TYPE_LABA', 4);

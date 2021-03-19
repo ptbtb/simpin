@@ -329,3 +329,12 @@ Route::group(['prefix' => 'saldo-awal'], function() {
         Route::post('import/excel', [App\Http\Controllers\SaldoAwalController::class, 'storeImportExcel'])->name('saldo-awal-import-excel');
     });
 });
+
+// buku besar
+Route::group(['prefix' => 'buku-besar'], function() {
+    Route::group(['middleware' => ['auth']], function () {
+        Route::get('', [App\Http\Controllers\BukuBesarController::class, 'index'])->name('buku-besar-list');
+        Route::get('data', [App\Http\Controllers\BukuBesarController::class, 'indexAjax'])->name('buku-besar-list-ajax');
+        Route::post('', [App\Http\Controllers\BukuBesarController::class, 'index'])->name('buku-besar-list');
+    });
+});

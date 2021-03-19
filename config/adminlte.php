@@ -417,13 +417,27 @@ return [
             'route' => 'invoice-list',
             'can'  => ['view invoice'],
             'active'  => ['/invoice', 'regex:@^invoice/[0-9]+$@'],
-        ],    
-        [
-            'text' => 'Jurnal',
-            'url' => '/jurnal',
-            'icon' => 'fas fa-book nav-icon',
-            'can'  => ['view jurnal'],
         ],   
+        [
+            'text' => 'Laporan',
+            'url' => '/jurnal/',
+            'icon' => 'fas fa-university nav-icon',
+            'can'  => ['view jurnal'],
+            'submenu' => [
+                [
+                    'text' => 'Jurnal',
+                    'url' => '/jurnal',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view jurnal'],
+                ],
+                [
+                    'text' => 'Buku Besar',
+                    'url' => '/buku-besar',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view jurnal'],
+                ],
+            ],
+        ],
         [
             'text' => 'Jurnal Umum',
             'url' => '/jurnal-umum',
