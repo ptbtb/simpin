@@ -76,6 +76,13 @@ class PenarikanController extends Controller
             {
                 return redirect()->back()->withError("Saldo tabungan tidak mencukupi");
             }
+            else if($request->jenis_simpanan == JENIS_SIMPANAN_SUKARELA)
+            {
+                if($besarPenarikan > ($tabungan->totalBesarTabungan / 2))
+                {
+                    return redirect()->back()->withError("Penarikan simpanan sukarela tidak boleh melebihi 50% dari saldo tabungan");
+                }
+            }
 
             $penarikan = new Penarikan();
             DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user)
