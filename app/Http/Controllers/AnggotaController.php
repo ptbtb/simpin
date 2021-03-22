@@ -13,11 +13,14 @@ use App\Models\Anggota;
 use App\Models\Company;
 use App\Models\JenisAnggota;
 use App\Models\KelasCompany;
+use App\Models\JenisPenghasilan;
+use App\Models\Penghasilan;
 
 use Auth;
 use Excel;
 use PDF;
 use Carbon\Carbon;
+use Storage;
 
 class AnggotaController extends Controller {
 
@@ -63,6 +66,16 @@ class AnggotaController extends Controller {
     public function edit($id) {
         $this->authorize('edit anggota', Auth::user());
         $anggota = Anggota::find($id);
+        $listJenisPenghasilan = JenisPenghasilan::show()
+												->orderBy('sequence','asc')
+                                                ->get();
+                                                
+        $listPenghasilan = $anggota->listPenghasilan;
+        if ($listPenghasilan->count())
+        {
+            $data['listPenghasilan'] = $listPenghasilan;
+        }
+        $data['listJenisPenghasilan'] = $listJenisPenghasilan;
         $data['title'] = 'Tambah Anggota';
         $data['companies'] = Company::all();
         $data['jenisAnggotas'] = JenisAnggota::all();
@@ -157,12 +170,97 @@ class AnggotaController extends Controller {
             $Anggota->email = $request->email;
             $Anggota->emergency_kontak = $request->emergency_kontak;
             $Anggota->status = 'aktif';
+            
+            // save file KTP
+            $file_ktp = $request->ktp_photo;
+            $user = $Anggota->user;
+			if ($file_ktp)
+			{
+				$config['disk'] = 'upload';
+				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
+				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
+				if (!Storage::disk($config['disk'])->has($config['upload_path']))
+				{
+					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+				}
+				if ($file_ktp->isValid())
+				{
+					$filename = uniqid() .'.'. $file_ktp->getClientOriginalExtension();
+
+					Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file_ktp, $filename);
+					$Anggota->foto_ktp = $config['disk'].$config['upload_path'].'/'.$filename;
+				}
+            }
+            
             $Anggota->save();
+
+            // save penghasilan
+            $requestPenghasilan = $request->penghasilan;
+			foreach ($requestPenghasilan as $key => $value)
+			{	
+				$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)
+											->where('kode_anggota', $Anggota->kode_anggota)
+                                            ->first();
+				if (is_null($penghasilan))
+				{
+					$penghasilan = new Penghasilan();
+					$penghasilan->id_jenis_penghasilan = $key;
+					$penghasilan->kode_anggota = $Anggota->kode_anggota;
+                }
+				$val = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+				if ($val)
+				{
+					$penghasilan->value = $val;
+				}
+				$penghasilan->save();
+			}
+			
+			
+			// for file upload
+			$fileRequestPenghasilan = $request->file_penghasilan;	
+			if(!is_null($fileRequestPenghasilan))
+			{
+				foreach ($fileRequestPenghasilan as $key => $value)
+				{
+					$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)
+												->where('kode_anggota', $Anggota->kode_anggota)
+												->first();
+
+					if (is_null($penghasilan))
+					{
+						$penghasilan = new Penghasilan();
+						$penghasilan->id_jenis_penghasilan = $key;
+						$penghasilan->kode_anggota = $Anggota->kode_anggota;
+					}
+					
+					$config['disk'] = 'upload';
+					$config['upload_path'] = '/user/'.$user->id.'/penghasilan'; 
+					$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/penghasilan';
+					
+					// create directory if doesn't exist
+					if (!Storage::disk($config['disk'])->has($config['upload_path']))
+					{
+						Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+					}
+
+					// upload file if valid
+					if ($value->isValid())
+					{
+						$filename = uniqid() .'.'. $value->getClientOriginalExtension();
+
+						Storage::disk($config['disk'])->putFileAs($config['upload_path'], $value, $filename);
+						$penghasilan->file_path = $config['disk'].$config['upload_path'].'/'.$filename;
+					}
+					$penghasilan->save();
+				}
+            }
+            
             // alihkan halaman tambah buku ke halaman books
             return redirect()->route('anggota-list')->withSuccess('Data anggota Berhasil Dirubah');
         }
         catch (\Exception $e)
         {
+            dd($e);
             $message = $e->getMessage();
 			if (isset($e->errorInfo[2]))
 			{
