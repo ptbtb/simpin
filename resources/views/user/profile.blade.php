@@ -42,7 +42,7 @@
 							</div>
 							<div class="col-md-6 form-group">
 								<label>Company</label>
-								<input type="text" name="company" class="form-control" value="{{ $anggota->company->nama }}" readonly>
+								<input type="text" name="company" class="form-control" value="@if($anggota->company) {{ $anggota->company->nama }} @else - @endif" readonly>
 							</div>
 							
 							@if (!$classList == '')
