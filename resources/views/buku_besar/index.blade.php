@@ -50,7 +50,7 @@
                             <th>#</th>
                             <th>Code</th>
                             <th>Nama</th>
-                            <th style="width: 35%">Saldo</th>
+                            <th style="width: 40%">Saldo</th>
                         </tr>
                     </thead>
                 </table>
