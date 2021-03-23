@@ -44,6 +44,14 @@ class Penarikan extends Model
         return $this->belongsTo(User::class, 'paid_by_cashier');
     }
 
+    /**
+     * Get all of the penarikan's jurnals.
+    */
+    public function jurnals()
+    {
+        return $this->morphMany(Jurnal::class, 'jurnalable');
+    }
+
     public function scopeNotApproved($query)
     {
         return $query->whereIn('status_pengambilan', [STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI, STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN]);

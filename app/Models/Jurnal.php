@@ -41,6 +41,14 @@ class Jurnal extends Model
     }
 
     /**
+     * Get the parent jurnalable model.
+     */
+    public function jurnalable()
+    {
+        return $this->morphTo();
+    }
+
+    /**
      * Get the updatedBy that owns the Jurnal
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

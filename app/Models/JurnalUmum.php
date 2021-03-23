@@ -25,6 +25,14 @@ class JurnalUmum extends Model
         return $this->hasMany(JurnalUmumLampiran::class);
     }
 
+    /**
+     * Get all of the jurnal umum's jurnals.
+     */
+    public function jurnals()
+    {
+        return $this->morphMany(Jurnal::class, 'jurnalable');
+    }
+
     public function getViewTglTransaksiAttribute()
     {
         return $this->tgl_transaksi->format('d F Y');

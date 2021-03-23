@@ -19,6 +19,14 @@ class SaldoAwal extends Model
         return $this->belongsTo(Code::class, 'code_id');
     }
 
+    /**
+     * Get all of the saldo awal's jurnals.
+     */
+    public function jurnals()
+    {
+        return $this->morphMany(Jurnal::class, 'jurnalable');
+    }
+
     public function getNominalRupiahAttribute()
     {
         if ($this->nominal)

@@ -38,6 +38,14 @@ class Pinjaman extends Model {
         return $this->hasMany(Angsuran::class, 'kode_pinjam');
     }
 
+    /**
+     * Get all of the pinjaman's jurnals.
+    */
+    public function jurnals()
+    {
+        return $this->morphMany(Jurnal::class, 'jurnalable');
+    }
+
     public function scopeNotPaid($query) {
         return $query->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS);
     }

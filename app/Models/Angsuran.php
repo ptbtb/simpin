@@ -25,6 +25,14 @@ class Angsuran extends Model
         return $this->belongsTo(Pinjaman::class, 'kode_pinjam');
     }
 
+    /**
+     * Get all of the angsuran's jurnals.
+    */
+    public function jurnals()
+    {
+        return $this->morphMany(Jurnal::class, 'jurnalable');
+    }
+
     public function getTotalAngsuranAttribute()
     {
         return $this->besar_angsuran + $this->jasa;

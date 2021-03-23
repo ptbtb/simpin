@@ -26,7 +26,9 @@ class JurnalManager
         $jurnal->keterangan = 'Pengambilan simpanan anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->save();
+
+        // save as polymorphic
+        $penarikan->jurnals()->save($jurnal);
     }
 
     public static function createJurnalPinjaman(Pinjaman $pinjaman)
@@ -41,7 +43,9 @@ class JurnalManager
         $jurnal->keterangan = 'Pinjaman '. strtolower($pinjaman->jenisPinjaman->nama_pinjaman) .' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->save();
+        
+        // save as polymorphic
+        $pinjaman->jurnals()->save($jurnal);
     }
 
     public static function createJurnalAngsuran(Angsuran $angsuran)
@@ -56,7 +60,9 @@ class JurnalManager
         $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->save();
+
+        // save as polymorphic
+        $angsuran->jurnals()->save($jurnal);
     }
 
     public static function createSaldoAwal(SaldoAwal $saldoAwal)
@@ -83,7 +89,9 @@ class JurnalManager
         $jurnal->keterangan = 'Saldo Awal';
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->save();
+
+        // save as polymorphic
+        $saldoAwal->jurnals()->save($jurnal);
     }
 
     public static function updateSaldoAwal(SaldoAwal $saldoAwal)
@@ -123,7 +131,9 @@ class JurnalManager
             }
 
             $jurnal->updated_by = Auth::user()->id;
-            $jurnal->save();
+
+            // save as polymorphic
+            $saldoAwal->jurnals()->save($jurnal);
         }
     }
 
@@ -155,7 +165,9 @@ class JurnalManager
             $jurnal->keterangan = $jurnalUmum->deskripsi;
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            $jurnal->save();
+
+            // save as polymorphic
+            $jurnalUmum->jurnals()->save($jurnal);
         }
     }
 
@@ -196,7 +208,9 @@ class JurnalManager
             }
 
             $jurnal->updated_by = Auth::user()->id;
-            $jurnal->save();
+            
+            // save as polymorphic
+            $jurnalUmum->jurnals()->save($jurnal);
         }
     }
 }
