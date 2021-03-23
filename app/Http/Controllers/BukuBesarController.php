@@ -43,6 +43,8 @@ class BukuBesarController extends Controller
                     ]);
                 }
             }
+
+            $bukuBesars = $bukuBesars->sortBy('code');
             
             $data['title'] = 'List Buku Besar';
             $data['codes'] = $codes;
@@ -96,6 +98,8 @@ class BukuBesarController extends Controller
             {
                 $bukuBesars = $bukuBesars->where('code_type_id', $request->code_type_id);
             }
+
+            $bukuBesars = $bukuBesars->sortBy('code');
 
             return DataTables::collection($bukuBesars)->make(true);
         }
