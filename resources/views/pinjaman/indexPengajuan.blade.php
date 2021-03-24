@@ -180,6 +180,10 @@
                                         @else
                                             <b style="color: red !important"><i class="fas fa-times"></i></b>
                                         @endif
+
+                                        @if($pengajuan->menungguKonfirmasi() || $pengajuan->menungguApprovalSpv() || $pengajuan->menungguApprovalAsman() || $pengajuan->menungguApprovalManager() || $pengajuan->menungguApprovalBendahara() || $pengajuan->menungguApprovalKetua())
+                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
+                                        @endif
                                     @endcan
                                 @endif
                             </td>
@@ -319,6 +323,52 @@
                     backdrop: false 
                 });
                 $('#my-modal').modal('show');
+            });
+        });
+
+        $('.btn-jurnal').on('click', function ()
+        {
+            var id = $(this).data('id');
+
+            var htmlText =  '<div class="container-fluid">'+
+                                '<div class="row">'+
+                                    '<div class="col-md-6 offset-md-3" style="font-size:15px">'+
+                                        '<table class="table">'+
+                                            '<thead class="thead-dark">'+
+                                                '<tr>'+
+                                                    '<th>Akun Kredit</th>'+
+                                                    '<th>Kredit</th>'+
+                                                    '<th>Akun Debet</th>'+
+                                                    '<th>Debet</th>'+
+                                                '</tr>'+
+                                            '</thead>'+
+                                            '<tbody>'+
+                                                '<tr>'+
+                                                    '<td>{{ $pengajuan->kode_jenis_pinjam }}</td>'+
+                                                    '<td>{{ $pengajuan->besar_pinjam }}</td>'+
+                                                    '<td>Bank/Kas</td>'+
+                                                    '<td>{{ $pengajuan->besar_pinjam }}</td>'+
+                                                '</tr>'+
+                                            '</tbody>'+
+                                        '</table>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+
+            Swal.fire({
+                title: 'Jurnal Pengajuan',
+                html: htmlText, 
+                icon: "info",
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+                confirmButtonColor: "#00a65a",
+                grow: 'row',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+            }).then((result) => {
+                if (result.value) {
+                }
             });
         });
     </script>
