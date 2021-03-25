@@ -71,6 +71,7 @@ class AnggotaController extends Controller {
                                                 ->get();
                                                 
         $listPenghasilan = $anggota->listPenghasilan;
+        $data['listPenghasilan'] = null;
         if ($listPenghasilan->count())
         {
             $data['listPenghasilan'] = $listPenghasilan;
