@@ -55,6 +55,11 @@ class Pengajuan extends Model
         return $this->hasMany(PengajuanTopup::class, 'kode_pengajuan');
     }
 
+    public function akunDebet()
+    {
+        return $this->belongsTo(Code::class, 'id_akun_debet');
+    }
+
     /**
      * Get the jenisPenghasilan that owns the Pengajuan
      *

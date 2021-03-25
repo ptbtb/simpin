@@ -14,6 +14,7 @@ use App\Models\Pinjaman;
 use App\Models\JenisPinjaman;
 use App\Models\Penghasilan;
 use App\Models\StatusPengajuan;
+use App\Models\Code;
 use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
 use App\Imports\PinjamanImport;
@@ -86,9 +87,12 @@ class PinjamanController extends Controller {
             $listPengajuanPinjaman = Pengajuan::with('anggota')->get();
         }
 
+        $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+        
         $data['title'] = "List Pengajuan Pinjaman";
         $data['listPengajuanPinjaman'] = $listPengajuanPinjaman;
         $data['request'] = $request;
+        $data['bankAccounts'] = $bankAccounts;
         return view('pinjaman.indexPengajuan', $data);
     }
 
@@ -403,12 +407,22 @@ class PinjamanController extends Controller {
                         $pengajuan->bukti_pembayaran = $config['disk'] . $config['upload_path'] . '/' . $filename;
                     }
                 }
+
+                if($request->id_akun_debet)
+                {
+                    $pengajuan->id_akun_debet = $request->id_akun_debet;
+                }
             }
 
             $pengajuan->save();
             if ($pengajuan->menungguPembayaran() && is_null($pengajuan->pinjaman))
             {
                 event(new PengajuanApproved($pengajuan));
+            }
+
+            if ($pengajuan->diterima() && $pengajuan->pinjaman)
+            {
+                JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
             }
             
             event(new PengajuanUpdated($pengajuan));
@@ -664,7 +678,7 @@ class PinjamanController extends Controller {
 
     public function bayarAngsuran(Request $request, $id) {
         try {
-            $pinjaman = Pinjaman::findOrFail($id);
+            $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
             $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
             foreach ($listAngsuran as $angsuran) {
@@ -723,7 +737,7 @@ class PinjamanController extends Controller {
             {
                 return redirect()->back()->withError('Besar pembayaran harus sama dengan total bayar');
             }
-            $pinjaman = Pinjaman::findOrFail($id);
+            $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
             foreach ($listAngsuran as $angsuran) {
                 $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
@@ -848,7 +862,7 @@ class PinjamanController extends Controller {
                 return response()->json(['message' => 'Wrong password'], 403);
             }
 
-            $pinjaman = Pinjaman::find($id);
+            $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
             if (is_null($pinjaman))
             {
                 return response()->json(['message' => 'Pinjaman not found'], 404);
