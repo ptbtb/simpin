@@ -182,7 +182,7 @@
                                         @endif
 
                                         @if($pengajuan->menungguKonfirmasi() || $pengajuan->menungguApprovalSpv() || $pengajuan->menungguApprovalAsman() || $pengajuan->menungguApprovalManager() || $pengajuan->menungguApprovalBendahara() || $pengajuan->menungguApprovalKetua())
-                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
+                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}" class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
                                         @endif
                                     @endcan
                                 @endif
@@ -329,6 +329,8 @@
         $('.btn-jurnal').on('click', function ()
         {
             var id = $(this).data('id');
+            var code = $(this).data('code');
+            var nominal = $(this).data('nominal');
 
             var htmlText =  '<div class="container-fluid">'+
                                 '<div class="row">'+
@@ -344,10 +346,10 @@
                                             '</thead>'+
                                             '<tbody>'+
                                                 '<tr>'+
-                                                    '<td>{{ $pengajuan->kode_jenis_pinjam }}</td>'+
-                                                    '<td>{{ $pengajuan->besar_pinjam }}</td>'+
+                                                    '<td>'+code+'</td>'+
+                                                    '<td>'+new Intl.NumberFormat(['ban', 'id']).format(nominal)+'</td>'+
                                                     '<td>Bank/Kas</td>'+
-                                                    '<td>{{ $pengajuan->besar_pinjam }}</td>'+
+                                                    '<td>'+new Intl.NumberFormat(['ban', 'id']).format(nominal)+'</td>'+
                                                 '</tr>'+
                                             '</tbody>'+
                                         '</table>'+

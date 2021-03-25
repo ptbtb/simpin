@@ -33,19 +33,33 @@ class JurnalManager
 
     public static function createJurnalPinjaman(Pinjaman $pinjaman)
     {
-        $jurnal = new Jurnal();
-        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
-        $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_kredit = $pinjaman->kode_jenis_pinjam;
-        $jurnal->kredit = $pinjaman->besar_pinjam;
-        $jurnal->akun_debet = COA_BANK_MANDIRI;
-        $jurnal->debet = $pinjaman->besar_pinjam;
-        $jurnal->keterangan = 'Pinjaman '. strtolower($pinjaman->jenisPinjaman->nama_pinjaman) .' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
-        $jurnal->created_by = Auth::user()->id;
-        $jurnal->updated_by = Auth::user()->id;
-        
-        // save as polymorphic
-        $pinjaman->jurnals()->save($jurnal);
+        try
+        {
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = $pinjaman->kode_jenis_pinjam;
+            $jurnal->kredit = $pinjaman->besar_pinjam;
+            if($pinjaman->akunDebet)
+            {
+                $jurnal->akun_debet = $pinjaman->akunDebet->CODE;
+            }
+            else
+            {
+                $jurnal->akun_debet = COA_BANK_MANDIRI;
+            }
+            $jurnal->debet = $pinjaman->besar_pinjam;
+            $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+            
+            // save as polymorphic
+            $pinjaman->jurnals()->save($jurnal);
+        }
+        catch (\Exception $e)
+        {
+            \Log::error($e);
+        }
     }
 
     public static function createJurnalAngsuran(Angsuran $angsuran)

@@ -13,7 +13,7 @@ class Pinjaman extends Model {
     use Userstamps;
 
     protected $table = "t_pinjam";
-    protected $primaryKey = "kode_pinjam";
+    protected $primaryKey = "id";
     protected $keyType = 'string';
     public $incrementing = false;
     protected $dates = ['tgl_entri', 'tgl_tempo'];
@@ -36,6 +36,11 @@ class Pinjaman extends Model {
 
     public function listAngsuran() {
         return $this->hasMany(Angsuran::class, 'kode_pinjam');
+    }
+
+    public function akunDebet()
+    {
+        return $this->belongsTo(Code::class, 'id_akun_debet');
     }
 
     /**

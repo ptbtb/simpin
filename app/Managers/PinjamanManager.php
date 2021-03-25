@@ -58,11 +58,11 @@ class PinjamanManager
             $pinjaman->tgl_entri = Carbon::now();
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($jenisPinjaman->lama_angsuran);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
+            $pinjaman->id_akun_debet = $pengajuan->id_akun_debet;
             // dd($pinjaman);
             $pinjaman->save();
             event(new PinjamanCreated($pinjaman));
             
-            JurnalManager::createJurnalPinjaman($pinjaman);
         }
         catch (\Exception $e)
         {
