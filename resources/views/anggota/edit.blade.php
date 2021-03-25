@@ -131,10 +131,13 @@
 								@foreach ($listJenisPenghasilan as $jenisPenghasilan)
 									<div class="col-md-6 form-group">
 										<label>{{ $jenisPenghasilan->name }}</label>
-										<input type="text" id="penghasilanTertentu{{ $jenisPenghasilan->id }}" name="penghasilan[{{ $jenisPenghasilan->id }}]" class="form-control toRupiah" placeholder="{{ $jenisPenghasilan->name }}" required
+										<input type="text" id="penghasilanTertentu{{ $jenisPenghasilan->id }}" name="penghasilan[{{ $jenisPenghasilan->id }}]" class="form-control toRupiah" placeholder="{{ $jenisPenghasilan->name }}"
 										@if ($listPenghasilan)
 											value="{{ $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->value }}"
 										@endif 
+										@if($jenisPenghasilan == 4)
+											required
+										@endif
 										onkeypress="return isNumberKey(event)">
 									</div>
 									<div class="col-md-6 form-group">
