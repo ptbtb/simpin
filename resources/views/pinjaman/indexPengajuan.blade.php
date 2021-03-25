@@ -18,7 +18,6 @@
 @endsection
 
 @section('plugins.Datatables', true)
-@section('plugins.Select2', true)
 
 @section('css')
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
@@ -208,25 +207,12 @@
                     <form enctype="multipart/form-data" id="formKonfirmasi">
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label>Jenis Akun</label>
-                                <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
-                                    <option value="1">KAS</option>
-                                    <option value="2" selected>BANK</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
                                 <label>Upload Bukti Pembayaran</label>
-                                <input type="file" name="bukti_pembayaran" id="buktiPembayaran" class="form-control" required>
+                                <input type="file" name="bukti_pembayaran" id="buktiPembayaran" class="form-control">
                                 {{-- <div class="custom-file">
 									<input type="file" class="custom-file-input" id="buktiPembayaran" name="bukti_pembayaran" style="cursor: pointer">
 									<label class="custom-file-label" for="customFile">Choose File</label>
 								</div> --}}
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Akun</label>
-                                <select name="id_akun_debet" id="code" class="form-control select2" required>
-                                    <option value="" selected disabled>Pilih Akun</option>
-                                </select>
                             </div>
                         </div>
                     </form>
@@ -265,79 +251,64 @@
             var url = '{{ route("pengajuan-pinjaman-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
-            var id_akun_debet = $('#code').val();
-
-            // files is mandatory when status pengajuan pinjaman diterima
-            if(status == {{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }} && files[0] == undefined)
-            {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Wajib upload bukti pembayaran!',
-                });
-            }
-            else
-            {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    input: 'password',
-                    inputAttributes: {
-                        name: 'password',
-                        placeholder: 'Password',
-                        required: 'required',
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                },
+                validationMessage:'Password required',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    formData.append('_token', token);
+                    formData.append('id', id);
+                    formData.append('status', status);
+                    formData.append('bukti_pembayaran', files[0]);
+                    formData.append('password', password);
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,   
+                        contentType: false,
+                        processData: false,                     
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your has been changed',
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
                     },
-                    validationMessage:'Password required',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var password = result.value;
-                        var formData = new FormData();
-                        var token = "{{ csrf_token() }}";
-                        formData.append('_token', token);
-                        formData.append('id', id);
-                        formData.append('status', status);
-                        formData.append('bukti_pembayaran', files[0]);
-                        formData.append('password', password);
-                        formData.append('id_akun_debet', id_akun_debet);
-                        $.ajax({
-                            type: 'post',
-                            url: url,
-                            data: formData,   
-                            contentType: false,
-                            processData: false,                     
-                        success: function(data) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Your has been changed',
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        },
-                        error: function(error){
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: error.responseJSON.message,
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        }
-                    });
+                    error: function(error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.responseJSON.message,
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
                     }
                 });
-            }
+                }
+            });
         });
 
         $('.btn-konfirmasi').on('click', function ()
@@ -353,8 +324,6 @@
                 });
                 $('#my-modal').modal('show');
             });
-
-            $('#jenisAkun').trigger( "change" );
         });
 
         $('.btn-jurnal').on('click', function ()
@@ -402,55 +371,5 @@
                 }
             });
         });
-
-        $(".select2").select2({
-            width: '100%',
-        });
-
-        // code array
-        var bankAccountArray = [];
-
-        // get bank account number from php
-        @foreach($bankAccounts as $key => $bankAccount)
-            bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
-        @endforeach
-        
-        // trigger to get kas or bank select option
-        $(document).on('change', '#jenisAkun', function () 
-        {
-            // remove all option in code
-            $('#code').empty();
-
-            // get jenis akun
-            var jenisAkun = $('#jenisAkun').val();
-
-            if(jenisAkun == 2)
-            {
-                // loop through code bank
-                $.each(bankAccountArray, function(key, bankAccount) 
-                {
-                    // set dafault to 102.18.000
-                    if(bankAccount.id == 22)
-                    {
-                        var selected = 'selected';
-                    }
-                    else
-                    {
-                        var selected = '';
-                    }
-                    
-                    // insert new option
-                    $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
-                });
-            }
-            else if(jenisAkun == 1)
-            {
-                // insert new option 
-                $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
-            }
-
-            $('#code').trigger( "change" );
-        });
-
     </script>
 @endsection
