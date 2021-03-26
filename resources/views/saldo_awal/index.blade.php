@@ -35,6 +35,9 @@
 
 @section('content')
     <div class="card">
+        <div class="card-header text-right">
+            <a href="{{ route('saldo-awal-download-excel') }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+        </div>
         <div class="card-body table-responsive">
             <table class="table table-striped">
                 <thead>

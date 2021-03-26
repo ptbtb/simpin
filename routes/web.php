@@ -327,6 +327,7 @@ Route::group(['prefix' => 'saldo-awal'], function() {
         Route::post('/edit/{id}', [App\Http\Controllers\SaldoAwalController::class, 'update'])->where('id', '[0-9]+')->name('saldo-awal-edit');
         Route::get('import/excel', [App\Http\Controllers\SaldoAwalController::class, 'importExcel'])->name('saldo-awal-import-excel');
         Route::post('import/excel', [App\Http\Controllers\SaldoAwalController::class, 'storeImportExcel'])->name('saldo-awal-import-excel');
+        Route::get('download/excel', [App\Http\Controllers\SaldoAwalController::class, 'createExcel'])->name('saldo-awal-download-excel');
     });
 });
 

@@ -9,6 +9,8 @@ use App\Models\Jurnal;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
 
+use App\Exports\SaldoAwalExport;
+
 use App\Imports\SaldoAwalImport;
 
 use Auth;
@@ -235,5 +237,13 @@ class SaldoAwalController extends Controller
             return redirect()->back()->withError('Gagal import data');
         }
         
+    }
+
+    public function createExcel(Request $request) {
+        $user = Auth::user();
+        $this->authorize('view saldo awal', $user);
+
+        $filename = 'export_saldo_awal_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+        return Excel::download(new SaldoAwalExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 }
