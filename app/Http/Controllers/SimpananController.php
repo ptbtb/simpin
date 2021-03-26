@@ -559,7 +559,7 @@ class SimpananController extends Controller
                     }
                 }
             }
-                                    
+                            dd($listSimpanan);die;         
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
             

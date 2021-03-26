@@ -15,7 +15,7 @@ class PinjamanController extends Controller
             $user = $request->user('api');
             $anggota = $user->anggota;
             $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
-            
+
             $response['message'] = null;
             $response['data'] = $data;
             return response()->json($response, 200);
@@ -29,17 +29,17 @@ class PinjamanController extends Controller
             return response()->json($response, 500);
         }
     }
-    
+
     public function Detail(Request $request)
     {
         try
         {
             $user = $request->user('api');
             $anggota = $user->anggota;
-            $data['ListPinjaman'] = $listPinjaman = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+            $data['List'] = $listPinjaman = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)
                         ->notPaid()
                         ->get();
-            
+
             $response['message'] = null;
             $response['data'] = $data;
             return response()->json($response, 200);
@@ -54,5 +54,5 @@ class PinjamanController extends Controller
         }
     }
 
-   
+
 }

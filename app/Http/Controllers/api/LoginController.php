@@ -22,18 +22,20 @@ class LoginController extends Controller
         if (!$user)
         {
             throw ValidationException::withMessages([
-                'email' => 'Incorrect email'
+                'message' => 'Incorrect email'
             ]);
         }
         elseif(!Hash::check($request->password, $user->password))
         {
             throw ValidationException::withMessages([
-                'password' => 'Incorrect password'
+                'message' => 'Incorrect password'
             ]);
         }
 
         $token = $user->createToken('Auth Token')->accessToken;
         $response = [
+            "message"=>"",
+            "errors"=>null,
             "token_type" => "Bearer",
             "access_token" => $token
         ];
