@@ -38,6 +38,11 @@ class Pinjaman extends Model {
         return $this->hasMany(Angsuran::class, 'kode_pinjam');
     }
 
+    public function akunDebet()
+    {
+        return $this->belongsTo(Code::class, 'id_akun_debet');
+    }
+
     /**
      * Get all of the pinjaman's jurnals.
     */

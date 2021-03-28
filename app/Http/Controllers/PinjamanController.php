@@ -14,6 +14,7 @@ use App\Models\Pinjaman;
 use App\Models\JenisPinjaman;
 use App\Models\Penghasilan;
 use App\Models\StatusPengajuan;
+use App\Models\Code;
 use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
 use App\Imports\PinjamanImport;
@@ -86,9 +87,12 @@ class PinjamanController extends Controller {
             $listPengajuanPinjaman = Pengajuan::with('anggota')->get();
         }
 
+        $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+        
         $data['title'] = "List Pengajuan Pinjaman";
         $data['listPengajuanPinjaman'] = $listPengajuanPinjaman;
         $data['request'] = $request;
+        $data['bankAccounts'] = $bankAccounts;
         return view('pinjaman.indexPengajuan', $data);
     }
 
@@ -401,6 +405,19 @@ class PinjamanController extends Controller {
 
                         Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
                         $pengajuan->bukti_pembayaran = $config['disk'] . $config['upload_path'] . '/' . $filename;
+                    }
+                }
+
+                if($request->id_akun_debet)
+                {
+                    $pengajuan->id_akun_debet = $request->id_akun_debet;
+                    
+                    $pinjaman = $pengajuan->pinjaman;
+
+                    if($pinjaman)
+                    {
+                        $pinjaman->id_akun_debet = $request->id_akun_debet;
+                        $pinjaman->save();
                     }
                 }
             }
