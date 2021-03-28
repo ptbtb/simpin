@@ -410,6 +410,11 @@ class PinjamanController extends Controller {
             {
                 event(new PengajuanApproved($pengajuan));
             }
+
+            if ($pengajuan->diterima() && $pengajuan->pinjaman)
+            {
+                JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
+            }
             
             event(new PengajuanUpdated($pengajuan));
 

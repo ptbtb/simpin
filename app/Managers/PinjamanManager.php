@@ -62,7 +62,8 @@ class PinjamanManager
             $pinjaman->save();
             event(new PinjamanCreated($pinjaman));
             
-            JurnalManager::createJurnalPinjaman($pinjaman);
+            // changed, jurnal setelah pengajuan pinjaman di terima
+            // JurnalManager::createJurnalPinjaman($pinjaman);
         }
         catch (\Exception $e)
         {
