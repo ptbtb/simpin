@@ -52,6 +52,11 @@ class Penarikan extends Model
         return $this->morphMany(Jurnal::class, 'jurnalable');
     }
 
+    public function akunDebet()
+    {
+        return $this->belongsTo(Code::class, 'id_akun_debet');
+    }
+
     public function scopeNotApproved($query)
     {
         return $query->whereIn('status_pengambilan', [STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI, STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN]);

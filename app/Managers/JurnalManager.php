@@ -21,7 +21,14 @@ class JurnalManager
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_kredit = $penarikan->tabungan->kode_trans;
         $jurnal->kredit = $penarikan->besar_ambil;
-        $jurnal->akun_debet = COA_BANK_MANDIRI;
+        if($penarikan->akunDebet)
+        {
+            $jurnal->akun_debet = $penarikan->akunDebet->CODE;
+        }
+        else
+        {
+            $jurnal->akun_debet = COA_BANK_MANDIRI;
+        }
         $jurnal->debet = $penarikan->besar_ambil;
         $jurnal->keterangan = 'Pengambilan simpanan anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;

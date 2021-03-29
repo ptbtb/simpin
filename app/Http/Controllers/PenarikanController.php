@@ -16,6 +16,7 @@ use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Tabungan;
+use App\Models\Code;
 
 use Carbon\Carbon;
 use DB;
@@ -294,9 +295,12 @@ class PenarikanController extends Controller
                 $listPenarikan = Penarikan::with('anggota')->get();
             }
 
+            $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+
             $data['title'] = "List Penarikan Pinjaman";
             $data['listPenarikan'] = $listPenarikan;
             $data['request'] = $request;
+            $data['bankAccounts'] = $bankAccounts;
             return view('penarikan.index', $data);
         }
         catch (\Throwable $e)
@@ -372,6 +376,8 @@ class PenarikanController extends Controller
                         $penarikan->bukti_pembayaran = $config['disk'] . $config['upload_path'] . '/' . $filename;
                     }
                 }
+
+                $penarikan->id_akun_debet = ($request->id_akun_debet)? $request->id_akun_debet:null;
             }
 
             $penarikan->save();
