@@ -80,7 +80,7 @@ class SimpananController extends Controller
     public function create(Request $request)
     {
         $this->authorize('add simpanan', Auth::user());
-        $listJenisSimpanan = JenisSimpanan::all(); 
+        $listJenisSimpanan = JenisSimpanan::all();
         if ($request->kode_anggota)
         {
             $data['anggota'] = Anggota::find($request->kode_anggota);
@@ -108,15 +108,15 @@ class SimpananController extends Controller
             {
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
-            
-            
+
+
             $besarSimpanan = filter_var($request->besar_simpanan, FILTER_SANITIZE_NUMBER_INT);
             $jenisSimpanan = JenisSimpanan::find($request->jenis_simpanan);
             $anggotaId = $request->kode_anggota;
-            
+
             if($jenisSimpanan->nama_simpanan === 'SIMPANAN POKOK') {
                 $checkSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
-                
+
                 if ($checkSimpanan) {
                     $simpananOldValue = $checkSimpanan->besar_simpanan;
                     $simpananCurrentValue = $simpananOldValue + $besarSimpanan;
@@ -128,7 +128,7 @@ class SimpananController extends Controller
                                 'besar_simpanan' => $simpananCurrentValue,
                                 'updated_at' => Carbon::now()
                             ]);
-                    
+
                     $indexAngsuran = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $checkSimpanan->kode_simpan)->count();
 
                     $angsurSimpanan = new AngsuranSimpanan();
@@ -156,7 +156,7 @@ class SimpananController extends Controller
 
                     if ($besarSimpanan < 499999){
                         $existingSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
-                        
+
                         $indexAngsuran = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $existingSimpanan->kode_simpan)->count();
 
                         $angsurSimpanan = new AngsuranSimpanan();
@@ -169,14 +169,14 @@ class SimpananController extends Controller
                         $angsurSimpanan->created_at = Carbon::now();
                         $angsurSimpanan->updated_at = Carbon::now();
                         $angsurSimpanan->save();
-                        
+
                     }
                 }
             }
             else {
 
                 $periodeTime = strtotime($request->periode);
-                
+
                 $simpanan = new Simpanan();
                 $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
                 $simpanan->besar_simpanan = $besarSimpanan;
@@ -217,7 +217,7 @@ class SimpananController extends Controller
      */
     public function edit($id)
     {
-        
+
     }
 
     /**
@@ -263,7 +263,7 @@ class SimpananController extends Controller
             {
                 return redirect()->back()->withError('Your account has no members');
             }
-            
+
             $listSimpanan = Simpanan::where('kode_anggota', $anggota->kode_anggota);
         }
         else
@@ -323,7 +323,7 @@ class SimpananController extends Controller
 
         // Kalkulasi Simpanan Wajib
         else if($type == '411.12.000') {
-            
+
             $payment = DB::table('t_anggota')
                     ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
                     ->join('t_kelas_company', 't_penghasilan.kelas_company_id', 't_kelas_company.id')
@@ -331,10 +331,10 @@ class SimpananController extends Controller
                     ->select('t_kelas_simpanan.simpanan as paymentValue')
                     ->where('t_anggota.kode_anggota', '=', $anggotaId)
                     ->first();
-            
+
             $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', '411.12.000')->first();
             $attribute = $latestAngsur;
-            
+
             $paymentValue = $payment->paymentValue;
         }
 
@@ -356,7 +356,7 @@ class SimpananController extends Controller
             }
 
         }
-        
+
         return response()->json([
             'paymentValue' => $paymentValue,
             'attribute' => $attribute
@@ -375,7 +375,7 @@ class SimpananController extends Controller
             {
                 return redirect()->back()->withError('Your account has no members');
             }
-            
+
             $listSimpanan = Simpanan::where('kode_anggota', $anggota->kode_anggota);
         }
         else
@@ -405,7 +405,7 @@ class SimpananController extends Controller
         {
             $listSimpanan = $listSimpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
         }
-        
+
         if ($request->kode_anggota)
         {
             $listSimpanan = $listSimpanan->where('kode_anggota', $request->kode_anggota);
@@ -417,7 +417,7 @@ class SimpananController extends Controller
         // share data to view
         view()->share('listSimpanan',$listSimpanan);
         $pdf = PDF::loadView('simpanan.excel', $listSimpanan)->setPaper('a4', 'landscape');
-  
+
         // download PDF file with download method
         $filename = 'export_simpanan_'.Carbon::now()->format('d M Y').'.pdf';
         return $pdf->download($filename);
@@ -432,7 +432,7 @@ class SimpananController extends Controller
             $anggota = $user->anggota;
             $request->anggota = $anggota;
         }
-        
+
         $filename = 'export_simpanan_excel_'.Carbon::now()->format('d M Y').'.xlsx';
         return Excel::download(new SimpananExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
@@ -451,7 +451,7 @@ class SimpananController extends Controller
         {
             DB::transaction(function () use ($request)
             {
-                Excel::import(new SimpananImport, $request->file); 
+                Excel::import(new SimpananImport, $request->file);
             });
             return redirect()->back()->withSuccess('Import data berhasil');
         }
@@ -460,7 +460,7 @@ class SimpananController extends Controller
             \Log::error($e);
             return redirect()->back()->withError('Gagal import data');
         }
-        
+
     }
 
     public function indexCard(Request $request)
@@ -488,7 +488,7 @@ class SimpananController extends Controller
         {
             // get anggota
             $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($kodeAnggota);
-            
+
             // get this year
             $thisYear = Carbon::now()->year;
             // $thisYear = 2020;
@@ -499,7 +499,7 @@ class SimpananController extends Controller
                                     ->whereraw("keterangan not like '%MUTASI%'")
                                     ->orderBy('tgl_entri','asc')
                                     ->get();
-                                    
+
             // data di grouping berdasarkan kode jenis simpan
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
@@ -559,10 +559,10 @@ class SimpananController extends Controller
                     }
                 }
             }
-                            dd($listSimpanan);die;         
+                           //dd($listSimpanan);die;
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
-            
+
             return view('simpanan.card.detail', $data);
         }
         catch (\Throwable $e)
@@ -588,7 +588,7 @@ class SimpananController extends Controller
                                     ->where('kode_anggota', $anggota->kode_anggota)
                                     ->whereraw("keterangan not like '%MUTASI%'")
                                     ->orderBy('tgl_entri','asc')
-                                    ->get();                  
+                                    ->get();
             // data di grouping berdasarkan kode jenis simpan
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
@@ -648,15 +648,15 @@ class SimpananController extends Controller
                     }
                 }
             }
-                                    
+
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
-            
+
             // share data to view
             view()->share('data',$data);
             PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
             $pdf = PDF::loadView('simpanan.card.export2', $data)->setPaper('a4', 'portrait');
-    
+
             // download PDF file with download method
             $filename = 'export_kartu_simpanan_'.Carbon::now()->format('d M Y').'.pdf';
             return $pdf->download($filename);
