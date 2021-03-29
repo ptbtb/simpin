@@ -9,6 +9,7 @@ use App\Models\JurnalUmumItem;
 use App\Models\JurnalUmum;
 use App\Models\SaldoAwal;
 use App\Models\Code;
+use App\Models\Simpanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -91,6 +92,37 @@ class JurnalManager
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
+    }
+
+    public static function createJurnalSimpanan(Simpanan $simpanan)
+    {
+        try
+        {
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = $simpanan->kode_jenis_simpan;
+            $jurnal->kredit = $simpanan->besar_simpanan;
+            if($simpanan->akunDebet)
+            {
+                $jurnal->akun_debet = $simpanan->akunDebet->CODE;
+            }
+            else
+            {
+                $jurnal->akun_debet = COA_BANK_MANDIRI;
+            }
+            $jurnal->debet = $simpanan->besar_simpanan;
+            $jurnal->keterangan = 'Simpanan '.strtolower($simpanan->jenis_simpan) . ' anggota '. ucwords(strtolower($simpanan->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+            
+            // save as polymorphic
+            $simpanan->jurnals()->save($jurnal);
+        }
+        catch (\Exception $e)
+        {
+            \Log::error($e);
+        }
     }
 
     public static function createSaldoAwal(SaldoAwal $saldoAwal)

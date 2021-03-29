@@ -11,7 +11,10 @@ use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Tabungan;
 use App\Models\AngsuranSimpanan;
+use App\Models\Code;
 use Illuminate\Http\Request;
+
+use App\Managers\JurnalManager;
 
 use Auth;
 use DB;
@@ -85,9 +88,12 @@ class SimpananController extends Controller
         {
             $data['anggota'] = Anggota::find($request->kode_anggota);
         }
+        $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+
         $data['title'] = "Tambah Transaksi Simpanan";
         $data['listJenisSimpanan'] = $listJenisSimpanan;
         $data['request'] = $request;
+        $data['bankAccounts'] = $bankAccounts;
         return view('simpanan.create', $data);
     }
 
@@ -152,6 +158,7 @@ class SimpananController extends Controller
                     $simpanan->tgl_entri = Carbon::now();
                     $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                     $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
+                    $simpanan->id_akun_debet = ($request->id_akun_debet)? $request->id_akun_debet:null;
                     $simpanan->save();
 
                     if ($besarSimpanan < 499999){
@@ -188,6 +195,8 @@ class SimpananController extends Controller
                 $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
                 $simpanan->save();
             }
+
+            JurnalManager::createJurnalSimpanan($simpanan);
 
             // return redirect()->route('simpanan-list', ['kode_anggota' => $request->kode_anggota])->withSuccess('Berhasil menambah transaksi');
             return redirect()->route('simpanan-list')->withSuccess('Berhasil menambah transaksi');

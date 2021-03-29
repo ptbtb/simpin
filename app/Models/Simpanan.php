@@ -25,6 +25,19 @@ class Simpanan extends Model
         return $this->belongsTo(JenisSimpanan::class, 'kode_jenis_simpan', 'kode_jenis_simpan');
     }
 
+    public function akunDebet()
+    {
+        return $this->belongsTo(Code::class, 'id_akun_debet');
+    }
+
+    /**
+     * Get all of the simpanan's jurnals.
+    */
+    public function jurnals()
+    {
+        return $this->morphMany(Jurnal::class, 'jurnalable');
+    }
+
     public function getTanggalEntriAttribute()
     {
         if ($this->tgl_entri)
