@@ -134,8 +134,8 @@
 										<input type="text" id="penghasilanTertentu{{ $jenisPenghasilan->id }}" name="penghasilan[{{ $jenisPenghasilan->id }}]" class="form-control toRupiah" placeholder="{{ $jenisPenghasilan->name }}"
 										@if ($listPenghasilan)
 											value="{{ $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->value }}"
-										@endif 
-										@if($jenisPenghasilan == 4)
+										@endif
+										@if($jenisPenghasilan->id == 4)
 											required
 										@endif
 										onkeypress="return isNumberKey(event)">
@@ -210,7 +210,7 @@
 	var companyId = $('#companyId').val();
 	var jenisAnggotaId = $('#jenisAnggota').val();
 	var listKelasCompany = collect({!!$kelasCompany!!});
-    
+
     $(document).ready(function () {
 //        $.validator.setDefaults({
 //            submitHandler: function () {
@@ -254,7 +254,7 @@
 			jenis_kelamin: {
 				required: true
 			},
-			
+
 			},
 			messages: {
 			email: {
@@ -323,8 +323,8 @@
 			$(this).val(toRupiah(val));
 		});
     });
-	
-	
+
+
 
 	$('#companyId').on('change', function(){
 		if($(this).children("option:selected").val() != companyId){
@@ -383,7 +383,7 @@
 					$('#kelasCompany').val("").change();
 
 				}
-            }  
+            }
         })
 	}
 
