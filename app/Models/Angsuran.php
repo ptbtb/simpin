@@ -33,6 +33,11 @@ class Angsuran extends Model
         return $this->morphMany(Jurnal::class, 'jurnalable');
     }
 
+    public function akunKredit()
+    {
+        return $this->belongsTo(Code::class, 'id_akun_kredit');
+    }
+
     public function getTotalAngsuranAttribute()
     {
         return $this->besar_angsuran + $this->jasa;
