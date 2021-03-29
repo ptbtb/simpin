@@ -41,7 +41,7 @@ class UserController extends Controller
 			{
 				$roles = Role::where('id', ROLE_ANGGOTA)->get();
 				$data['roles'] = $roles;
-			}							
+			}
 		}
 		$data['title'] = 'List User';
 		$data['request'] = $request;
@@ -54,7 +54,7 @@ class UserController extends Controller
 		$users = User::with('roles','creator');
 		$currentUser = Auth::user();
 		if(isset($request->role_id) && $request->role_id !== '')
-        {     
+        {
             $users = $users->whereHas('roles', function ($query) use ($request)
 			{
 				return $query->where('id', $request->role_id);
@@ -124,7 +124,7 @@ class UserController extends Controller
 			if ($file)
 			{
 				$config['disk'] = 'upload';
-				$config['upload_path'] = '/user/'.$user->id.'/photo'; 
+				$config['upload_path'] = '/user/'.$user->id.'/photo';
 				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/photo';
 
 				// create directory if doesn't exist
@@ -150,7 +150,7 @@ class UserController extends Controller
 			$user->save();
 
 			event(new UserCreated($user, $request->password));
-			
+
 			return redirect()->route('user-list')->withSuccess('Create user Success');
 		}
 		catch (\Exception $e)
@@ -177,7 +177,7 @@ class UserController extends Controller
 		{
 			$roles = Role::where('name', 'Anggota')->get();
 		}
-		
+
 		$data['user'] = $user;
 		$data['roles'] = $roles;
 		$data['title'] = 'Edit User';
@@ -192,7 +192,7 @@ class UserController extends Controller
     	{
     		return redirect()->back()->withMessage('User not found');
 		}
-		
+
 		if ($request->reset_password)
 		{
 			$user->password = Hash::make($request->new_password);
@@ -205,7 +205,7 @@ class UserController extends Controller
 		if ($file)
 		{
 			$config['disk'] = 'upload';
-			$config['upload_path'] = '/user/'.$user->id.'/photo'; 
+			$config['upload_path'] = '/user/'.$user->id.'/photo';
 			$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/photo';
 
 			// create directory if doesn't exist
@@ -240,7 +240,7 @@ class UserController extends Controller
 		$user->delete();
 		return redirect()->back()->withSuccess('Delete user success');
 	}
-	
+
     public function profile()
     {
 		$user = Auth::user();
@@ -280,7 +280,7 @@ class UserController extends Controller
     	{
     		return redirect()->back()->witError('User not found');
 		}
-		
+
 		// DB::transaction(function () use ($user, $request)
 		// {
 			$user->name = $request->name;
@@ -289,7 +289,7 @@ class UserController extends Controller
 			if ($file)
 			{
 				$config['disk'] = 'upload';
-				$config['upload_path'] = '/user/'.$user->id.'/photo'; 
+				$config['upload_path'] = '/user/'.$user->id.'/photo';
 				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/photo';
 
 				// create directory if doesn't exist
@@ -315,7 +315,7 @@ class UserController extends Controller
 			if ($file_ktp)
 			{
 				$config['disk'] = 'upload';
-				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
+				$config['upload_path'] = '/user/'.$user->id.'/ktp';
 				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
 				if (!Storage::disk($config['disk'])->has($config['upload_path']))
 				{
@@ -332,7 +332,7 @@ class UserController extends Controller
 			$anggota->kelas_company_id = $request->kelas_company;
 			$anggota->save();
 
-			$requestPenghasilan = $request->penghasilan;		
+			$requestPenghasilan = $request->penghasilan;
 			foreach ($requestPenghasilan as $key => $value)
 			{
 				$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)
@@ -351,10 +351,10 @@ class UserController extends Controller
 				}
 				$penghasilan->save();
 			}
-			
-			
+
+
 			// for file upload
-			$fileRequestPenghasilan = $request->file_penghasilan;	
+			$fileRequestPenghasilan = $request->file_penghasilan;
 			if(!is_null($fileRequestPenghasilan))
 			{
 				foreach ($fileRequestPenghasilan as $key => $value)
@@ -369,11 +369,11 @@ class UserController extends Controller
 						$penghasilan->id_jenis_penghasilan = $key;
 						$penghasilan->kode_anggota = $anggota->kode_anggota;
 					}
-					
+
 					$config['disk'] = 'upload';
-					$config['upload_path'] = '/user/'.$user->id.'/penghasilan'; 
+					$config['upload_path'] = '/user/'.$user->id.'/penghasilan';
 					$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/penghasilan';
-					
+
 					// create directory if doesn't exist
 					if (!Storage::disk($config['disk'])->has($config['upload_path']))
 					{
@@ -395,7 +395,7 @@ class UserController extends Controller
 		// });
     	return redirect()->back()->withSuccess('Update profile success');
 	}
-	
+
 	public function changePassword()
 	{
 		$user = Auth::user();
@@ -472,9 +472,9 @@ class UserController extends Controller
             \Log::error($e);
             return redirect()->back()->withError('Gagal import data');
         }
-        
+
 	}
-	
+
 	public function createExcel(Request $request)
     {
         try
