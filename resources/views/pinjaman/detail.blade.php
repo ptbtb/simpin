@@ -18,6 +18,8 @@
 </div>
 @endsection
 
+@section('plugins.Select2', true)
+
 @section('css')
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <style>
@@ -167,6 +169,19 @@
                                 <label>Besar Pembayaran</label>
                                 <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
                             </div>
+                            <div class="form-group">
+                                <label>Jenis Akun</label>
+                                <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
+                                    <option value="1">KAS</option>
+                                    <option value="2" selected>BANK</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Akun</label>
+                                <select name="id_akun_kredit" id="code" class="form-control select2" required>
+                                    <option value="" selected disabled>Pilih Akun</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success">Submit</button>
@@ -226,6 +241,19 @@
                                 <label>Besar Pembayaran</label>
                                 <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
                             </div>
+                            <div class="form-group">
+                                <label>Jenis Akun</label>
+                                <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
+                                    <option value="1">KAS</option>
+                                    <option value="2" selected>BANK</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Akun</label>
+                                <select name="id_akun_kredit" id="code" class="form-control select2" required>
+                                    <option value="" selected disabled>Pilih Akun</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success">Submit</button>
@@ -248,6 +276,7 @@
                 backdrop: false 
             });
             $('#my-modal').modal('show');
+            $('#jenisAkun').trigger( "change" );
         });
 
         $('.btn-pelunasanDipercepat').on('click', function ()
@@ -256,6 +285,55 @@
                 backdrop: false 
             });
             $('#my-modal1').modal('show');
+        });
+
+        $(".select2").select2({
+            width: '100%',
+        });
+
+        // code array
+        var bankAccountArray = [];
+
+        // get bank account number from php
+        @foreach($bankAccounts as $key => $bankAccount)
+            bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
+        @endforeach
+        
+        // trigger to get kas or bank select option
+        $(document).on('change', '#jenisAkun', function () 
+        {
+            // remove all option in code
+            $('#code').empty();
+
+            // get jenis akun
+            var jenisAkun = $('#jenisAkun').val();
+
+            if(jenisAkun == 2)
+            {
+                // loop through code bank
+                $.each(bankAccountArray, function(key, bankAccount) 
+                {
+                    // set dafault to 102.18.000
+                    if(bankAccount.id == 22)
+                    {
+                        var selected = 'selected';
+                    }
+                    else
+                    {
+                        var selected = '';
+                    }
+                    
+                    // insert new option
+                    $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+                });
+            }
+            else if(jenisAkun == 1)
+            {
+                // insert new option 
+                $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+            }
+
+            $('#code').trigger( "change" );
         });
     </script>
 @endsection

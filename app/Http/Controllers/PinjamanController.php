@@ -135,12 +135,14 @@ class PinjamanController extends Controller {
 
         $listAngsuran = $pinjaman->listAngsuran->sortBy('angsuran_ke')->values();
         $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
+        $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
         $data['pinjaman'] = $pinjaman;
         $data['title'] = 'Detail Pinjaman';
         $data['jenisPinjaman'] = $pinjaman->jenisPinjaman;
         $data['listAngsuran'] = $listAngsuran;
         $data['tagihan'] = $tagihan;
+        $data['bankAccounts'] = $bankAccounts;
         return view('pinjaman.detail', $data);
     }
 
@@ -706,6 +708,7 @@ class PinjamanController extends Controller {
                 $pembayaran = $pembayaran - $angsuran->totalAngsuran;
                 $angsuran->paid_at = Carbon::now();
                 $angsuran->u_entry = Auth::user()->name;
+                $angsuran->id_akun_kredit = ($request->id_akun_kredit)? $request->id_akun_kredit:null;
                 $angsuran->save();
 
                 // create JKM angsuran
@@ -752,6 +755,7 @@ class PinjamanController extends Controller {
                 $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
                 $angsuran->paid_at = Carbon::now();
                 $angsuran->u_entry = Auth::user()->name;
+                $angsuran->id_akun_kredit = ($request->id_akun_kredit)? $request->id_akun_kredit:null;
                 $angsuran->save();
 
                 $pinjaman->sisa_angsuran = 0;

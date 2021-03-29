@@ -76,7 +76,14 @@ class JurnalManager
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
         $jurnal->debet = $angsuran->besar_pembayaran;
-        $jurnal->akun_kredit = COA_BANK_MANDIRI;
+        if($angsuran->akunKredit)
+        {
+            $jurnal->akun_kredit = $angsuran->akunKredit->CODE;
+        }
+        else
+        {
+            $jurnal->akun_kredit = COA_BANK_MANDIRI;
+        }
         $jurnal->kredit = $angsuran->besar_pembayaran;
         $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;

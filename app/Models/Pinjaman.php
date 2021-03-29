@@ -35,7 +35,7 @@ class Pinjaman extends Model {
     }
 
     public function listAngsuran() {
-        return $this->hasMany(Angsuran::class, 'kode_pinjam');
+        return $this->hasMany(Angsuran::class, 'kode_pinjam', 'kode_pinjam');
     }
 
     public function akunDebet()
