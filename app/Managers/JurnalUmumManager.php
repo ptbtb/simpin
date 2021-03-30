@@ -26,7 +26,7 @@ class JurnalUmumManager
             $nextSerialNumber = 1;
 
             // get date
-            $date = Carbon::createFromFormat('d-m-Y', $date);
+            $date = Carbon::createFromFormat('Y-m-d', $date);
             $year = $date->year;
 
             // get jurnal umum data on this year
