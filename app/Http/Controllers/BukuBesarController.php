@@ -28,18 +28,28 @@ class BukuBesarController extends Controller
                 // get code's normal balance 
                 if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
                 {
+                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+
+                    $saldo = $saldoDebet - $saldoKredit;
+
                     $bukuBesars->push([
                         'code' => $code->CODE,
                         'name' => $code->NAMA_TRANSAKSI,
-                        'saldo' => $jurnal->where('akun_debet', $code->CODE)->sum('debet'),
+                        'saldo' => $saldo,
                     ]);
                 }
                 else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                 {
+                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+
+                    $saldo = $saldoDebet - $saldoKredit;
+
                     $bukuBesars->push([
                         'code' => $code->CODE,
                         'name' => $code->NAMA_TRANSAKSI,
-                        'saldo' => $jurnal->where('akun_kredit', $code->CODE)->sum('kredit'),
+                        'saldo' => $saldo,
                     ]);
                 }
             }
@@ -76,20 +86,30 @@ class BukuBesarController extends Controller
                 // get code's normal balance 
                 if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
                 {
+                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+
+                    $saldo = $saldoDebet - $saldoKredit;
+
                     $bukuBesars->push([
                         'code' => $code->CODE,
                         'name' => $code->NAMA_TRANSAKSI,
                         'code_type_id' => $code->code_type_id,
-                        'saldo' => $jurnal->where('akun_debet', $code->CODE)->sum('debet'),
+                        'saldo' => $saldo,
                     ]);
                 }
                 else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                 {
+                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+
+                    $saldo = $saldoDebet - $saldoKredit;
+
                     $bukuBesars->push([
                         'code' => $code->CODE,
                         'name' => $code->NAMA_TRANSAKSI,
                         'code_type_id' => $code->code_type_id,
-                        'saldo' => $jurnal->where('akun_kredit', $code->CODE)->sum('kredit'),
+                        'saldo' => $saldo,
                     ]);
                 }
             }
