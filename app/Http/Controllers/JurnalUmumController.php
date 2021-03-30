@@ -59,19 +59,9 @@ class JurnalUmumController extends Controller
     {
         $this->authorize('add jurnal umum', Auth::user());
         $debetCodes = Code::where('is_parent', 0)
-                            ->where('CODE', 'not like', "411%")
-                            ->where('CODE', 'not like', "106%")
-                            ->where('CODE', 'not like', "502%")
-                            ->where('CODE', 'not like', "105%")
-                            ->where('normal_balance_id', NORMAL_BALANCE_DEBET)
                             ->get();
 
         $creditCodes = Code::where('is_parent', 0)
-                            ->where('CODE', 'not like', "411%")
-                            ->where('CODE', 'not like', "106%")
-                            ->where('CODE', 'not like', "502%")
-                            ->where('CODE', 'not like', "105%")
-                            ->where('normal_balance_id', NORMAL_BALANCE_KREDIT)
                             ->get();
         
         $data['title'] = "Tambah Jurnal Umum";
@@ -109,14 +99,28 @@ class JurnalUmumController extends Controller
             $jurnalUmum->save();
             
             // loop every item
-            for ($i=0; $i < count($request->code_id) ; $i++) 
+            // debet
+            for ($i=0; $i < count($request->code_debet_id) ; $i++) 
             { 
                 $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
 
                 $jurnalUmumItem = new JurnalUmumItem();
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
-                $jurnalUmumItem->code_id = $request->code_id[$i];
+                $jurnalUmumItem->code_id = $request->code_debet_id[$i];
                 $jurnalUmumItem->nominal = $nominal;
+                $jurnalUmumItem->normal_balance_id = NORMAL_BALANCE_DEBET;
+                $jurnalUmumItem->save();
+            }
+            // credit
+            for ($i=0; $i < count($request->code_credit_id) ; $i++) 
+            { 
+                $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
+
+                $jurnalUmumItem = new JurnalUmumItem();
+                $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
+                $jurnalUmumItem->code_id = $request->code_credit_id[$i];
+                $jurnalUmumItem->nominal = $nominal;
+                $jurnalUmumItem->normal_balance_id = NORMAL_BALANCE_KREDIT;
                 $jurnalUmumItem->save();
             }
 
@@ -180,8 +184,8 @@ class JurnalUmumController extends Controller
         $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans')
                         ->find($id);
 
-        $itemDebets = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_DEBET);
-        $itemCredits = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_KREDIT);
+        $itemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);
+        $itemCredits = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_KREDIT);
 
         $data['jurnalUmum'] = $jurnalUmum;
         $data['itemDebets'] = $itemDebets;
@@ -202,23 +206,13 @@ class JurnalUmumController extends Controller
         $this->authorize('edit jurnal umum', Auth::user());
         $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans')->find($id);
         $debetCodes = Code::where('is_parent', 0)
-                ->where('CODE', 'not like', "411%")
-                ->where('CODE', 'not like', "106%")
-                ->where('CODE', 'not like', "502%")
-                ->where('CODE', 'not like', "105%")
-                ->where('normal_balance_id', NORMAL_BALANCE_DEBET)
-                ->get();
+                        ->get();
 
         $creditCodes = Code::where('is_parent', 0)
-                ->where('CODE', 'not like', "411%")
-                ->where('CODE', 'not like', "106%")
-                ->where('CODE', 'not like', "502%")
-                ->where('CODE', 'not like', "105%")
-                ->where('normal_balance_id', NORMAL_BALANCE_KREDIT)
-                ->get();
+                        ->get();
 
-        $itemDebets = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_DEBET);
-        $itemCredits = $jurnalUmum->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_KREDIT);
+        $itemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);
+        $itemCredits = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_KREDIT);
 
         $data['title'] = "Edit Jurnal Umum";
         $data['jurnalUmum'] = $jurnalUmum;
@@ -257,34 +251,71 @@ class JurnalUmumController extends Controller
             $jurnalUmum->deskripsi = $request->deskripsi;
             $jurnalUmum->save();
 
-            $jurnalUmumItems = $jurnalUmum->jurnalUmumItems;
+            $jurnalUmumItemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);
+            $jurnalUmumItemKredits = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_KREDIT);
+
+            $jurnalUmumItemDebets = $jurnalUmumItemDebets->values();
+            $jurnalUmumItemKredits = $jurnalUmumItemKredits->values();
             
             // loop every item
-            for ($i=0; $i < count($request->code_id) ; $i++) 
+            // debet
+            for ($i=0; $i < count($request->code_debet_id) ; $i++) 
             { 
                 // update item
-                if ($i < $jurnalUmumItems->count())
+                if ($i < $jurnalUmumItemDebets->count())
                 {
-                    $jurnalUmumItem = $jurnalUmumItems[$i];
+                    $jurnalUmumItem = $jurnalUmumItemDebets[$i];
                 }
                 else
                 {
                     $jurnalUmumItem = new JurnalUmumItem();
                 }
                 
-                $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
+                $nominal = filter_var($request->nominal_debet[$i], FILTER_SANITIZE_NUMBER_INT);
 
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
-                $jurnalUmumItem->code_id = $request->code_id[$i];
+                $jurnalUmumItem->code_id = $request->code_debet_id[$i];
                 $jurnalUmumItem->nominal = $nominal;
+                $jurnalUmumItem->normal_balance_id = NORMAL_BALANCE_DEBET;
+                $jurnalUmumItem->save();
+            }
+            
+            // kredit
+            for ($i=0; $i < count($request->code_credit_id) ; $i++) 
+            { 
+                // update item
+                if ($i < $jurnalUmumItemKredits->count() )
+                {
+                    $jurnalUmumItem = $jurnalUmumItemKredits[$i];
+                }
+                else
+                {
+                    $jurnalUmumItem = new JurnalUmumItem();
+                }
+                
+                $nominal = filter_var($request->nominal_credit[$i], FILTER_SANITIZE_NUMBER_INT);
+
+                $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
+                $jurnalUmumItem->code_id = $request->code_credit_id[$i];
+                $jurnalUmumItem->nominal = $nominal;
+                $jurnalUmumItem->normal_balance_id = NORMAL_BALANCE_KREDIT;
                 $jurnalUmumItem->save();
             }
 
             // delete item if jurnal umum items less than request jurnal umum items
-            if (count($request->code_id) < $jurnalUmumItems->count())
+            // debet
+            if (count($request->code_debet_id) < $jurnalUmumItemDebets->count())
             {
-                for ($i=count($request->code_id); $i < $jurnalUmumItems->count(); $i++) { 
-                    $jurnalUmumItem = $jurnalUmumItems[$i];
+                for ($i=count($request->code_debet_id); $i < $jurnalUmumItemDebets->count(); $i++) { 
+                    $jurnalUmumItem = $jurnalUmumItemDebets[$i];
+                    $jurnalUmumItem->delete();
+                }
+            }
+            // credit
+            if (count($request->code_credit_id) < $jurnalUmumItemKredits->count() )
+            {
+                for ($i= count($request->code_credit_id); $i < $jurnalUmumItemKredits->count(); $i++) { 
+                    $jurnalUmumItem = $jurnalUmumItemKredits[$i];
                     $jurnalUmumItem->delete();
                 }
             }
@@ -362,14 +393,13 @@ class JurnalUmumController extends Controller
             if($jurnalUmum)
             {
                 // update jurnal data
-                // JurnalManager::updateJurnalUmum($jurnalUmum);
+                JurnalManager::updateJurnalUmum($jurnalUmum);
             }
             
             return redirect()->route('jurnal-umum-list')->withSuccess('Berhasil merubah transaksi');
         }
         catch (\Throwable $th)
         {
-            dd($th);
             \Log::error($th);
             return redirect()->back()->withError('Gagal menyimpan data');
         }

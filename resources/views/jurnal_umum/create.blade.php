@@ -60,7 +60,7 @@
                     <div class="col-md-6 form-group">
                         <label for="kodeAkun">Kode Akun</label>
                         <br>
-                        <select name="code_id[]" id="kodeAkunDebet1" class="form-control select2Akun" required>
+                        <select name="code_debet_id[]" id="kodeAkunDebet1" class="form-control select2Akun" required>
                         @foreach ($debetCodes as $code)
                         <option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>
                         @endforeach
@@ -84,7 +84,7 @@
                     <div class="col-md-6 form-group">
                         <label for="kodeAkunCredit1">Kode Akun</label>
                         <br>
-                        <select name="code_id[]" id="kodeAkunCredit1" class="form-control select2Akun" required>
+                        <select name="code_credit_id[]" id="kodeAkunCredit1" class="form-control select2Akun" required>
                         @foreach ($creditCodes as $code)
                             <option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>
                         @endforeach
@@ -168,7 +168,7 @@
         var element =   '<div class="row" id="formDebet'+formCounter+'">'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="kodeAkunDebet'+formCounter+'">Kode Akun</label>'+
-                                '<select name="code_id[]" id="kodeAkunDebet'+formCounter+'" class="form-control select2Akun" required>'+
+                                '<select name="code_debet_id[]" id="kodeAkunDebet'+formCounter+'" class="form-control select2Akun" required>'+
                                 '@foreach ($debetCodes as $code)'+
                                     '<option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>'+
                                 '@endforeach'+
@@ -207,7 +207,7 @@
         var element =   '<div class="row" id="formCredit'+formCounter+'">'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="kodeAkunCredit'+formCounter+'">Kode Akun</label>'+
-                                '<select name="code_id[]" id="kodeAkunCredit'+formCounter+'" class="form-control select2Akun" required>'+
+                                '<select name="code_credit_id[]" id="kodeAkunCredit'+formCounter+'" class="form-control select2Akun" required>'+
                                 '@foreach ($creditCodes as $code)'+
                                     '<option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>'+
                                 '@endforeach'+

@@ -207,14 +207,14 @@ class JurnalManager
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JU;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
 
-            if ($jurnalUmumItem->code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+            if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET) 
             {
                 $jurnal->akun_debet = $jurnalUmumItem->code->CODE;
                 $jurnal->debet = $jurnalUmumItem->nominal;
                 $jurnal->akun_kredit = 0;
                 $jurnal->kredit = 0;
             }
-            else if($jurnalUmumItem->code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+            else if($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_KREDIT)
             {
                 $jurnal->akun_debet = 0;
                 $jurnal->debet = 0;
@@ -233,42 +233,38 @@ class JurnalManager
 
     public static function updateJurnalUmum(JurnalUmum $jurnalUmum)
     {
-        // get jurnal data
-        $jurnal = Jurnal::where('id_tipe_jurnal', TIPE_JURNAL_JU);
+        // delete old jurnal data
+        $jurnalUmum->jurnals()->delete();
 
-        // cek updated code is debet/kredit
-        $code = Code::find($saldoAwal->getOriginal()['code_id']);
+        $newJurnalUmum = JurnalUmum::find($jurnalUmum->id);
 
-        // if debet
-        if ($code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+        $jurnalUmumItems = $newJurnalUmum->jurnalUmumItems;
+        
+        foreach ($jurnalUmumItems as $key => $jurnalUmumItem) 
         {
-            $jurnal = $jurnal->where('akun_debet', $code->CODE)->first();
-        }
-        // if kredit
-        else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
-        {
-            $jurnal = $jurnal->where('akun_kredit', $code->CODE)->first();
-        }
-        // if jurnal exist
-        if($jurnal)
-        {
-            if ($code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JU;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+
+            if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET) 
             {
-                $jurnal->akun_debet = $saldoAwal->code->CODE;
-                $jurnal->debet = $saldoAwal->nominal;
+                $jurnal->akun_debet = $jurnalUmumItem->code->CODE;
+                $jurnal->debet = $jurnalUmumItem->nominal;
                 $jurnal->akun_kredit = 0;
                 $jurnal->kredit = 0;
             }
-            else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+            else if($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_KREDIT)
             {
                 $jurnal->akun_debet = 0;
                 $jurnal->debet = 0;
-                $jurnal->akun_kredit = $saldoAwal->code->CODE;
-                $jurnal->kredit = $saldoAwal->nominal;
+                $jurnal->akun_kredit = $jurnalUmumItem->code->CODE;
+                $jurnal->kredit = $jurnalUmumItem->nominal;
             }
 
+            $jurnal->keterangan = $jurnalUmum->deskripsi;
+            $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            
+
             // save as polymorphic
             $jurnalUmum->jurnals()->save($jurnal);
         }

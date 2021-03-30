@@ -40,14 +40,14 @@ class JurnalUmum extends Model
 
     public function getTotalNominalDebetRupiahAttribute()
     {
-        $totalDebet = $this->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_DEBET)->sum('nominal');
+        $totalDebet = $this->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET)->sum('nominal');
         
         return number_format($totalDebet,0,",",".");
     }
 
     public function getTotalNominalKreditRupiahAttribute()
     {
-        $totalKredit = $this->jurnalUmumItems->where('code.normal_balance_id', NORMAL_BALANCE_KREDIT)->sum('nominal');
+        $totalKredit = $this->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_KREDIT)->sum('nominal');
         
         return number_format($totalKredit,0,",",".");
     }

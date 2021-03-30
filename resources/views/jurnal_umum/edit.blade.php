@@ -76,7 +76,7 @@
                         <div class="col-md-6 form-group">
                             <label for="kodeAkun">Kode Akun</label>
                             <br>
-                            <select name="code_id[]" id="kodeAkunDebet{{ $loop->iteration }}" class="form-control select2Akun" required>
+                            <select name="code_debet_id[]" id="kodeAkunDebet{{ $loop->iteration }}" class="form-control select2Akun" required>
                             @foreach ($debetCodes as $code)
                                 <option value="{{ $code->id }}" @if($code->id == $itemDebet->code_id) selected @endif>{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>
                             @endforeach
@@ -84,7 +84,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="nominalDebet{{ $loop->iteration }}">Besar Nominal</label>
-                            <input type="text" name="nominal[]" id="nominalDebet{{ $loop->iteration }}" value="{{ $itemDebet->nominal }}" data-type="Debet" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                            <input type="text" name="nominal_debet[]" id="nominalDebet{{ $loop->iteration }}" value="{{ $itemDebet->nominal }}" data-type="Debet" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                         </div>
                     </div>
                 @endforeach
@@ -102,7 +102,7 @@
                     <div class="col-md-6 form-group">
                         <label for="kodeAkunCredit{{ $loop->iteration }}">Kode Akun</label>
                         <br>
-                        <select name="code_id[]" id="kodeAkunCredit{{ $loop->iteration }}" class="form-control select2Akun" required>
+                        <select name="code_credit_id[]" id="kodeAkunCredit{{ $loop->iteration }}" class="form-control select2Akun" required>
                         @foreach ($creditCodes as $code)
                             <option value="{{ $code->id }}" @if($code->id == $itemCredit->code_id) selected @endif>{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>
                         @endforeach
@@ -110,7 +110,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="nominalCredit{{ $loop->iteration }}">Besar Nominal</label>
-                        <input type="text" name="nominal[]" id="nominalCredit{{ $loop->iteration }}" value="{{ $itemCredit->nominal }}" data-type="Credit" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                        <input type="text" name="nominal_credit[]" id="nominalCredit{{ $loop->iteration }}" value="{{ $itemCredit->nominal }}" data-type="Credit" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                     </div>
                 </div>
                 @endforeach
@@ -189,7 +189,7 @@
         var element =   '<div class="row" id="formDebet'+formCounter+'">'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="kodeAkunDebet'+formCounter+'">Kode Akun</label>'+
-                                '<select name="code_id[]" id="kodeAkunDebet'+formCounter+'" class="form-control select2Akun" required>'+
+                                '<select name="code_debet_id[]" id="kodeAkunDebet'+formCounter+'" class="form-control select2Akun" required>'+
                                 '@foreach ($debetCodes as $code)'+
                                     '<option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>'+
                                 '@endforeach'+
@@ -197,7 +197,7 @@
                             '</div>'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="nominalDebet'+formCounter+'">Besar Nominal</label>'+
-                                '<input type="text" name="nominal[]" id="nominalDebet'+formCounter+'" data-type="Debet" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<input type="text" name="nominal_debet[]" id="nominalDebet'+formCounter+'" data-type="Debet" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
@@ -228,7 +228,7 @@
         var element =   '<div class="row" id="formCredit'+formCounter+'">'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="kodeAkunCredit'+formCounter+'">Kode Akun</label>'+
-                                '<select name="code_id[]" id="kodeAkunCredit'+formCounter+'" class="form-control select2Akun" required>'+
+                                '<select name="code_credit_id[]" id="kodeAkunCredit'+formCounter+'" class="form-control select2Akun" required>'+
                                 '@foreach ($creditCodes as $code)'+
                                     '<option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>'+
                                 '@endforeach'+
@@ -236,7 +236,7 @@
                             '</div>'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="nominalCredit'+formCounter+'">Besar Nominal</label>'+
-                                '<input type="text" name="nominal[]" id="nominalCredit'+formCounter+'" data-type="Credit" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<input type="text" name="nominal_credit[]" id="nominalCredit'+formCounter+'" data-type="Credit" data-form="'+formCounter+'" class="nominal form-control" placeholder="Besar Nominal" autocomplete="off" required >'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
