@@ -7,7 +7,7 @@ use App\Models\Code;
 use App\Models\JurnalUmum;
 use App\Models\JurnalUmumItem;
 use App\Models\Jurnal;
-use App\Models\jurnalUmumLampiran;
+use App\Models\JurnalUmumLampiran;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
 
