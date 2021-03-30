@@ -13,7 +13,7 @@ class Pinjaman extends Model {
     use Userstamps;
 
     protected $table = "t_pinjam";
-    protected $primaryKey = "kode_pinjam";
+    protected $primaryKey = "id";
     protected $keyType = 'string';
     public $incrementing = false;
     protected $dates = ['tgl_entri', 'tgl_tempo'];
