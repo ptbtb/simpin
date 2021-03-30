@@ -126,15 +126,19 @@ class SimpananController extends Controller
                     if (isset($requiredKeyIndex[$key]))
                     {
                         $seq = $requiredKeyIndex[$key];
-                        $listSimpanan[$seq] = (object)$res;
+                        $res['seq'] = $seq;
+                        array_push($listSimpanan,$res);
                     }
                     else
                     {
-                        $listSimpanan[$index] = (object)$res;
+                        $res['seq'] = $index;
+                        array_push($listSimpanan,$res);
                         $index++;
                     }
                 }
             }
+
+            unset($anggota['simpanSaldoAwal']);
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
             $response['message'] = null;

@@ -36,6 +36,9 @@ class PinjamanManager
             $provisi = round($pengajuan->besar_pinjam * $provisi,2);
 
             $biayaAdministrasi = $jenisPinjaman->biaya_admin;
+
+            // get next serial number
+            $nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
            
             $pinjaman = new Pinjaman();
             $kodeAnggota = $pengajuan->kode_anggota;
@@ -58,6 +61,7 @@ class PinjamanManager
             $pinjaman->tgl_entri = Carbon::now();
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($jenisPinjaman->lama_angsuran);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
+            $pinjaman->serial_number = $nextSerialNumber;
             // dd($pinjaman);
             $pinjaman->save();
             event(new PinjamanCreated($pinjaman));
@@ -92,6 +96,40 @@ class PinjamanManager
         catch (\Throwable $e)
         {
             Log::error($e);
+        }
+    }
+
+    /**
+     * get serial number on pinjaman table.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function getSerialNumber($date)
+    {        
+        try
+        {
+            $nextSerialNumber = 1;
+
+            // get date
+            $date = Carbon::createFromFormat('d-m-Y', $date);
+            $year = $date->year;
+
+            // get pinjaman data on this year
+            $lastPinjaman = Pinjaman::whereYear('tgl_entri', '=', $year)
+                                        ->orderBy('serial_number', 'desc')
+                                        ->first();
+            if($lastPinjaman)
+            {
+                $nextSerialNumber = $lastPinjaman->serial_number + 1;
+            }
+
+            return $nextSerialNumber;
+        }
+        catch(\Exception $e)
+        {
+            \Log::info($e->getMessage());
+            return false;
         }
     }
 }

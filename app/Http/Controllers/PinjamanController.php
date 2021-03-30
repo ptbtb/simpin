@@ -20,6 +20,8 @@ use App\Events\Pinjaman\PinjamanCreated;
 use App\Imports\PinjamanImport;
 use App\Managers\JurnalManager;
 use App\Managers\PengajuanManager;
+use App\Managers\PinjamanManager;
+use App\Managers\AngsuranManager;
 use App\Models\Angsuran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -789,6 +791,9 @@ class PinjamanController extends Controller {
 
     public function store(Request $request) {
 
+        // get next serial number
+        $nextSerialNumber = PinjamanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
         foreach ($request->besar_pinjam as $key => $besar_pinjam) {
             if ($besar_pinjam > 0) {
                 $pinjaman = new Pinjaman();
@@ -813,11 +818,16 @@ class PinjamanController extends Controller {
                 $pinjaman->tgl_tempo = Carbon::now()->addMonths($request->sisa_angsuran[$key] - 1);
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
                 $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
+                $pinjaman->serial_number = $nextSerialNumber;
                 $pinjaman->save();
 //            dd($pinjaman);die;
 
 
                 for ($i = 0; $i <= $pinjaman->sisa_angsuran - 1; $i++) {
+
+                    // get next serial number
+                    $nextSerialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
                     $jatuhTempo = $pinjaman->tgl_entri->addMonths($i)->endOfMonth();
                     $sisaPinjaman = $pinjaman->sisa_pinjaman;
                     $angsuran = new Angsuran();
@@ -831,6 +841,7 @@ class PinjamanController extends Controller {
                     $angsuran->tgl_entri = Carbon::now();
                     $angsuran->jatuh_tempo = $jatuhTempo;
                     $angsuran->u_entry = Auth::user()->name;
+                    $angsuran->serial_number = $nextSerialNumber;
 //                 dd($angsuran);die;
                     $angsuran->save();
                 }

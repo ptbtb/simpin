@@ -17,6 +17,7 @@ class Pinjaman extends Model {
     // protected $keyType = 'string';
     // public $incrementing = false;
     protected $dates = ['tgl_entri', 'tgl_tempo'];
+    protected $appends = ['serial_number_view'];
 
     public function anggota() {
         return $this->belongsTo(Anggota::class, 'kode_anggota');
@@ -130,5 +131,10 @@ class Pinjaman extends Model {
         $minimalAngsuranLunas = $this->minimal_angsur_pelunasan;
         $angsuranLunas = $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)->count();
         return $angsuranLunas >= $minimalAngsuranLunas;
+    }
+
+    public function getSerialNumberViewAttribute()
+    {
+        return 'PIJ' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
     }
 }

@@ -27,7 +27,7 @@ class Jurnal extends Model
      *
      * @var array
      */
-    protected $appends = ['view_created_at'];
+    protected $appends = ['view_created_at', 'jurnalable_view'];
 
 
     /**
@@ -61,5 +61,17 @@ class Jurnal extends Model
     public function getViewCreatedAtAttribute()
     {
         return $this->created_at->format('d F Y');
+    }
+
+    public function getJurnalableViewAttribute()
+    {
+        if($this->jurnalable)
+        {
+            return $this->jurnalable;
+        }
+        else
+        {
+            return '';
+        }
     }
 }

@@ -13,6 +13,7 @@ class Penarikan extends Model
     protected $primaryKey = "kode_ambil";
     protected $dates = ['tgl_ambil', 'tgl_acc'];
     protected $fillable = ['kode_anggota', 'kode_tabungan','besar_ambil','tgl_ambil','keterangan','code_trans','u_entry'];
+    protected $appends = ['serial_number_view'];
 
     public function anggota()
     {
@@ -110,5 +111,10 @@ class Penarikan extends Model
     public function jkkPrinted()
     {
         return $this->status_jkk == 1;
+    }
+
+    public function getSerialNumberViewAttribute()
+    {
+        return 'TAR' . $this->tgl_ambil->format('Y') . $this->tgl_ambil->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
     }
 }

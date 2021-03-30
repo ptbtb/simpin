@@ -75,7 +75,7 @@ Route::group(['prefix' => 'setting'], function () {
     Route::get('/simpanan/jenis/searchByUser', [App\Http\Controllers\JenisSimpananController::class, 'searchSimpananByUser'])->name('jenis-simpanan-searchByUser');
     Route::get('/simpanan/import/excel', [App\Http\Controllers\SettingSimpananController::class, 'importExcel'])->name('saldosimpanan-import-excel');
     Route::post('/simpanan/import/excel', [App\Http\Controllers\SettingSimpananController::class, 'storeImportExcel'])->name('saldosimpanan-import-excel');
-   
+
     //pinjaman
     Route::get('/pinjaman', [App\Http\Controllers\SettingPinjamanController::class, 'index'])->name('jenis-pinjaman-list');
     Route::get('/pinjaman/edit/{id}', [App\Http\Controllers\SettingPinjamanController::class, 'edit'])->name('jenis-pinjaman-edit');
@@ -85,11 +85,11 @@ Route::group(['prefix' => 'setting'], function () {
     Route::post('/pinjaman/create', [App\Http\Controllers\SettingPinjamanController::class, 'store'])->name('jenis-pinjaman-add');
     Route::get('/pinjaman/import/excel', [App\Http\Controllers\SettingPinjamanController::class, 'importExcel'])->name('saldopinjaman-import-excel');
     Route::post('/pinjaman/import/excel', [App\Http\Controllers\SettingPinjamanController::class, 'storeImportExcel'])->name('saldopinjaman-import-excel');
-   
+
     //codetrans
     Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index'])->name('kode-transaksi-list');
-    Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit']);
-    Route::post('/codetrans/update', [App\Http\Controllers\SettingCodeTransController::class, 'update']);
+    Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit'])->name('kode-transaksi-edit');
+    Route::post('/codetrans/update/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'update'])->name('kode-transaksi-update');
     Route::get('/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy']);
     Route::get('/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create'])->name('kode-transaksi-create');
     Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store'])->name('kode-transaksi-store');
@@ -192,7 +192,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
 
         Route::group(['prefix' => 'pengajuan'], function () {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
-            Route::get('data-jurnal/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'viewDataJurnalPinjaman'])->name('view-data-jurnal-pengajuan-pinjaman'); 
+            Route::get('data-jurnal/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'viewDataJurnalPinjaman'])->name('view-data-jurnal-pengajuan-pinjaman');
             Route::get('print-jkk', [App\Http\Controllers\PengajuanController::class, 'indexJkk'])->name('pengajuan-pinjaman-print-jkk');
             Route::post('print-jkk', [App\Http\Controllers\PengajuanController::class, 'printJkk'])->name('pengajuan-pinjaman-print-jkk');
             Route::get('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add')->middleware(['pinjaman']);
@@ -245,7 +245,7 @@ Route::group(['prefix' => 'penarikan'], function () {
 
         Route::get('receipt/{id}', [App\Http\Controllers\PenarikanController::class, 'receipt'])->where('id', '[0-9]+')->name('penarikan-receipt');
         Route::get('receipt/download/{id}', [App\Http\Controllers\PenarikanController::class, 'downloadReceipt'])->where('id', '[0-9]+')->name('penarikan-receipt-download');
-    
+
         Route::get('anggota/detail/{id}', [App\Http\Controllers\PenarikanController::class, 'detailAnggota'])->where('id', '[0-9]+')->name('penarikan-detail-anggota');
         Route::get('download/pdf', [App\Http\Controllers\PenarikanController::class, 'createPDF'])->name('penarikan-download-pdf');
         Route::get('download/excel', [App\Http\Controllers\PenarikanController::class, 'createExcel'])->name('penarikan-download-excel');
@@ -254,7 +254,7 @@ Route::group(['prefix' => 'penarikan'], function () {
         Route::post('import/excel', [App\Http\Controllers\PenarikanController::class, 'storeImportExcel'])->name('penarikan-import-excel');
 
         Route::post('update-status', [App\Http\Controllers\PenarikanController::class, 'updateStatus'])->name('penarikan-update-status');
-        
+
         Route::get('print-jkk', [App\Http\Controllers\PenarikanController::class, 'printJkk'])->name('penarikan-print-jkk');
         Route::post('print-jkk', [App\Http\Controllers\PenarikanController::class, 'storePrintJkk'])->name('penarikan-print-jkk');
 
@@ -273,7 +273,7 @@ Route::group(['prefix' => 'tabungan'], function () {
         Route::delete('delete/{id}', [App\Http\Controllers\TabunganController::class, 'delete'])->where('id', '[0-9]+')->name('tabungan-delete');
         Route::get('import', [App\Http\Controllers\TabunganController::class, 'importTabungan'])->name('tabungan-import');
         Route::post('import', [App\Http\Controllers\TabunganController::class, 'storeImportTabungan'])->name('tabungan-import');
-    }); 
+    });
 });
 
 // Notifikasi

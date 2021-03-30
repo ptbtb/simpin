@@ -65,6 +65,9 @@ class PenarikanController extends Controller
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
 
+            // get next serial number
+            $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
             $anggota = Anggota::with('tabungan')->find($request->kode_anggota);
             $tabungan = $anggota->tabungan->where('kode_trans', $request->jenis_simpanan)->first();
             $besarPenarikan = filter_var($request->besar_penarikan, FILTER_SANITIZE_NUMBER_INT);
@@ -86,7 +89,7 @@ class PenarikanController extends Controller
             }
 
             $penarikan = new Penarikan();
-            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user)
+            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber)
             {
                 $penarikan->kode_anggota = $anggota->kode_anggota;
                 $penarikan->kode_tabungan = $tabungan->kode_tabungan;
@@ -97,6 +100,7 @@ class PenarikanController extends Controller
                 $penarikan->u_entry = $user->name;
                 $penarikan->created_by = $user->id;
                 $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI;
+                $penarikan->serial_number = $nextSerialNumber;
                 $penarikan->save();
             });
 

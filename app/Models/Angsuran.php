@@ -14,6 +14,7 @@ class Angsuran extends Model
     protected $table = "t_angsur";
     protected $primaryKey = "kode_angsur";
     protected $dates = ['tgl_entri','paid_at','jatuh_tempo'];
+    protected $appends = ['serial_number_view'];
 
     public function statusAngsuran()
     {
@@ -50,5 +51,10 @@ class Angsuran extends Model
             return $this->sisa_pinjam + $this->totalAngsuran - $this->besar_pembayaran;
         }
         return $this->sisa_pinjam + $this->besar_angsuran;
+    }
+
+    public function getSerialNumberViewAttribute()
+    {
+        return 'ANG' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
     }
 }
