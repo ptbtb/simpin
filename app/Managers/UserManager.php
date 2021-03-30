@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Events\User\UserCreated;
 
 use Auth;
-
+use Illuminate\Support\Facades\Hash;
 
 class UserManager 
 {
@@ -18,7 +18,7 @@ class UserManager
             $user->name = $anggota->nama_anggota;
             $user->kode_anggota = $anggota->kode_anggota;
             $user->email = $anggota->email;
-            $user->password = $password;
+            $user->password = Hash::make($password);
 			$user->created_by = Auth::user()->id;
             $user->save();
             
@@ -30,7 +30,7 @@ class UserManager
             $user->assignRole($role->name);
             $user->save();
             
-            event(new UserCreated($user, $user->password));
+            event(new UserCreated($user, $password));
 			return redirect()->route('user-list')->withSuccess('Create user Success');
         }
         catch(\Exception $e) {

@@ -130,7 +130,7 @@ class AnggotaController extends Controller {
                     'emergency_kontak' => $request->emergency_kontak,
                     'status' => 'aktif'
                 ]);
-                $password =  Hash::make($request->password);
+                $password = $request->password;
                 event(new AnggotaCreated($anggota, $password));
             });
             // alihkan halaman tambah buku ke halaman books
