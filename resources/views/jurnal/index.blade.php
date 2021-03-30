@@ -93,8 +93,15 @@
                         className: "dt-body-center", "name": "index"				
                     },
                     { 
-                        mData: 'nomer', sType: "string", 
-                        className: "dt-body-center", "name": "nomer"						
+                        mData: 'jurnalable_view', sType: "string", 
+                        className: "dt-body-center", "name": "jurnalable_view",
+                        mRender: function(data, type, full) 
+                        {
+                            if(data)
+                            {
+                                return data.serial_number_view;
+                            }
+                        }					
                     },
                     { 
                         mData: 'tipe_jurnal.name', sType: "string", 
