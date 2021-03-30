@@ -114,9 +114,9 @@
                             <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
                             <td>{{ ucwords($pinjaman->statusPinjaman->name) }}</td>
                             <td>
-                                <a href="{{ route('pinjaman-detail', ['id'=>$pinjaman->kode_pinjam]) }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a>
+                                <a href="{{ route('pinjaman-detail', ['id'=>$pinjaman->kode_pinjam]) }}" class="btn btn-sm btn-info text-white" data-action='detail'><i class="fa fa-eye"></i> Detail</a>
                                 @can('delete pinjaman')
-                                    <a class="btn btn-sm btn-danger text-white btn-delete" style="cursor: pointer" data-id='{{ $pinjaman->kode_pinjam }}' data-token='{{ csrf_token() }}'><i class="fa fa-trash"></i> Delete</a>
+                                    <a class="btn btn-sm btn-danger text-white btn-delete" style="cursor: pointer" data-action='delete' data-id='{{ $pinjaman->kode_pinjam }}' data-token='{{ csrf_token() }}'><i class="fa fa-trash"></i> Delete</a>
                                 @endcan
                                 {{-- <a data-id="{{ $pinjaman->kode_pinjam }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a> --}}
                             </td>
@@ -162,62 +162,66 @@
         $('.table').on('click', 'a', function ()
         {
             var data_id = $(this).data('id');
+            var data_action = $(this).data('action');
             var url = baseURL+'/pinjaman/delete/'+data_id;
             var token = $(this).data('token');
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                input: 'password',
-                inputAttributes: {
-                    name: 'password',
-                    placeholder: 'Password',
-                    required: 'required',
-                },
-                validationMessage:'Password required',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var password = result.value;
-                    url = url + '?pw=' + password
-                    $.ajax({
-                        url: url,
-                        type: 'delete',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        contentType: false,
-                        processData: false,                     
-                        success: function(data) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Your has been changed',
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        },
-                        error: function(error){
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: error.responseJSON.message,
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        }
-                    });
-                }
-            });
+            if (data_action == 'delete')
+            {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    input: 'password',
+                    inputAttributes: {
+                        name: 'password',
+                        placeholder: 'Password',
+                        required: 'required',
+                    },
+                    validationMessage:'Password required',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var password = result.value;
+                        url = url + '?pw=' + password
+                        $.ajax({
+                            url: url,
+                            type: 'delete',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            contentType: false,
+                            processData: false,                     
+                            success: function(data) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Your has been changed',
+                                    showConfirmButton: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            },
+                            error: function(error){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: error.responseJSON.message,
+                                    showConfirmButton: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         });
     </script>
 @endsection

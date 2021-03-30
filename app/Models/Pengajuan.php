@@ -152,4 +152,14 @@ class Pengajuan extends Model
     {
         return 'Rp '.number_format($this->jenisPinjaman->biaya_admin, '2', ',', '.');
     }
+
+    public function getViewCreditBankAttribute()
+    {
+        $provisi = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        $admin = $this->jenisPinjaman->biaya_admin;
+        $asuransi = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        $total = $this->besar_pinjam - $provisi - $admin - $asuransi;        
+
+        return 'Rp '.number_format($total, '2', ',', '.');
+    }
 }
