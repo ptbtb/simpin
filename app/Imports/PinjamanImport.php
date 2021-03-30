@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use App\Managers\PinjamanManager;
 
 class PinjamanImport implements OnEachRow
 {
@@ -23,6 +24,9 @@ class PinjamanImport implements OnEachRow
         $besar_pinjam = $row[3];
         if ($besar_pinjam > 0 && $row[2] > 0)
         {
+            // get next serial number
+            $nextSerialNumber = PinjamanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
             $pinjaman = new Pinjaman();
             $kodeAnggota = $row[1];
             $kodePinjaman = str_replace('.', '', $row[0]) . '-' . $kodeAnggota . '-' . Carbon::createFromFormat('Y-m-d', $row[6]);
@@ -45,6 +49,7 @@ class PinjamanImport implements OnEachRow
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($row[5] - 1);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
             $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
+            $pinjaman->serial_number = $nextSerialNumber;
             $pinjaman->save();
 
 

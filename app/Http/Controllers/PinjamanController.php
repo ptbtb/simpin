@@ -20,6 +20,7 @@ use App\Events\Pinjaman\PinjamanCreated;
 use App\Imports\PinjamanImport;
 use App\Managers\JurnalManager;
 use App\Managers\PengajuanManager;
+use App\Managers\PinjamanManager;
 use App\Models\Angsuran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -787,6 +788,9 @@ class PinjamanController extends Controller {
 
     public function store(Request $request) {
 
+        // get next serial number
+        $nextSerialNumber = PinjamanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
         foreach ($request->besar_pinjam as $key => $besar_pinjam) {
             if ($besar_pinjam > 0) {
                 $pinjaman = new Pinjaman();
@@ -811,6 +815,7 @@ class PinjamanController extends Controller {
                 $pinjaman->tgl_tempo = Carbon::now()->addMonths($request->sisa_angsuran[$key] - 1);
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
                 $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
+                $pinjaman->serial_number = $nextSerialNumber;
                 $pinjaman->save();
 //            dd($pinjaman);die;
 
