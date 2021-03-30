@@ -156,31 +156,31 @@
                             <h5>Pembayaran Angsuran</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-                        <div class="modal-body">
-                            <div class="form-group">
+                        <div class="modal-body row">
+                            <div class="form-group col-md-6">
                                 <label>Bulan</label>
                                 <input type="text" name="bulan" class="form-control" value="{{ ($tagihan->jatuh_tempo)? $tagihan->jatuh_tempo->format('d-m-Y'):'' }}" readonly>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label>Total Angsuran</label>
                                 <input type="text" name="total_angsuran" class="form-control" value="Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}" readonly>
                             </div>
-                            <div class="form-group">
-                                <label>Besar Pembayaran</label>
-                                <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
-                            </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label>Jenis Akun</label>
                                 <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label>Akun</label>
                                 <select name="id_akun_kredit" id="code" class="form-control select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>
                                 </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Besar Pembayaran</label>
+                                <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
                             </div>
                         </div>
                         <div class="modal-footer">
