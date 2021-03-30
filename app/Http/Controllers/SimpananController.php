@@ -15,6 +15,7 @@ use App\Models\Code;
 use Illuminate\Http\Request;
 
 use App\Managers\JurnalManager;
+use App\Managers\SimpananManager;
 
 use Auth;
 use DB;
@@ -120,6 +121,9 @@ class SimpananController extends Controller
             $jenisSimpanan = JenisSimpanan::find($request->jenis_simpanan);
             $anggotaId = $request->kode_anggota;
 
+            // get next serial number
+            $nextSerialNumber = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
             if($jenisSimpanan->nama_simpanan === 'SIMPANAN POKOK') {
                 $checkSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
 
@@ -159,6 +163,7 @@ class SimpananController extends Controller
                     $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                     $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
                     $simpanan->id_akun_debet = ($request->id_akun_debet)? $request->id_akun_debet:null;
+                    $simpanan->serial_number = $nextSerialNumber;
                     $simpanan->save();
 
                     if ($besarSimpanan < 499999){
@@ -193,6 +198,8 @@ class SimpananController extends Controller
                 $simpanan->periode = date("Y-m-d", $periodeTime);
                 $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                 $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
+                $simpanan->id_akun_debet = ($request->id_akun_debet)? $request->id_akun_debet:null;
+                $simpanan->serial_number = $nextSerialNumber;
                 $simpanan->save();
             }
 

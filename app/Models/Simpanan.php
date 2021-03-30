@@ -12,7 +12,7 @@ class Simpanan extends Model
     protected $table = "t_simpan";
     protected $primaryKey = "kode_simpan";
     protected $dates = ['tgl_mulai', 'tgl_entri'];
-    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah'];
+    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view'];
     protected $fillable = ['jenis_simpan', 'besar_simpanan','kode_anggota','u_entry','tgl_mulai','tgl_entri','kode_jenis_simpan','keterangan'];
 
     public function anggota()
@@ -63,5 +63,10 @@ class Simpanan extends Model
             return 'Rp.' . number_format($this->besar_simpanan,0,",",".");
         }
         return $this->besar_simpanan;
+    }
+
+    public function getSerialNumberViewAttribute()
+    {
+        return 'SIP' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
     }
 }

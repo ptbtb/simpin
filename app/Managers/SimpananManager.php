@@ -53,4 +53,40 @@ class SimpananManager
             Log::error($e);
         }
     }
+
+    /**
+     * get serial number on simpanan table.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function getSerialNumber($date)
+    {        
+        try
+        {
+            $nextSerialNumber = 1;
+
+            // get date
+            $date = Carbon::createFromFormat('d-m-Y', $date);
+            $year = $date->year;
+
+            // get simpanan data on this year
+            $lastSimpanan = Simpanan::whereYear('tgl_entri', '=', $year)
+                                        ->orderBy('serial_number', 'desc')
+                                        ->first();
+            if($lastSimpanan)
+            {
+                $nextSerialNumber = $lastSimpanan->serial_number + 1;
+            }
+
+            return $nextSerialNumber;
+        }
+        catch(\Exception $e)
+        {
+            \Log::info($e->getMessage());
+            return false;
+        }
+    }
 }
+
+?>
