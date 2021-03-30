@@ -47,7 +47,7 @@ class NotificationManager
     
     static function sendNotificationUpdatePengajuanPinjaman(Pengajuan $pengajuan) {
        try {
-           
+           $receiver = null;
             if($pengajuan->menungguApprovalSpv()) {
                 $receiver = User::spv()->get();
             } elseif ($pengajuan->menungguApprovalAsman()) {
@@ -62,46 +62,49 @@ class NotificationManager
                 $receiver = User::operatorSimpin()->get();
             }
 
-            $keterangan = '';
-            $informasi_notifikasi = '';
-            $roleReceiver = $receiver->first()->roles;
-            $jenisPinjaman = JenisPinjaman::where('kode_jenis_pinjam', $pengajuan->kode_jenis_pinjam)->get()->first()->nama_pinjaman;
-            $namaPeminjam =  User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->name;
-
-            if($pengajuan->menungguPembayaran()){
-                // Notifikasi untuk Operator Simpin/Kasir
-                $keterangan = "Pengajuan Pinjaman oleh " .$namaPeminjam. " menunggu pembayaran oleh " . $roleReceiver->first()->name;
-                $informasi_notifikasi = "Pengajuan Pinjaman " .$jenisPinjaman. " oleh " .$namaPeminjam. ' menunggu pembayaran dari anda';
-            } else {
-                $keterangan = 'Persetujuan Pengajuan Pinjaman oleh ' . $roleReceiver->first()->name;
-                $informasi_notifikasi = $namaPeminjam. ' telah melakukan pengajuan pinjaman ' .$jenisPinjaman. ' sebesar Rp ' . number_format($pengajuan->besar_pinjam,0,",",".");
-            }
-
-
-            foreach ($receiver as $user)
+            if ($receiver)
             {
-                $notifikasi = new Notification();
-                $notifikasi->role_id=$roleReceiver->first()->id;
-                $notifikasi->receiver=$user->id;
-                $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->id;
-                $notifikasi->informasi_notifikasi = $informasi_notifikasi;
-                $notifikasi->has_read = 0;
-                $notifikasi->keterangan = $keterangan;
-                $notifikasi->url=route('pengajuan-pinjaman-list');
-                $notifikasi->save();
-            }
-
-
-            // Notifikasi untuk user
-            if($pengajuan->menungguPembayaran()){
-                $notifikasi = new Notification();
-                $notifikasi->role_id=ROLE_ANGGOTA;
-                $notifikasi->receiver= $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->id;
-                $notifikasi->informasi_notifikasi = "Pengajuan pinjaman anda telah diterima. Silakan menunggu pembayaran oleh kasir ";
-                $notifikasi->has_read = 0;
-                $notifikasi->keterangan = "Pengajuan Pinjaman Menunggu Pembayaran";
-                $notifikasi->url=route('pengajuan-pinjaman-list');
-                $notifikasi->save();
+                $keterangan = '';
+                $informasi_notifikasi = '';
+                $roleReceiver = $receiver->first()->roles;
+                $jenisPinjaman = JenisPinjaman::where('kode_jenis_pinjam', $pengajuan->kode_jenis_pinjam)->get()->first()->nama_pinjaman;
+                $namaPeminjam =  User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->name;
+    
+                if($pengajuan->menungguPembayaran()){
+                    // Notifikasi untuk Operator Simpin/Kasir
+                    $keterangan = "Pengajuan Pinjaman oleh " .$namaPeminjam. " menunggu pembayaran oleh " . $roleReceiver->first()->name;
+                    $informasi_notifikasi = "Pengajuan Pinjaman " .$jenisPinjaman. " oleh " .$namaPeminjam. ' menunggu pembayaran dari anda';
+                } else {
+                    $keterangan = 'Persetujuan Pengajuan Pinjaman oleh ' . $roleReceiver->first()->name;
+                    $informasi_notifikasi = $namaPeminjam. ' telah melakukan pengajuan pinjaman ' .$jenisPinjaman. ' sebesar Rp ' . number_format($pengajuan->besar_pinjam,0,",",".");
+                }
+    
+    
+                foreach ($receiver as $user)
+                {
+                    $notifikasi = new Notification();
+                    $notifikasi->role_id=$roleReceiver->first()->id;
+                    $notifikasi->receiver=$user->id;
+                    $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->id;
+                    $notifikasi->informasi_notifikasi = $informasi_notifikasi;
+                    $notifikasi->has_read = 0;
+                    $notifikasi->keterangan = $keterangan;
+                    $notifikasi->url=route('pengajuan-pinjaman-list');
+                    $notifikasi->save();
+                }
+    
+    
+                // Notifikasi untuk user
+                if($pengajuan->menungguPembayaran()){
+                    $notifikasi = new Notification();
+                    $notifikasi->role_id=ROLE_ANGGOTA;
+                    $notifikasi->receiver= $notifikasi->peminjam = User::where('kode_anggota', $pengajuan->kode_anggota)->get()->first()->id;
+                    $notifikasi->informasi_notifikasi = "Pengajuan pinjaman anda telah diterima. Silakan menunggu pembayaran oleh kasir ";
+                    $notifikasi->has_read = 0;
+                    $notifikasi->keterangan = "Pengajuan Pinjaman Menunggu Pembayaran";
+                    $notifikasi->url=route('pengajuan-pinjaman-list');
+                    $notifikasi->save();
+                }
             }
 
 

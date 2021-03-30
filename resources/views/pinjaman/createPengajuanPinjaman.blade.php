@@ -192,7 +192,6 @@
                 {
                     $('#suratPenghasilanTertentu').hide();
                 }
-                console.log(selectedPinjaman);
 
                 if (besarPinjaman > maxPinjaman)
                 {

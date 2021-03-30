@@ -22,7 +22,7 @@ class Angsuran extends Model
 
     public function pinjaman()
     {
-        return $this->belongsTo(Pinjaman::class, 'kode_pinjam');
+        return $this->belongsTo(Pinjaman::class, 'kode_pinjam', 'kode_pinjam');
     }
 
     /**

@@ -14,8 +14,8 @@ class Pinjaman extends Model {
 
     protected $table = "t_pinjam";
     protected $primaryKey = "id";
-    protected $keyType = 'string';
-    public $incrementing = false;
+    // protected $keyType = 'string';
+    // public $incrementing = false;
     protected $dates = ['tgl_entri', 'tgl_tempo'];
 
     public function anggota() {

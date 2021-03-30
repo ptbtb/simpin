@@ -422,6 +422,8 @@ class PinjamanController extends Controller {
                         $pinjaman->save();
                     }
                 }
+
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
             }
 
             $pengajuan->save();
