@@ -308,10 +308,10 @@ class SimpananController extends Controller
         $attribute = [];
 
         // Kalkulasi Simpanan Pokok
-        if ($type == '411.01.000') {
-            $checkPaymentAvailable = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
-            $checkPaymentAvailable_old = DB::table('t_tabungan')->where('kode_anggota', '=', $anggotaId)->where('kode_trans', '=', '411.01.000')->first();
-            $besarSimpananPokok = DB::table('t_jenis_simpan')->where('kode_jenis_simpan', '=', '411.01.000')->first();
+        if ($type == JENIS_SIMPANAN_POKOK) {
+            $checkPaymentAvailable = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', JENIS_SIMPANAN_POKOK)->first();
+            $checkPaymentAvailable_old = DB::table('t_tabungan')->where('kode_anggota', '=', $anggotaId)->where('kode_trans', '=', JENIS_SIMPANAN_POKOK)->first();
+            $besarSimpananPokok = DB::table('t_jenis_simpan')->where('kode_jenis_simpan', '=', JENIS_SIMPANAN_POKOK)->first();
             if ($checkPaymentAvailable) {
                 $angsuranList = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $checkPaymentAvailable->kode_simpan)->get();
 
@@ -331,20 +331,14 @@ class SimpananController extends Controller
         }
 
         // Kalkulasi Simpanan Wajib
-        else if($type == '411.12.000') {
+        else if($type == JENIS_SIMPANAN_WAJIB) {
 
-            $payment = DB::table('t_anggota')
-                    ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
-                    ->join('t_kelas_company', 't_penghasilan.kelas_company_id', 't_kelas_company.id')
-                    ->join('t_kelas_simpanan', 't_kelas_company.id', 't_kelas_simpanan.kelas_company_id')
-                    ->select('t_kelas_simpanan.simpanan as paymentValue')
-                    ->where('t_anggota.kode_anggota', '=', $anggotaId)
-                    ->first();
+            $payment = Anggota::find($anggotaId)->kelasCompany->kelasSimpanan;
 
-            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', '411.12.000')->first();
+            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', JENIS_SIMPANAN_WAJIB)->first();
             $attribute = $latestAngsur;
 
-            $paymentValue = $payment->paymentValue;
+            $paymentValue = $payment->simpanan;
         }
 
         // Kalkulasi Simpanan Sukarela
@@ -354,9 +348,9 @@ class SimpananController extends Controller
                     ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
                     ->select('t_penghasilan.value as penghasilan')
                     ->where('t_anggota.kode_anggota', '=', $anggotaId)
-                    ->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
+                    ->where('t_penghasilan.id_jenis_penghasilan', '=', JENIS_PENGHASILAN_GAJI_BULANAN)
                     ->first();
-            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', '502.01.000')->first();
+            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', JENIS_SIMPANAN_SUKARELA)->first();
             $attribute = $latestAngsur;
             if ($latestAngsur){
                 $paymentValue= $latestAngsur->besar_simpanan;

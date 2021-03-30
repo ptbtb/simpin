@@ -21,4 +21,14 @@ class KelasCompany extends Model
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+
+    /**
+     * Get the kelasSimpanan associated with the KelasCompany
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function kelasSimpanan()
+    {
+        return $this->hasOne(kelasSimpanan::class, 'kelas_company_id', 'id');
+    }
 }

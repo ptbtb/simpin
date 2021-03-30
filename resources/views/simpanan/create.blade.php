@@ -245,11 +245,21 @@
                 if(response) {
                     $("#besarSimpanan").prop('disabled', false);
                     // simpanan wajib
-                    if(type === '411.12.000') {
+                    if(type === '{{ JENIS_SIMPANAN_WAJIB }}') {
                         const paymentValue = response.paymentValue;
-                        let latestPayment = response.attribute.periode || response.attribute.tanggal_entri;
-                        let monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
-                        let dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
+                        // jika belum pernah ada transaksi simpanan wajib
+                        if (response.attribute == null)
+                        {
+                            var latestPayment = moment();
+                            var monthYear = moment(latestPayment).format('MMMM YYYY');
+                            var dateMonthYear = moment(latestPayment).format('YYYY-MM-DD');
+                        }
+                        else
+                        {
+                            var latestPayment = response.attribute.periode || response.attribute.tanggal_entri;
+                            var monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
+                            var dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
+                        }
                         $('#periode').val(monthYear);
                         $('#besarSimpanan').val(toRupiah(paymentValue));
                         $('#besarSimpanan').attr('readonly',true);
@@ -258,7 +268,7 @@
                         $('#besaSimpananDetail').removeClass('col-md-12').addClass('col-md-6');
                     }
                     // simpanan pokok
-                    if(type === '411.01.000') {
+                    if(type === '{{ JENIS_SIMPANAN_POKOK }}') {
                         const angsuranSimpanan = response.attribute;
                         const paymentValue = response.paymentValue;
                         besarSimpananPokok = paymentValue;
@@ -285,12 +295,21 @@
     
                     }
                     // simpanan sukarela
-                    if(type ===  '502.01.000') {
+                    if(type ===  '{{ JENIS_SIMPANAN_SUKARELA }}') {
                         const paymentValue = response.paymentValue;
                         besarSimpananSukarela = response.paymentValue; 
-                        let latestPayment = response.attribute.periode || response.attribute.tanggal_entri;
-                        let monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
-                        let dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
+                        if (response.attribute == null)
+                        {
+                            var latestPayment = moment();
+                            var monthYear = moment(latestPayment).format('MMMM YYYY');
+                            var dateMonthYear = moment(latestPayment).format('YYYY-MM-DD');
+                        }
+                        else
+                        {
+                            var latestPayment = response.attribute.periode || response.attribute.tanggal_entri;
+                            var monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
+                            var dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
+                        }
                         $('#besarSimpanan').val(toRupiah(paymentValue));
                         $('#periode').val(monthYear);
                         $('#angsuranSimpanan').hide();
