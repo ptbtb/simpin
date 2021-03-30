@@ -10,6 +10,7 @@ use App\Models\Jurnal;
 use App\Models\JurnalUmumLampiran;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
+use App\Managers\JurnalUmumManager;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File; 
@@ -100,10 +101,14 @@ class JurnalUmumController extends Controller
             // get auth user
             $user = Auth::user();
 
+            // get next serial number
+            $nextSerialNumber = JurnalUmumManager::getSerialNumber($request->tgl_transaksi);
+
             // save into jurnal umum
             $jurnalUmum = new JurnalUmum();
             $jurnalUmum->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
             $jurnalUmum->deskripsi = $request->deskripsi;
+            $jurnalUmum->serial_number = $nextSerialNumber;
             $jurnalUmum->save();
             
             // loop every item
