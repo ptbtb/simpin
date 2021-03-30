@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use App\Managers\AngsuranManager;
 use App\Managers\PinjamanManager;
 
 class PinjamanImport implements OnEachRow
@@ -55,6 +56,9 @@ class PinjamanImport implements OnEachRow
 
             for ($i = 0; $i <= $pinjaman->sisa_angsuran - 1; $i++)
             {
+                // get next serial number
+                $nextSerialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
                 $jatuhTempo = $pinjaman->tgl_entri->addMonths($i)->endOfMonth();
                 $sisaPinjaman = $pinjaman->sisa_pinjaman;
                 $angsuran = new Angsuran();
@@ -68,6 +72,7 @@ class PinjamanImport implements OnEachRow
                 $angsuran->tgl_entri = Carbon::now();
                 $angsuran->jatuh_tempo = $jatuhTempo;
                 $angsuran->u_entry = Auth::user()->name;
+                $angsuran->serial_number = $nextSerialNumber;
                 $angsuran->save();
             }
         }
