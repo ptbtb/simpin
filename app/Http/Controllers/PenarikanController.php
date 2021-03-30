@@ -89,7 +89,7 @@ class PenarikanController extends Controller
             }
 
             $penarikan = new Penarikan();
-            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user)
+            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber)
             {
                 $penarikan->kode_anggota = $anggota->kode_anggota;
                 $penarikan->kode_tabungan = $tabungan->kode_tabungan;
