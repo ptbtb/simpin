@@ -895,4 +895,12 @@ class PinjamanController extends Controller {
             return response()->json(['message' => 'Terjadi Kesalahan'], 500);
         }
     }
+
+    public function viewDataJurnalPinjaman($id)
+    {
+        $pengajuan = Pengajuan::find($id);
+        $data['pengajuan'] = $pengajuan;
+        return view('pinjaman.viewjurnal', $data);
+        // return response()->json(['message' => 'error'], 500);
+    }
 }

@@ -183,7 +183,7 @@
                                         @endif
 
                                         @if($pengajuan->menungguKonfirmasi() || $pengajuan->menungguApprovalSpv() || $pengajuan->menungguApprovalAsman() || $pengajuan->menungguApprovalManager() || $pengajuan->menungguApprovalBendahara() || $pengajuan->menungguApprovalKetua())
-                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}" class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
+                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}"  class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
                                         @endif
                                     @endcan
                                 @endif
@@ -238,6 +238,12 @@
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="loading" style="position: absolute; top: 0; left: 0; z-index: 100; height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.5)">
+        <div class="d-flex w-100 h-100">
+            <img src="{{ asset('img/load.gif') }}" class="m-auto">
         </div>
     </div>
 @endsection
@@ -359,48 +365,44 @@
 
         $('.btn-jurnal').on('click', function ()
         {
+            htmlText = '';
             var id = $(this).data('id');
-            var code = $(this).data('code');
-            var nominal = $(this).data('nominal');
-
-            var htmlText =  '<div class="container-fluid">'+
-                                '<div class="row">'+
-                                    '<div class="col-md-6 offset-md-3" style="font-size:15px">'+
-                                        '<table class="table">'+
-                                            '<thead class="thead-dark">'+
-                                                '<tr>'+
-                                                    '<th>Akun Kredit</th>'+
-                                                    '<th>Kredit</th>'+
-                                                    '<th>Akun Debet</th>'+
-                                                    '<th>Debet</th>'+
-                                                '</tr>'+
-                                            '</thead>'+
-                                            '<tbody>'+
-                                                '<tr>'+
-                                                    '<td>'+code+'</td>'+
-                                                    '<td>'+new Intl.NumberFormat(['ban', 'id']).format(nominal)+'</td>'+
-                                                    '<td>Bank/Kas</td>'+
-                                                    '<td>'+new Intl.NumberFormat(['ban', 'id']).format(nominal)+'</td>'+
-                                                '</tr>'+
-                                            '</tbody>'+
-                                        '</table>'+
-                                    '</div>'+
-                                '</div>'+
-                            '</div>';
-
-            Swal.fire({
-                title: 'Jurnal Pengajuan',
-                html: htmlText, 
-                icon: "info",
-                showCancelButton: false,
-                confirmButtonText: "Ok",
-                confirmButtonColor: "#00a65a",
-                grow: 'row',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: false,
-            }).then((result) => {
-                if (result.value) {
+            $.ajax({
+                url: baseURL + '/pinjaman/pengajuan/data-jurnal/' + id,
+                success : function (data, status, xhr) {
+                    htmlText = data;
+                    Swal.fire({
+                        title: 'Jurnal Pengajuan',
+                        html: htmlText, 
+                        icon: "info",
+                        showCancelButton: false,
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: "#00a65a",
+                        grow: 'row',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
+                },
+                error : function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        html: htmlText, 
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: "#00a65a",
+                        grow: 'row',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
                 }
             });
         });
@@ -453,6 +455,15 @@
             }
 
             $('#code').trigger( "change" );
+        });
+
+        var $loading = $('#loading').hide();
+        $(document)
+        .ajaxStart(function () {
+            $loading.show();
+        })
+        .ajaxStop(function () {
+            $loading.hide();
         });
 
     </script>
