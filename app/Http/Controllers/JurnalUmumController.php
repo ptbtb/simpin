@@ -59,9 +59,17 @@ class JurnalUmumController extends Controller
     {
         $this->authorize('add jurnal umum', Auth::user());
         $debetCodes = Code::where('is_parent', 0)
+                            ->where('CODE', 'not like', "411%")
+                            ->where('CODE', 'not like', "106%")
+                            ->where('CODE', 'not like', "502%")
+                            ->where('CODE', 'not like', "105%")
                             ->get();
 
         $creditCodes = Code::where('is_parent', 0)
+                            ->where('CODE', 'not like', "411%")
+                            ->where('CODE', 'not like', "106%")
+                            ->where('CODE', 'not like', "502%")
+                            ->where('CODE', 'not like', "105%")
                             ->get();
         
         $data['title'] = "Tambah Jurnal Umum";
@@ -206,9 +214,17 @@ class JurnalUmumController extends Controller
         $this->authorize('edit jurnal umum', Auth::user());
         $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans')->find($id);
         $debetCodes = Code::where('is_parent', 0)
+                        ->where('CODE', 'not like', "411%")
+                        ->where('CODE', 'not like', "106%")
+                        ->where('CODE', 'not like', "502%")
+                        ->where('CODE', 'not like', "105%")
                         ->get();
 
         $creditCodes = Code::where('is_parent', 0)
+                        ->where('CODE', 'not like', "411%")
+                        ->where('CODE', 'not like', "106%")
+                        ->where('CODE', 'not like', "502%")
+                        ->where('CODE', 'not like', "105%")
                         ->get();
 
         $itemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);
