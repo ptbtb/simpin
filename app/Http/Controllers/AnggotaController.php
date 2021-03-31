@@ -48,7 +48,7 @@ class AnggotaController extends Controller {
 
         $anggotas = $anggotas->get();
 
-        return $anggotas;    
+        return $anggotas;
     }
 
     public function create()
@@ -69,7 +69,7 @@ class AnggotaController extends Controller {
         $listJenisPenghasilan = JenisPenghasilan::show()
 												->orderBy('sequence','asc')
                                                 ->get();
-                                                
+
         $listPenghasilan = $anggota->listPenghasilan;
         $data['listPenghasilan'] = null;
         if ($listPenghasilan->count())
@@ -102,7 +102,7 @@ class AnggotaController extends Controller {
                 return redirect()->back()->withError($message);
             }
 
-            
+
             DB::transaction(function () use ($request)
             {
                 $companyId = Company::find($request->company);
@@ -171,15 +171,15 @@ class AnggotaController extends Controller {
             $Anggota->email = $request->email;
             $Anggota->emergency_kontak = $request->emergency_kontak;
             $Anggota->status = 'aktif';
-            
+
             // save file KTP
             $file_ktp = $request->ktp_photo;
             $user = $Anggota->user;
 			if ($file_ktp)
 			{
 				$config['disk'] = 'upload';
-				$config['upload_path'] = '/user/'.$user->id.'/ktp'; 
-				$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/ktp';
+				$config['upload_path'] = '/user/'.$Anggota->kode_anggota.'/ktp';
+				$config['public_path'] = env('APP_URL') . '/upload/user/'.$Anggota->kode_anggota.'/ktp';
 				if (!Storage::disk($config['disk'])->has($config['upload_path']))
 				{
 					Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
@@ -192,13 +192,13 @@ class AnggotaController extends Controller {
 					$Anggota->foto_ktp = $config['disk'].$config['upload_path'].'/'.$filename;
 				}
             }
-            
+
             $Anggota->save();
 
             // save penghasilan
             $requestPenghasilan = $request->penghasilan;
 			foreach ($requestPenghasilan as $key => $value)
-			{	
+			{
 				$penghasilan = Penghasilan::where('id_jenis_penghasilan', $key)
 											->where('kode_anggota', $Anggota->kode_anggota)
                                             ->first();
@@ -215,10 +215,10 @@ class AnggotaController extends Controller {
 				}
 				$penghasilan->save();
 			}
-			
-			
+
+
 			// for file upload
-			$fileRequestPenghasilan = $request->file_penghasilan;	
+			$fileRequestPenghasilan = $request->file_penghasilan;
 			if(!is_null($fileRequestPenghasilan))
 			{
 				foreach ($fileRequestPenghasilan as $key => $value)
@@ -233,11 +233,11 @@ class AnggotaController extends Controller {
 						$penghasilan->id_jenis_penghasilan = $key;
 						$penghasilan->kode_anggota = $Anggota->kode_anggota;
 					}
-					
+
 					$config['disk'] = 'upload';
-					$config['upload_path'] = '/user/'.$user->id.'/penghasilan'; 
-					$config['public_path'] = env('APP_URL') . '/upload/user/'.$user->id.'/penghasilan';
-					
+					$config['upload_path'] = '/user/'.$Anggota->kode_anggota.'/penghasilan';
+					$config['public_path'] = env('APP_URL') . '/upload/user/'.$Anggota->kode_anggota.'/penghasilan';
+
 					// create directory if doesn't exist
 					if (!Storage::disk($config['disk'])->has($config['upload_path']))
 					{
@@ -255,13 +255,13 @@ class AnggotaController extends Controller {
 					$penghasilan->save();
 				}
             }
-            
+
             // alihkan halaman tambah buku ke halaman books
             return redirect()->route('anggota-list')->withSuccess('Data anggota Berhasil Dirubah');
         }
         catch (\Exception $e)
         {
-            dd($e);
+
             $message = $e->getMessage();
 			if (isset($e->errorInfo[2]))
 			{
@@ -274,7 +274,7 @@ class AnggotaController extends Controller {
     public function delete($ids) {
         $this->authorize('delete anggota', Auth::user());
         $Anggota = Anggota::destroy($ids);
-       
+
         return redirect()->route('anggota-list')->withSuccess('Data anggota Berhasil Dihapus');
     }
 
@@ -322,7 +322,7 @@ class AnggotaController extends Controller {
 
         return response()->json($anggota, 200);
     }
-    
+
     public function getKelasCompany(Request $request){
         $companyId = $request->companyId;
         $jenisAnggotaId = $request->jenisAnggotaId;
@@ -357,7 +357,7 @@ class AnggotaController extends Controller {
         // share data to view
         view()->share('anggotas',$anggotas);
         $pdf = PDF::loadView('anggota.pdf', $anggotas)->setPaper('a4', 'landscape');
-  
+
         // download PDF file with download method
         $filename = 'export_anggota_'.Carbon::now()->format('d M Y').'.pdf';
         return $pdf->download($filename);
