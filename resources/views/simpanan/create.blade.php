@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-md-6 form-group" id="periodeDetail">
                     <label for="besarSimpanan">Periode</label>
-                    <input type="text" name="periode" id="periode" class="form-control" placeholder="Periode" autocomplete="off" required readonly>
+                    <input type="text" name="periode" id="periode" class="form-control" placeholder="Periode" autocomplete="off" required>
                 </div>
                 <div class="col-md-12" id="angsuranSimpanan">
                     <label for="besarSimpanan">Detail Informasi</label>
@@ -153,7 +153,7 @@
         if(tipeSimpanan === '411.01.000'){
             if(besarSimpanan > besarSimpananPokok) {
                 errMessage('warningText', 'Jumlah besar simpanan melebihi sisa angsuran');
-                
+
             } else {
                 clearErrMessage('warningText');
             }
@@ -207,7 +207,7 @@
         @else
             $("#kodeAnggota").select2();
         anggotaId={{$request->kode_anggota}};
-         callDetailAnggota(anggotaId);   
+         callDetailAnggota(anggotaId);
         @endif
     }
 
@@ -227,7 +227,7 @@
                     $('#jenisSimpanan').prop('disabled', false);
                     clearErrMessage('warningTextAnggota');
                 }
-            }  
+            }
         })
     }
 
@@ -260,9 +260,9 @@
                             var monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
                             var dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
                         }
-                        $('#periode').val(monthYear);
+                        $('#periode').val(dateMonthYear);
                         $('#besarSimpanan').val(toRupiah(paymentValue));
-                        $('#besarSimpanan').attr('readonly',true);
+                        $('#besarSimpanan').attr('readonly',false);
                         $('#angsuranSimpanan').hide();
                         $('#periodeDetail').show();
                         $('#besaSimpananDetail').removeClass('col-md-12').addClass('col-md-6');
@@ -272,7 +272,7 @@
                         const angsuranSimpanan = response.attribute;
                         const paymentValue = response.paymentValue;
                         besarSimpananPokok = paymentValue;
-                        
+
                         $('#besarSimpanan').val(toRupiah(paymentValue));
                         $('#detailAngsuran').empty();
                         angsuranSimpanan.map(val => {
@@ -281,23 +281,23 @@
                         })
                         $('#detailAngsuran').append('<div class="col-md-6"> Sisa Angsuran </div>');
                         $('#detailAngsuran').append('<div class="col-md-6">' + toRupiah(paymentValue) + '</div>');
-                        
+
                         $('#angsuranSimpanan').show();
                         $('#periodeDetail').hide();
                         $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');
-                        
+
                         if(angsuranSimpanan.length === 3) {
                             $('#besarSimpanan').attr('readonly',true);
                         } else {
                             $('#besarSimpanan').attr('readonly',false);
                         }
-                      
-    
+
+
                     }
                     // simpanan sukarela
                     if(type ===  '{{ JENIS_SIMPANAN_SUKARELA }}') {
                         const paymentValue = response.paymentValue;
-                        besarSimpananSukarela = response.paymentValue; 
+                        besarSimpananSukarela = response.paymentValue;
                         if (response.attribute == null)
                         {
                             var latestPayment = moment();
@@ -320,7 +320,7 @@
 
                     }
                     if(type ===  '409.01.000') {
-                        
+
                         $('#angsuranSimpanan').hide();
                         $('#periodeDetail').hide();
                         $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');
@@ -330,7 +330,7 @@
                     }
 
                 }
-            }  
+            }
         })
     }
 
@@ -368,7 +368,7 @@
         $('#' +idElement).show();
         $('#btnSubmit').prop('disabled', true);
     }
-    
+
     function clearErrMessage(idElement, message)
     {
         $('#' +idElement).hide();
@@ -386,9 +386,9 @@
     @foreach($bankAccounts as $key => $bankAccount)
         bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
     @endforeach
-    
+
     // trigger to get kas or bank select option
-    $(document).on('change', '#jenisAkun', function () 
+    $(document).on('change', '#jenisAkun', function ()
     {
         // remove all option in code
         $('#code').empty();
@@ -399,7 +399,7 @@
         if(jenisAkun == 2)
         {
             // loop through code bank
-            $.each(bankAccountArray, function(key, bankAccount) 
+            $.each(bankAccountArray, function(key, bankAccount)
             {
                 // set dafault to 102.18.000
                 if(bankAccount.id == 22)
@@ -410,19 +410,19 @@
                 {
                     var selected = '';
                 }
-                
+
                 // insert new option
                 $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
             });
         }
         else if(jenisAkun == 1)
         {
-            // insert new option 
+            // insert new option
             $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
         }
 
         $('#code').trigger( "change" );
     });
-    
+
 </script>
 @stop
