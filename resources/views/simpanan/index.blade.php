@@ -92,9 +92,7 @@
                     <th>Jenis Simpanan</th>
                     <th>Besar Simpanan</th>
                     <th>User Entry</th>
-                    <th>Tanggal Mulai</th>
-                    <th>Tanggal Entri</th>
-                    {{-- <th>Action</th> --}}
+                    <th style="width: 10%">Action</th>
 
                 </tr>
             </thead>
@@ -107,6 +105,7 @@
 
 @section('js')
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     $.fn.dataTable.ext.errMode = 'none';
     var baseURL = {!! json_encode(url('/')) !!};
@@ -117,113 +116,106 @@
         @if($request->jenis_simpanan)
             updateSelect2();
         @endif
-    });
-    $('#from').datepicker({
-        uiLibrary: 'bootstrap4',
-        format: 'yyyy-mm-dd'
-    });
-    $('#to').datepicker({
-        uiLibrary: 'bootstrap4',
-        format: 'yyyy-mm-dd'
-    });
-    var t = $('.table').DataTable({
-        processing: true,
-        serverside: true,
-        responsive: true,
-        order: [[ 7, "desc" ]],
-        ajax: {
-            url: '{{ route('simpanan-list-ajax') }}',
-            dataSrc: 'data',
-            data: function(data){
-                @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
-                @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
-                @if(isset($request->jenis_simpanan)) data.jenis_simpanan = '{{ $request->jenis_simpanan }}'; @endif
-                @if(isset($request->kode_anggota)) data.kode_anggota = '{{ $request->kode_anggota }}'; @endif
-            }
-        },
-        aoColumns: [
-            { 
-                mData: null		
-            },
-            { 
-                mData: 'kode_simpan', sType: "string", 
-                className: "dt-body-center", "name": "kode_simpan"				
-            },
-            { 
-                mData: 'anggota.nama_anggota', sType: "string", 
-                className: "dt-body-center", "name": "anggota.nama_anggota"	,
-                mRender: function (data, type, full) {
-                    if (data == null || data == '') {
-                        return '-';
-                    }
-                    return data;
-                }			
-            },
-            { 
-                mData: 'jenis_simpan', sType: "string", 
-                className: "dt-body-center", "name": "jenis_simpan"	,
-                mRender: function (data, type, full) {
-                    if (data == null || data == '') {
-                        return '-';
-                    }
-                    return data;
-                }			
-            },
-            { 
-                mData: 'besar_simpanan_rupiah', sType: "string", 
-                className: "dt-body-center", "name": "besar_simpanan_rupiah"	,
-                mRender: function (data, type, full) {
-                    if (data == null || data == '') {
-                        return '-';
-                    }
-                    return data;
-                }			
-            },
-            { 
-                mData: 'u_entry', sType: "string", 
-                className: "dt-body-center", "name": "u_entry"	,
-                mRender: function (data, type, full) {
-                    if (data == null || data == '') {
-                        return '-';
-                    }
-                    return data;
-                }			
-            },
-            { 
-                mData: 'tanggal_mulai', sType: "string", 
-                className: "dt-body-center", "name": "tanggal_mulai"	,
-                mRender: function (data, type, full) {
-                    if (data == null || data == '') {
-                        return '-';
-                    }
-                    return data;
-                }			
-            },
-            { 
-                mData: 'tanggal_entri', sType: "string", 
-                className: "dt-body-center", "name": "tanggal_entri"	,
-                mRender: function (data, type, full) {
-                    if (data == null || data == '') {
-                        return '-';
-                    }
-                    return data;
-                }			
-            },
-            // { 
-            //     mData: 'kode_simpan', sType: "string", 
-            //     className: "dt-body-center", "name": "action"	,
-            //     mRender: function (data, type, full) {
-            //         return '-'
-            //     }			
-            // },
-        ]
+        initiateDatatable();
+        initiateDatepicker();
+        initiateEvent();
     });
 
-    t.on( 'order.dt search.dt', function () {
-        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
+    function initiateDatepicker()
+    {
+        $('#from').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
+        $('#to').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
+    }
+
+    function initiateDatatable()
+    {
+        var t = $('.table').DataTable({
+            processing: true,
+            serverside: true,
+            responsive: true,
+            // order: [[ 7, "desc" ]],
+            ajax: {
+                url: '{{ route('simpanan-list-ajax') }}',
+                dataSrc: 'data',
+                data: function(data){
+                    @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
+                    @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
+                    @if(isset($request->jenis_simpanan)) data.jenis_simpanan = '{{ $request->jenis_simpanan }}'; @endif
+                    @if(isset($request->kode_anggota)) data.kode_anggota = '{{ $request->kode_anggota }}'; @endif
+                }
+            },
+            aoColumns: [
+                { 
+                    mData: null		
+                },
+                { 
+                    mData: 'kode_simpan', sType: "string", 
+                    className: "dt-body-center", "name": "kode_simpan"				
+                },
+                { 
+                    mData: 'anggota.nama_anggota', sType: "string", 
+                    className: "dt-body-center", "name": "anggota.nama_anggota"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'jenis_simpan', sType: "string", 
+                    className: "dt-body-center", "name": "jenis_simpan"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'besar_simpanan_rupiah', sType: "string", 
+                    className: "dt-body-center", "name": "besar_simpanan_rupiah"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'u_entry', sType: "string", 
+                    className: "dt-body-center", "name": "u_entry"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }			
+                },
+                { 
+                    mData: 'kode_simpan', sType: "string", 
+                    className: "dt-body-center", "name": "action"	,
+                    mRender: function (data, type, full) {
+                        var mark = '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1" data-action="info" data-start-date="' + full['tanggal_mulai'] + '" data-entry-date="' + full['tanggal_entri'] + '" data-u-entry="' + full['u_entry'] + '"><i class="fa fa-info"></i> Info</a>';
+                        mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
+                        return mark;
+                    }			
+                },
+            ]
+        });
+
+        t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+    }
 
     function initiateSelect2() {
         $("#jenisSimpanan").select2({
@@ -268,6 +260,69 @@
                     data: data
                 }
             });
+        });
+    }
+
+    function initiateEvent()
+    {
+        // event button table on click
+        $('table').on('click', 'a', function ()
+        {
+            var action = $(this).data('action');
+
+            // action info
+            if (action == 'info')
+            {
+                var startDate = ($(this).data('start-date') == null)? '-':$(this).data('start-date');
+                var entryDate = ($(this).data('entry-date') == null)? '-':$(this).data('entry-date');
+                var uEntry = ($(this).data('u-entry') == null)? '-':$(this).data('u-entry');
+
+                var htmlText = '<div class="container-fluid" style="font-size : 14px">' + 
+                                    '<div class="row">' + 
+                                        '<div class="col-md-6 mx-0 my-2">Tanggal Mulai <br> <b>' + startDate + '</b></div>' + 
+                                        '<div class="col-md-6 mx-0 my-2">Tangggal Entri <br> <b>' + entryDate + '</b></div>' + 
+                                        '<div class="col-md-6 mx-0 my-2"></div>' + 
+                                        '<div class="col-md-6 mx-0 my-2">User Entri <br> <b>' + uEntry + '</b></div>' + 
+                                    '</div>' + 
+                                '</div>';
+                
+                Swal.fire({
+                    title: 'Info',
+                    html: htmlText, 
+                    showCancelButton: false,
+                    confirmButtonText: "Tutup",
+                    confirmButtonColor: "#00ff00",
+                });
+            }
+            else if(action == 'jurnal')
+            {
+                var dataId = $(this).data('id');
+                $.ajax({
+                    url: baseURL + '/simpanan/jurnal/' + dataId,
+                    success: function (data, status, xhr)
+                    {
+                        var htmlText = data;
+                        Swal.fire({
+                            title: 'Info',
+                            html: htmlText, 
+                            showCancelButton: false,
+                            confirmButtonText: "Tutup",
+                            confirmButtonColor: "#00ff00",
+                        });
+                    },
+                    error: function (xhr,status,error)
+                    {
+                        Swal.fire({
+                            title: 'Error',
+                            html: 'Terjadi Kesalahan', 
+                            icon: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Tutup",
+                            confirmButtonColor: "#00ff00",
+                        });
+                    }
+                });
+            }
         });
     }
 </script>

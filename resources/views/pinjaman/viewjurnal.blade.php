@@ -40,22 +40,3 @@
         </div>
     </div>
 </div>
-
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th>Akun Debet</th>
-            <th>Debet</th>
-            <th>Akun Kredit</th>
-            <th>Kredit</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{ $pengajuan->kode_jenis_pinjam }}</td>
-            <td>Rp. {{ number_format($pengajuan->besar_pinjam, 2, ',', '.') }}</td>
-            <td>Bank/Kas</td>
-            <td>{{ $pengajuan->view_credit_bank }}</td>
-        </tr>
-    </tbody>
-</table>

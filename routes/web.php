@@ -211,6 +211,7 @@ Route::group(['prefix' => 'simpanan'], function () {
         Route::get('list', [App\Http\Controllers\SimpananController::class, 'index'])->name('simpanan-list');
         Route::post('list', [App\Http\Controllers\SimpananController::class, 'index'])->name('simpanan-list');
         Route::get('list/data', [App\Http\Controllers\SimpananController::class, 'indexAjax'])->name('simpanan-list-ajax');
+        Route::get('jurnal/{kode_simpanan}', [App\Http\Controllers\SimpananController::class, 'showJurnal'])->name('simpanan-view-jurnal');
         Route::get('create', [App\Http\Controllers\SimpananController::class, 'create'])->name('simpanan-add');
         Route::post('create', [App\Http\Controllers\SimpananController::class, 'store'])->name('simpanan-add');
         Route::get('history', [App\Http\Controllers\SimpananController::class, 'history'])->name('simpanan-history');

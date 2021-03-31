@@ -22,6 +22,7 @@ use DB;
 use Hash;
 use Carbon\Carbon;
 use Excel;
+use Illuminate\Support\Facades\Log;
 use PDF;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -620,6 +621,29 @@ class SimpananController extends Controller
         } catch (\Throwable $th) {
             \Log::error($e);
             return redirect()->back()->withError('Terjadi kesalahan sistem');
+        }
+    }
+
+    public function showJurnal($id)
+    {
+        try
+        {
+            $simpanan = Simpanan::find($id);
+            if (is_null($simpanan))
+            {
+                return response()->json(['message' => 'Not Found'], 404);
+            }
+
+            $data['simpanan'] = $simpanan;
+            $data['jurnals'] = $simpanan->jurnals;
+            return view('simpanan.jurnal', $data);
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+
+            return response()->json(['message' => 'Terjadi Kesalahan'], 500);
         }
     }
 }
