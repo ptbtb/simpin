@@ -217,7 +217,7 @@
         });
         $('.table').DataTable();
 
-        $('.btn-approval').on('click', function ()
+        $('table').on('click','.btn-approval', function ()
         {
             var id = $(this).data('id');
             var status = $(this).data('status');
@@ -284,7 +284,7 @@
             });
         });
 
-        $('.btn-konfirmasi').on('click', function ()
+        $('table').on('click', '.btn-konfirmasi', function ()
         {
             var id = $(this).data('id');
             var action = $(this).data('action');
