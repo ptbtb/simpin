@@ -97,6 +97,7 @@ class SimpananController extends Controller
             $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
                 ->whereYear('tgl_ambil', $thisYear)
                 ->whereIn('code_trans', $simpananKeys)
+                ->where('paid_by_cashier', 1)
                 ->orderBy('tgl_ambil', 'asc')
                 ->get();
             /*
