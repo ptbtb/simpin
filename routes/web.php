@@ -260,6 +260,8 @@ Route::group(['prefix' => 'penarikan'], function () {
         Route::post('print-jkk', [App\Http\Controllers\PenarikanController::class, 'storePrintJkk'])->name('penarikan-print-jkk');
 
         Route::get('detail-transfer/{id}', [App\Http\Controllers\PenarikanController::class, 'detailTransfer'])->name('penarikan-detail-transfer');
+
+        Route::get('data-jurnal/{id}', [App\Http\Controllers\PenarikanController::class, 'viewDataJurnalPenarikan'])->name('view-data-jurnal-penarikan');
     });
 });
 

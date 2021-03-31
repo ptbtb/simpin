@@ -146,6 +146,10 @@
                                         @else
                                             <b style="color: red !important"><i class="fas fa-times"></i></b>
                                         @endif
+
+                                        @if($penarikan->menungguKonfirmasi() || $penarikan->menungguApprovalSpv() || $penarikan->menungguApprovalAsman() || $penarikan->menungguApprovalManager() || $penarikan->menungguApprovalBendahara() || $penarikan->menungguApprovalKetua())
+                                        <a data-id="{{ $penarikan->kode_ambil }}" data-code="{{ $penarikan->code_trans }}" data-nominal="{{ $penarikan->besar_ambil }}"  class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
+                                        @endif
                                     @endcan
                                 @endif
                             </td>
@@ -298,6 +302,50 @@
                 $('#my-modal').modal('show');
             });
             $('#jenisAkun').trigger( "change" );
+        });
+
+        $('.btn-jurnal').on('click', function ()
+        {
+            htmlText = '';
+            var id = $(this).data('id');
+            $.ajax({
+                url: baseURL + '/penarikan/data-jurnal/' + id,
+                success : function (data, status, xhr) {
+                    htmlText = data;
+                    Swal.fire({
+                        title: 'Jurnal Penarikan',
+                        html: htmlText, 
+                        icon: "info",
+                        showCancelButton: false,
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: "#00a65a",
+                        grow: 'row',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
+                },
+                error : function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        html: htmlText, 
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: "#00a65a",
+                        grow: 'row',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
+                }
+            });
         });
 
         $(".select2").select2({
