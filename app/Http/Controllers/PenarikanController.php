@@ -406,4 +406,11 @@ class PenarikanController extends Controller
         $data['penarikan'] = $penarikan;
         return view('penarikan.detailTransfer', $data);
     }
+
+    public function viewDataJurnalPenarikan($id)
+    {
+        $penarikan = Penarikan::find($id);
+        $data['penarikan'] = $penarikan;
+        return view('penarikan.viewJurnal', $data);
+    }
 }
