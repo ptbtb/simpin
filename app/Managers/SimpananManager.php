@@ -42,9 +42,9 @@ class SimpananManager
 
             if ($totalTarik > 0)
             {
-                $tabungan = $penarikan->tabungan;
-                $tabungan->besar_tabungan = $tabungan->besar_tabungan - $totalTarik;
-                $tabungan->save();
+                // $tabungan = $penarikan->tabungan;
+                // $tabungan->besar_tabungan = $tabungan->besar_tabungan - $totalTarik;
+                // $tabungan->save();
                 $totalTarik = 0;
             }
         }
