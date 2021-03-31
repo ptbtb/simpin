@@ -131,7 +131,7 @@ class PinjamanController extends Controller {
         $user = Auth::user();
         $this->authorize('view pinjaman', $user);
 
-        $pinjaman = Pinjaman::with('anggota', 'listAngsuran')
+        $pinjaman = Pinjaman::with('anggota', 'listAngsuran.jurnals')
                 ->where('kode_pinjam', $id)
                 ->first();
 

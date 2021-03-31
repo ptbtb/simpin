@@ -85,6 +85,7 @@
     @endif
 
     {{-- Custom Scripts --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/collect.js/4.28.6/collect.min.js"></script>
     @yield('adminlte_js')
 
 </body>

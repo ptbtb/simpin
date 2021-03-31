@@ -122,7 +122,7 @@
                             <th>Besar Pembayaran</th>
                             <th>Dibayar Pada Tanggal</th>
                             <th>Status</th>
-                            <th>Diupdate Oleh</th>
+                            <th style="width: 10%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,7 +136,12 @@
                                 <td>Rp. {{ number_format($angsuran->besar_pembayaran,0,",",".") }}</td>
                                 <td>{{($angsuran->paid_at)?  $angsuran->paid_at->format('d M Y'):'-' }}</td>
                                 <td>{{ $angsuran->statusAngsuran->name }}</td>
-                                <td>{{ ($angsuran->paid_at)? $angsuran->u_entry:'-' }}</td>
+                                <td>
+                                    @if ($angsuran->isLunas())
+                                        <a style="cursor: pointer" class="btn btn-sm btn-info text-white mt-1" data-action="jurnal" data-id="{{ $angsuran->kode_angsur }}"><i class="fa fa-eye"></i> Jurnal</a>
+                                    @endif
+                                    <a style="cursor: pointer" class="btn btn-sm btn-warning mt-1" data-action="info" data-id="{{ $angsuran->kode_angsur }}"><i class="fa fa-info"></i> Info</a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -269,6 +274,7 @@
 @endsection
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         $('.btn-bayarAngsuran').on('click', function ()
         {
@@ -334,6 +340,72 @@
             }
 
             $('#code').trigger( "change" );
+        });
+
+        // action button on click
+        $('table').on('click', 'a', function ()
+        {
+            var dataId = $(this).data('id');
+            var action = $(this).data('action');
+            var listAngsuran = collect(@json($listAngsuran));
+
+            // show jurnal
+            if (action == 'jurnal')
+            {
+                var angsuran = listAngsuran.where('kode_angsur', dataId).first();
+                var jurnals = collect(angsuran.jurnals);
+                var htmlText = '<table class="table" style="font-size: 14px" >' +
+                                    '<thead class="thead-dark">' +
+                                        '<tr>' +
+                                            '<th>Akun Debet</th>' +
+                                            '<th>Debet</th>' +
+                                            '<th>Akun Kredit</th>' +
+                                            '<th>Kredit</th>' +
+                                            '</tr>' +
+                                    '</thead>' +
+                                    '<tbody>';
+                jurnals.each(function (jurnal)
+                {
+                    var body = '<tr>' +
+                                    '<td>' + jurnal['akun_debet'] + '</td>' +
+                                    '<td> Rp ' + new Intl.NumberFormat(['ban', 'id']).format(jurnal['debet']) + '</td>' +
+                                    '<td>' + jurnal['akun_kredit'] + '</td>' +
+                                    '<td> Rp ' + new Intl.NumberFormat(['ban', 'id']).format(jurnal['kredit']) + '</td>' +
+                                '</tr>';
+
+                    htmlText = htmlText + body;
+                });
+
+                htmlText = htmlText + '</tbody></table>';
+
+                Swal.fire({
+                    title: 'Jurnal',
+                    html: htmlText, 
+                    showCancelButton: false,
+                    confirmButtonText: "Ok",
+                    confirmButtonColor: "#00a65a",
+                });
+            }
+            else if(action == 'info')
+            {
+                var angsuran = listAngsuran.where('kode_angsur', dataId).first();
+                var htmlText = '<div class="container-fluid">' + 
+                                    '<div class="row">' + 
+                                        '<div class="col-md-6 mx-0 my-2">Created At <br> <b>' + angsuran['created_at_view'] + '</b></div>' + 
+                                        '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + angsuran['created_by_view'] + '</b></div>' + 
+                                        '<div class="col-md-6 mx-0 my-2">Updated At <br> <b>' + angsuran['updated_at_view'] + '</b></div>' + 
+                                        '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + angsuran['updated_by_view'] + '</b></div>' + 
+                                    '</div>' + 
+                                '</div>';
+
+                Swal.fire({
+                    title: 'Info',
+                    html: htmlText, 
+                    showCancelButton: false,
+                    confirmButtonText: "Ok",
+                    confirmButtonColor: "#00a65a",
+                });
+            }
         });
     </script>
 @endsection

@@ -245,7 +245,6 @@
 
 @section('js')
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/collect.js/4.28.6/collect.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
@@ -260,7 +259,7 @@
         });
         $('.table').DataTable();
 
-        $('.btn-approval').on('click', function ()
+        $('table').on('click', '.btn-approval', function ()
         {
             var id = $(this).data('id');
             var status = $(this).data('status');
@@ -342,7 +341,7 @@
             }
         });
 
-        $('.btn-konfirmasi').on('click', function ()
+        $('table').on('click', '.btn-konfirmasi', function ()
         {
             var id = $(this).data('id');
             var action = $(this).data('action');
@@ -359,7 +358,7 @@
             $('#jenisAkun').trigger( "change" );
         });
 
-        $('.btn-jurnal').on('click', function ()
+        $('table').on('click', '.btn-jurnal',function ()
         {
             htmlText = '';
             var id = $(this).data('id');
@@ -403,7 +402,7 @@
             });
         });
 
-        $('.btn-detail').on('click', function ()
+        $('table').on('click', '.btn-detail', function ()
         {
             var id = $(this).data('id');
             var pengajuan = collect(@json($listPengajuanPinjaman)).where('kode_pengajuan', id).first();
