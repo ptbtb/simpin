@@ -44,35 +44,28 @@ class SimpananController extends Controller
     {
         $this->authorize('view simpanan', Auth::user());
         $simpanan = Simpanan::with('anggota');
-        if ($request->from || $request->to)
-        {
-            if ($request->from)
-            {
-                $simpanan = $simpanan->where('tgl_entri','>=', $request->from);
+        if ($request->from || $request->to) {
+            if ($request->from) {
+                $simpanan = $simpanan->where('tgl_entri', '>=', $request->from);
             }
-            if ($request->to)
-            {
-                $simpanan = $simpanan->where('tgl_entri','<=', $request->to);
+            if ($request->to) {
+                $simpanan = $simpanan->where('tgl_entri', '<=', $request->to);
             }
-        }
-        else
-        {
+        } else {
             $from = Carbon::now()->addDays(-30)->format('Y-m-d');
             $to = Carbon::now()->format('Y-m-d');
-            $simpanan = $simpanan->where('tgl_entri','>=', $from)
-                                ->where('tgl_entri','<=', $to);
+            $simpanan = $simpanan->where('tgl_entri', '>=', $from)
+                ->where('tgl_entri', '<=', $to);
         }
 
-        if ($request->jenis_simpanan)
-        {
-            $simpanan = $simpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
+        if ($request->jenis_simpanan) {
+            $simpanan = $simpanan->where('kode_jenis_simpan', $request->jenis_simpanan);
         }
 
-        if ($request->kode_anggota)
-        {
+        if ($request->kode_anggota) {
             $simpanan = $simpanan->where('kode_anggota', $request->kode_anggota);
         }
-        $simpanan = $simpanan->orderBy('tgl_entri','desc');
+        $simpanan = $simpanan->orderBy('tgl_entri', 'desc');
         return DataTables::eloquent($simpanan)->make(true);
     }
 
@@ -85,8 +78,7 @@ class SimpananController extends Controller
     {
         $this->authorize('add simpanan', Auth::user());
         $listJenisSimpanan = JenisSimpanan::all();
-        if ($request->kode_anggota)
-        {
+        if ($request->kode_anggota) {
             $data['anggota'] = Anggota::find($request->kode_anggota);
         }
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
@@ -101,18 +93,16 @@ class SimpananController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $this->authorize('add simpanan', Auth::user());
-        try
-        {
+        try {
             // check password
             $check = Hash::check($request->password, Auth::user()->password);
-            if (!$check)
-            {
+            if (!$check) {
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
 
@@ -124,7 +114,7 @@ class SimpananController extends Controller
             // get next serial number
             $nextSerialNumber = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
 
-            if($jenisSimpanan->nama_simpanan === 'SIMPANAN POKOK') {
+            if ($jenisSimpanan->nama_simpanan === 'SIMPANAN POKOK') {
                 $checkSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
 
                 if ($checkSimpanan) {
@@ -132,12 +122,12 @@ class SimpananController extends Controller
                     $simpananCurrentValue = $simpananOldValue + $besarSimpanan;
 
                     Simpanan::where('kode_anggota', $anggotaId)
-                            ->where('kode_jenis_simpan', '411.01.000')
-                            ->where('kode_simpan', (int) $checkSimpanan->kode_simpan)
-                            ->update([
-                                'besar_simpanan' => $simpananCurrentValue,
-                                'updated_at' => Carbon::now()
-                            ]);
+                        ->where('kode_jenis_simpan', '411.01.000')
+                        ->where('kode_simpan', (int)$checkSimpanan->kode_simpan)
+                        ->update([
+                            'besar_simpanan' => $simpananCurrentValue,
+                            'updated_at' => Carbon::now()
+                        ]);
 
                     $indexAngsuran = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $checkSimpanan->kode_simpan)->count();
 
@@ -152,8 +142,7 @@ class SimpananController extends Controller
                     $angsurSimpanan->updated_at = Carbon::now();
                     $angsurSimpanan->save();
 
-                }
-                else {
+                } else {
                     $simpanan = new Simpanan();
                     $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
                     $simpanan->besar_simpanan = $besarSimpanan;
@@ -161,12 +150,12 @@ class SimpananController extends Controller
                     $simpanan->u_entry = Auth::user()->name;
                     $simpanan->tgl_entri = Carbon::now();
                     $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
-                    $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
-                    $simpanan->id_akun_debet = ($request->id_akun_debet)? $request->id_akun_debet:null;
+                    $simpanan->keterangan = ($request->keterangan) ? $request->keterangan : null;
+                    $simpanan->id_akun_debet = ($request->id_akun_debet) ? $request->id_akun_debet : null;
                     $simpanan->serial_number = $nextSerialNumber;
                     $simpanan->save();
 
-                    if ($besarSimpanan < 499999){
+                    if ($besarSimpanan < 499999) {
                         $existingSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
 
                         $indexAngsuran = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $existingSimpanan->kode_simpan)->count();
@@ -184,8 +173,7 @@ class SimpananController extends Controller
 
                     }
                 }
-            }
-            else {
+            } else {
 
                 $periodeTime = strtotime($request->periode);
 
@@ -197,8 +185,8 @@ class SimpananController extends Controller
                 $simpanan->tgl_entri = Carbon::now();
                 $simpanan->periode = date("Y-m-d", $periodeTime);
                 $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
-                $simpanan->keterangan = ($request->keterangan)? $request->keterangan:null;
-                $simpanan->id_akun_debet = ($request->id_akun_debet)? $request->id_akun_debet:null;
+                $simpanan->keterangan = ($request->keterangan) ? $request->keterangan : null;
+                $simpanan->id_akun_debet = ($request->id_akun_debet) ? $request->id_akun_debet : null;
                 $simpanan->serial_number = $nextSerialNumber;
                 $simpanan->save();
             }
@@ -207,9 +195,7 @@ class SimpananController extends Controller
 
             // return redirect()->route('simpanan-list', ['kode_anggota' => $request->kode_anggota])->withSuccess('Berhasil menambah transaksi');
             return redirect()->route('simpanan-list')->withSuccess('Berhasil menambah transaksi');
-        }
-        catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             return redirect()->back()->withError('Gagal menyimpan data');
         }
     }
@@ -217,7 +203,7 @@ class SimpananController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -228,7 +214,7 @@ class SimpananController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -239,8 +225,8 @@ class SimpananController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -251,7 +237,7 @@ class SimpananController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -265,51 +251,43 @@ class SimpananController extends Controller
         $this->authorize('view history simpanan', $user);
         $data['title'] = "History Simpanan";
         $data['request'] = $request;
-        return view('simpanan.history',$data);
+        return view('simpanan.history', $data);
     }
 
     public function historyData(Request $request)
     {
         $user = Auth::user();
         $this->authorize('view history simpanan', $user);
-        if ($user->roles->first()->id == ROLE_ANGGOTA)
-        {
+        if ($user->roles->first()->id == ROLE_ANGGOTA) {
             $anggota = $user->anggota;
-            if (is_null($anggota))
-            {
+            if (is_null($anggota)) {
                 return redirect()->back()->withError('Your account has no members');
             }
 
             $listSimpanan = Simpanan::where('kode_anggota', $anggota->kode_anggota);
-        }
-        else
-        {
+        } else {
             $listSimpanan = Simpanan::with('anggota');
         }
 
-        if ($request->from || $request->to)
-        {
-            if ($request->from)
-            {
-                $listSimpanan = $listSimpanan->where('tgl_entri','>=', $request->from);
+        if ($request->from || $request->to) {
+            if ($request->from) {
+                $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $request->from);
             }
-            if ($request->to)
-            {
-                $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
+            if ($request->to) {
+                $listSimpanan = $listSimpanan->where('tgl_entri', '<=', $request->to);
             }
-        }
-        else
-        {
+        } else {
             $from = Carbon::now()->addDays(-30)->format('Y-m-d');
             $to = Carbon::now()->format('Y-m-d');
-            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $from)
-                                        ->where('tgl_entri','<=', $to);
+            $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $from)
+                ->where('tgl_entri', '<=', $to);
         }
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc');
+        $listSimpanan = $listSimpanan->orderBy('tgl_entri', 'desc');
         return DataTables::eloquent($listSimpanan)->make(true);
     }
 
-    public function paymentValue(Request $request){
+    public function paymentValue(Request $request)
+    {
         $type = $request->type;
         $anggotaId = $request->anggotaId;
         $attribute = [];
@@ -323,22 +301,19 @@ class SimpananController extends Controller
                 $angsuranList = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $checkPaymentAvailable->kode_simpan)->get();
 
                 $angsuranValue = 0;
-                foreach($angsuranList as $angsuran){
+                foreach ($angsuranList as $angsuran) {
                     $angsuranValue += $angsuran->besar_angsuran;
                 }
 
                 $paymentValue = $besarSimpananPokok->besar_simpanan - $angsuranValue;
                 $attribute = $angsuranList;
-            }elseif($checkPaymentAvailable_old){
+            } elseif ($checkPaymentAvailable_old) {
                 $paymentValue = 0;
-            }
-            else {
+            } else {
                 $paymentValue = $besarSimpananPokok->besar_simpanan;
             }
-        }
-
-        // Kalkulasi Simpanan Wajib
-        else if($type == JENIS_SIMPANAN_WAJIB) {
+        } // Kalkulasi Simpanan Wajib
+        else if ($type == JENIS_SIMPANAN_WAJIB) {
 
             $payment = Anggota::find($anggotaId)->kelasCompany->kelasSimpanan;
 
@@ -346,23 +321,21 @@ class SimpananController extends Controller
             $attribute = $latestAngsur;
 
             $paymentValue = $payment->simpanan;
-        }
-
-        // Kalkulasi Simpanan Sukarela
+        } // Kalkulasi Simpanan Sukarela
         else {
 
             $anggota = DB::table('t_anggota')
-                    ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
-                    ->select('t_penghasilan.value as penghasilan')
-                    ->where('t_anggota.kode_anggota', '=', $anggotaId)
-                    ->where('t_penghasilan.id_jenis_penghasilan', '=', JENIS_PENGHASILAN_GAJI_BULANAN)
-                    ->first();
+                ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
+                ->select('t_penghasilan.value as penghasilan')
+                ->where('t_anggota.kode_anggota', '=', $anggotaId)
+                ->where('t_penghasilan.id_jenis_penghasilan', '=', JENIS_PENGHASILAN_GAJI_BULANAN)
+                ->first();
             $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', JENIS_SIMPANAN_SUKARELA)->first();
             $attribute = $latestAngsur;
-            if ($latestAngsur){
-                $paymentValue= $latestAngsur->besar_simpanan;
-            }else{
-            $paymentValue = 0.65 * $anggota->penghasilan;
+            if ($latestAngsur) {
+                $paymentValue = $latestAngsur->besar_simpanan;
+            } else {
+                $paymentValue = 0.65 * $anggota->penghasilan;
             }
 
         }
@@ -378,58 +351,47 @@ class SimpananController extends Controller
         $user = Auth::user();
         $this->authorize('view history simpanan', $user);
 
-        if ($user->roles->first()->id == ROLE_ANGGOTA)
-        {
+        if ($user->roles->first()->id == ROLE_ANGGOTA) {
             $anggota = $user->anggota;
-            if (is_null($anggota))
-            {
+            if (is_null($anggota)) {
                 return redirect()->back()->withError('Your account has no members');
             }
 
             $listSimpanan = Simpanan::where('kode_anggota', $anggota->kode_anggota);
-        }
-        else
-        {
+        } else {
             $listSimpanan = Simpanan::with('anggota');
         }
 
-        if ($request->from || $request->to)
-        {
-            if ($request->from)
-            {
-                $listSimpanan = $listSimpanan->where('tgl_entri','>=', $request->from);
+        if ($request->from || $request->to) {
+            if ($request->from) {
+                $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $request->from);
             }
-            if ($request->to)
-            {
-                $listSimpanan = $listSimpanan->where('tgl_entri','<=', $request->to);
+            if ($request->to) {
+                $listSimpanan = $listSimpanan->where('tgl_entri', '<=', $request->to);
             }
-        }
-        else
-        {
+        } else {
             $from = Carbon::now()->addDays(-30)->format('Y-m-d');
             $to = Carbon::now()->format('Y-m-d');
-            $listSimpanan = $listSimpanan->where('tgl_entri','>=', $from)
-                                        ->where('tgl_entri','<=', $to);
+            $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $from)
+                ->where('tgl_entri', '<=', $to);
         }
-        if ($request->jenis_simpanan)
-        {
-            $listSimpanan = $listSimpanan->where('kode_jenis_simpan',$request->jenis_simpanan);
+        if ($request->jenis_simpanan) {
+            $listSimpanan = $listSimpanan->where('kode_jenis_simpan', $request->jenis_simpanan);
         }
 
-        if ($request->kode_anggota)
-        {
+        if ($request->kode_anggota) {
             $listSimpanan = $listSimpanan->where('kode_anggota', $request->kode_anggota);
         }
 
         // $listSimpanan = $listSimpanan->get();
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->get();
+        $listSimpanan = $listSimpanan->orderBy('tgl_entri', 'desc')->get();
 
         // share data to view
-        view()->share('listSimpanan',$listSimpanan);
+        view()->share('listSimpanan', $listSimpanan);
         $pdf = PDF::loadView('simpanan.excel', $listSimpanan)->setPaper('a4', 'landscape');
 
         // download PDF file with download method
-        $filename = 'export_simpanan_'.Carbon::now()->format('d M Y').'.pdf';
+        $filename = 'export_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
         return $pdf->download($filename);
     }
 
@@ -437,13 +399,12 @@ class SimpananController extends Controller
     {
         $user = Auth::user();
         $this->authorize('view history simpanan', $user);
-        if ($user->roles->first()->id == ROLE_ANGGOTA)
-        {
+        if ($user->roles->first()->id == ROLE_ANGGOTA) {
             $anggota = $user->anggota;
             $request->anggota = $anggota;
         }
 
-        $filename = 'export_simpanan_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+        $filename = 'export_simpanan_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
         return Excel::download(new SimpananExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
@@ -457,16 +418,12 @@ class SimpananController extends Controller
     public function storeImportExcel(Request $request)
     {
         $this->authorize('import simpanan', Auth::user());
-        try
-        {
-            DB::transaction(function () use ($request)
-            {
+        try {
+            DB::transaction(function () use ($request) {
                 Excel::import(new SimpananImport, $request->file);
             });
             return redirect()->back()->withSuccess('Import data berhasil');
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             \Log::error($e);
             return redirect()->back()->withError('Gagal import data');
         }
@@ -475,18 +432,14 @@ class SimpananController extends Controller
 
     public function indexCard(Request $request)
     {
-        try
-        {
-            if ($request->kode_anggota)
-            {
+        try {
+            if ($request->kode_anggota) {
                 $data['anggota'] = Anggota::find($request->kode_anggota);
             }
             $data['title'] = "Kartu Simpanan";
             $data['request'] = $request;
             return view('simpanan.card.index', $data);
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             \Log::error($e);
             return redirect()->back()->withError('Terjadi kesalahan sistem');
         }
@@ -494,8 +447,7 @@ class SimpananController extends Controller
 
     public function showCard($kodeAnggota)
     {
-        try
-        {
+        try {
             // get anggota
             $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($kodeAnggota);
 
@@ -505,10 +457,10 @@ class SimpananController extends Controller
 
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
-                                    ->where('kode_anggota', $anggota->kode_anggota)
-                                    ->whereraw("keterangan not like '%MUTASI%'")
-                                    ->orderBy('tgl_entri','asc')
-                                    ->get();
+                ->where('kode_anggota', $anggota->kode_anggota)
+                ->whereraw("keterangan not like '%MUTASI%'")
+                ->orderBy('tgl_entri', 'asc')
+                ->get();
 
             // data di grouping berdasarkan kode jenis simpan
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
@@ -516,23 +468,22 @@ class SimpananController extends Controller
             // kode_jenis_simpan yang wajib ada
             $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc');
             $requiredKey = $jenisSimpanan->pluck('kode_jenis_simpan');
-            $requiredKeyIndex = $jenisSimpanan->pluck('sequence','kode_jenis_simpan');
+            $requiredKeyIndex = $jenisSimpanan->pluck('sequence', 'kode_jenis_simpan');
 
             // set default value untuk key yang tidak ada
-            foreach ($requiredKey as $value)
-            {
-                if (!isset($groupedListSimpanan[$value]))
-                {
+            foreach ($requiredKey as $value) {
+                if (!isset($groupedListSimpanan[$value])) {
                     $groupedListSimpanan[$value] = collect([]);
                 }
             }
 
             $simpananKeys = $groupedListSimpanan->keys();
             $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                                        ->whereYear('tgl_ambil', $thisYear)
-                                        ->whereIn('code_trans', $simpananKeys)
-                                        ->orderBy('tgl_ambil', 'asc')
-                                        ->get();
+                ->whereYear('tgl_ambil', $thisYear)
+                ->whereIn('code_trans', $simpananKeys)
+                ->where('paid_by_cashier', 1)
+                ->orderBy('tgl_ambil', 'asc')
+                ->get();
             /*
                 tiap jenis simpanan di bagi jadi 3 komponen
                 1. saldo akhir tahun tiap jenis simpanan
@@ -544,39 +495,32 @@ class SimpananController extends Controller
 
             $listSimpanan = [];
             $index = count($requiredKey);
-            foreach ($groupedListSimpanan as $key => $list)
-            {
+            foreach ($groupedListSimpanan as $key => $list) {
                 $jenisSimpanan = JenisSimpanan::find($key);
-                if ($jenisSimpanan)
-                {
-                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans',$key)->first();
+                if ($jenisSimpanan) {
+                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = ($tabungan)? $tabungan->besar_tabungan:0;
+                    $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan : 0;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('besar_simpanan');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
                     $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
                     $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
-                    if (isset($requiredKeyIndex[$key]))
-                    {
+                    if (isset($requiredKeyIndex[$key])) {
                         $seq = $requiredKeyIndex[$key];
                         $listSimpanan[$seq] = (object)$res;
-                    }
-                    else
-                    {
+                    } else {
                         $listSimpanan[$index] = (object)$res;
                         $index++;
                     }
                 }
             }
-                           //dd($listSimpanan);die;
+            //dd($listSimpanan);die;
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
 
             return view('simpanan.card.detail', $data);
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             \Log::error($e);
             return redirect()->back()->withError('Terjadi kesalahan sistem');
         }
@@ -584,44 +528,41 @@ class SimpananController extends Controller
 
     public function downloadPDFCard($kodeAnggota)
     {
-        try
-        {
+        try {
             // get anggota
             $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($kodeAnggota);
 
             // get this year
             $thisYear = Carbon::now()->year;
             $listTabungan = \App\Models\View\ViewSimpanSaldoAwal::where('kode_anggota', $anggota->kode_anggota)
-                                    ->get();
+                ->get();
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
-                                    ->where('kode_anggota', $anggota->kode_anggota)
-                                    ->whereraw("keterangan not like '%MUTASI%'")
-                                    ->orderBy('tgl_entri','asc')
-                                    ->get();
+                ->where('kode_anggota', $anggota->kode_anggota)
+                ->whereraw("keterangan not like '%MUTASI%'")
+                ->orderBy('tgl_entri', 'asc')
+                ->get();
             // data di grouping berdasarkan kode jenis simpan
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
             // kode_jenis_simpan yang wajib ada
             $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc');
             $requiredKey = $jenisSimpanan->pluck('kode_jenis_simpan');
-            $requiredKeyIndex = $jenisSimpanan->pluck('sequence','kode_jenis_simpan');
+            $requiredKeyIndex = $jenisSimpanan->pluck('sequence', 'kode_jenis_simpan');
 
             // set default value untuk key yang tidak ada
-            foreach ($requiredKey as $value)
-            {
-                if (!isset($groupedListSimpanan[$value]))
-                {
+            foreach ($requiredKey as $value) {
+                if (!isset($groupedListSimpanan[$value])) {
                     $groupedListSimpanan[$value] = collect([]);
                 }
             }
 
             $simpananKeys = $groupedListSimpanan->keys();
             $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                                        ->whereYear('tgl_ambil', $thisYear)
-                                        ->whereIn('code_trans', $simpananKeys)
-                                        ->orderBy('tgl_ambil', 'asc')
-                                        ->get();
+                ->whereYear('tgl_ambil', $thisYear)
+                ->whereIn('code_trans', $simpananKeys)
+                ->orderBy('tgl_ambil', 'asc')
+                ->get();
             /*
                 tiap jenis simpanan di bagi jadi 3 komponen
                 1. saldo akhir tahun tiap jenis simpanan
@@ -633,26 +574,21 @@ class SimpananController extends Controller
 
             $listSimpanan = [];
             $index = count($requiredKey);
-            foreach ($groupedListSimpanan as $key => $list)
-            {
+            foreach ($groupedListSimpanan as $key => $list) {
                 $jenisSimpanan = JenisSimpanan::find($key);
-                if ($jenisSimpanan)
-                {
-                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans',$key)->first();
+                if ($jenisSimpanan) {
+                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = $listTabungan->where('kode_trans',$key)->values()->sum('besar_tabungan');
+                    $res['balance'] = $listTabungan->where('kode_trans', $key)->values()->sum('besar_tabungan');
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('besar_simpanan');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
                     $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
                     $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
-                    if (isset($requiredKeyIndex[$key]))
-                    {
+                    if (isset($requiredKeyIndex[$key])) {
                         $seq = $requiredKeyIndex[$key];
                         $listSimpanan[$seq] = (object)$res;
-                    }
-                    else
-                    {
+                    } else {
                         $listSimpanan[$index] = (object)$res;
                         $index++;
                     }
@@ -663,16 +599,14 @@ class SimpananController extends Controller
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
 
             // share data to view
-            view()->share('data',$data);
-            PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
+            view()->share('data', $data);
+            PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
             $pdf = PDF::loadView('simpanan.card.export2', $data)->setPaper('a4', 'portrait');
 
             // download PDF file with download method
-            $filename = 'export_kartu_simpanan_'.Carbon::now()->format('d M Y').'.pdf';
+            $filename = 'export_kartu_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
             return $pdf->download($filename);
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             \Log::error($e);
             return redirect()->back()->withError('Terjadi kesalahan sistem');
         }
@@ -680,13 +614,10 @@ class SimpananController extends Controller
 
     public function downloadExcelCard($kodeAnggota)
     {
-        try
-        {
-            $filename = 'export_kartu_simpanan_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+        try {
+            $filename = 'export_kartu_simpanan_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
             return Excel::download(new KartuSimpananExport($kodeAnggota), $filename);
-        }
-        catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             \Log::error($e);
             return redirect()->back()->withError('Terjadi kesalahan sistem');
         }
