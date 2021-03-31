@@ -311,7 +311,7 @@
                             var dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
                         }
                         $('#besarSimpanan').val(toRupiah(paymentValue));
-                        $('#periode').val(monthYear);
+                        $('#periode').val(dateMonthYear);
                         $('#angsuranSimpanan').hide();
                         $('#periodeDetail').show();
                           $('#besaSimpananDetail').removeClass('col-md-12').addClass('col-md-6');
@@ -320,7 +320,8 @@
 
                     }
                     if(type ===  '409.01.000') {
-
+                        var dateMonthYear = moment(latestPayment).format('YYYY-MM-DD');
+                        $('#periode').val(dateMonthYear);
                         $('#angsuranSimpanan').hide();
                         $('#periodeDetail').hide();
                         $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');
