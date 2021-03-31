@@ -28,6 +28,9 @@
 
 @section('content')
     <div class="card">
+        <div class="card-header text-right">
+            <a href="{{ route('buku-besar-download-excel') }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+        </div>
         <div class="card-body row">
             <div class="col-md-6 table-responsive">
                 <h5 class="text-center">Aktiva</h5>

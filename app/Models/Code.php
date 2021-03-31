@@ -20,6 +20,11 @@ class Code extends Model
         return $this->belongsTo(CodeCategory::class, 'code_category_id');
     }
 
+    public function codeType()
+    {
+        return $this->belongsTo(CodeType::class, 'code_type_id');
+    }
+
     public function saldoAwals()
     {
         return $this->hasMany(SaldoAwal::class);

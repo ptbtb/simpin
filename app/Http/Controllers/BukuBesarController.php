@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
+use App\Exports\BukuBesarExport;
+
+use Carbon\Carbon;
+use Excel;
+
 class BukuBesarController extends Controller
 {
     public function index(Request $request)
@@ -135,5 +140,13 @@ class BukuBesarController extends Controller
             Log::error($message);
             return response()->json(['message' => 'error'], 500);
         }
+    }
+
+    public function createExcel(Request $request) {
+        $user = Auth::user();
+        $this->authorize('view jurnal', $user);
+
+        $filename = 'export_buku_besar_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+        return Excel::download(new BukuBesarExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 }
