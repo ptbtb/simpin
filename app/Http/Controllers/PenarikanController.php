@@ -31,37 +31,31 @@ class PenarikanController extends Controller
 {
     public function create()
     {
-        try
-        {
+        try {
             $user = Auth::user();
             $this->authorize('add penarikan', $user);
 
             $data['title'] = "Buat Penarikan";
-            $data['jenisSimpanan'] = JenisSimpanan::all();
+            $data['jenisSimpanan'] = JenisSimpanan::where('is_normal_withdraw', 1)->get();
             return view('penarikan.create', $data);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
-			if (isset($e->errorInfo[2]))
-			{
-				$message = $e->errorInfo[2];
-			}
-			return redirect()->back()->withError($message);
+            if (isset($e->errorInfo[2])) {
+                $message = $e->errorInfo[2];
+            }
+            return redirect()->back()->withError($message);
         }
     }
 
     public function store(Request $request)
     {
-        try
-        {
+        try {
             $user = Auth::user();
             $this->authorize('add penarikan', $user);
-
+            $jenissimpanan = JenisSimpanan::where('kode_jenis_simpan', $request->jenis_simpanan)->first();
             // check password
             $check = Hash::check($request->password, $user->password);
-            if (!$check)
-            {
+            if (!$check) {
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
 
@@ -71,26 +65,17 @@ class PenarikanController extends Controller
             $anggota = Anggota::with('tabungan')->find($request->kode_anggota);
             $tabungan = $anggota->tabungan->where('kode_trans', $request->jenis_simpanan)->first();
             $besarPenarikan = filter_var($request->besar_penarikan, FILTER_SANITIZE_NUMBER_INT);
-            
-            if (is_null($tabungan))
-            {
-                return redirect()->back()->withError($anggota->nama_anggota. " belum memiliki tabungan");
-            }
-            else if($tabungan->totalBesarTabungan < $besarPenarikan)
-            {
+            $maxtarik = $tabungan->totalBesarTabungan * $jenissimpanan->max_withdraw;
+            if (is_null($tabungan)) {
+                return redirect()->back()->withError($anggota->nama_anggota . " belum memiliki tabungan");
+            } else if ($tabungan->totalBesarTabungan < $besarPenarikan) {
                 return redirect()->back()->withError("Saldo tabungan tidak mencukupi");
-            }
-            else if($request->jenis_simpanan == JENIS_SIMPANAN_SUKARELA)
-            {
-                if($besarPenarikan > ($tabungan->totalBesarTabungan / 2))
-                {
-                    return redirect()->back()->withError("Penarikan simpanan sukarela tidak boleh melebihi 50% dari saldo tabungan");
-                }
+            } else if ($besarPenarikan > $maxtarik) {
+                return redirect()->back()->withError("Penarikan simpanan " . $jenissimpanan->nama_simpanan . " tidak boleh melebihi ".$jenissimpanan->max_withdraw." dari saldo tabungan");
             }
 
             $penarikan = new Penarikan();
-            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber)
-            {
+            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber) {
                 $penarikan->kode_anggota = $anggota->kode_anggota;
                 $penarikan->kode_tabungan = $tabungan->kode_tabungan;
                 $penarikan->id_tabungan = $tabungan->id;
@@ -107,15 +92,12 @@ class PenarikanController extends Controller
             event(new PenarikanCreated($penarikan, $tabungan));
             // return redirect()->route('penarikan-receipt', ['id' => $penarikan->kode_ambil])->withSuccess("Penarikan berhasil");
             return redirect()->back()->withSuccess('Permintaan penarikan berhasil disimpan dan dalam proses persetujuan');
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
-			if (isset($e->errorInfo[2]))
-			{
-				$message = $e->errorInfo[2];
-			}
-			return redirect()->back()->withError($message);
+            if (isset($e->errorInfo[2])) {
+                $message = $e->errorInfo[2];
+            }
+            return redirect()->back()->withError($message);
         }
     }
 
@@ -127,24 +109,7 @@ class PenarikanController extends Controller
         $anggota = Anggota::with('tabungan')->find($id);
         $saldoTabungan = Tabungan::where('kode_anggota', $id)->get();
 
-        $thisYear = Carbon::now()->year;
-        $listSimpanan = Simpanan::where('kode_anggota', $id)
-                                ->whereYear('tgl_entri', $thisYear)
-                                ->orderBy('tgl_entri','asc')
-                                ->get();
 
-        $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
-        $saldoTabungan = $saldoTabungan->map(function ($tabungan) use ($groupedListSimpanan)
-        {
-            $res = $tabungan;
-            if (isset($groupedListSimpanan[$tabungan->kode_trans]))
-            {
-                $totalSimpanan = $groupedListSimpanan[$tabungan->kode_trans]->sum('besar_simpanan');
-                $res->besar_tabungan = $tabungan->besar_tabungan + $totalSimpanan;
-            }
-            return $res;
-        });
-        
         $data['anggota'] = $anggota;
         $data['saldoTabungan'] = $saldoTabungan;
         return view('penarikan.detailAnggota', $data);
@@ -158,8 +123,8 @@ class PenarikanController extends Controller
         $data['title'] = 'Bukti Pengambilan Tunai';
         $penarikan = Penarikan::findOrFail($id);
         $tabungan = Tabungan::where('kode_anggota', $penarikan->kode_anggota)
-                            ->where('kode_trans', $penarikan->code_trans)
-                            ->first();
+            ->where('kode_trans', $penarikan->code_trans)
+            ->first();
         $data['penarikan'] = $penarikan;
         $data['tabungan'] = $tabungan;
         return view('penarikan.receipt', $data);
@@ -172,15 +137,15 @@ class PenarikanController extends Controller
 
         $penarikan = Penarikan::findOrFail($id);
         $tabungan = Tabungan::where('kode_anggota', $penarikan->kode_anggota)
-                            ->where('kode_trans', $penarikan->code_trans)
-                            ->first();
+            ->where('kode_trans', $penarikan->code_trans)
+            ->first();
         $penarikan->tabungan = $tabungan;
         // share data to view
-        view()->share('penarikan',$penarikan);
+        view()->share('penarikan', $penarikan);
         $pdf = PDF::loadView('penarikan.receiptpdf', $penarikan)->setPaper('a4', 'portrait');
-  
+
         // download PDF file with download method
-        $filename = 'receipt_penarikan_'.$penarikan->anggota->nama_anggota."_".Carbon::now()->format('d M Y').'.pdf';
+        $filename = 'receipt_penarikan_' . $penarikan->anggota->nama_anggota . "_" . Carbon::now()->format('d M Y') . '.pdf';
         return $pdf->download($filename);
     }
 
@@ -189,34 +154,30 @@ class PenarikanController extends Controller
         $user = Auth::user();
         $this->authorize('view history penarikan', $user);
 
-        $listPenarikan = Penarikan::with('anggota');
+        $listPenarikan = Penarikan::with('anggota')->whereraw('paid_by_cashier is not null');
 
-        if ($request->kode_anggota)
-        {
+        if ($request->kode_anggota) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);
         }
 
-        if ($request->from)
-        {
-            $listPenarikan = $listPenarikan->where('tgl_ambil','>=', $request->from);
+        if ($request->from) {
+            $listPenarikan = $listPenarikan->where('tgl_ambil', '>=', $request->from);
         }
-        if ($request->to)
-        {
-            $listPenarikan = $listPenarikan->where('tgl_ambil','<=', $request->to);
+        if ($request->to) {
+            $listPenarikan = $listPenarikan->where('tgl_ambil', '<=', $request->to);
         }
-        if ($user->isAnggota())
-        {
+        if ($user->isAnggota()) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $user->anggota->kode_anggota);
         }
 
-        $listPenarikan = $listPenarikan->orderBy('tgl_ambil','desc')
-                                        ->has('anggota')
-                                        ->get();
-                                        
-		$data['title'] = 'History Penarikan';
+        $listPenarikan = $listPenarikan->orderBy('tgl_ambil', 'desc')
+            ->has('anggota')
+            ->get();
+
+        $data['title'] = 'History Penarikan';
         $data['request'] = $request;
         $data['listPenarikan'] = $listPenarikan;
-		return view('penarikan.history', $data);
+        return view('penarikan.history', $data);
     }
 
     public function createPDF(Request $request)
@@ -226,30 +187,27 @@ class PenarikanController extends Controller
 
         $listPenarikan = Penarikan::with('anggota');
 
-        if ($request->kode_anggota)
-        {
+        if ($request->kode_anggota) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);
         }
 
-        if ($request->from)
-        {
-            $listPenarikan = $listPenarikan->where('tgl_ambil','>=', $request->from);
+        if ($request->from) {
+            $listPenarikan = $listPenarikan->where('tgl_ambil', '>=', $request->from);
         }
-        if ($request->to)
-        {
-            $listPenarikan = $listPenarikan->where('tgl_ambil','<=', $request->to);
+        if ($request->to) {
+            $listPenarikan = $listPenarikan->where('tgl_ambil', '<=', $request->to);
         }
 
-        $listPenarikan = $listPenarikan->orderBy('tgl_ambil','desc')
-                                        ->has('anggota')
-                                        ->get();
+        $listPenarikan = $listPenarikan->orderBy('tgl_ambil', 'desc')
+            ->has('anggota')
+            ->get();
 
         // share data to view
-        view()->share('listPenarikan',$listPenarikan);
+        view()->share('listPenarikan', $listPenarikan);
         $pdf = PDF::loadView('penarikan.excel', $listPenarikan)->setPaper('a4', 'landscape');
-  
+
         // download PDF file with download method
-        $filename = 'export_history_penarikan_'.Carbon::now()->format('d M Y').'.pdf';
+        $filename = 'export_history_penarikan_' . Carbon::now()->format('d M Y') . '.pdf';
         return $pdf->download($filename);
     }
 
@@ -257,26 +215,23 @@ class PenarikanController extends Controller
     {
         $user = Auth::user();
         $this->authorize('view history penarikan', $user);
-        $filename = 'export_transaksi_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+        $filename = 'export_transaksi_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
         return Excel::download(new PenarikanExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function importExcel()
     {
         $data['title'] = 'Import Transaksi Penarikan';
-		return view('penarikan.import', $data);
+        return view('penarikan.import', $data);
     }
 
     public function storeImportExcel(Request $request)
     {
         $this->authorize('import penarikan', Auth::user());
-        try
-        {
+        try {
             Excel::import(new PenarikanImport, $request->file);
             return redirect()->back()->withSuccess('Import data berhasil');
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             \Log::error($e);
             return redirect()->back()->withError('Gagal import data');
         }
@@ -284,17 +239,16 @@ class PenarikanController extends Controller
 
     public function index(Request $request)
     {
-        try
-        {
+        try {
             $user = Auth::user();
             if ($user->isAnggota()) {
                 $anggota = $user->anggota;
                 if (is_null($anggota)) {
                     return redirect()->back()->withError('Your account has no members');
                 }
-    
+
                 $listPenarikan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                        ->get();
+                    ->get();
             } else {
                 $listPenarikan = Penarikan::with('anggota')->get();
             }
@@ -306,9 +260,7 @@ class PenarikanController extends Controller
             $data['request'] = $request;
             $data['bankAccounts'] = $bankAccounts;
             return view('penarikan.index', $data);
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             Log::error($e);
             return redirect()->back()->withError('Terjadi Kesalahan');
         }
@@ -316,8 +268,7 @@ class PenarikanController extends Controller
 
     public function updateStatus(Request $request)
     {
-        try
-        {
+        try {
             $user = Auth::user();
             $check = Hash::check($request->password, $user->password);
             if (!$check) {
@@ -381,25 +332,20 @@ class PenarikanController extends Controller
                     }
                 }
 
-                $penarikan->id_akun_debet = ($request->id_akun_debet)? $request->id_akun_debet:null;
+                $penarikan->id_akun_debet = ($request->id_akun_debet) ? $request->id_akun_debet : null;
             }
 
             $penarikan->save();
-            if ($penarikan->menungguPembayaran())
-            {
+            if ($penarikan->menungguPembayaran()) {
                 event(new PenarikanApproved($penarikan));
-            }
-            elseif ($penarikan->diterima())
-            {
+            } elseif ($penarikan->diterima()) {
                 JurnalManager::createJurnalPenarikan($penarikan);
             }
             event(new PenarikanUpdated($penarikan));
-            
+
             return response()->json(['message' => 'success'], 200);
-        }
-        catch (\Exception $e)
-        {
-            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+        } catch (\Exception $e) {
+            $message = class_basename($e) . ' in ' . basename($e->getFile()) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
             Log::error($message);
             return response()->json(['message' => $message], 500);
         }
@@ -407,18 +353,15 @@ class PenarikanController extends Controller
 
     public function printJkk()
     {
-        try
-        {
+        try {
             $listPenarikan = Penarikan::needPrintJkk()
-                                            ->menungguPembayaran()
-                                            ->get();
+                ->menungguPembayaran()
+                ->get();
 
             $data['title'] = "Print JKK";
             $data['listPenarikan'] = $listPenarikan;
-            return view('penarikan.printJKK',$data);
-        }
-        catch (\Throwable $e)
-        {
+            return view('penarikan.printJKK', $data);
+        } catch (\Throwable $e) {
             Log::error($e);
             $message = $e->getMessage();
             return response()->json(['message' => $message], 500);
@@ -427,31 +370,27 @@ class PenarikanController extends Controller
 
     public function storePrintJkk(Request $request)
     {
-        try
-        {
+        try {
             $listPenarikan = Penarikan::whereIn('kode_ambil', $request->kode_ambil)
-                                        ->get();
+                ->get();
 
-            foreach ($listPenarikan as $penarikan)
-            {
+            foreach ($listPenarikan as $penarikan) {
                 $penarikan->no_jkk = $request->no_jkk;
                 $penarikan->status_jkk = 1;
                 $penarikan->save();
             }
-            
+
             $data['listPenarikan'] = $listPenarikan;
-            view()->share('data',$data);
-            PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
+            view()->share('data', $data);
+            PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
             $pdf = PDF::loadView('penarikan.pdfJKK', $data)->setPaper('a4', 'landscape');
 
             // download PDF file with download method
-            $filename = $request->no_jkk.'-'.Carbon::now()->toDateString().'.pdf';
+            $filename = $request->no_jkk . '-' . Carbon::now()->toDateString() . '.pdf';
             return $pdf->download($filename);
 
             // return view('penarikan.pdfJKK', $data);
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             Log::error($e);
             return redirect()->back()->withError('Terjadi Kesalahan');
         }
