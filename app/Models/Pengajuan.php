@@ -15,6 +15,13 @@ class Pengajuan extends Model
     public $incrementing = false;
     protected $dates = ['tgl_pengajuan', 'tgl_acc'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view'];
+
     public function anggota()
     {
         return $this->belongsTo(Anggota::class, 'kode_anggota', 'kode_anggota');
@@ -161,5 +168,61 @@ class Pengajuan extends Model
         $total = $this->besar_pinjam - $provisi - $admin - $asuransi;        
 
         return 'Rp '.number_format($total, '2', ',', '.');
+    }
+
+    /**
+     * Get the createdAtView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCreatedAtViewAttribute()
+    {
+        return $this->created_at->format('d F Y');
+    }
+
+    /**
+     * Get the getUpdatedAtView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getUpdatedAtViewAttribute()
+    {
+        return $this->updated_at->format('d F Y');
+    }
+
+    /**
+     * Get the createdByView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCreatedByViewAttribute()
+    {
+        if ($this->createdBy)
+        {
+            return $this->createdBy->name;
+        }
+        return '-';
+    }
+
+    /**
+     * Get the updatedByView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getUpdatedByViewAttribute($value)
+    {
+        if ($this->paidByCashier)
+        {
+            return $this->paidByCashier->name;
+        }
+        elseif($this->approvedBy)
+        {
+            return $this->approvedBy->name;
+        }
+        return '-';
     }
 }
