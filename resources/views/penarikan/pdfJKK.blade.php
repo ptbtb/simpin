@@ -6,7 +6,7 @@
     table tr td{
         font-size: 12px;
     }
-    
+
     .border-collapse, .border-collapse tr td, .border-collapse tr th {
         border: 1px solid black;
     }
@@ -33,7 +33,7 @@
     }
 </style>
 <body>
-    <h5 style="margin: 0">REKAP PENARIKAN DAERAH</h5>
+    <h5 style="margin: 0">REKAP PENARIKAN </h5>
     <h5 style="margin-top: 0">TGL {{ \Carbon\Carbon::now()->format('d F Y') }}</h5>
 
     <table class="border-collapse">
