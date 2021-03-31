@@ -259,7 +259,7 @@
         });
         $('.table').DataTable();
 
-        $('table').on('click', '.btn-approval', function ()
+        $(document).on('click', '.btn-approval', function ()
         {
             var id = $(this).data('id');
             var status = $(this).data('status');
@@ -341,7 +341,7 @@
             }
         });
 
-        $('table').on('click', '.btn-konfirmasi', function ()
+        $(document).on('click', '.btn-konfirmasi', function ()
         {
             var id = $(this).data('id');
             var action = $(this).data('action');
@@ -358,7 +358,7 @@
             $('#jenisAkun').trigger( "change" );
         });
 
-        $('table').on('click', '.btn-jurnal',function ()
+        $(document).on('click', '.btn-jurnal',function ()
         {
             htmlText = '';
             var id = $(this).data('id');
@@ -402,7 +402,7 @@
             });
         });
 
-        $('table').on('click', '.btn-detail', function ()
+        $(document).on('click', '.btn-detail', function ()
         {
             var id = $(this).data('id');
             var pengajuan = collect(@json($listPengajuanPinjaman)).where('kode_pengajuan', id).first();
