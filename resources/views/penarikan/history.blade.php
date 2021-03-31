@@ -78,6 +78,7 @@
                         <th>Tanggal Penarikan</th>
                         <th>Besar Penarikan</th>
                         <th>Status Penarikan</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,6 +89,10 @@
                             <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
                             <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
                             <td>{{ $penarikan->anggota->nama_anggota }}</td>
+                            <td>
+                                <a data-id="{{ $penarikan->kode_ambil }}" class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
+                                <a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 mt-md-0 btn-information" data-id="{{ $penarikan->kode_ambil }}"><i class="fa fa-info"></i> Info</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody> 
@@ -98,6 +103,7 @@
 
 @section('js')
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
         var kode_anggota = '{{ ($request->kode_anggota)? $request->kode_anggota:'' }}';
@@ -167,5 +173,72 @@
                 });
             });
         }
+
+        $('.btn-jurnal').on('click', function ()
+        {
+            htmlText = '';
+            var id = $(this).data('id');
+            $.ajax({
+                url: baseURL + '/penarikan/data-jurnal/' + id,
+                success : function (data, status, xhr) {
+                    htmlText = data;
+                    Swal.fire({
+                        title: 'Jurnal Penarikan',
+                        html: htmlText, 
+                        icon: "info",
+                        showCancelButton: false,
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: "#00a65a",
+                        grow: 'row',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
+                },
+                error : function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        html: htmlText, 
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: "#00a65a",
+                        grow: 'row',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
+                }
+            });
+        });
+
+        $('.btn-information').on('click', function ()
+        {
+            var dataId = $(this).data('id');
+            var listPenarikan = collect(@json($listPenarikan));
+            var penarikan = listPenarikan.where('kode_ambil', dataId).first();
+            var htmlText = '<div class="container-fluid">' + 
+                                '<div class="row">' + 
+                                    '<div class="col-md-6 mx-0 my-2">Created At <br> <b>' + penarikan['created_at_view'] + '</b></div>' + 
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + penarikan['created_by_view'] + '</b></div>' + 
+                                    '<div class="col-md-6 mx-0 my-2">Updated At <br> <b>' + penarikan['updated_at_view'] + '</b></div>' + 
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + penarikan['updated_by_view'] + '</b></div>' + 
+                                '</div>' + 
+                            '</div>';
+
+            Swal.fire({
+                title: 'Info',
+                html: htmlText, 
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+                confirmButtonColor: "#00a65a",
+            });
+        });
     </script>
 @endsection
