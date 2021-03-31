@@ -146,7 +146,7 @@ class Pengajuan extends Model
 
     public function getViewProvisiAttribute()
     {
-        $value = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        $value = round($this->jenisPinjaman->provisi*$this->besar_pinjam, 2);
         return 'Rp '.number_format($value, '2', ',', '.');
     }
 
@@ -165,7 +165,7 @@ class Pengajuan extends Model
         $provisi = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
         $admin = $this->jenisPinjaman->biaya_admin;
         $asuransi = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
-        $total = $this->besar_pinjam - $provisi - $admin - $asuransi;        
+        $total = $this->besar_pinjam - $provisi - $admin - $asuransi;
 
         return 'Rp '.number_format($total, '2', ',', '.');
     }
