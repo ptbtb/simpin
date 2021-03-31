@@ -36,12 +36,7 @@ class Tabungan extends Model
 
     public function getTotalBesarTabunganAttribute()
     {
-        $thisYear = Carbon::now()->year;
-        $simpanan = Simpanan::where('kode_jenis_simpan', $this->kode_trans)
-                            ->whereYear('tgl_entri', $thisYear)
-                            ->where('kode_anggota', $this->kode_anggota)
-                            ->get()
-                            ->sum('besar_simpanan');
-        return $this->besar_tabungan + $simpanan;
+
+        return $this->besar_tabungan;
     }
 }

@@ -19,7 +19,7 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\EmailListener@onUserCreated',
         ],
         'App\Events\Penarikan\PenarikanCreated' => [
-             'App\Listeners\PenarikanListener@onPenarikanCreated',
+           //  'App\Listeners\PenarikanListener@onPenarikanCreated',
             // 'App\Listeners\EmailListener@onPenarikanCreated',
         ],
         'App\Events\Pinjaman\PengajuanCreated' => [
