@@ -190,6 +190,10 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::post('import', [App\Http\Controllers\PinjamanController::class, 'storeImportPinjaman'])->name('pinjaman-import');
         Route::delete('delete/{id}', [App\Http\Controllers\PinjamanController::class, 'destroy'])->name('pinjaman-delete');
 
+        // import angsuran
+        Route::get('import-angsuran', [App\Http\Controllers\AngsuranController::class, 'importAngsuran'])->name('import_angsuran');
+        Route::post('import-angsuran', [App\Http\Controllers\AngsuranController::class, 'storeImportAngsuran'])->name('import_angsuran');
+
         Route::group(['prefix' => 'pengajuan'], function () {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
             Route::get('data-jurnal/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'viewDataJurnalPinjaman'])->name('view-data-jurnal-pengajuan-pinjaman');

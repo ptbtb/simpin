@@ -360,6 +360,12 @@ return [
                     'can'  => ['download form pinjaman'],
                 ],
                 [
+                    'text' => 'Import Angsuran',
+                    'url' => '/pinjaman/import-angsuran',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import angsuran'],
+                ],
+                [
                     'text' => 'List Pinjaman',
                     'url' => '/pinjaman/list',
                     'icon' => 'fas fa-file-invoice-dollar nav-icon',
