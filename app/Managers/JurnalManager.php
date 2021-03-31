@@ -43,11 +43,13 @@ class JurnalManager
     {
         try
         {
+            // jurnal pinjaman
+            // jurnal untuk debet
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-            $jurnal->akun_kredit = $pinjaman->kode_jenis_pinjam;
-            $jurnal->kredit = $pinjaman->besar_pinjam;
+            $jurnal->akun_kredit = 0;
+            $jurnal->kredit = 0;
             if($pinjaman->akunDebet)
             {
                 $jurnal->akun_debet = $pinjaman->akunDebet->CODE;
@@ -57,6 +59,67 @@ class JurnalManager
                 $jurnal->akun_debet = COA_BANK_MANDIRI;
             }
             $jurnal->debet = $pinjaman->besar_pinjam;
+            $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+            
+            // save as polymorphic
+            $pinjaman->jurnals()->save($jurnal);
+
+
+            // jurnal untuk total credit bank
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = $pinjaman->kode_jenis_pinjam;
+            $jurnal->kredit = $pinjaman->besar_pinjam - $pinjaman->biaya_administrasi - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi;
+            $jurnal->akun_debet = 0;
+            $jurnal->debet = 0;
+            $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+            
+            // save as polymorphic
+            $pinjaman->jurnals()->save($jurnal);
+
+            // jurnal untuk total provisi
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = COA_JASA_PROVISI;
+            $jurnal->kredit = $pinjaman->biaya_provisi;
+            $jurnal->akun_debet = 0;
+            $jurnal->debet = 0;
+            $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+            
+            // save as polymorphic
+            $pinjaman->jurnals()->save($jurnal);
+
+            // jurnal untuk total ASURANSI
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = COA_UTIP_ASURANSI;
+            $jurnal->kredit = $pinjaman->biaya_asuransi;
+            $jurnal->akun_debet = 0;
+            $jurnal->debet = 0;
+            $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+            
+            // save as polymorphic
+            $pinjaman->jurnals()->save($jurnal);
+
+            // jurnal untuk total ADMINISTRASI
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = COA_JASA_ADMINISTRASI;
+            $jurnal->kredit = $pinjaman->biaya_administrasi;
+            $jurnal->akun_debet = 0;
+            $jurnal->debet = 0;
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
