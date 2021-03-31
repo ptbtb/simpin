@@ -221,7 +221,7 @@
         });
         $('.table').DataTable();
 
-        $('table').on('click','.btn-approval', function ()
+        $(document).on('click','.btn-approval', function ()
         {
             var id = $(this).data('id');
             var status = $(this).data('status');
@@ -288,7 +288,7 @@
             });
         });
 
-        $('table').on('click', '.btn-konfirmasi', function ()
+        $(document).on('click', '.btn-konfirmasi', function ()
         {
             var id = $(this).data('id');
             var action = $(this).data('action');
@@ -304,7 +304,7 @@
             $('#jenisAkun').trigger( "change" );
         });
 
-        $('.btn-jurnal').on('click', function ()
+        $(document).on('click', '.btn-jurnal', function ()
         {
             htmlText = '';
             var id = $(this).data('id');

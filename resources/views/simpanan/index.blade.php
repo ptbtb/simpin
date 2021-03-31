@@ -266,7 +266,7 @@
     function initiateEvent()
     {
         // event button table on click
-        $('table').on('click', 'a', function ()
+        $(document).on('click', 'a', function ()
         {
             var action = $(this).data('action');
 
