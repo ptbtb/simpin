@@ -55,6 +55,32 @@
                     </thead>
                 </table>
             </div>
+            <div class="col-md-6 table-responsive">
+                <h5 class="text-center">Rugi</h5>
+                <table class="table table-striped table-rugi">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Nama</th>
+                            <th style="width: 40%">Saldo</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-md-6 table-responsive">
+                <h5 class="text-center">Laba</h5>
+                <table class="table table-striped table-laba">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Nama</th>
+                            <th style="width: 40%">Saldo</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 @endsection
@@ -140,6 +166,78 @@
                 ]
             });
 
+            var tableRugi = $('.table-rugi').DataTable({
+                processing: true,
+                serverside: true,
+                paging:   false,
+                ajax: {
+                    url: '{{ route('buku-besar-list-ajax') }}',
+                    dataSrc: 'data',
+                    data: function(data){
+                        data.code_type_id = {{ CODE_TYPE_RUGI }};
+                    }
+                },
+                aoColumns: [
+                    { 
+                        mData: 'null', sType: "string", 
+                        className: "dt-body-center", "name": "index"				
+                    },
+                    { 
+                        mData: 'code', sType: "string", 
+                        className: "dt-body-center", "name": "code"						
+                    },
+                    { 
+                        mData: 'name', sType: "string", 
+                        className: "dt-body-center", "name": "name"				
+                    },
+                    { 
+                        mData: 'saldo', sType: "string", 
+                        className: "dt-body-center text-right", "name": "saldo",
+                        mRender: function(data, type, full) 
+                        {
+                            var saldo = toRupiah(data);
+                            return saldo;
+                        }			
+                    },
+                ]
+            });
+
+            var tableLaba = $('.table-laba').DataTable({
+                processing: true,
+                serverside: true,
+                paging:   false,
+                ajax: {
+                    url: '{{ route('buku-besar-list-ajax') }}',
+                    dataSrc: 'data',
+                    data: function(data){
+                        data.code_type_id = {{ CODE_TYPE_LABA }};
+                    }
+                },
+                aoColumns: [
+                    { 
+                        mData: 'null', sType: "string", 
+                        className: "dt-body-center", "name": "index"				
+                    },
+                    { 
+                        mData: 'code', sType: "string", 
+                        className: "dt-body-center", "name": "code"						
+                    },
+                    { 
+                        mData: 'name', sType: "string", 
+                        className: "dt-body-center", "name": "name"				
+                    },
+                    { 
+                        mData: 'saldo', sType: "string", 
+                        className: "dt-body-center text-right", "name": "saldo",
+                        mRender: function(data, type, full) 
+                        {
+                            var saldo = toRupiah(data);
+                            return saldo;
+                        }			
+                    },
+                ]
+            });
+
             // add index column
             tableAktiva.on( 'order.dt search.dt', function () {
                 tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -148,8 +246,22 @@
             }).draw();
 
             // add index column
-            tablePassiva.on( 'order.dt search.dt', function () {
-                tablePassiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            tableAktiva.on( 'order.dt search.dt', function () {
+                tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                    cell.innerHTML = i+1;
+                } );
+            }).draw();
+
+            // add index column
+            tableRugi.on( 'order.dt search.dt', function () {
+                tableRugi.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                    cell.innerHTML = i+1;
+                } );
+            }).draw();
+
+            // add index column
+            tableLaba.on( 'order.dt search.dt', function () {
+                tableLaba.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );
             }).draw();
