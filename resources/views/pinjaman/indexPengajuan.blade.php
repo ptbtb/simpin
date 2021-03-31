@@ -53,7 +53,7 @@
                         <input id="to" type="text" name="to" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->to)? $request->to:'' }}">
                     </div>
                     <div class="col-md-1 form-group" style="margin-top: 26px">
-                        <button type="submit" class="btn btn-sm btn-success form-control"><i class="fa fa-filter"></i> Filter</button>
+                        <button type="submit" class="btn mt-1 btn-sm btn-success form-control"><i class="fa fa-filter"></i> Filter</button>
                     </div>
                 </div>
             </form>
@@ -61,12 +61,12 @@
     </div> --}}
     <div class="card">
         <div class="card-header text-right">
-            {{-- <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
-            <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a> --}}
+            {{-- <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn mt-1 btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
+            <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn mt-1 btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a> --}}
             @can('print jkk')
-                <a href="{{ route('pengajuan-pinjaman-print-jkk') }}" class="btn btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
+                <a href="{{ route('pengajuan-pinjaman-print-jkk') }}" class="btn mt-1 btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
             @endcan
-            <a href="{{ route('pengajuan-pinjaman-add') }}" class="btn btn-sm btn-success"><i class="fas fa-plus"></i> Buat Pengajuan Pinjaman</a>
+            <a href="{{ route('pengajuan-pinjaman-add') }}" class="btn mt-1 btn-sm btn-success"><i class="fas fa-plus"></i> Buat Pengajuan Pinjaman</a>
         </div>
         <div class="card-body table-responsive">
             <table class="table table-striped">
@@ -83,7 +83,6 @@
                         <th>Diajukan Oleh</th>
                         <th>Dikonfirmasi Oleh</th>
                         <th>Pembayaran Oleh</th>
-                        <th>Bukti Pembayaran</th>
                         <th style="width: 20%">Action</th>
                     </tr>
                 </thead>
@@ -101,7 +100,7 @@
                             </td>
                             <td>{{ ucwords(strtolower($pengajuan->jenisPinjaman->nama_pinjaman)) }}</td>
                             <td>Rp. {{ number_format($pengajuan->besar_pinjam,0,",",".") }}</td>
-                            <td><a class="btn btn-warning btn-sm" href="{{ asset($pengajuan->form_persetujuan) }}" target="_blank"><i class="fa fa-file"></i></a></td>
+                            <td><a class="btn mt-1 btn-warning btn-sm" href="{{ asset($pengajuan->form_persetujuan) }}" target="_blank"><i class="fa fa-file"></i></a></td>
                             <td class="str-to">{{ ucfirst($pengajuan->statusPengajuan->name) }}</td>
                             <td>
                                 @if ($pengajuan->tgl_acc)
@@ -132,59 +131,55 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($pengajuan->bukti_pembayaran)
-                                    <a class="btn btn-warning btn-sm" href="{{ asset($pengajuan->bukti_pembayaran) }}" target="_blank"><i class="fa fa-file"></i></a>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td>
                                 @if (Auth::user()->isAnggota())
                                     @if ($pengajuan->menungguKonfirmasi())
-                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Cancel</a>
+                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Cancel</a>
                                     @else
                                         -
                                     @endif
                                 @else    
                                     @can('approve pengajuan pinjaman')
                                         @if ($pengajuan->menungguKonfirmasi())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguApprovalSpv())
                                             @can('approve pengajuan pinjaman spv')
-                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
-                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                                <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                             @endcan
                                         @elseif($pengajuan->menungguApprovalAsman())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguApprovalManager())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguApprovalBendahara())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA}}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguApprovalKetua())
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
-                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN}}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>
+                                            <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
                                         @elseif($pengajuan->menungguPembayaran())
                                             @can('bayar pengajuan pinjaman')
                                                 @if ($pengajuan->jkkPrinted())
-                                                    <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
+                                                    <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn mt-1 btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
                                                 @else
                                                     JKK Belum di Print
                                                 @endif
                                             @endcan
                                             <!-- <b style="color: blue !important"><i class="fas fa-clock"></i></b> -->
                                         @elseif($pengajuan->diterima())
-                                            <b style="color: green !important"><i class="fas fa-check"></i></b>
+                                            {{-- <b style="color: green !important"><i class="fas fa-check"></i></b> --}}
                                         @else
-                                            <b style="color: red !important"><i class="fas fa-times"></i></b>
+                                            {{-- <b style="color: red !important"><i class="fas fa-times"></i></b> --}}
                                         @endif
 
-                                        @if($pengajuan->menungguKonfirmasi() || $pengajuan->menungguApprovalSpv() || $pengajuan->menungguApprovalAsman() || $pengajuan->menungguApprovalManager() || $pengajuan->menungguApprovalBendahara() || $pengajuan->menungguApprovalKetua())
-                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}"  class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
-                                        @endif
+                                        {{-- @if($pengajuan->menungguKonfirmasi() || $pengajuan->menungguApprovalSpv() || $pengajuan->menungguApprovalAsman() || $pengajuan->menungguApprovalManager() || $pengajuan->menungguApprovalBendahara() || $pengajuan->menungguApprovalKetua())
+                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}"  class="text-white btn mt-1 btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
+                                        @endif --}}
+                                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}"  class="text-white btn mt-1 btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
+                                        <a class="btn mt-1 btn-sm btn-warning btn-detail" data-id="{{ $pengajuan->kode_pengajuan }}" style="cursor: pointer"><i class="fa fa-info"></i> Info</a>
+                                        <a class="btn mt-1 btn-dark btn-sm" href="{{ asset($pengajuan->bukti_pembayaran) }}" target="_blank"><i class="fa fa-file"></i> Lampiran</a>
                                     @endcan
                                 @endif
                             </td>
@@ -233,9 +228,9 @@
                 </div>
                 <div class="modal-footer">
                     @if (isset($pengajuan))
-                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm btn-success btn-approval">Bayar</a>
+                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn mt-1 btn-sm btn-success btn-approval">Bayar</a>
                     @endif
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn mt-1 btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -250,6 +245,7 @@
 
 @section('js')
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/collect.js/4.28.6/collect.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
@@ -403,6 +399,31 @@
                         if (result.value) {
                         }
                     });
+                }
+            });
+        });
+
+        $('.btn-detail').on('click', function ()
+        {
+            var id = $(this).data('id');
+            var pengajuan = collect(@json($listPengajuanPinjaman)).where('kode_pengajuan', id).first();
+            var htmlText = '<div class="container-fluid">' + 
+                                '<div class="row">' + 
+                                    '<div class="col-md-6 mx-0 my-2">Created At <br> ' + pengajuan['created_at_view'] + '</div>' + 
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['created_by_view'] + '</div>' + 
+                                    '<div class="col-md-6 mx-0 my-2">Updated At <br> ' + pengajuan['updated_at_view'] + '</div>' + 
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['updated_by_view'] + '</div>' + 
+                                '</div>' + 
+                            '</div>';
+
+            Swal.fire({
+                title: 'Info',
+                html: htmlText, 
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+                confirmButtonColor: "#00a65a",
+            }).then((result) => {
+                if (result.value) {
                 }
             });
         });
