@@ -143,13 +143,13 @@
         var besarSimpanan = $(this).val().toString();
         besarSimpanan = besarSimpanan.replace(/[^\d]/g, "",'');
         $('#besarSimpanan').val(toRupiah(besarSimpanan));
-        if(tipeSimpanan === '502.01.000'){
+        /*if(tipeSimpanan === '502.01.000'){
             if(besarSimpanan > besarSimpananSukarela) {
                 errMessage('warningText', 'Jumlah besar simpanan melebihi 65% dari total gaji/bulan');
             } else {
                 clearErrMessage('warningText');
             }
-        }
+        }*/
         if(tipeSimpanan === '411.01.000'){
             if(besarSimpanan > besarSimpananPokok) {
                 errMessage('warningText', 'Jumlah besar simpanan melebihi sisa angsuran');
