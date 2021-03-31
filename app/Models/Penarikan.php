@@ -13,7 +13,7 @@ class Penarikan extends Model
     protected $primaryKey = "kode_ambil";
     protected $dates = ['tgl_ambil', 'tgl_acc'];
     protected $fillable = ['kode_anggota', 'kode_tabungan','besar_ambil','tgl_ambil','keterangan','code_trans','u_entry'];
-    protected $appends = ['serial_number_view'];
+    protected $appends = ['serial_number_view', 'created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view'];
 
     public function anggota()
     {
@@ -116,5 +116,61 @@ class Penarikan extends Model
     public function getSerialNumberViewAttribute()
     {
         return 'TAR' . $this->tgl_ambil->format('Y') . $this->tgl_ambil->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+    }
+
+    /**
+     * Get the createdAtView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCreatedAtViewAttribute()
+    {
+        return $this->created_at->format('d F Y');
+    }
+
+    /**
+     * Get the getUpdatedAtView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getUpdatedAtViewAttribute()
+    {
+        return $this->updated_at->format('d F Y');
+    }
+
+    /**
+     * Get the createdByView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCreatedByViewAttribute()
+    {
+        if ($this->createdBy)
+        {
+            return $this->createdBy->name;
+        }
+        return '-';
+    }
+
+    /**
+     * Get the updatedByView
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getUpdatedByViewAttribute($value)
+    {
+        if ($this->paidByCashier)
+        {
+            return $this->paidByCashier->name;
+        }
+        elseif($this->approvedBy)
+        {
+            return $this->approvedBy->name;
+        }
+        return '-';
     }
 }
