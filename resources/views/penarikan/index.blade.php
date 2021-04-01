@@ -296,6 +296,7 @@
             
             $.get(url, function( data ) {
                 $('#my-modal .form-detail').html(data);
+                $('.btn-approval').data('id', id);
                 $('#my-modal').modal({
                     backdrop: false 
                 });

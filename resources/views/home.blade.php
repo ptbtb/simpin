@@ -36,7 +36,13 @@
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner" style="min-height: 123px;">
-                            <h3><a href="{{ route('simpanan-index-card') }}" class="link-dashboard">Rp. {{ number_format($saldo->jumlah,0,",",".") }}</a></h3>
+                            <h3><a href="{{ route('simpanan-index-card') }}" class="link-dashboard">
+                                @if ($saldo)
+                                    Rp. {{ number_format($saldo->jumlah,0,",",".") }}
+                                @else
+                                    0
+                                @endif
+                            </a></h3>
 
                             <p class="font-weight-bold">Saldo </p>
                         </div>
