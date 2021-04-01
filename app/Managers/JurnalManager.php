@@ -20,17 +20,17 @@ class JurnalManager
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_kredit = $penarikan->tabungan->kode_trans;
-        $jurnal->kredit = $penarikan->besar_ambil;
-        if($penarikan->akunDebet)
+        $jurnal->akun_debet = $penarikan->tabungan->kode_trans;
+        $jurnal->debet = $penarikan->besar_ambil;
+        if($penarikan->akun_kredit)
         {
-            $jurnal->akun_debet = $penarikan->akunDebet->CODE;
+            $jurnal->akun_kredit = $penarikan->akunDebet->CODE;
         }
         else
         {
-            $jurnal->akun_debet = '102.18.000';
+            $jurnal->akun_kredit = '102.18.000';
         }
-        $jurnal->debet = $penarikan->besar_ambil;
+        $jurnal->kredit = $penarikan->besar_ambil;
         $jurnal->keterangan = 'Pengambilan simpanan anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
@@ -68,7 +68,7 @@ class JurnalManager
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
             $jurnal->akun_debet = 0;
             $jurnal->debet = 0;
-            if($pinjaman->akunDebet)
+            if($pinjaman->akun_kredit)
             {
                 $jurnal->akun_kredit = $pinjaman->akunDebet->CODE;
             }
