@@ -59,7 +59,20 @@
                 </table>
             </div>
             <div class="col-md-6 table-responsive">
-                <h5 class="text-center">Rugi</h5>
+                <h5 class="text-center">Pendapatan</h5>
+                <table class="table table-striped table-laba">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Code</th>
+                        <th>Nama</th>
+                        <th style="width: 40%">Saldo</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-md-6 table-responsive">
+                <h5 class="text-center">Beban</h5>
                 <table class="table table-striped table-rugi">
                     <thead>
                         <tr>
@@ -71,19 +84,7 @@
                     </thead>
                 </table>
             </div>
-            <div class="col-md-6 table-responsive">
-                <h5 class="text-center">Laba</h5>
-                <table class="table table-striped table-laba">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 40%">Saldo</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+
         </div>
     </div>
 @endsection
@@ -109,26 +110,26 @@
                     }
                 },
                 aoColumns: [
-                    { 
-                        mData: 'null', sType: "string", 
-                        className: "dt-body-center", "name": "index"				
+                    {
+                        mData: 'null', sType: "string",
+                        className: "dt-body-center", "name": "index"
                     },
-                    { 
-                        mData: 'code', sType: "string", 
-                        className: "dt-body-center", "name": "code"						
+                    {
+                        mData: 'code', sType: "string",
+                        className: "dt-body-center", "name": "code"
                     },
-                    { 
-                        mData: 'name', sType: "string", 
-                        className: "dt-body-center", "name": "name"				
+                    {
+                        mData: 'name', sType: "string",
+                        className: "dt-body-center", "name": "name"
                     },
-                    { 
-                        mData: 'saldo', sType: "string", 
+                    {
+                        mData: 'saldo', sType: "string",
                         className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full) 
+                        mRender: function(data, type, full)
                         {
                             var saldo = toRupiah(data);
                             return saldo;
-                        }			
+                        }
                     },
                 ]
             });
@@ -145,26 +146,26 @@
                     }
                 },
                 aoColumns: [
-                    { 
-                        mData: 'null', sType: "string", 
-                        className: "dt-body-center", "name": "index"				
+                    {
+                        mData: 'null', sType: "string",
+                        className: "dt-body-center", "name": "index"
                     },
-                    { 
-                        mData: 'code', sType: "string", 
-                        className: "dt-body-center", "name": "code"						
+                    {
+                        mData: 'code', sType: "string",
+                        className: "dt-body-center", "name": "code"
                     },
-                    { 
-                        mData: 'name', sType: "string", 
-                        className: "dt-body-center", "name": "name"				
+                    {
+                        mData: 'name', sType: "string",
+                        className: "dt-body-center", "name": "name"
                     },
-                    { 
-                        mData: 'saldo', sType: "string", 
+                    {
+                        mData: 'saldo', sType: "string",
                         className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full) 
+                        mRender: function(data, type, full)
                         {
                             var saldo = toRupiah(data);
                             return saldo;
-                        }			
+                        }
                     },
                 ]
             });
@@ -181,26 +182,26 @@
                     }
                 },
                 aoColumns: [
-                    { 
-                        mData: 'null', sType: "string", 
-                        className: "dt-body-center", "name": "index"				
+                    {
+                        mData: 'null', sType: "string",
+                        className: "dt-body-center", "name": "index"
                     },
-                    { 
-                        mData: 'code', sType: "string", 
-                        className: "dt-body-center", "name": "code"						
+                    {
+                        mData: 'code', sType: "string",
+                        className: "dt-body-center", "name": "code"
                     },
-                    { 
-                        mData: 'name', sType: "string", 
-                        className: "dt-body-center", "name": "name"				
+                    {
+                        mData: 'name', sType: "string",
+                        className: "dt-body-center", "name": "name"
                     },
-                    { 
-                        mData: 'saldo', sType: "string", 
+                    {
+                        mData: 'saldo', sType: "string",
                         className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full) 
+                        mRender: function(data, type, full)
                         {
                             var saldo = toRupiah(data);
                             return saldo;
-                        }			
+                        }
                     },
                 ]
             });
@@ -217,26 +218,26 @@
                     }
                 },
                 aoColumns: [
-                    { 
-                        mData: 'null', sType: "string", 
-                        className: "dt-body-center", "name": "index"				
+                    {
+                        mData: 'null', sType: "string",
+                        className: "dt-body-center", "name": "index"
                     },
-                    { 
-                        mData: 'code', sType: "string", 
-                        className: "dt-body-center", "name": "code"						
+                    {
+                        mData: 'code', sType: "string",
+                        className: "dt-body-center", "name": "code"
                     },
-                    { 
-                        mData: 'name', sType: "string", 
-                        className: "dt-body-center", "name": "name"				
+                    {
+                        mData: 'name', sType: "string",
+                        className: "dt-body-center", "name": "name"
                     },
-                    { 
-                        mData: 'saldo', sType: "string", 
+                    {
+                        mData: 'saldo', sType: "string",
                         className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full) 
+                        mRender: function(data, type, full)
                         {
                             var saldo = toRupiah(data);
                             return saldo;
-                        }			
+                        }
                     },
                 ]
             });
@@ -269,7 +270,7 @@
                 } );
             }).draw();
         }
-        
+
         function toRupiah(number)
         {
             var stringNumber = number.toString();
