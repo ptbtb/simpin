@@ -343,7 +343,7 @@
         });
 
         // action button on click
-        $('table').on('click', 'a', function ()
+        $(document).on('click', 'a', function ()
         {
             var dataId = $(this).data('id');
             var action = $(this).data('action');

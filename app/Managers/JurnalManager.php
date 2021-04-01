@@ -13,24 +13,24 @@ use App\Models\Simpanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class JurnalManager 
+class JurnalManager
 {
     public static function createJurnalPenarikan(Penarikan $penarikan)
     {
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_kredit = $penarikan->tabungan->kode_trans;
-        $jurnal->kredit = $penarikan->besar_ambil;
-        if($penarikan->akunDebet)
+        $jurnal->akun_debet = $penarikan->tabungan->kode_trans;
+        $jurnal->debet = $penarikan->besar_ambil;
+        if($penarikan->akun_kredit)
         {
-            $jurnal->akun_debet = $penarikan->akunDebet->CODE;
+            $jurnal->akun_kredit = $penarikan->akunDebet->CODE;
         }
         else
         {
-            $jurnal->akun_debet = COA_BANK_MANDIRI;
+            $jurnal->akun_kredit = '102.18.000';
         }
-        $jurnal->debet = $penarikan->besar_ambil;
+        $jurnal->kredit = $penarikan->besar_ambil;
         $jurnal->keterangan = 'Pengambilan simpanan anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
@@ -48,21 +48,16 @@ class JurnalManager
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_debet = $pinjaman->kode_jenis_pinjam;
+            $jurnal->debet = $pinjaman->besar_pinjam;
             $jurnal->akun_kredit = 0;
             $jurnal->kredit = 0;
-            if($pinjaman->akunDebet)
-            {
-                $jurnal->akun_debet = $pinjaman->akunDebet->CODE;
-            }
-            else
-            {
-                $jurnal->akun_debet = COA_BANK_MANDIRI;
-            }
-            $jurnal->debet = $pinjaman->besar_pinjam;
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            
+
+
+
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
 
@@ -71,14 +66,21 @@ class JurnalManager
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-            $jurnal->akun_kredit = $pinjaman->kode_jenis_pinjam;
-            $jurnal->kredit = $pinjaman->besar_pinjam - $pinjaman->biaya_administrasi - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi;
             $jurnal->akun_debet = 0;
             $jurnal->debet = 0;
+            if($pinjaman->akun_kredit)
+            {
+                $jurnal->akun_kredit = $pinjaman->akunDebet->CODE;
+            }
+            else
+            {
+                $jurnal->akun_kredit = '102.18.000';
+            }
+            $jurnal->kredit = $pinjaman->besar_pinjam - $pinjaman->biaya_administrasi - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi;
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            
+
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
 
@@ -93,7 +95,7 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            
+
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
 
@@ -108,7 +110,7 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            
+
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
 
@@ -123,7 +125,7 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            
+
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
         }
@@ -135,11 +137,27 @@ class JurnalManager
 
     public static function createJurnalAngsuran(Angsuran $angsuran)
     {
+        // debet
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
-        $jurnal->debet = $angsuran->besar_pembayaran;
+        $jurnal->debet = $angsuran->besar_angsuran;
+        $jurnal->akun_kredit = 0;
+        $jurnal->kredit = 0;
+        $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        $jurnal->created_by = Auth::user()->id;
+        $jurnal->updated_by = Auth::user()->id;
+
+        // save as polymorphic
+        $angsuran->jurnals()->save($jurnal);
+
+        // kredit
+        $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
         if($angsuran->akunKredit)
         {
             $jurnal->akun_kredit = $angsuran->akunKredit->CODE;
@@ -149,6 +167,30 @@ class JurnalManager
             $jurnal->akun_kredit = COA_BANK_MANDIRI;
         }
         $jurnal->kredit = $angsuran->besar_pembayaran;
+        $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        $jurnal->created_by = Auth::user()->id;
+        $jurnal->updated_by = Auth::user()->id;
+
+        // save as polymorphic
+        $angsuran->jurnals()->save($jurnal);
+
+        // jurnal untuk JASA
+        $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_kredit = 0;
+        $jurnal->kredit = 0;
+        // japen
+        if($angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
+        {
+            $jurnal->akun_debet = '701.02.003';
+        }
+        // japan and others
+        else
+        {
+            $jurnal->akun_debet = '701.02.001';
+        }
+        $jurnal->debet = $angsuran->jasa;
         $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
@@ -178,7 +220,7 @@ class JurnalManager
             $jurnal->keterangan = 'Simpanan '.strtolower($simpanan->jenis_simpan) . ' anggota '. ucwords(strtolower($simpanan->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            
+
             // save as polymorphic
             $simpanan->jurnals()->save($jurnal);
         }
@@ -194,7 +236,7 @@ class JurnalManager
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JSA;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
 
-        if ($saldoAwal->code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+        if ($saldoAwal->code->normal_balance_id == NORMAL_BALANCE_DEBET)
         {
             $jurnal->akun_debet = $saldoAwal->code->CODE;
             $jurnal->debet = $saldoAwal->nominal;
@@ -226,7 +268,7 @@ class JurnalManager
         $code = Code::find($saldoAwal->getOriginal()['code_id']);
 
         // if debet
-        if ($code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+        if ($code->normal_balance_id == NORMAL_BALANCE_DEBET)
         {
             $jurnal = $jurnal->where('akun_debet', $code->CODE)->first();
         }
@@ -238,7 +280,7 @@ class JurnalManager
         // if jurnal exist
         if($jurnal)
         {
-            if ($code->normal_balance_id == NORMAL_BALANCE_DEBET) 
+            if ($code->normal_balance_id == NORMAL_BALANCE_DEBET)
             {
                 $jurnal->akun_debet = $saldoAwal->code->CODE;
                 $jurnal->debet = $saldoAwal->nominal;
@@ -264,13 +306,13 @@ class JurnalManager
     {
         $jurnalUmumItems = $jurnalUmum->jurnalUmumItems;
 
-        foreach ($jurnalUmumItems as $key => $jurnalUmumItem) 
+        foreach ($jurnalUmumItems as $key => $jurnalUmumItem)
         {
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JU;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
 
-            if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET) 
+            if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET)
             {
                 $jurnal->akun_debet = $jurnalUmumItem->code->CODE;
                 $jurnal->debet = $jurnalUmumItem->nominal;
@@ -302,14 +344,14 @@ class JurnalManager
         $newJurnalUmum = JurnalUmum::find($jurnalUmum->id);
 
         $jurnalUmumItems = $newJurnalUmum->jurnalUmumItems;
-        
-        foreach ($jurnalUmumItems as $key => $jurnalUmumItem) 
+
+        foreach ($jurnalUmumItems as $key => $jurnalUmumItem)
         {
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JU;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
 
-            if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET) 
+            if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET)
             {
                 $jurnal->akun_debet = $jurnalUmumItem->code->CODE;
                 $jurnal->debet = $jurnalUmumItem->nominal;

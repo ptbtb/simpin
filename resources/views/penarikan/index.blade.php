@@ -221,13 +221,14 @@
         });
         $('.table').DataTable();
 
-        $('table').on('click','.btn-approval', function ()
+        $(document).on('click','.btn-approval', function ()
         {
             var id = $(this).data('id');
             var status = $(this).data('status');
             var url = '{{ route("penarikan-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
+            var id_akun_debet = $('#code').val();
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -253,6 +254,7 @@
                     formData.append('status', status);
                     formData.append('bukti_pembayaran', files[0]);
                     formData.append('password', password);
+                    formData.append('id_akun_debet', id_akun_debet);
                     $.ajax({
                         type: 'post',
                         url: url,
@@ -288,7 +290,7 @@
             });
         });
 
-        $('table').on('click', '.btn-konfirmasi', function ()
+        $(document).on('click', '.btn-konfirmasi', function ()
         {
             var id = $(this).data('id');
             var action = $(this).data('action');
@@ -305,7 +307,7 @@
             $('#jenisAkun').trigger( "change" );
         });
 
-        $('.btn-jurnal').on('click', function ()
+        $(document).on('click', '.btn-jurnal', function ()
         {
             htmlText = '';
             var id = $(this).data('id');

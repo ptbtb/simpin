@@ -54,10 +54,10 @@
                         <th>#</th>
                         <th>Nomor</th>
                         <th>Tipe Jurnal</th>
-                        <th>Akun Kredit</th>
-                        <th style="width: 10%">Kredit</th>
                         <th>Akun Debet</th>
                         <th style="width: 10%">Debet</th>
+                        <th>Akun Kredit</th>
+                        <th style="width: 10%">Kredit</th>
                         <th>Keterangan</th>
                         <th>Created At</th>
                         <th>Updated By</th>
@@ -88,62 +88,62 @@
                     }
                 },
                 aoColumns: [
-                    { 
-                        mData: 'null', sType: "string", 
-                        className: "dt-body-center", "name": "index"				
+                    {
+                        mData: 'null', sType: "string",
+                        className: "dt-body-center", "name": "index"
                     },
-                    { 
-                        mData: 'jurnalable_view', sType: "string", 
+                    {
+                        mData: 'jurnalable_view', sType: "string",
                         className: "dt-body-center", "name": "jurnalable_view",
-                        mRender: function(data, type, full) 
+                        mRender: function(data, type, full)
                         {
                             if(data)
                             {
                                 return data.serial_number_view;
                             }
-                        }					
+                        }
                     },
-                    { 
-                        mData: 'tipe_jurnal.name', sType: "string", 
-                        className: "dt-body-center", "name": "tipe_jurnal.name"				
+                    {
+                        mData: 'tipe_jurnal.name', sType: "string",
+                        className: "dt-body-center", "name": "tipe_jurnal.name"
                     },
-                    { 
-                        mData: 'akun_kredit', sType: "string", 
-                        className: "dt-body-center", "name": "akun_kredit"				
+                    {
+                        mData: 'akun_debet', sType: "string",
+                        className: "dt-body-center", "name": "akun_debet",
                     },
-                    { 
-                        mData: 'kredit', sType: "string", 
-                        className: "dt-body-center", "name": "kredit",
-                        mRender: function(data, type, full) 
-                        {
-                            var kredit = toRupiah(data);
-                            return kredit;
-                        }			
-                    },
-                    { 
-                        mData: 'akun_debet', sType: "string", 
-                        className: "dt-body-center", "name": "akun_debet",				
-                    },
-                    { 
-                        mData: 'debet', sType: "string", 
+                    {
+                        mData: 'debet', sType: "string",
                         className: "dt-body-center", "name": "debet",
-                        mRender: function(data, type, full) 
+                        mRender: function(data, type, full)
                         {
                             var debet = toRupiah(data);
                             return debet;
-                        }			
+                        }
                     },
-                    { 
-                        mData: 'keterangan', sType: "string", 
-                        className: "dt-body-center", "name": "keterangan",				
+                    {
+                        mData: 'akun_kredit', sType: "string",
+                        className: "dt-body-center", "name": "akun_kredit"
                     },
-                    { 
-                        mData: 'view_created_at', sType: "string", 
-                        className: "dt-body-center", "name": "view_created_at",				
+                    {
+                        mData: 'kredit', sType: "string",
+                        className: "dt-body-center", "name": "kredit",
+                        mRender: function(data, type, full)
+                        {
+                            var kredit = toRupiah(data);
+                            return kredit;
+                        }
                     },
-                    { 
-                        mData: 'created_by.name', sType: "string", 
-                        className: "dt-body-center", "name": "created_by.name",				
+                    {
+                        mData: 'keterangan', sType: "string",
+                        className: "dt-body-center", "name": "keterangan",
+                    },
+                    {
+                        mData: 'view_created_at', sType: "string",
+                        className: "dt-body-center", "name": "view_created_at",
+                    },
+                    {
+                        mData: 'created_by.name', sType: "string",
+                        className: "dt-body-center", "name": "created_by.name",
                     },
                 ]
             });
@@ -156,7 +156,7 @@
             }).draw();
         }
 
-        
+
         function toRupiah(number)
         {
             var stringNumber = number.toString();

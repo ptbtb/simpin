@@ -345,5 +345,6 @@ Route::group(['prefix' => 'buku-besar'], function() {
         Route::get('', [App\Http\Controllers\BukuBesarController::class, 'index'])->name('buku-besar-list');
         Route::get('data', [App\Http\Controllers\BukuBesarController::class, 'indexAjax'])->name('buku-besar-list-ajax');
         Route::post('', [App\Http\Controllers\BukuBesarController::class, 'index'])->name('buku-besar-list');
+        Route::get('download/excel', [App\Http\Controllers\BukuBesarController::class, 'createExcel'])->name('buku-besar-download-excel');
     });
 });
