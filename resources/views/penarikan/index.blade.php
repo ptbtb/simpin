@@ -228,6 +228,7 @@
             var url = '{{ route("penarikan-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
+            var id_akun_debet = $('#code').val();
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -253,6 +254,7 @@
                     formData.append('status', status);
                     formData.append('bukti_pembayaran', files[0]);
                     formData.append('password', password);
+                    formData.append('id_akun_debet', id_akun_debet);
                     $.ajax({
                         type: 'post',
                         url: url,
