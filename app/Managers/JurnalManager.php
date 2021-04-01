@@ -28,7 +28,7 @@ class JurnalManager
         }
         else
         {
-            $jurnal->akun_debet = COA_BANK_MANDIRI;
+            $jurnal->akun_debet = '102.18.000';
         }
         $jurnal->debet = $penarikan->besar_ambil;
         $jurnal->keterangan = 'Pengambilan simpanan anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
@@ -56,7 +56,7 @@ class JurnalManager
             }
             else
             {
-                $jurnal->akun_debet = COA_BANK_MANDIRI;
+                $jurnal->akun_debet = '102.18.000';
             }
             $jurnal->debet = $pinjaman->besar_pinjam;
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
