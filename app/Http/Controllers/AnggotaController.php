@@ -342,6 +342,7 @@ class AnggotaController extends Controller {
 
     // Generate PDF
     public function createPDF(Request $request) {
+        ini_set('max_execution_time', 120);
         $anggotas = Anggota::with('jenisAnggota');
         if ($request->status)
         {
@@ -365,6 +366,7 @@ class AnggotaController extends Controller {
 
     public function createExcel(Request $request)
     {
+        ini_set('max_execution_time', 300);
         $filename = 'export_anggota_excel_'.Carbon::now()->format('d M Y').'.xlsx';
         return Excel::download(new AnggotaExport($request), $filename);
     }
@@ -378,6 +380,7 @@ class AnggotaController extends Controller {
 
 	public function storeImportExcel(Request $request)
     {
+        ini_set('max_execution_time', 300);
         $this->authorize('import anggota', Auth::user());
         try
         {
