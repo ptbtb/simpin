@@ -314,25 +314,26 @@ class SimpananController extends Controller
                 $paymentValue = $besarSimpananPokok->besar_simpanan;
             }
         } // Kalkulasi Simpanan Wajib
-        //else if ($type == JENIS_SIMPANAN_WAJIB) {
+        else if ($type == JENIS_SIMPANAN_WAJIB) {
 
         //    $payment = Anggota::find($anggotaId)->kelasCompany->kelasSimpanan;
 
-        //    $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', JENIS_SIMPANAN_WAJIB)->first();
-        //    $attribute = $latestAngsur;
+            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', JENIS_SIMPANAN_WAJIB)->first();
+            $attribute = $latestAngsur;
+            $paymentValue=0;
 
         //    $paymentValue = $payment->simpanan;
-       // } // Kalkulasi Simpanan Sukarela
+        } // Kalkulasi Simpanan Sukarela
         else {
             $paymentValue=0;
-            //$anggota = DB::table('t_anggota')
+            //$anggota = DB::table(latestPayment't_anggota')
             //    ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
             //    ->select('t_penghasilan.value as penghasilan')
             //    ->where('t_anggota.kode_anggota', '=', $anggotaId)
-            //    ->where('t_penghasilan.id_jenis_penghasilan', '=', JENIS_PENGHASILAN_GAJI_BULANAN)
-            //    ->first();
-            //$latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', JENIS_SIMPANAN_SUKARELA)->first();
-            //$attribute = $latestAngsur;
+               // ->where('t_penghasilan.id_jenis_penghasilan', '=', JENIS_PENGHASILAN_GAJI_BULANAN)
+             //   ->first();
+            $latestAngsur = Simpanan::latest('created_at')->where('kode_anggota', $anggotaId)->where('kode_jenis_simpan', JENIS_SIMPANAN_SUKARELA)->first();
+            $attribute = $latestAngsur;
             //if ($latestAngsur) {
            //     $paymentValue = $latestAngsur->besar_simpanan;
            // } else {
