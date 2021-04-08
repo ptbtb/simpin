@@ -179,7 +179,7 @@
                                         @endif --}}
                                         <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}"  class="text-white btn mt-1 btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
                                         <a class="btn mt-1 btn-sm btn-warning btn-detail" data-id="{{ $pengajuan->kode_pengajuan }}" style="cursor: pointer"><i class="fa fa-info"></i> Info</a>
-                                        <a class="btn mt-1 btn-dark btn-sm" href="{{ asset($pengajuan->bukti_pembayaran) }}" target="_blank"><i class="fa fa-file"></i> Lampiran</a>
+                                        <a class="btn mt-1 btn-dark btn-sm btn-lampiran text-white"><i class="fa fa-file"></i> Lampiran</a>
                                     @endcan
                                 @endif
                             </td>
@@ -428,6 +428,73 @@
             });
         });
 
+        $(document).on('click', '.btn-lampiran', function ()
+        {
+            var id = $(this).data('id');
+            var pengajuan = collect(@json($listPengajuanPinjaman)).where('kode_pengajuan', id).first();
+
+            var foto_ktp = pengajuan.anggota.foto_ktp;
+            var bukti_pembayaran = pengajuan.bukti_pembayaran;
+            var slip_gaji = [];
+
+            if(pengajuan.anggota.list_penghasilan != undefined)
+            {
+                slip_gaji = $.grep(pengajuan.anggota.list_penghasilan, function( n, i ) {
+                                return n.id_jenis_penghasilan == 4;
+                            });
+            }
+            
+            var htmlText = '<div class="container-fluid">' + 
+                                '<div class="row">' + 
+                                    '<div class="col-md-6 mx-0 my-2 text-left">Form Pengajuan</div>';
+
+                                    if(bukti_pembayaran != '' && bukti_pembayaran != null)
+                                    {
+                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class="mt-1" href="'+baseURL + '/' +bukti_pembayaran+'" download><i class="fa fa-download"></i></a></div>' ;
+                                    }
+                                    else
+                                    {
+                                        htmlText += '<div class="col-md-6"></div>';
+                                    }
+
+                                    htmlText += '<div class="col-md-6 mx-0 my-2 text-left">KTP</div>' ;
+
+                                    if(foto_ktp != '' && foto_ktp != null)
+                                    {
+                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="'+baseURL + '/' +foto_ktp+'" target="_blank"><i class="fa fa-eye"></i></a></div>' + 
+                                        '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="'+baseURL + '/' +foto_ktp+'" download><i class="fa fa-download"></i></a></div>';
+                                    }
+                                    else
+                                    {
+                                        htmlText += '<div class="col-md-6"></div>';
+                                    }
+
+                                    htmlText += '<div class="col-md-6 mx-0 my-2 text-left">Slip Gaji</div>' ;
+
+                                    if(slip_gaji.length != 0)
+                                    {
+                                        var slip_gaji_url = slip_gaji[0].file_path;
+                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class="mt-1" href="'+baseURL + '/' + slip_gaji_url+'" download><i class="fa fa-download"></i></a></div>';
+                                    }
+                                    else
+                                    {
+                                        htmlText += '<div class="col-md-6"></div>';
+                                    }
+
+                    htmlText += '</div>' + 
+                            '</div>';
+
+            Swal.fire({
+                title: 'Lampiran',
+                html: htmlText, 
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+                confirmButtonColor: "#00a65a",
+            }).then((result) => {
+                if (result.value) {
+                }
+            });
+        });
 
         $(".select2").select2({
             width: '100%',
