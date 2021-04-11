@@ -312,14 +312,23 @@ class AnggotaController extends Controller {
     public function getDetail(Request $request){
         $anggotaId = $request->anggotaId;
 
-        $anggota = DB::table('t_anggota')
-                ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
-                ->join('t_kelas_company', 't_anggota.kelas_company_id', 't_kelas_company.id')
-                ->select('t_anggota.kode_anggota', 't_anggota.nama_anggota', 't_penghasilan.value as gaji_bulanan', 't_kelas_company.nama', 't_kelas_company.id')
+        $anggotacheck = DB::table('t_anggota')
+                //->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
+                //->join('t_kelas_company', 't_anggota.kelas_company_id', 't_kelas_company.id')
+                //->select('t_anggota.kode_anggota', 't_anggota.nama_anggota', 't_penghasilan.value as gaji_bulanan', 't_kelas_company.nama', 't_kelas_company.id')
                 ->where('t_anggota.kode_anggota', '=', $anggotaId)
-                ->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
+                //->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
                 ->first();
-
+        if ($anggotacheck->id_jenis_anggota==3){
+            return response()->json($anggotacheck, 200);
+        }
+        $anggota = DB::table('t_anggota')
+            ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
+            ->join('t_kelas_company', 't_anggota.kelas_company_id', 't_kelas_company.id')
+            ->select('t_anggota.kode_anggota', 't_anggota.nama_anggota', 't_penghasilan.value as gaji_bulanan', 't_kelas_company.nama', 't_kelas_company.id')
+            ->where('t_anggota.kode_anggota', '=', $anggotaId)
+            ->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
+            ->first();
         return response()->json($anggota, 200);
     }
 
@@ -342,6 +351,7 @@ class AnggotaController extends Controller {
 
     // Generate PDF
     public function createPDF(Request $request) {
+        ini_set('max_execution_time', 120);
         $anggotas = Anggota::with('jenisAnggota');
         if ($request->status)
         {
@@ -365,6 +375,7 @@ class AnggotaController extends Controller {
 
     public function createExcel(Request $request)
     {
+        ini_set('max_execution_time', 300);
         $filename = 'export_anggota_excel_'.Carbon::now()->format('d M Y').'.xlsx';
         return Excel::download(new AnggotaExport($request), $filename);
     }
@@ -378,6 +389,7 @@ class AnggotaController extends Controller {
 
 	public function storeImportExcel(Request $request)
     {
+        ini_set('max_execution_time', 300);
         $this->authorize('import anggota', Auth::user());
         try
         {

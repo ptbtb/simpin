@@ -72,8 +72,8 @@ class SimpananController extends Controller
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
                 ->where('kode_anggota', $anggota->kode_anggota)
-                ->whereraw("keterangan not like '%MUTASI%'")
-                ->orderBy('tgl_entri','asc')
+                ->where("mutasi",0)
+                ->orderBy('tgl_entri', 'asc')
                 ->get();
 
             // data di grouping berdasarkan kode jenis simpan

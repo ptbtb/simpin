@@ -323,6 +323,11 @@
 			$(this).val(toRupiah(val));
 		});
     });
+    var sel = $("#jenisAnggota").val();
+
+    if(sel==3){
+        $("#penghasilanTertentu4").prop('required',false);
+    }
 
 
 
@@ -336,6 +341,12 @@
 	$('#jenisAnggota').on('change', function(){
 		if($(this).children("option:selected").val() != jenisAnggotaId){
 			jenisAnggotaId = $(this).children("option:selected").val();
+
+            if(jenisAnggotaId==3){
+                $("#penghasilanTertentu4").prop('required',false);
+            }else{
+                $("#penghasilanTertentu4").prop('required',true);
+            }
 			$('#kelasCompany').val('');
 			getKelasCompany(companyId, jenisAnggotaId);
 		}

@@ -220,8 +220,13 @@
             },
             success: function (response) {
                 if (!response.hasOwnProperty('gaji_bulanan')){
-                    $('#jenisSimpanan').prop('disabled', true);
-                    errMessage('warningTextAnggota', 'Anggota ini belum memiliki gaji bulanan');
+                    if (response.id_jenis_anggota==3){
+
+                    }else{
+                        $('#jenisSimpanan').prop('disabled', true);
+                        errMessage('warningTextAnggota', 'Anggota ini belum memiliki gaji bulanan');
+                    }
+
                 }
                 else {
                     $('#jenisSimpanan').prop('disabled', false);

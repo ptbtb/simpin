@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anggota;
+use App\Models\Penarikan;
+use App\Models\Simpanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -46,15 +48,16 @@ class HomeController extends Controller
             $data['listPinjaman'] = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
                                         ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
                                         ->get();
-            
+
             $data['sisaPinjaman'] = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
         }
         else
         {
             $anggota = DB::table('t_anggota')->where('status', 'aktif')->count();
             $data['anggota']=$anggota;
-            $Simpanan = ViewSaldo::sum('jumlah');
-            $data['simpanan']=$Simpanan;
+            $Simpanan = Simpanan::sum('besar_simpanan');
+            $penarikan = Penarikan::sum('besar_ambil');
+            $data['simpanan']=$Simpanan-$penarikan;
             $data['sisaPinjaman'] = str_replace('.', '', Pinjaman::sum('sisa_pinjaman'));
 
             // if search
@@ -64,7 +67,7 @@ class HomeController extends Controller
                 $result->tabungan = Tabungan::where('kode_anggota',$request->kw_kode_anggota)->get();
                 $result->pinjaman = Pinjaman::where('kode_anggota',$request->kw_kode_anggota)->get();
                 $result->sumtabungan = Tabungan::where('kode_anggota',$request->kw_kode_anggota)->sum('besar_tabungan');
-                
+
                 if(is_null($result))
                 {
                     return redirect()->back()->withError('Anggota tidak ditemukan');
@@ -72,7 +75,7 @@ class HomeController extends Controller
                 $data['searchResult'] = $result;
             }
         }
-        
+
         $data['role'] = $role;
         return view('home', $data);
     }

@@ -270,7 +270,7 @@ class PenarikanController extends Controller
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
-            $data['title'] = "List Penarikan Pinjaman";
+            $data['title'] = "List Penarikan Simpanan";
             $data['listPenarikan'] = $listPenarikan;
             $data['request'] = $request;
             $data['bankAccounts'] = $bankAccounts;
