@@ -297,6 +297,13 @@ return [
                     'can'  => ['view status pengajuan'],
                     'active' => ['/setting/status-pengajuan/list', '/setting/status-pengajuan/create', 'regex:@^setting/status-pengajuan/edit/[0-9]+$@'],
                 ],
+                [
+                    'text' => 'Rule SIM-PIN',
+                    'url' => '/setting/simpin-rule',
+                    'icon' => 'fas fa-cog nav-icon',
+                    'can'  => ['view rule simpin'],
+                    'active' => ['/setting/simpin-rule/list', '/setting/simpin-rule/create', 'regex:@^setting/simpin-rule/edit/[0-9]+$@'],
+                ],
             ],
         ],
         ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan','import penarikan']],

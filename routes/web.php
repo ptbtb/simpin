@@ -113,6 +113,15 @@ Route::group(['prefix' => 'setting'], function () {
     // Route::get('/status-pengajuan/destroy/{id}', [App\Http\Controllers\SettingStatusPengajuanController::class, 'destroy'])->name('status-pengajuan-delete');
     // Route::get('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'create'])->name('status-pengajuan-add');
     // Route::post('/status-pengajuan/create', [App\Http\Controllers\SettingStatusPengajuanController::class, 'store'])->name('status-pengajuan-add');
+
+    Route::group(['prefix' => 'simpin-rule', 'middleware' => 'auth'], function ()
+    {
+        Route::get('', [App\Http\Controllers\SimpinRuleController::class, 'index'])->name('simpin-rule-list');
+        Route::get('create', [App\Http\Controllers\SimpinRuleController::class, 'create'])->name('simpin-rule-create');
+        Route::post('create', [App\Http\Controllers\SimpinRuleController::class, 'store'])->name('simpin-rule-create');
+        Route::get('edit/{id}', [App\Http\Controllers\SimpinRuleController::class, 'edit'])->where('id', '[0-9]+')->name('simpin-rule-edit');
+        Route::post('edit/{id}', [App\Http\Controllers\SimpinRuleController::class, 'update'])->where('id', '[0-9]+')->name('simpin-rule-edit');
+    });
 });
 
 // user
