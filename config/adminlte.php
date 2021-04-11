@@ -301,7 +301,7 @@ return [
                     'text' => 'Rule SIM-PIN',
                     'url' => '/setting/simpin-rule',
                     'icon' => 'fas fa-cog nav-icon',
-                    'can'  => ['view rule simpin'],
+                    'can'  => ['view simpin rule'],
                     'active' => ['/setting/simpin-rule/list', '/setting/simpin-rule/create', 'regex:@^setting/simpin-rule/edit/[0-9]+$@'],
                 ],
             ],

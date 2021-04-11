@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SimpinRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -11,6 +12,8 @@ class SimpinRuleController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        $this->authorize('view simpin rule', $user);
         try
         {
             $rules = SimpinRule::all();
@@ -31,6 +34,8 @@ class SimpinRuleController extends Controller
     {
         try
         {
+            $user = Auth::user();
+            $this->authorize('create simpin rule', $user);
             $data['title'] = 'Simpin Rule Create';
             return view('simpin-rule.create', $data);
         }
@@ -47,6 +52,8 @@ class SimpinRuleController extends Controller
     {
         try
         {
+            $user = Auth::user();
+            $this->authorize('create simpin rule', $user);
             DB::transaction(function () use($request)
             {
                 $rule = new SimpinRule();
@@ -72,6 +79,9 @@ class SimpinRuleController extends Controller
     {
         try
         {
+            $user = Auth::user();
+            $this->authorize('edit simpin rule', $user);
+            
             $rule = SimpinRule::findOrFail($id);
             $data['title'] = 'Simpin Rule Create';
             $data['rule'] = $rule;
@@ -90,6 +100,9 @@ class SimpinRuleController extends Controller
     {
         try
         {
+            $user = Auth::user();
+            $this->authorize('create simpin rule', $user);
+
             $rule = SimpinRule::findOrFail($id);
             DB::transaction(function () use($request, $rule)
             {

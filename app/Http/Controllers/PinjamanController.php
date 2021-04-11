@@ -23,6 +23,7 @@ use App\Managers\PengajuanManager;
 use App\Managers\PinjamanManager;
 use App\Managers\AngsuranManager;
 use App\Models\Angsuran;
+use App\Models\SimpinRule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -528,8 +529,12 @@ class PinjamanController extends Controller {
 
         $angsuranPokok = round($besarPinjaman / $lamaAngsuran, 2);
 
-        $asuransi = $jenisPinjaman->asuransi;
-        $asuransi = round($besarPinjaman * $asuransi, 2);
+        $asuransi = 0;
+        $simpinRule = SimpinRule::find(SIMPIN_RULE_ASURANSI);
+        if ($besarPinjaman > $simpinRule->value)
+        {
+            $asuransi = $simpinRule->amount;
+        }
 
         $jasa = $jenisPinjaman->jasa;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek()) {
@@ -575,8 +580,12 @@ class PinjamanController extends Controller {
         $provisi = $jenisPinjaman->provisi;
         $provisi = round($besarPinjaman * $provisi, 2);
 
-        $asuransi = $jenisPinjaman->asuransi;
-        $asuransi = round($besarPinjaman * $asuransi, 2);
+        $asuransi = 0;
+        $simpinRule = SimpinRule::find(SIMPIN_RULE_ASURANSI);
+        if ($besarPinjaman > $simpinRule->value)
+        {
+            $asuransi = $simpinRule->amount;
+        }
 
         $angsuranPokok = round($besarPinjaman / $lamaAngsuran, 2);
 

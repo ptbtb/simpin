@@ -2,6 +2,7 @@
 namespace App\Http\ViewComposers;
 
 use App\Models\CompanySetting;
+use App\Models\SimpinRule;
 use Illuminate\View\View;
 
 class Navigation

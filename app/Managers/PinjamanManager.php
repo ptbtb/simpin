@@ -6,7 +6,7 @@ use App\Managers\JurnalManager;
 use App\Models\AsuransiPinjaman;
 use App\Models\Pinjaman;
 use App\Models\Pengajuan;
-
+use App\Models\SimpinRule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -27,8 +27,12 @@ class PinjamanManager
             }
             $jasaPerbulan = round($jasaPerbulan,2);
 
-            $asuransi = $jenisPinjaman->asuransi;
-            $asuransi = round($pengajuan->besar_pinjam*$asuransi,2);
+            $asuransi = 0;
+            $simpinRule = SimpinRule::find(SIMPIN_RULE_ASURANSI);
+            if ($pengajuan->besar_pinjam > $simpinRule->value)
+            {
+                $asuransi = $simpinRule->amount;
+            }
 
             $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan;
 
