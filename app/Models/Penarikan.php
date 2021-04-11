@@ -72,6 +72,17 @@ class Penarikan extends Model
     {
         return $query->where('status_pengambilan', STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN);
     }
+    
+    /**
+     * Scope a query to only include Approved
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status_pengambilan', STATUS_PENGAMBILAN_DITERIMA);
+    }
 
     public function menungguKonfirmasi()
     {

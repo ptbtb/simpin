@@ -58,7 +58,7 @@
                 <td>{{ strtoupper($penarikan->anggota->nama_anggota) }}</td>
                 <td>{{ strtoupper($settings[COMPANY_SETTING_BANK_NAME]) }}</td>
                 <td>{{ "Rp " . number_format($penarikan->besar_ambil,2,',','.') }}</td>
-                <td>PENARIKAN {{ strtoupper($penarikan->tabungan->jenisSimpanan->nama_simpanan) }}</td>
+                <td>PENARIKAN {{ strtoupper($jenisSimpanan->where('kode_jenis_simpan', $penarikan->code_trans)->first()->nama_simpanan) }}</td>
                 <td>{{ $settings[COMPANY_SETTING_BANK_ACCOUNT] }}</td>
                 <td>{{ "Rp " . number_format($penarikan->besar_ambil,2,',','.') }}</td>
             </tr>

@@ -17,7 +17,7 @@ use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Tabungan;
 use App\Models\Code;
-
+use App\Models\SimpinRule;
 use Carbon\Carbon;
 use DB;
 use Excel;
@@ -63,6 +63,21 @@ class PenarikanController extends Controller
             $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
 
             $anggota = Anggota::with('tabungan')->find($request->kode_anggota);
+
+            // check max penarikan user
+            $thisYear = Carbon::now()->year;
+            $penarikanUser = Penarikan::approved()
+                                        ->where('kode_anggota', $anggota->kode_anggota)
+                                        ->whereYear('created_at', $thisYear)
+                                        ->get();
+
+            $simpinRule = SimpinRule::findOrFail(SIMPIN_RULE_MAX_PENGAMBILAN_DALAM_SETAHUN);
+
+            if ($penarikanUser->count() >= $simpinRule->value)
+            {
+                return redirect()->back()->withError('Gagal melakukan penarikan. Jumlah penarikan anda tahun ini adalah '. $penarikanUser->count() .'.Maksimal penarikan dalam setahun adalah '. $simpinRule->value);
+            }
+
             $tabungan = $anggota->tabungan->where('kode_trans', $request->jenis_simpanan)->first();
             $besarPenarikan = filter_var($request->besar_penarikan, FILTER_SANITIZE_NUMBER_INT);
             $maxtarik = $tabungan->totalBesarTabungan * $jenissimpanan->max_withdraw;
@@ -381,6 +396,7 @@ class PenarikanController extends Controller
             }
 
             $data['listPenarikan'] = $listPenarikan;
+            $data['jenisSimpanan'] = JenisSimpanan::all();
             view()->share('data', $data);
             PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
             $pdf = PDF::loadView('penarikan.pdfJKK', $data)->setPaper('a4', 'landscape');

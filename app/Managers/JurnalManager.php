@@ -20,7 +20,7 @@ class JurnalManager
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_debet = $penarikan->tabungan->kode_trans;
+        $jurnal->akun_debet = $penarikan->code_trans;
         $jurnal->debet = $penarikan->besar_ambil;
         if($penarikan->akun_kredit)
         {
