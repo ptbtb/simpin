@@ -511,7 +511,14 @@ class PinjamanController extends Controller {
         $maksimalBesarPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
         $lamaAngsuran = $request->lama_angsuran;
         $keperluan = $request->keperluan;
-        $biayaAdministrasi = $jenisPinjaman->biaya_admin;
+        
+        // biaya administrasi
+        $biayaAdministrasi = 0;
+        $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
+        if ($besarPinjaman > $simpinRule->value)
+        {
+            $biayaAdministrasi = $simpinRule->amount;
+        }
 
         //check gaji
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
@@ -529,12 +536,8 @@ class PinjamanController extends Controller {
 
         $angsuranPokok = round($besarPinjaman / $lamaAngsuran, 2);
 
-        $asuransi = 0;
-        $simpinRule = SimpinRule::find(SIMPIN_RULE_ASURANSI);
-        if ($besarPinjaman > $simpinRule->value)
-        {
-            $asuransi = $simpinRule->amount;
-        }
+        $asuransi = $jenisPinjaman->asuransi;
+        $asuransi = round($besarPinjaman * $asuransi, 2);
 
         $jasa = $jenisPinjaman->jasa;
         if ($besarPinjaman > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek()) {
@@ -574,18 +577,21 @@ class PinjamanController extends Controller {
         $besarPinjaman = filter_var($request->besarPinjaman, FILTER_SANITIZE_NUMBER_INT);
         $maksimalBesarPinjaman = filter_var($request->maksimalBesarPinjaman, FILTER_SANITIZE_NUMBER_INT);
         $lamaAngsuran = $request->lamaAngsuran;
-        $biayaAdministrasi = $jenisPinjaman->kategoriJenisPinjaman->biaya_admin;
+        
+        // biaya administrasi
+        $biayaAdministrasi = 0;
+        $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
+        if ($besarPinjaman > $simpinRule->value)
+        {
+            $biayaAdministrasi = $simpinRule->amount;
+        }
         $keperluan = $request->keperluan;
 
         $provisi = $jenisPinjaman->provisi;
         $provisi = round($besarPinjaman * $provisi, 2);
 
-        $asuransi = 0;
-        $simpinRule = SimpinRule::find(SIMPIN_RULE_ASURANSI);
-        if ($besarPinjaman > $simpinRule->value)
-        {
-            $asuransi = $simpinRule->amount;
-        }
+        $asuransi = $jenisPinjaman->asuransi;
+        $asuransi = round($besarPinjaman * $asuransi, 2);
 
         $angsuranPokok = round($besarPinjaman / $lamaAngsuran, 2);
 

@@ -27,20 +27,22 @@ class PinjamanManager
             }
             $jasaPerbulan = round($jasaPerbulan,2);
 
-            $asuransi = 0;
-            $simpinRule = SimpinRule::find(SIMPIN_RULE_ASURANSI);
-            if ($pengajuan->besar_pinjam > $simpinRule->value)
-            {
-                $asuransi = $simpinRule->amount;
-            }
+            $asuransi = $jenisPinjaman->asuransi;
+            $asuransi = round($pengajuan->besar_pinjam * $asuransi, 2);
 
             $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan;
 
             $provisi = $jenisPinjaman->provisi;
             $provisi = round($pengajuan->besar_pinjam * $provisi,2);
-
-            $biayaAdministrasi = $jenisPinjaman->biaya_admin;
-
+        
+            // biaya administrasi
+            $biayaAdministrasi = 0;
+            $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
+            if ($pengajuan->besar_pinjam > $simpinRule->value)
+            {
+                $biayaAdministrasi = $simpinRule->amount;
+            }
+            
             // get next serial number
             $nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
            
