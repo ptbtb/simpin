@@ -127,13 +127,13 @@
                         </div>
                         @foreach ($data->list as $simpanan)
                             <div class="row">
-                                <div class="col-8">{{ $simpanan->tgl_entri->format('m-Y') }}</div>
+                                <div class="col-8">{{ $simpanan->periode->format('m-Y') }}</div>
                                 <div class="col-4">{{ number_format($simpanan->besar_simpanan,0,",",".") }}</div>
                             </div>
                         @endforeach
                         <div class="row">
                             <div class="col-3 pr-0 text-right">
-                                Sub Jumlah : 
+                                Sub Jumlah :
                             </div>
                             <div class="col-9 text-right">
                                 {{ number_format($data->amount,0,",",".") }}
@@ -163,14 +163,14 @@
                     </div>
                 </div>
             </div>
-        @endforeach    
-        <!-- *********************************************************** JUMLAH *********************************************************** -->        
+        @endforeach
+        <!-- *********************************************************** JUMLAH *********************************************************** -->
         <div class="row">
             <div class="col-9 pr-0">
                 <div class="border p-1 border-top-0 h-100">
                     <div class="row">
                         <div class="col-3 pr-0 text-right">
-                            Jumlah : 
+                            Jumlah :
                         </div>
                         <div class="col-9 text-right font-weight-bold">
                             {{ number_format($jumlahSimpanan,0,",",".") }}
@@ -182,7 +182,7 @@
                 <div class="border p-1 border-top-0 border-left-0 h-100">
                     <div class="row">
                         <div class="col-6 text-left">
-                            Jumlah : 
+                            Jumlah :
                         </div>
                         <div class="col-6 text-right font-weight-bold">
                             {{ number_format($jumlahPengambilan,0,",",".") }}
@@ -196,7 +196,7 @@
                 <div class="border p-1 border-top-0 border-right-0 h-100">
                     <div class="row">
                         <div class="col-3 pr-0 text-right">
-                            Jumlah Simpanan : 
+                            Jumlah Simpanan :
                         </div>
                         <div class="col-9 text-right font-weight-bold">
                             {{ number_format($jumlahSimpanan - $jumlahPengambilan,0,",",".") }}
@@ -210,7 +210,7 @@
             </div>
         </div>
     </div>
-{{-- 
+{{--
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
