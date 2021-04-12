@@ -11,7 +11,7 @@ class Simpanan extends Model
 
     protected $table = "t_simpan";
     protected $primaryKey = "kode_simpan";
-    protected $dates = ['tgl_mulai', 'tgl_entri'];
+    protected $dates = ['tgl_mulai', 'tgl_entri', 'periode'];
     protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view'];
     protected $fillable = ['jenis_simpan', 'besar_simpanan','kode_anggota','u_entry','tgl_mulai','tgl_entri','kode_jenis_simpan','keterangan'];
 

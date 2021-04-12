@@ -1,6 +1,8 @@
 <?php
 namespace App\Managers;
 
+use App\Models\Anggota;
+use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
 use Carbon\Carbon;
@@ -85,6 +87,32 @@ class SimpananManager
         {
             \Log::info($e->getMessage());
             return false;
+        }
+    }
+
+    public static function generateMutasiSimpananAnggota()
+    {
+        $jenisSimpanan = JenisSimpanan::all();
+        $anggotas = Anggota::doesntHave('listSimpanan')
+                            ->get();
+                            
+        foreach ($anggotas as $anggota)
+        {
+            $jenisSimpanan->each(function ($jenis) use ($anggota)
+            {
+                $simpanan = new Simpanan();
+                $simpanan->jenis_simpan = $jenis->nama_simpanan;
+                $simpanan->besar_simpanan = 0;
+                $simpanan->kode_anggota = $anggota->kode_anggota;
+                $simpanan->u_entry = 'SYSTEM';
+                $simpanan->periode = Carbon::now();
+                $simpanan->tgl_mulai = Carbon::now();
+                $simpanan->tgl_entri = Carbon::now();
+                $simpanan->kode_jenis_simpan = $jenis->kode_jenis_simpan;
+                $simpanan->keterangan = "MUTASI ".$jenis->nama_simpanan." ". Carbon::now()->year;
+                $simpanan->mutasi = 1;
+                $simpanan->save();
+            });
         }
     }
 }

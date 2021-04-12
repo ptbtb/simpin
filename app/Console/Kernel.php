@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\UpdateBatchTabungan::class,
         Commands\InvoiceGenerator::class,
+        Commands\SaldoAwalCommand::class,
     ];
 
     /**
