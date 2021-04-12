@@ -119,25 +119,32 @@ class MigrationController extends Controller
                             {
                                 $tabungan = $anggota->tabungan->where('kode_trans', $jenisSimpanan->kode_jenis_simpan)->first();
                                 
-                                // get next serial number
-                                $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                                if($tabungan)
+                                {
+                                    // get next serial number
+                                    $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
 
-                                $penarikan = new Penarikan();
-                                $penarikan->kode_anggota = $transaction->kode_anggota;
-                                $penarikan->kode_tabungan = $tabungan->kode_tabungan;
-                                $penarikan->id_tabungan = $tabungan->id;
-                                $penarikan->besar_ambil = $totalTransaction;
-                                $penarikan->code_trans = $tabungan->kode_trans;
-                                $penarikan->tgl_ambil = Carbon::now();
-                                $penarikan->u_entry = Auth::user()->name;
-                                $penarikan->created_by = Auth::user()->id;
-                                $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
-                                $penarikan->serial_number = $nextSerialNumber;
-                                $penarikan->save();
+                                    $penarikan = new Penarikan();
+                                    $penarikan->kode_anggota = $transaction->kode_anggota;
+                                    $penarikan->kode_tabungan = $tabungan->kode_tabungan;
+                                    $penarikan->id_tabungan = $tabungan->id;
+                                    $penarikan->besar_ambil = $totalTransaction;
+                                    $penarikan->code_trans = $tabungan->kode_trans;
+                                    $penarikan->tgl_ambil = Carbon::now();
+                                    $penarikan->u_entry = Auth::user()->name;
+                                    $penarikan->created_by = Auth::user()->id;
+                                    $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
+                                    $penarikan->serial_number = $nextSerialNumber;
+                                    $penarikan->save();
 
-                                echo('NO BUKTI PENARIKAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
+                                    echo('NO BUKTI PENARIKAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
 
-                                $transactionSuccess = $penarikan;
+                                    $transactionSuccess = $penarikan;
+                                }
+                                else
+                                {
+                                    echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->no_bukti . "<br>");
+                                }
                             }
                             else
                             {
