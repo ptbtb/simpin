@@ -36,6 +36,8 @@ Route::post('resend-email-activation', [App\Http\Controllers\Auth\ResendEmailAct
 
 Route::get('testEvent', [App\Http\Controllers\MigrationController::class, 'index'])->name('test-event');
 
+Route::get('migrationJurnalTransaction/{month}', [App\Http\Controllers\MigrationController::class, 'migrationJurnalTransaction'])->name('migration-jurnal-transaction');
+
 // anggota
 Route::group(['prefix' => 'anggota'], function () {
     Route::group(['middleware' => ['auth', 'check']], function () {

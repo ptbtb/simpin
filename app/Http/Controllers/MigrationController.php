@@ -33,12 +33,11 @@ class MigrationController extends Controller
     {
         // TabunganManager::updateSaldoTahunan();
     }
-    public function migrationJurnalTransaction()
+    public function migrationJurnalTransaction($bulan)
     {
         try 
         {
             // bulan its 1 = january, 2 = feb, 3 = maret, 1 running for 1 month choosed
-            $bulan = 3;
 
             $jurnals = JurnalTemp::whereMonth('tgl_posting', '=', $bulan)->get()->unique('no_bukti');
 
