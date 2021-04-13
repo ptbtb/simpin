@@ -70,7 +70,7 @@ class MigrationController extends Controller
 
                         $newCode = substr($transaction->code,0,3).'.'.substr($transaction->code,3,2).'.'.substr($transaction->code,5,3);
 
-                        $totalTransaction = $uraian->where('kode_anggota', '!=', null)->sum('jumlah');
+                        $totalTransaction = $uraian->where('kode_anggota', '!=', null)->first()->jumlah;
 
                         // check coa is simpanan or pinjaman
                         // if simpanan
@@ -233,7 +233,7 @@ class MigrationController extends Controller
                                 $angsuran = new Angsuran();
                                 $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
                                 $angsuran->angsuran_ke = 1;
-                                $angsuran->besar_angsuran = $pinjaman->besar_angsuran_pokok;
+                                $angsuran->besar_angsuran = $transaction->jumlah;
                                 $angsuran->denda = 0;
                                 $angsuran->jasa = $pinjaman->biaya_jasa;
                                 $angsuran->kode_anggota = $pinjaman->kode_anggota;
