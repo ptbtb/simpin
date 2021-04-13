@@ -94,7 +94,7 @@ class MigrationController extends Controller
                             $simpanan->jenis_simpan = strtoupper($jenisSimpanan->where('kode_jenis_simpan', $newCode)->first()->nama_simpanan);
                             $simpanan->besar_simpanan = $totalTransaction;
                             $simpanan->kode_anggota = $transaction->kode_anggota;
-                            $simpanan->u_entry = Auth::user()->name;
+                            $simpanan->u_entry = 'Admin BTB';
                             $simpanan->tgl_entri = Carbon::now();
                             $simpanan->periode = $transaction->tgl_posting;
                             $simpanan->kode_jenis_simpan = $jenisSimpanan->where('kode_jenis_simpan', $newCode)->first()->kode_jenis_simpan;
@@ -131,8 +131,8 @@ class MigrationController extends Controller
                                     $penarikan->besar_ambil = $totalTransaction;
                                     $penarikan->code_trans = $tabungan->kode_trans;
                                     $penarikan->tgl_ambil = Carbon::now();
-                                    $penarikan->u_entry = Auth::user()->name;
-                                    $penarikan->created_by = Auth::user()->id;
+                                    $penarikan->u_entry = 'Admin BTB';
+                                    $penarikan->created_by = 1;
                                     $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
                                     $penarikan->serial_number = $nextSerialNumber;
                                     $penarikan->save();
@@ -200,7 +200,7 @@ class MigrationController extends Controller
                             $pinjaman->biaya_asuransi = $asuransi;
                             $pinjaman->biaya_provisi = $provisi;
                             $pinjaman->biaya_administrasi = $biayaAdministrasi;
-                            $pinjaman->u_entry = Auth::user()->name;
+                            $pinjaman->u_entry = 'Admin BTB';
                             $pinjaman->tgl_entri = Carbon::now();
                             $pinjaman->tgl_tempo = Carbon::now()->addMonths($jenisPinjaman->lama_angsuran);
                             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
@@ -292,8 +292,8 @@ class MigrationController extends Controller
                             $newJurnal->keterangan = '-';
                         }
 
-                        $newJurnal->created_by = Auth::user()->id;
-                        $newJurnal->updated_by = Auth::user()->id;
+                        $newJurnal->created_by = 1;
+                        $newJurnal->updated_by = 1;
                         $newJurnal->created_at = $uraianJurnal->tgl_posting;
 
                         if($transactionSuccess)
