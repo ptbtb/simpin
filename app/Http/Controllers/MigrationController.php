@@ -33,7 +33,7 @@ class MigrationController extends Controller
     {
         // TabunganManager::updateSaldoTahunan();
     }
-    public function migrationJurnalTransaction($bulan)
+    public static function migrationJurnalTransaction($bulan)
     {
         try 
         {
