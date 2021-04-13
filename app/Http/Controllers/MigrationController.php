@@ -135,6 +135,7 @@ class MigrationController extends Controller
                                     $penarikan->created_by = 1;
                                     $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
                                     $penarikan->serial_number = $nextSerialNumber;
+                                    $penarikan->paid_by_cashier = 1;
                                     $penarikan->save();
 
                                     echo('NO BUKTI PENARIKAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
