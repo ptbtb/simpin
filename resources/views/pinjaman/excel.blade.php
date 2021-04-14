@@ -12,6 +12,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Kode Pinjam</th>
                 <th>Nama Anggota</th>
                 <th>Nomor Anggota</th>
                 <th>Tanggal Pinjaman</th>
@@ -27,6 +28,7 @@
             @foreach ($listPinjaman as $pinjaman)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ $pinjaman->kode_pinjam }}</td>
                     <td>
                         @if ($pinjaman->anggota)
                             {{ $pinjaman->anggota->nama_anggota }}
@@ -37,12 +39,16 @@
                     <td>
                         @if ($pinjaman->anggota)
                             {{ $pinjaman->anggota->kode_anggota }}
+                        @endif
+                    </td>
+                    <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
+                    <td>
+                        @if ($pinjaman->jenisPinjaman)
+                            {{ $pinjaman->jenisPinjaman->nama_pinjaman }}
                         @else
                             -
                         @endif
                     </td>
-                    <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
-                    <td>{{ $pinjaman->jenisPinjaman->nama_pinjaman }}</td>
                     <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
                     <td>Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
                     <td>{{ $pinjaman->sisa_angsuran }}</td>

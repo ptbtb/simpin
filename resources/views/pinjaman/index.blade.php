@@ -68,6 +68,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Kode Pinjam</th>
                         @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
                             <th>Nama Anggota</th>
                             <th>Nomor Anggota</th>
@@ -85,6 +86,7 @@
                     @foreach ($listPinjaman as $pinjaman)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ $pinjaman->kode_pinjam }}</td>
                             @if (\Auth::user()->roles()->first()->id != ROLE_ANGGOTA)
                                 <td>
                                     @if ($pinjaman->anggota)
