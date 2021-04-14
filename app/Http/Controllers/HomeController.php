@@ -56,7 +56,7 @@ class HomeController extends Controller
             $anggota = DB::table('t_anggota')->where('status', 'aktif')->count();
             $data['anggota']=$anggota;
             $Simpanan = Simpanan::sum('besar_simpanan');
-            $penarikan = Penarikan::sum('besar_ambil');
+            $penarikan = Penarikan::wherenotnull('paid_by_cashier')->sum('besar_ambil');
             $data['simpanan']=$Simpanan-$penarikan;
             $data['sisaPinjaman'] = str_replace('.', '', Pinjaman::sum('sisa_pinjaman'));
 

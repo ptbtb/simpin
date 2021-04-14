@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\UpdateBatchTabungan::class,
         Commands\InvoiceGenerator::class,
         Commands\SaldoAwalCommand::class,
+        Commands\MigrateJurnalTransaction::class,
     ];
 
     /**
