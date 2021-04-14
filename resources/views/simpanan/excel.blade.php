@@ -25,6 +25,7 @@
         <tbody>
             @foreach ($listSimpanan as $simpanan)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $simpanan->jenis_simpan }}</td>
                     <td>Rp. {{ number_format($simpanan->besar_simpanan,0,",",".") }}</td>
                     <td>
