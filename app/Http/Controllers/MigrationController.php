@@ -145,7 +145,7 @@ class MigrationController extends Controller
                         {
                             $jenisSimpanan = $jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->first();
 
-                            $transaction = $transactions->where('code', str_replace(".","",$jenisSimpanan->kode_jenis_simpan))->first();
+                            $transaction = $transactions->where('kode_anggota', '!=', null)->where('code', str_replace(".","",$jenisSimpanan->kode_jenis_simpan))->first();
 
                             // simpanan
                             if($transaction->normal_balance == 2)
