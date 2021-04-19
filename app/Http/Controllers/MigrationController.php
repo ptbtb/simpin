@@ -195,62 +195,76 @@ class MigrationController extends Controller
                             {
                                 $anggota = Anggota::with('tabungan')->find($transaction->kode_anggota);
 
-                                if(count($anggota->tabungan) > 0)
+                                if($anggota)
                                 {
-                                    $tabungan = $anggota->tabungan->where('kode_trans', $jenisSimpanan->kode_jenis_simpan)->first();
-    
-                                    if($tabungan)
+                                    if(count($anggota->tabungan) > 0)
                                     {
-                                        // get next serial number
-                                        $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
-    
-                                        $penarikan = new Penarikan();
-                                        $penarikan->kode_anggota = $transaction->kode_anggota;
-                                        $penarikan->kode_tabungan = $tabungan->kode_tabungan;
-                                        $penarikan->id_tabungan = $tabungan->id;
-                                        $penarikan->besar_ambil = $totalTransaction;
-                                        $penarikan->code_trans = $tabungan->kode_trans;
-                                        $penarikan->tgl_ambil = Carbon::now();
-                                        $penarikan->u_entry = 'Admin BTB';
-                                        $penarikan->created_by = 1;
-                                        $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
-                                        $penarikan->serial_number = $nextSerialNumber;
-                                        $penarikan->paid_by_cashier = 1;
-                                        $penarikan->save();
-    
-                                        echo('NO BUKTI PENARIKAN SUCCESS : ' . $jurnal->unik_bukti . "<br>");
-    
-                                        $transactionSuccess = $penarikan;
-    
-                                        foreach($uraian as $jurnalTemp)
+                                        $tabungan = $anggota->tabungan->where('kode_trans', $jenisSimpanan->kode_jenis_simpan)->first();
+        
+                                        if($tabungan)
                                         {
-                                            // update status jurnal_temp
-                                            $jurnalTemp->is_success = 1;
-                                            $jurnalTemp->save();
+                                            // get next serial number
+                                            $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+        
+                                            $penarikan = new Penarikan();
+                                            $penarikan->kode_anggota = $transaction->kode_anggota;
+                                            $penarikan->kode_tabungan = $tabungan->kode_tabungan;
+                                            $penarikan->id_tabungan = $tabungan->id;
+                                            $penarikan->besar_ambil = $totalTransaction;
+                                            $penarikan->code_trans = $tabungan->kode_trans;
+                                            $penarikan->tgl_ambil = Carbon::now();
+                                            $penarikan->u_entry = 'Admin BTB';
+                                            $penarikan->created_by = 1;
+                                            $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
+                                            $penarikan->serial_number = $nextSerialNumber;
+                                            $penarikan->paid_by_cashier = 1;
+                                            $penarikan->save();
+        
+                                            echo('NO BUKTI PENARIKAN SUCCESS : ' . $jurnal->unik_bukti . "<br>");
+        
+                                            $transactionSuccess = $penarikan;
+        
+                                            foreach($uraian as $jurnalTemp)
+                                            {
+                                                // update status jurnal_temp
+                                                $jurnalTemp->is_success = 1;
+                                                $jurnalTemp->save();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
+        
+                                            foreach($uraian as $jurnalTemp)
+                                            {
+                                                // update status jurnal_temp
+                                                $jurnalTemp->keterangan_gagal = 'NO BUKTI PENARIKAN, TABUNGAN KOSONG';
+                                                $jurnalTemp->save();
+                                            }
                                         }
                                     }
                                     else
                                     {
-                                        echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
-    
                                         foreach($uraian as $jurnalTemp)
                                         {
                                             // update status jurnal_temp
                                             $jurnalTemp->keterangan_gagal = 'NO BUKTI PENARIKAN, TABUNGAN KOSONG';
                                             $jurnalTemp->save();
                                         }
+        
+                                        echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
                                     }
                                 }
                                 else
                                 {
+                                    echo('NO BUKTI PENARIKAN, ANGGOTA TIDAK ADA : ' . $jurnal->unik_bukti . "<br>");
+        
                                     foreach($uraian as $jurnalTemp)
                                     {
                                         // update status jurnal_temp
-                                        $jurnalTemp->keterangan_gagal = 'NO BUKTI PENARIKAN, TABUNGAN KOSONG';
+                                        $jurnalTemp->keterangan_gagal = 'NO BUKTI PENARIKAN, ANGGOTA TIDAK ADA';
                                         $jurnalTemp->save();
                                     }
-    
-                                    echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
                                 }
     
                                 $idTipeJurnal = TIPE_JURNAL_JKK;
