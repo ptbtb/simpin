@@ -127,15 +127,22 @@ class MigrationController extends Controller
                     }
                     else
                     {
-                        $transaction = $uraian->where('kode_anggota', '!=', null)->first();
+                        $transactions = $uraian->where('kode_anggota', '!=', null);
 
-                        $newCode = substr($transaction->code,0,3).'.'.substr($transaction->code,3,2).'.'.substr($transaction->code,5,3);
+                        $codes = [];
+
+                        foreach($transactions as $transaction)
+                        {
+                            $newCode = substr($transaction->code,0,3).'.'.substr($transaction->code,3,2).'.'.substr($transaction->code,5,3);
+
+                            $codes[] = $newCode;
+                        }
 
                         $totalTransaction = $uraian->where('kode_anggota', '!=', null)->first()->jumlah;
 
                         // check coa is simpanan or pinjaman
                         // if simpanan
-                        if($jenisSimpanan->where('kode_jenis_simpan', $newCode)->first() && $transaction->normal_balance == 2)
+                        if($jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->first() && $transaction->normal_balance == 2)
                         {
                             // get next serial number
                             $nextSerialNumber = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
@@ -152,13 +159,13 @@ class MigrationController extends Controller
                             $codeDebet = Code::where('CODE', $newCodeDebet)->first();
 
                             $simpanan = new Simpanan();
-                            $simpanan->jenis_simpan = strtoupper($jenisSimpanan->where('kode_jenis_simpan', $newCode)->first()->nama_simpanan);
+                            $simpanan->jenis_simpan = strtoupper($jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->first()->nama_simpanan);
                             $simpanan->besar_simpanan = $totalTransaction;
                             $simpanan->kode_anggota = $transaction->kode_anggota;
                             $simpanan->u_entry = 'Admin BTB';
                             $simpanan->tgl_entri = Carbon::now();
                             $simpanan->periode = $transaction->tgl_posting;
-                            $simpanan->kode_jenis_simpan = $jenisSimpanan->where('kode_jenis_simpan', $newCode)->first()->kode_jenis_simpan;
+                            $simpanan->kode_jenis_simpan = $jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->first()->kode_jenis_simpan;
                             $simpanan->keterangan = $transaction->uraian_3;
                             $simpanan->id_akun_debet = $codeDebet->id;
                             $simpanan->serial_number = $nextSerialNumber;
@@ -178,9 +185,12 @@ class MigrationController extends Controller
                             }
                         }
                         // if penarikan
-                        else if($jenisSimpanan->where('kode_jenis_simpan', $newCode)->first() && $transaction->normal_balance == 1)
+                        else if($jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->first() && $transaction->normal_balance == 1)
                         {
-                            $jenisSimpanan = $jenisSimpanan->where('kode_jenis_simpan', $newCode)->first();
+                            $jenisSimpanan = $jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->first();
+
+                            $transaction = $transactions->where('code', str_replace(".","",$jenisSimpanan->kode_jenis_simpan))->first();
+
                             $anggota = Anggota::with('tabungan')->find($transaction->kode_anggota);
 
                             if(count($anggota->tabungan) > 0)
@@ -245,13 +255,15 @@ class MigrationController extends Controller
 
                         }
                         // pinjaman
-                        else if($jenisPinjaman->where('kode_jenis_pinjam', $newCode)->first() && $transaction->normal_balance == 1)
+                        else if($jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->first() && $transaction->normal_balance == 1)
                         {
-                            $jenisPinjaman = $jenisPinjaman->where('kode_jenis_pinjam', $newCode)->first();
+                            $jenisPinjaman = $jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->first();
 
                             $pinjaman = new Pinjaman();
 
+                            $transaction = $transactions->where('code', str_replace(".","",$jenisPinjaman->kode_jenis_pinjam))->first();
                             $kodeAnggota = $transaction->kode_anggota;
+
                             $kodePinjaman = str_replace('.','',$jenisPinjaman->kode_jenis_pinjam).'-'.$kodeAnggota.'-'.Carbon::now()->format('dmYHis');
 
                             $angsuranPerbulan = round($totalTransaction/$jenisPinjaman->lama_angsuran,2);
@@ -311,7 +323,7 @@ class MigrationController extends Controller
                             }
                         }
                         // angsuran
-                        else if($jenisPinjaman->where('kode_jenis_pinjam', $newCode)->first() && $transaction->normal_balance == 2)
+                        else if($jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->first() && $transaction->normal_balance == 2)
                         {
                             // get next serial number
                             $nextSerialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
