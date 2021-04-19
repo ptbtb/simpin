@@ -35,27 +35,26 @@ class MigrationController extends Controller
     }
     public static function migrationJurnalTransaction($bulan)
     {
-        try 
+        try
         {
             // bulan its 1 = january, 2 = feb, 3 = maret, 1 running for 1 month choosed
 
-            $jurnals = JurnalTemp::whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get()->unique('no_bukti');
-           
+            $jurnals = JurnalTemp::whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get()->unique('unik_bukti');
             $jenisSimpanan = JenisSimpanan::get();
             $jenisPinjaman = JenisPinjaman::get();
 
-            foreach ($jurnals as $key => $jurnal) 
+            foreach ($jurnals as $key => $jurnal)
             {
-                $transactions = JurnalTemp::where('no_bukti', $jurnal->no_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
+                $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
 
                 // group by uraian3 because 1 kode_bukti has more than 1 transaction
                 $groupByUraian = $transactions->groupBy('uraian_3');
 
-                foreach ($groupByUraian as $key => $uraian) 
+                foreach ($groupByUraian as $key => $uraian)
                 {
                     // check if kode_anggota is null
                     $groupByAnggota = $uraian->groupBy('kode_anggota');
-                    
+
                     $transactionSuccess = null;
 
                     $idTipeJurnal = null;
@@ -100,7 +99,7 @@ class MigrationController extends Controller
                                 $simpanan->serial_number = $nextSerialNumber;
                                 $simpanan->save();
 
-                                echo('NO BUKTI SIMPANAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
+                                echo('NO BUKTI SIMPANAN SUCCESS : ' . $jurnal->unik_bukti . "<br>");
 
                                 $transactionSuccess = $simpanan;
 
@@ -165,7 +164,7 @@ class MigrationController extends Controller
                             $simpanan->serial_number = $nextSerialNumber;
                             $simpanan->save();
 
-                            echo('NO BUKTI SIMPANAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
+                            echo('NO BUKTI SIMPANAN SUCCESS : ' . $jurnal->unik_bukti . "<br>");
 
                             $transactionSuccess = $simpanan;
 
@@ -183,11 +182,11 @@ class MigrationController extends Controller
                         {
                             $jenisSimpanan = $jenisSimpanan->where('kode_jenis_simpan', $newCode)->first();
                             $anggota = Anggota::with('tabungan')->find($transaction->kode_anggota);
-                            
+
                             if(count($anggota->tabungan) > 0)
                             {
                                 $tabungan = $anggota->tabungan->where('kode_trans', $jenisSimpanan->kode_jenis_simpan)->first();
-                                
+
                                 if($tabungan)
                                 {
                                     // get next serial number
@@ -207,7 +206,7 @@ class MigrationController extends Controller
                                     $penarikan->paid_by_cashier = 1;
                                     $penarikan->save();
 
-                                    echo('NO BUKTI PENARIKAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
+                                    echo('NO BUKTI PENARIKAN SUCCESS : ' . $jurnal->unik_bukti . "<br>");
 
                                     $transactionSuccess = $penarikan;
 
@@ -220,7 +219,7 @@ class MigrationController extends Controller
                                 }
                                 else
                                 {
-                                    echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->no_bukti . "<br>");
+                                    echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
 
                                     foreach($uraian as $jurnalTemp)
                                     {
@@ -239,11 +238,11 @@ class MigrationController extends Controller
                                     $jurnalTemp->save();
                                 }
 
-                                echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->no_bukti . "<br>");
+                                echo('NO BUKTI PENARIKAN, TABUNGAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
                             }
 
                             $idTipeJurnal = TIPE_JURNAL_JKK;
-                            
+
                         }
                         // pinjaman
                         else if($jenisPinjaman->where('kode_jenis_pinjam', $newCode)->first() && $transaction->normal_balance == 1)
@@ -251,7 +250,7 @@ class MigrationController extends Controller
                             $jenisPinjaman = $jenisPinjaman->where('kode_jenis_pinjam', $newCode)->first();
 
                             $pinjaman = new Pinjaman();
-                            
+
                             $kodeAnggota = $transaction->kode_anggota;
                             $kodePinjaman = str_replace('.','',$jenisPinjaman->kode_jenis_pinjam).'-'.$kodeAnggota.'-'.Carbon::now()->format('dmYHis');
 
@@ -298,7 +297,7 @@ class MigrationController extends Controller
                             $pinjaman->serial_number = $nextSerialNumber;
                             $pinjaman->save();
 
-                            echo('NO BUKTI PINJAMAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
+                            echo('NO BUKTI PINJAMAN SUCCESS : ' . $jurnal->unik_bukti . "<br>");
 
                             $transactionSuccess = $pinjaman;
 
@@ -357,7 +356,7 @@ class MigrationController extends Controller
                                 $pinjaman->sisa_pinjaman -= $transaction->jumlah;
                                 $pinjaman->save();
 
-                                echo('NO BUKTI PINJAMAN SUCCESS : ' . $jurnal->no_bukti . "<br>");
+                                echo('NO BUKTI PINJAMAN SUCCESS : ' . $jurnal->unik_bukti . "<br>");
 
                                 $transactionSuccess = $angsuran;
 
@@ -377,15 +376,15 @@ class MigrationController extends Controller
                                     $jurnalTemp->save();
                                 }
 
-                                echo('NO BUKTI ANGSURAN, PINJAMAN KOSONG : ' . $jurnal->no_bukti . "<br>");
+                                echo('NO BUKTI ANGSURAN, PINJAMAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
                             }
-                            
+
                             $idTipeJurnal = TIPE_JURNAL_JKM;
                         }
                     }
-                    
+
                     // save every jurnal to jurnal table
-                    foreach ($uraian as $key => $uraianJurnal) 
+                    foreach ($uraian as $key => $uraianJurnal)
                     {
                         if($uraianJurnal->is_success == 1)
                         {
@@ -415,7 +414,7 @@ class MigrationController extends Controller
                             }
 
                             $newJurnal->keterangan = $uraianJurnal->uraian_3;
-                            
+
                             if($newJurnal->keterangan == '' || $newJurnal->keterangan == null)
                             {
                                 $newJurnal->keterangan = '-';
@@ -440,7 +439,7 @@ class MigrationController extends Controller
             }
 
             echo('DONE');
-            
+
         } catch (\Exception $e) {
             dd($e);
         }
