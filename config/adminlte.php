@@ -265,24 +265,14 @@ return [
                     'icon' => 'fa fa-money-bill nav-icon',
                     'can'  => ['view jenis simpanan'],
                 ],
-                [
-                    'text' => 'Import Saldo Simpanan',
-                    'url' => '/tabungan/import',
-                    'icon' => 'fa fa-money-bill nav-icon',
-                    'can'  => ['view jenis simpanan'],
-                ],
+
                 [
                     'text' => 'Jenis Pinjaman',
                     'url' => '/setting/pinjaman',
                     'icon' => 'fa fa-money-check-alt nav-icon',
                     'can'  => ['view jenis pinjaman'],
                 ],
-                [
-                    'text' => 'Import Saldo Pinjaman',
-                    'url' => '/pinjaman/import',
-                    'icon' => 'fa fa-money-check-alt nav-icon',
-                    'can'  => ['view jenis pinjaman'],
-                ],
+
                 [
                     'text' => 'Jenis Anggota',
                     'url' => '/setting/jenis-anggota/list',
@@ -306,19 +296,14 @@ return [
                 ],
             ],
         ],
-        ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan','import penarikan']],
+        ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan']],
         [
             'text' => 'Penarikan',
             'icon' => 'fas fa-exchange-alt nav-icon',
             'can'  => ['add penarikan', 'view history penarikan'],
-            'active' => ['/penarikan/history', '/penarikan/create','/penarikan/import/excel'],
+            'active' => ['/penarikan/history', '/penarikan/create'],
             'submenu' => [
-                [
-                    'text' => 'Import Data Penarikan',
-                    'url' => '/penarikan/import/excel',
-                    'icon' => 'fas fa-upload nav-icon',
-                    'can'  => ['import penarikan'],
-                ],
+
                 [
                     'text' => 'History Penarikan',
                     'url' => '/penarikan/history',
@@ -339,7 +324,7 @@ return [
                     'can'  => ['view penarikan'],
                 ],
             ],
-        ], 
+        ],
         // ['header' => 'ANGGOTA'],
         [
             'text' => 'Transaksi',
@@ -366,12 +351,7 @@ return [
                     'icon' => 'fas fa-download nav-icon',
                     'can'  => ['download form pinjaman'],
                 ],
-                [
-                    'text' => 'Import Angsuran',
-                    'url' => '/pinjaman/import-angsuran',
-                    'icon' => 'fas fa-upload nav-icon',
-                    'can'  => ['import angsuran'],
-                ],
+
                 [
                     'text' => 'List Pinjaman',
                     'url' => '/pinjaman/list',
@@ -392,12 +372,7 @@ return [
             'icon' => 'fa fa-money-bill nav-icon',
             'can'  => ['view simpanan','view history simpanan','kartu simpanan'],
             'submenu' => [
-                [
-                    'text' => 'Import Data Simpanan',
-                    'url' => '/simpanan/import/excel',
-                    'icon' => 'fas fa-upload nav-icon',
-                    'can'  => ['import simpanan'],
-                ],
+
                 [
                     'text' => 'List Simpanan',
                     'url' => '/simpanan/list',
@@ -430,7 +405,7 @@ return [
             'route' => 'invoice-list',
             'can'  => ['view invoice'],
             'active'  => ['/invoice', 'regex:@^invoice/[0-9]+$@'],
-        ],   
+        ],
         [
             'text' => 'Laporan',
             'url' => '/jurnal/',
@@ -470,7 +445,7 @@ return [
                     'can'  => ['add jurnal umum'],
                 ],
             ],
-        ],   
+        ],
         [
             'text' => 'Saldo Awal',
             'url' => '/saldo-awal',
@@ -489,14 +464,60 @@ return [
                     'icon' => 'fas fa-plus nav-icon',
                     'can'  => ['add saldo awal'],
                 ],
+
+            ],
+        ],
+        [
+            'text' => 'Import Tools',
+            //'url' => '/saldo-awal',
+            'icon' => 'fas fa-upload nav-icon',
+            //'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal'],
+            'submenu' => [
                 [
-                    'text' => 'Import Saldo Awal',
+                    'text' => 'Import Saldo Awal COA',
                     'url' => '/saldo-awal/import/excel',
                     'icon' => 'fas fa-upload nav-icon',
                     'can'  => ['add saldo awal'],
                 ],
+                [
+                    'text' => 'Import Saldo Awal Simpanan',
+                    'url' => '/tabungan/import',
+                    'icon' => 'fa fa-money-bill nav-icon',
+                    'can'  => ['view jenis simpanan'],
+                ],
+                [
+                    'text' => 'Import Saldo Awal Pinjaman',
+                    'url' => '/pinjaman/import',
+                    'icon' => 'fa fa-money-check-alt nav-icon',
+                    'can'  => ['view jenis pinjaman'],
+                ],
+                [
+                    'text' => 'Import Data Simpanan',
+                    'url' => '/simpanan/import/excel',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import simpanan'],
+                ],
+                [
+                    'text' => 'Import Data Penarikan',
+                    'url' => '/penarikan/import/excel',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import penarikan'],
+                ],
+                [
+                    'text' => 'Import Data Pinjaman',
+                    'url' => '/pinjaman/importData',
+                    'icon' => 'fa fa-money-check-alt nav-icon',
+                    'can'  => ['import pinjaman'],
+                ],
+                [
+                    'text' => 'Import Angsuran',
+                    'url' => '/pinjaman/import-angsuran',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import angsuran'],
+                ],
+
             ],
-        ],   
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

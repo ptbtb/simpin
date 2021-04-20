@@ -51,7 +51,7 @@ class UserController extends Controller
 	public function indexAjax(Request $request)
 	{
 		$this->authorize('view user', Auth::user());
-		$users = User::with('roles','creator');
+		$users = User::with('roles','creator','anggota');
 		$currentUser = Auth::user();
 		if(isset($request->role_id) && $request->role_id !== '')
         {

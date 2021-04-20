@@ -75,8 +75,9 @@
                         <th>Name</th>
                         <th>Created Date</th>
                         <th>Created By</th>
-                        <th style="width: 25%">Role</th>
-                        @if (auth()->user()->can('edit user') || auth()->user()->can('delete user'))
+                        <th style="width: 15%">Role</th>
+                        <th style="width: 10%">No Anggota</th>
+                    @if (auth()->user()->can('edit user') || auth()->user()->can('delete user'))
                             <th style="width: 25%">Action</th>
                         @endif
                     </tr>
@@ -101,45 +102,57 @@
                 }
             },
             aoColumns: [
-                { 
-                    mData: 'id', sType: "string", 
-                    className: "dt-body-center", "name": "id"				
+                {
+                    mData: 'id', sType: "string",
+                    className: "dt-body-center", "name": "id"
                 },
-                { 
-                    mData: 'email', sType: "string", 
-                    className: "dt-body-center", "name": "email"						
+                {
+                    mData: 'email', sType: "string",
+                    className: "dt-body-center", "name": "email"
                 },
-                { 
-                    mData: 'name', sType: "string", 
-                    className: "dt-body-center", "name": "name"				
+                {
+                    mData: 'name', sType: "string",
+                    className: "dt-body-center", "name": "name"
                 },
-                { 
-                    mData: 'created_at', sType: "date", 
-                    className: "dt-body-center", "name": "created_at"				
+                {
+                    mData: 'created_at', sType: "date",
+                    className: "dt-body-center", "name": "created_at"
                 },
-                { 
-                    mData: 'creator.name', sType: "string", 
-                    className: "dt-body-center", "name": "creator.name"				
+                {
+                    mData: 'creator.name', sType: "string",
+                    className: "dt-body-center", "name": "creator.name"
                 },
-                { 
-                    mData: 'roles', sType: "string", 
+                {
+                    mData: 'roles', sType: "string",
                     className: "dt-body-center", "name": "roles.name"	,
-                    mRender: function(data, type, full) 
+                    mRender: function(data, type, full)
                     {
                         if(data[0])
                         {
                             return data[0].name;
                         }
                         return '-';
-                    }					
+                    }
+                },
+                {
+                    mData: 'anggota', sType: "string",
+                    className: "dt-body-center", "name": "anggota.kode_anggota"	,
+                    mRender: function(data, type, full)
+                    {
+                        if(data)
+                        {
+                            return data.kode_anggota;
+                        }
+                        return '-';
+                    }
                 },
                 @if (auth()->user()->can('edit user') || auth()->user()->can('delete user'))
-                    { 
-                        mData: 'id', sType: "string", 
-                        className: "dt-body-center", "name": "id",	
-                        mRender: function(data, type, full) 
+                    {
+                        mData: 'id', sType: "string",
+                        className: "dt-body-center", "name": "id",
+                        mRender: function(data, type, full)
                         {
-                            var markup = ''; 
+                            var markup = '';
                             var baseURL = {!! json_encode(url('/')) !!};
                             @can('edit user')
                                 markup += '<a href="' + baseURL + '/user/edit/' + data + '" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '

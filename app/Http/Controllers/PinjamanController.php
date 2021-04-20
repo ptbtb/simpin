@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\Pinjaman\PengajuanApproved;
+use App\Imports\PinjamanBaruImport;
 use Illuminate\Http\Request;
 use App\Events\Pinjaman\PengajuanCreated;
 use App\Events\Pinjaman\PengajuanUpdated;
@@ -53,7 +54,7 @@ class PinjamanController extends Controller {
         } else {
             if ($request->id) {
                 $anggota = Anggota::find($request->id);
-                
+
                 $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
                         ->notPaid();
             } else {
@@ -91,7 +92,7 @@ class PinjamanController extends Controller {
         }
 
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
-        
+
         $data['title'] = "List Pengajuan Pinjaman";
         $data['listPengajuanPinjaman'] = $listPengajuanPinjaman;
         $data['request'] = $request;
@@ -223,7 +224,7 @@ class PinjamanController extends Controller {
                                     ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
                                     ->get();
         }
-        
+
         $data['title'] = 'Buat Pengajuan Pinjaman';
         $data['listJenisPinjaman'] = JenisPinjaman::all();
         $data['listPinjaman'] = $listPinjaman;
@@ -249,7 +250,7 @@ class PinjamanController extends Controller {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda sudah pernah mengajukan pinjaman untuk jenis pinjaman ' . $jenisPinjaman->nama_pinjaman);
         }
 
-        
+
         // check if topup
         $listTopupPinjaman = collect([]);
         if ($request->jenis_pengajuan == JENIS_PENGAJUAN_TOPUP)
@@ -269,7 +270,7 @@ class PinjamanController extends Controller {
                     ->notPaid()
                     ->where('kode_anggota', $request->kode_anggota)
                     ->get();
-    
+
             if ($checkPinjaman->count()) {
                 return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda masih memiliki pinjaman dengan jenis pinjaman ' . $jenisPinjaman->nama_pinjaman . ' yang belum lunas');
             }
@@ -291,7 +292,7 @@ class PinjamanController extends Controller {
         $gaji = $gaji->value;
         $potonganGaji = 0.65 * $gaji;
         $angsuranPerbulan = $besarPinjaman / $request->lama_angsuran;
-        
+
         if ($angsuranPerbulan > $potonganGaji) {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas 65 % gaji Anda.');
         }
@@ -416,7 +417,7 @@ class PinjamanController extends Controller {
                 if($request->id_akun_debet)
                 {
                     $pengajuan->id_akun_debet = $request->id_akun_debet;
-                    
+
                     $pinjaman = $pengajuan->pinjaman;
 
                     if($pinjaman)
@@ -439,7 +440,7 @@ class PinjamanController extends Controller {
             {
                 JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
             }
-            
+
             event(new PengajuanUpdated($pengajuan));
 
             return response()->json(['message' => 'success'], 200);
@@ -511,7 +512,7 @@ class PinjamanController extends Controller {
         $maksimalBesarPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
         $lamaAngsuran = $request->lama_angsuran;
         $keperluan = $request->keperluan;
-        
+
         // biaya administrasi
         $biayaAdministrasi = 0;
         $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
@@ -577,7 +578,7 @@ class PinjamanController extends Controller {
         $besarPinjaman = filter_var($request->besarPinjaman, FILTER_SANITIZE_NUMBER_INT);
         $maksimalBesarPinjaman = filter_var($request->maksimalBesarPinjaman, FILTER_SANITIZE_NUMBER_INT);
         $lamaAngsuran = $request->lamaAngsuran;
-        
+
         // biaya administrasi
         $biayaAdministrasi = 0;
         $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
@@ -754,7 +755,7 @@ class PinjamanController extends Controller {
     public function bayarAngsuranDipercepat(Request $request, $id) {
         try {
             $rule['besar_pembayaran'] = 'required';
-            
+
             $validator = Validator::make($request->toArray(), $rule);
             if ($validator->fails()) {
                 $errors = $validator->errors();
@@ -869,6 +870,10 @@ class PinjamanController extends Controller {
     {
         $data['title'] = "Import Saldo Pinjaman";
         return view('pinjaman.importSaldo', $data);
+    }public function importDataPinjaman()
+    {
+        $data['title'] = "Import Data Pinjaman";
+        return view('pinjaman.importData', $data);
     }
 
     public function storeImportPinjaman(Request $request)
@@ -877,7 +882,23 @@ class PinjamanController extends Controller {
         {
             DB::transaction(function () use ($request)
             {
-                Excel::import(new PinjamanImport, $request->file); 
+                Excel::import(new PinjamanImport, $request->file);
+            });
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
+    }public function storeImportDataPinjaman(Request $request)
+    {
+
+        try
+        {
+            DB::transaction(function () use ($request)
+            {
+                Excel::import(new PinjamanBaruImport, $request->file);
             });
             return redirect()->back()->withSuccess('Import data berhasil');
         }
@@ -913,7 +934,7 @@ class PinjamanController extends Controller {
             {
                 $angsuran->delete();
             }
-            
+
             $pinjaman->delete();
 
             return response()->json(['message' => 'Delete data success'], 200);
