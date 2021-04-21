@@ -78,8 +78,12 @@
         {
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('.table').DataTable({
-                processing: true,
-                serverside: true,
+                bProcessing: true,
+                bServerSide: true,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
                 ajax: {
                     url: '{{ route('jurnal-list-ajax') }}',
                     dataSrc: 'data',
@@ -149,7 +153,7 @@
             });
 
             // add index column
-            table.on( 'order.dt search.dt', function () {
+            table.on( 'xhr.dt', function () {
                 table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );
