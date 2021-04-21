@@ -56,11 +56,11 @@ class PinjamanBaruImport implements OnEachRow
             $pinjaman->biaya_administrasi = $row[6];
             $pinjaman->id_akun_debet = $id_akun_debet;
             $pinjaman->u_entry = Auth::user()->name;
-            $pinjaman->tgl_entri = Carbon::now();
+            $pinjaman->tgl_entri = Carbon::createFromFormat('Y-m-d', $postDate);
             if($jenis->kode_jenis_pinjam=='105.01.000'){
-                $pinjaman->tgl_tempo = Carbon::now()->addMonths(3 - 1);
+                $pinjaman->tgl_tempo = Carbon::createFromFormat('Y-m-d', $postDate)->addMonths(3 - 1);
             }else{
-                $pinjaman->tgl_tempo = Carbon::now()->addMonths($lamaangsuran - 1);
+                $pinjaman->tgl_tempo = Carbon::createFromFormat('Y-m-d', $postDate)->addMonths($lamaangsuran - 1);
             }
 
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
@@ -89,7 +89,7 @@ class PinjamanBaruImport implements OnEachRow
                 $angsuran->jasa = $pinjaman->biaya_jasa;
                 $angsuran->kode_anggota = $pinjaman->kode_anggota;
                 $angsuran->sisa_pinjam = $sisaPinjaman;
-                $angsuran->tgl_entri = Carbon::now();
+                $angsuran->tgl_entri = Carbon::createFromFormat('Y-m-d', $postDate);
                 $angsuran->jatuh_tempo = $jatuhTempo;
                 $angsuran->u_entry = Auth::user()->name;
                 $angsuran->serial_number = $nextSerialNumber;
