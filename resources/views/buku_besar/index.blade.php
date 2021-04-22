@@ -99,9 +99,13 @@
         {
             $.fn.dataTable.ext.errMode = 'none';
             var tableAktiva = $('.table-aktiva').DataTable({
-                processing: true,
-                serverside: true,
-                paging:   false,
+                bProcessing: true,
+                bServerSide: true,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                paging: false,
                 ajax: {
                     url: '{{ route('buku-besar-list-ajax') }}',
                     dataSrc: 'data',
@@ -135,9 +139,13 @@
             });
 
             var tablePassiva = $('.table-passiva').DataTable({
-                processing: true,
-                serverside: true,
-                paging:   false,
+                bProcessing: true,
+                bServerSide: true,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                paging: false,
                 ajax: {
                     url: '{{ route('buku-besar-list-ajax') }}',
                     dataSrc: 'data',
@@ -171,9 +179,13 @@
             });
 
             var tableRugi = $('.table-rugi').DataTable({
-                processing: true,
-                serverside: true,
-                paging:   false,
+                bProcessing: true,
+                bServerSide: true,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                paging: false,
                 ajax: {
                     url: '{{ route('buku-besar-list-ajax') }}',
                     dataSrc: 'data',
@@ -207,9 +219,13 @@
             });
 
             var tableLaba = $('.table-laba').DataTable({
-                processing: true,
-                serverside: true,
-                paging:   false,
+                bProcessing: true,
+                bServerSide: true,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                paging: false,
                 ajax: {
                     url: '{{ route('buku-besar-list-ajax') }}',
                     dataSrc: 'data',
@@ -243,28 +259,28 @@
             });
 
             // add index column
-            tableAktiva.on( 'order.dt search.dt', function () {
+            tableAktiva.on( 'xhr.dt', function () {
                 tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );
             }).draw();
 
             // add index column
-            tableAktiva.on( 'order.dt search.dt', function () {
+            tableAktiva.on( 'xhr.dt', function () {
                 tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );
             }).draw();
 
             // add index column
-            tableRugi.on( 'order.dt search.dt', function () {
+            tableRugi.on( 'xhr.dt', function () {
                 tableRugi.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );
             }).draw();
 
             // add index column
-            tableLaba.on( 'order.dt search.dt', function () {
+            tableLaba.on( 'xhr.dt', function () {
                 tableLaba.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );

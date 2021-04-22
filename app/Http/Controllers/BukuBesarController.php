@@ -13,6 +13,7 @@ use App\Exports\BukuBesarExport;
 
 use Carbon\Carbon;
 use Excel;
+use DB;
 
 class BukuBesarController extends Controller
 {
@@ -23,19 +24,18 @@ class BukuBesarController extends Controller
         {
             $codes = Code::where('is_parent', 0)->get();
 
-            $jurnal = Jurnal::get();
-
             // buku besar collection
             $bukuBesars = collect();
 
             foreach ($codes as $key => $code) 
             {
+
                 $saldo = 0;
                 // get code's normal balance 
                 if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
                 {
-                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
-                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+                    $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
 
                     $saldo += $saldoDebet;
                     $saldo -= $saldoKredit;
@@ -48,8 +48,8 @@ class BukuBesarController extends Controller
                 }
                 else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                 {
-                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
-                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+                    $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
 
                     $saldo -= $saldoDebet;
                     $saldo += $saldoKredit;
@@ -72,6 +72,7 @@ class BukuBesarController extends Controller
         }
         catch (\Throwable $e)
         {
+            dd($e);
             $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
             Log::error($message);
             abort(500);
@@ -84,8 +85,6 @@ class BukuBesarController extends Controller
         {
             $codes = Code::where('is_parent', 0)->get();
 
-            $jurnal = Jurnal::get();
-
             // buku besar collection
             $bukuBesars = collect();
 
@@ -95,8 +94,8 @@ class BukuBesarController extends Controller
                 // get code's normal balance 
                 if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
                 {
-                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
-                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+                    $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
 
                     $saldo += $saldoDebet;
                     $saldo -= $saldoKredit;
@@ -110,8 +109,8 @@ class BukuBesarController extends Controller
                 }
                 else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                 {
-                    $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
-                    $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+                    $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
+                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
 
                     $saldo -= $saldoDebet;
                     $saldo += $saldoKredit;
@@ -136,6 +135,7 @@ class BukuBesarController extends Controller
         }
         catch (\Throwable $e)
         {
+            dd($e);
             $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
             Log::error($message);
             return response()->json(['message' => 'error'], 500);
