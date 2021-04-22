@@ -72,7 +72,6 @@ class BukuBesarController extends Controller
         }
         catch (\Throwable $e)
         {
-            dd($e);
             $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
             Log::error($message);
             abort(500);
@@ -135,7 +134,6 @@ class BukuBesarController extends Controller
         }
         catch (\Throwable $e)
         {
-            dd($e);
             $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
             Log::error($message);
             return response()->json(['message' => 'error'], 500);
