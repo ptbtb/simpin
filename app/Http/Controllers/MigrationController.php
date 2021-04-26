@@ -48,7 +48,7 @@ class MigrationController extends Controller
                 $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
 
                 // group by uraian3 because 1 kode_bukti has more than 1 transaction
-                $groupByUraian = $transactions->groupBy('uraian_3');
+                $groupByUraian = $transactions->groupBy('unik_bukti');
 
                 foreach ($groupByUraian as $key => $uraian)
                 {
@@ -270,8 +270,9 @@ class MigrationController extends Controller
                                 $idTipeJurnal = TIPE_JURNAL_JKK;
                             }
                         }
+                        
                         // pinjaman group
-                        else if($jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->first())
+                        if($jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->first())
                         {
                             $jenisPinjaman = $jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->first();
 
