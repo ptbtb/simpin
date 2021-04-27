@@ -198,7 +198,7 @@ class MigrationController extends Controller
                             // simpanan group
                             if($jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->first())
                             {
-                                $jenisSimpanans = $jenisSimpanan->whereIn('kode_jenis_simpan', $codes)->get();
+                                $jenisSimpanans = $jenisSimpanan->whereIn('kode_jenis_simpan', $codes);
 
                                 foreach ($jenisSimpanans as $key => $jenisSimpanan) 
                                 {
@@ -385,7 +385,7 @@ class MigrationController extends Controller
                             // pinjaman group
                             if($jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->first())
                             {
-                                $jenisPinjamans = $jenisPinjaman->whereIn('kode_jenis_pinjam', $codes)->get();
+                                $jenisPinjamans = $jenisPinjaman->whereIn('kode_jenis_pinjam', $codes);
 
                                 foreach ($jenisPinjamans as $key => $jenisPinjaman) 
                                 {
