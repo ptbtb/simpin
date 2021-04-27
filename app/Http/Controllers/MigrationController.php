@@ -455,13 +455,13 @@ class MigrationController extends Controller
                                             $jurnalTemp->is_success = 1;
                                             $jurnalTemp->save();
                                         }
+
+                                        // create angsuran
+                                        AngsuranManager::generateAngsuran($pinjaman);
                                     }
                                     // angsuran
                                     elseif($transaction->normal_balance == 2)
                                     {
-                                        // get next serial number
-                                        $nextSerialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
-
                                         $kodeAnggota = $transaction->kode_anggota;
 
                                         $pinjaman = Pinjaman::where('kode_anggota', $kodeAnggota)->where('kode_jenis_pinjam', $newCode)->first();
@@ -470,25 +470,12 @@ class MigrationController extends Controller
                                         {
                                             $jatuhTempo = $pinjaman->tgl_entri->addMonths(1)->endOfMonth();
 
-                                            // count sisa pinjaman
-                                            $besarPinjaman = $pinjaman->besar_pinjam;
-                                            $sisaPinjaman = $besarPinjaman-$transaction->jumlah;
-
-                                            $angsuran = new Angsuran();
+                                            $angsuran = Angsuran::where('kode_pinjam', $pinjaman->kode_pinjam)->first();
                                             $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
-                                            $angsuran->angsuran_ke = 1;
-                                            $angsuran->besar_angsuran = $pinjaman->besar_angsuran_pokok;
-                                            $angsuran->denda = 0;
-                                            $angsuran->jasa = $pinjaman->biaya_jasa;
-                                            $angsuran->kode_anggota = $pinjaman->kode_anggota;
-                                            $angsuran->sisa_pinjam = $sisaPinjaman;
-                                            $angsuran->tgl_entri = Carbon::now();
-                                            $angsuran->jatuh_tempo = $jatuhTempo;
-                                            $angsuran->u_entry = 'Administrator';
-                                            $angsuran->serial_number = $nextSerialNumber;
-                                            $angsuran->besar_pembayaran = $transaction->jumlah + $pinjaman->biaya_jasa;
+                                            $angsuran->angsuran_ke += 1;
+                                            $angsuran->sisa_pinjam -= $transaction->jumlah;
 
-                                            if( ($pinjaman->besar_pinjam - $transaction->jumlah) < 1)
+                                            if( $angsuran->sisa_pinjam <= 0)
                                             {
                                                 $angsuran->id_status_angsuran = 2;
                                             }
@@ -518,11 +505,11 @@ class MigrationController extends Controller
                                             foreach($uraian as $jurnalTemp)
                                             {
                                                 // update status jurnal_temp
-                                                $jurnalTemp->keterangan_gagal = 'NO BUKTI ANGSURAN, PINJAMAN KOSONG';
+                                                $jurnalTemp->keterangan_gagal = 'NO BUKTI ANGSURAN, PINJAMAN TIDAK DITEMUKAN';
                                                 $jurnalTemp->save();
                                             }
 
-                                            echo('NO BUKTI ANGSURAN, PINJAMAN KOSONG : ' . $jurnal->unik_bukti . "<br>");
+                                            echo('NO BUKTI ANGSURAN, PINJAMAN TIDAK DITEMUKAN : ' . $jurnal->unik_bukti . "<br>");
                                         }
 
                                         $idTipeJurnal = TIPE_JURNAL_JKM;
@@ -582,6 +569,54 @@ class MigrationController extends Controller
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    if($idTipeJurnal == TIPE_JURNAL_JU)
+                    {
+                        // save every jurnal to jurnal table
+                        foreach ($uraian as $key => $uraianJurnal)
+                        {
+                            // save into jurnal table
+                            $newJurnal = new Jurnal();
+                            $newJurnal->id_tipe_jurnal = $idTipeJurnal;
+                            $newJurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+
+                            // new format for code
+                            $newCoa = substr($uraianJurnal->code,0,3).'.'.substr($uraianJurnal->code,3,2).'.'.substr($uraianJurnal->code,5,3);
+
+                            // debet
+                            if($uraianJurnal->normal_balance == 1)
+                            {
+                                $newJurnal->akun_debet = $newCoa;
+                                $newJurnal->debet = $uraianJurnal->jumlah;
+                                $newJurnal->akun_kredit = 0;
+                                $newJurnal->kredit = 0;
+                            }
+                            // kredit
+                            else
+                            {
+                                $newJurnal->akun_debet = 0;
+                                $newJurnal->debet = 0;
+                                $newJurnal->akun_kredit = $newCoa;
+                                $newJurnal->kredit = $uraianJurnal->jumlah;
+                            }
+
+                            $newJurnal->keterangan = $uraianJurnal->uraian_3;
+
+                            if($newJurnal->keterangan == '' || $newJurnal->keterangan == null)
+                            {
+                                $newJurnal->keterangan = '-';
+                            }
+
+                            $newJurnal->created_by = 1;
+                            $newJurnal->updated_by = 1;
+                            $newJurnal->created_at = $uraianJurnal->tgl_posting;
+
+                            $newJurnal->save();
+                            
+                            $uraianJurnal->is_success = 1;
+                            $uraianJurnal->save();
                         }
                     }
                 }
