@@ -83,7 +83,7 @@ class Migration2Controller extends Controller
                  }else   
                  if ($cekpinjaman)  {
 
-                    $cekpelunasan = $uraian->wherein('code',[70102002,70102014,70102015]);
+                    $cekpelunasan = JurnalTemp::wherein('code',[70102016,70102017])->where('unik_bukti',$kredit->unik_bukti)->get();
                     //$topup= $uraian->wherein('code',[70102016,70102017]);
                     if ($cekpelunasan){
                      $status=self::transaksipelunasandipercepat($kredit); 
