@@ -209,6 +209,7 @@ echo('DONE');
 
 
 public static function transaksisimpanan($simpan){
+    echo ('transaksisimpanan');
     $status =true;
     $jenisSimpanans = JenisSimpanan::where('kode_jenis_simpan', $simpan->code)->first();
     $simpanan = new Simpanan();
@@ -227,7 +228,7 @@ public static function transaksisimpanan($simpan){
     
 }
 public static function transaksiangsuran($pinjamans){
-
+    echo ('transaksiangsuran');
     $status =true;
     $pinjaman= Pinjaman::where('kode_jenis_pinjam',$pinjamans->code)
     ->where('kode_anggota',$pinjamans->kode_anggota)
@@ -281,6 +282,7 @@ public static function transaksiangsuran($pinjamans){
 
 }
 public static function transaksipelunasandipercepat($pinjamans){
+    echo ('transaksipelunasandipercepat');
     $status =true;
     $pinjaman= Pinjaman::where('kode_jenis_pinjam',$pinjamans->code)
     ->where('kode_anggota',$pinjamans->kode_anggota)
@@ -312,6 +314,7 @@ public static function transaksipelunasandipercepat($pinjamans){
 }
 
 public static function transaksipenarikan($simpanans){
+     echo ('transaksipenarikan');
     $status =true;
     if($simpanans->kode_anggota>0){
         $penarikan = new Penarikan();
@@ -335,6 +338,7 @@ public static function transaksipenarikan($simpanans){
     return [$status,''];
 }
 public static function transaksikeluaranggota($simpanans){
+     echo ('transaksikeluaranggota');
     $status =true;
     if($simpanans->kode_anggota>0){
         $penarikan = new Penarikan();
@@ -375,6 +379,7 @@ public static function transaksitopup($pinjamans){
     return [$status,''];
 }
 public static function transaksipinjaman($pinjamans){
+    echo ('transaksipinjaman');
     $status =true;
     $jenis = JenisPinjaman::where('kode_jenis_pinjam',$pinjamans->code)->first();
     $lama_angsuran = $jenis->lama_angsuran;
