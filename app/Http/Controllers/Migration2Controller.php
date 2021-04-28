@@ -216,7 +216,7 @@ public static function transaksisimpanan($simpan){
     $simpanan->besar_simpanan = $simpan->jumlah;
     $simpanan->kode_anggota = $simpan->kode_anggota;
     $simpanan->u_entry = 'Admin BTB';
-    $simpanan->tgl_entri = Carbon::now();
+    $simpanan->tgl_entri = $simpan->tgl_posting;
     $simpanan->periode = $simpan->tgl_posting;
     $simpanan->kode_jenis_simpan = $simpan->code;
     $simpanan->keterangan = ($simpan->uraian_3!==null)?$simpan->uraian_3:'';
