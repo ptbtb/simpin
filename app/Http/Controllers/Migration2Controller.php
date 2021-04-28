@@ -231,7 +231,8 @@ public static function transaksiangsuran($pinjamans){
     $status =true;
     $pinjaman= Pinjaman::where('kode_jenis_pinjam',$pinjamans->code)
     ->where('kode_anggota',$pinjamans->kode_anggota)
-    ->where('besar_angsuran_pokok',$pinjamans->jumlah)->first();
+    //->where('besar_angsuran_pokok',$pinjamans->jumlah)
+    ->first();
     if($pinjaman){
         $dataAngsuran = Angsuran::where('kode_pinjam',$pinjaman->kode_pinjam)
         ->where('id_status_angsuran',1);
@@ -245,7 +246,7 @@ public static function transaksiangsuran($pinjamans){
             if ($angsuran->besar_pembayaran) {
                 $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
             }
-            if ($pembayaran >= $angsuran->totalAngsuran) {
+            if ($pembayaran >= $angsuran->totalAngsuran-5) {
                 $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
                 $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
                 $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
@@ -264,11 +265,11 @@ public static function transaksiangsuran($pinjamans){
             // create JKM angsuran
             
 
-            if ($pembayaran <= 0) {
+            if ($pembayaran <= 5) {
                 $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
                 $pinjaman->save();
             }
-            if ($pinjaman->sisa_pinjaman <= 0) {
+            if ($pinjaman->sisa_pinjaman <= 5) {
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 $pinjaman->save();
             }
@@ -283,7 +284,8 @@ public static function transaksipelunasandipercepat($pinjamans){
     $status =true;
     $pinjaman= Pinjaman::where('kode_jenis_pinjam',$pinjamans->code)
     ->where('kode_anggota',$pinjamans->kode_anggota)
-    ->where('sisa_pinjaman',$pinjamans->jumlah)->first();
+    //->where('sisa_pinjaman',$pinjamans->jumlah)
+    ->first();
     if($pinjaman){
         $angsurans = Angsuran::where('kode_pinjam',$pinjaman->kode_pinjam)
         ->where('id_status_angsuran',1)->get();
