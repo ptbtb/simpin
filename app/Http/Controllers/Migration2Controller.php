@@ -265,11 +265,11 @@ public static function transaksiangsuran($pinjamans){
             // create JKM angsuran
             
 
-            if ($pembayaran <= 5) {
+            if ($pembayaran <= 0) {
                 $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
                 $pinjaman->save();
             }
-            if ($pinjaman->sisa_pinjaman <= 5) {
+            if ($pinjaman->sisa_pinjaman <= 0) {
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 $pinjaman->save();
             }
