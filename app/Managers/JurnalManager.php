@@ -229,6 +229,29 @@ class JurnalManager
             \Log::error($e);
         }
     }
+public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
+    {
+        try
+        {
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = $simpanan->kode_jenis_simpan;
+            $jurnal->kredit = $simpanan->besar_simpanan;
+            $jurnal->akun_debet=0;
+            $jurnal->debet =0;
+            $jurnal->keterangan = $simpanan->keterangan.' '. ucwords(strtolower($simpanan->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+
+            // save as polymorphic
+            $simpanan->jurnals()->save($jurnal);
+        }
+        catch (\Exception $e)
+        {
+            \Log::error($e);
+        }
+    }
 
     public static function createSaldoAwal(SaldoAwal $saldoAwal)
     {
