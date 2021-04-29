@@ -134,6 +134,35 @@ class JurnalManager
             \Log::error($e);
         }
     }
+public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
+    {
+        try
+        {
+            // jurnal pinjaman
+            // jurnal untuk debet
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_debet = $pinjaman->kode_jenis_pinjam;
+            $jurnal->debet = $pinjaman->besar_pinjam;
+            $jurnal->akun_kredit = 0;
+            $jurnal->kredit = 0;
+            $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+            $jurnal->created_by = Auth::user()->id;
+            $jurnal->updated_by = Auth::user()->id;
+
+
+
+            // save as polymorphic
+            $pinjaman->jurnals()->save($jurnal);
+
+
+        }
+        catch (\Exception $e)
+        {
+            \Log::error($e);
+        }
+    }
 
     public static function createJurnalAngsuran(Angsuran $angsuran)
     {
