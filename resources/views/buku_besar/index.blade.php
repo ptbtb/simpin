@@ -131,7 +131,7 @@
                         className: "dt-body-center text-right", "name": "saldo",
                         mRender: function(data, type, full)
                         {
-                            var saldo = toRupiah(data);
+                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
                             return saldo;
                         }
                     },
@@ -171,7 +171,7 @@
                         className: "dt-body-center text-right", "name": "saldo",
                         mRender: function(data, type, full)
                         {
-                            var saldo = toRupiah(data);
+                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
                             return saldo;
                         }
                     },
@@ -211,7 +211,7 @@
                         className: "dt-body-center text-right", "name": "saldo",
                         mRender: function(data, type, full)
                         {
-                            var saldo = toRupiah(data);
+                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
                             return saldo;
                         }
                     },
@@ -251,7 +251,7 @@
                         className: "dt-body-center text-right", "name": "saldo",
                         mRender: function(data, type, full)
                         {
-                            var saldo = toRupiah(data);
+                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
                             return saldo;
                         }
                     },
