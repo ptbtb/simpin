@@ -39,6 +39,14 @@
                         <label>Tipe Jurnal</label>
                         {!! Form::select('id_tipe_jurnal', $tipeJurnal, $request->id_tipe_jurnal, ['class' => 'form-control', 'placeholder' => 'All']) !!}
                     </div>
+                    <div class="col-md-4 form-group">
+                        <label>Nomor</label>
+                        <input type="text" name="serial_number" id="serial_number" class="form-control" placeholder="Nomor Transaksi" autocomplete="off" value="{{ old('serial_number', $request->serial_number) }}">
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label>Keterangan</label>
+                        <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Keterangan" autocomplete="off" value="{{ old('keterangan', $request->keterangan) }}">
+                    </div>
                     <div class="col-md-12 form-group text-center">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
                     </div>
@@ -89,12 +97,18 @@
                     dataSrc: 'data',
                     data: function(data){
                         @if(isset($request->id_tipe_jurnal)) data.id_tipe_jurnal = '{{ $request->id_tipe_jurnal }}'; @endif
+                        
+                        var serial_number = '{{ $request->serial_number }}';
+                        data.serial_number = serial_number;
+
+                        var keterangan = '{{ $request->keterangan }}';
+                        data.keterangan = keterangan;
                     }
                 },
                 aoColumns: [
                     {
-                        mData: 'null', sType: "string",
-                        className: "dt-body-center", "name": "index"
+                        mData: 'DT_RowIndex', sType: "string",
+                        className: "dt-body-center", "name": "DT_RowIndex"
                     },
                     {
                         mData: 'jurnalable_view', sType: "string",
