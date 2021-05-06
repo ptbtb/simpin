@@ -48,13 +48,20 @@ class Migration2Controller extends Controller
             foreach ($jurnals as $key => $jurnal)
             {
 
-                $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
+                $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->orderBy('tgl_posting','asc')->get();
 
                 // group by uraian3 because 1 kode_bukti has more than 1 transaction
                 $groupByUraian = $transactions->groupBy('unik_bukti');
 
                 foreach ($groupByUraian as $key => $uraian)
                 {
+                    // $topup= $uraian->wherein('code',[70102002,70102014,70102015]);
+                    // if($topup){
+                    //     echo 'ada';die;
+                    // }else{
+                    //     echo 'ada';die;
+                    // }
+
                  $kredits = $uraian->wherein('normal_balance',2);
                  $debets = $uraian->wherein('normal_balance',1);
 
@@ -83,7 +90,8 @@ class Migration2Controller extends Controller
                  }else   
                  if ($cekpinjaman)  {
 
-                    $cekpelunasan = JurnalTemp::wherein('code',[70102016,70102017])->where('unik_bukti',$kredit->unik_bukti)->get();
+                    $cekpelunasan = JurnalTemp::wherein('code',[70102016,70102017,70102002,70102014,70102015])->where('unik_bukti',$kredit->unik_bukti)->get();
+                    //dd($cekpelunasan);die;
                     //$topup= $uraian->wherein('code',[70102016,70102017]);
                     if ($cekpelunasan->count()>0){
                      $status=self::transaksipelunasandipercepat($kredit); 
@@ -288,6 +296,7 @@ public static function transaksipelunasandipercepat($pinjamans){
     ->where('kode_anggota',$pinjamans->kode_anggota)
     //->where('sisa_pinjaman',$pinjamans->jumlah)
     ->first();
+    //dd($pinjaman);die;
     if($pinjaman){
         $angsurans = Angsuran::where('kode_pinjam',$pinjaman->kode_pinjam)
         ->where('id_status_angsuran',1)->get();
