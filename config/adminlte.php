@@ -424,6 +424,12 @@ return [
                     'icon' => 'fas fa-book nav-icon',
                     'can'  => ['view jurnal'],
                 ],
+                [
+                    'text' => 'Neraca',
+                    'url' => '/neraca',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view jurnal'],
+                ],
             ],
         ],
         [

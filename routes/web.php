@@ -362,3 +362,12 @@ Route::group(['prefix' => 'buku-besar'], function() {
         Route::get('download/excel', [App\Http\Controllers\BukuBesarController::class, 'createExcel'])->name('buku-besar-download-excel');
     });
 });
+
+// neraca
+Route::group(['prefix' => 'neraca'], function() {
+    Route::group(['middleware' => ['auth']], function () {
+        Route::get('', [App\Http\Controllers\NeracaController::class, 'index'])->name('neraca-list');
+        Route::post('', [App\Http\Controllers\NeracaController::class, 'index'])->name('neraca-list');
+        Route::get('download/excel', [App\Http\Controllers\NeracaController::class, 'createExcel'])->name('neraca-download-excel');
+    });
+});
