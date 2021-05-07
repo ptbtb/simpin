@@ -172,14 +172,14 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Jenis Akun</label>
-                                <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
+                                <select name="jenis_akun" id="jenisAkun1" class="form-control select2 jenisAkun" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Akun</label>
-                                <select name="id_akun_kredit" id="code" class="form-control select2" required>
+                                <select name="id_akun_kredit" id="code1" class="form-control select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>
                                 </select>
                             </div>
@@ -248,14 +248,14 @@
                             </div>
                             <div class="form-group">
                                 <label>Jenis Akun</label>
-                                <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
+                                <select name="jenis_akun" id="jenisAkun2" class="form-control select2 jenisAkun" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Akun</label>
-                                <select name="id_akun_kredit" id="code" class="form-control select2" required>
+                                <select name="id_akun_kredit" id="code2" class="form-control select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>
                                 </select>
                             </div>
@@ -282,7 +282,7 @@
                 backdrop: false 
             });
             $('#my-modal').modal('show');
-            $('#jenisAkun').trigger( "change" );
+            $('.jenisAkun').trigger( "change" );
         });
 
         $('.btn-pelunasanDipercepat').on('click', function ()
@@ -291,6 +291,7 @@
                 backdrop: false 
             });
             $('#my-modal1').modal('show');
+            $('.jenisAkun').trigger( "change" );
         });
 
         $(".select2").select2({
@@ -306,13 +307,14 @@
         @endforeach
         
         // trigger to get kas or bank select option
-        $(document).on('change', '#jenisAkun', function () 
+        $(document).on('change', '.jenisAkun', function () 
         {
             // remove all option in code
-            $('#code').empty();
+            $('#code1').empty();
+            $('#code2').empty();
 
             // get jenis akun
-            var jenisAkun = $('#jenisAkun').val();
+            var jenisAkun = $(this).val();
 
             if(jenisAkun == 2)
             {
@@ -330,16 +332,19 @@
                     }
                     
                     // insert new option
-                    $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+                    $('#code1').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+                    $('#code2').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
                 });
             }
             else if(jenisAkun == 1)
             {
                 // insert new option 
-                $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+                $('#code1').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+                $('#code2').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
             }
 
-            $('#code').trigger( "change" );
+            $('#code1').trigger( "change" );
+            $('#code2').trigger( "change" );
         });
 
         // action button on click
