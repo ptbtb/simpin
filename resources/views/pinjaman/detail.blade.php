@@ -171,13 +171,17 @@
                                 <input type="text" name="total_angsuran" class="form-control" value="Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}" readonly>
                             </div>
                             <div class="form-group col-md-6">
+                                <label for="tgl_transaksi">Tgl Transaksi</label>
+                                <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label>Jenis Akun</label>
                                 <select name="jenis_akun" id="jenisAkun1" class="form-control select2 jenisAkun" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label>Akun</label>
                                 <select name="id_akun_kredit" id="code1" class="form-control select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>

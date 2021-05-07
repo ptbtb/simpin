@@ -744,6 +744,11 @@ class PinjamanController extends Controller {
                     $pinjaman->save();
                 }
             }
+
+            // save tgl transaksi
+            $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+            $pinjaman->save();
+            
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {
             \Log::error($e);
