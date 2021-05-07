@@ -781,6 +781,7 @@ class PinjamanController extends Controller {
                 $pinjaman->sisa_angsuran = 0;
                 $pinjaman->sisa_pinjaman = 0;
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+                $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $pinjaman->save();
             }
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');

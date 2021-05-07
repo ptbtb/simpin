@@ -243,6 +243,10 @@
                             </div>
                             <hr>
                             <div class="form-group mt-2">
+                                <label for="tgl_transaksi">Tgl Transaksi</label>
+                                <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
+                            </div>
+                            <div class="form-group">
                                 <label>Besar Pembayaran</label>
                                 <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
                             </div>
