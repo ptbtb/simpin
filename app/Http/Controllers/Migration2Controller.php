@@ -400,7 +400,7 @@ public static function transaksipinjaman($pinjamans){
     //dd($pinjamans->perlengkapan);die;
     $pinjaman = new Pinjaman();
     $kodeAnggota = $pinjamans->kode_anggota;
-    $kodePinjaman = str_replace('.', '', $pinjamans->code) . '-' . $kodeAnggota . '-' . Carbon::createFromFormat('Y-m-d', $pinjamans->tgl_posting);
+    $kodePinjaman = str_replace('.', '', $pinjamans->code) . '-' . $kodeAnggota . '-' . $pinjamans->tgl_posting;
     $pinjaman->kode_pinjam = $kodePinjaman;
     $pinjaman->kode_pengajuan_pinjaman = $kodePinjaman;
     $pinjaman->kode_anggota = $kodeAnggota;
