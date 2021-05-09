@@ -40,7 +40,7 @@ class Migration2Controller extends Controller
         {
             // bulan its 1 = january, 2 = feb, 3 = maret, 1 running for 1 month choosed
 
-            $jurnals = JurnalTemp::whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get()->unique('unik_bukti');
+            $jurnals = JurnalTemp::whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->orderBy('tgl_posting','asc')->get()->unique('unik_bukti');
             $jenisSimpanan = JenisSimpanan::pluck('kode_jenis_simpan')->toArray();
             $jenisPinjaman = JenisPinjaman::pluck('kode_jenis_pinjam')->toArray();
             
@@ -48,7 +48,7 @@ class Migration2Controller extends Controller
             foreach ($jurnals as $key => $jurnal)
             {
 
-                $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->orderBy('tgl_posting','asc')->get();
+                $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
 
                 // group by uraian3 because 1 kode_bukti has more than 1 transaction
                 $groupByUraian = $transactions->groupBy('unik_bukti');
