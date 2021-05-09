@@ -296,7 +296,7 @@ public static function transaksipelunasandipercepat($pinjamans){
     ->where('kode_anggota',$pinjamans->kode_anggota)
     ->where('id_status_pinjaman',1)
     ->first();
-    dd($pinjaman);die;
+    //dd($pinjaman);die;
     if($pinjaman){
         $angsurans = Angsuran::where('kode_pinjam',$pinjaman->kode_pinjam)
         ->where('id_status_angsuran',1)->get();
