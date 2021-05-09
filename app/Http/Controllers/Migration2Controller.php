@@ -280,8 +280,14 @@ public static function transaksiangsuran($pinjamans){
             
 
             if ($pembayaran <= 0) {
+                $angsuran->sisaPinjaman = $angsuran->sisaPinjaman - $angsuran->besar_angsuran;
+                $angsuran->save();
                 $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
                 $pinjaman->save();
+                foreach ($dataAngsuran as $dataangsur) {
+                   $dataangsur->sisa_pinjaman=$angsuran->sisaPinjaman;
+                   $dataangsur->save();
+                }
             }
             if ($pinjaman->sisa_pinjaman <= 0) {
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
