@@ -280,12 +280,12 @@ public static function transaksiangsuran($pinjamans){
             
 
             if ($pembayaran <= 0) {
-                $angsuran->sisaPinjaman = $angsuran->sisaPinjaman - $angsuran->besar_angsuran;
+                $angsuran->sisa_pinjam = $angsuran->sisa_pinjam - $angsuran->besar_angsuran;
                 $angsuran->save();
-                $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
+                $pinjaman->sisa_pinjaman = $angsuran->sisa_pinjam;
                 $pinjaman->save();
                 foreach ($dataAngsuran as $dataangsur) {
-                   $dataangsur->sisa_pinjaman=$angsuran->sisaPinjaman;
+                   $dataangsur->sisa_pinjam=$angsuran->sisa_pinjam;
                    $dataangsur->save();
                 }
             }
