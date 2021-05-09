@@ -421,7 +421,7 @@ public static function transaksipinjaman($pinjamans){
     $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
     $pinjaman->keterangan = 'Pinjaman Baru Mutasi Simkop';
     $pinjaman->save();
-    for ($i = 1; $i <= $pinjaman->sisa_angsuran - 1; $i++)
+    for ($i = 0; $i <= $pinjaman->sisa_angsuran - 1; $i++)
     {
         $jatuhTempo = Carbon::createFromFormat('Y-m-d', $pinjamans->tgl_posting)->addMonths($i)->endOfMonth();
         $sisaPinjaman = $pinjaman->sisa_pinjaman;
