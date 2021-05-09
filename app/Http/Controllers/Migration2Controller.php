@@ -240,7 +240,7 @@ public static function transaksiangsuran($pinjamans){
     $status =true;
     $pinjaman= Pinjaman::where('kode_jenis_pinjam',$pinjamans->code)
     ->where('kode_anggota',$pinjamans->kode_anggota)
-    //->where('besar_angsuran_pokok',$pinjamans->jumlah)
+    ->where('id_status_pinjaman',1)
     ->first();
     if($pinjaman){
         $dataAngsuran = Angsuran::where('kode_pinjam',$pinjaman->kode_pinjam)
@@ -294,9 +294,9 @@ public static function transaksipelunasandipercepat($pinjamans){
     $status =true;
     $pinjaman= Pinjaman::where('kode_jenis_pinjam',$pinjamans->code)
     ->where('kode_anggota',$pinjamans->kode_anggota)
-    //->where('sisa_pinjaman',$pinjamans->jumlah)
+    ->where('id_status_pinjaman',1)
     ->first();
-    //dd($pinjaman);die;
+    dd($pinjaman);die;
     if($pinjaman){
         $angsurans = Angsuran::where('kode_pinjam',$pinjaman->kode_pinjam)
         ->where('id_status_angsuran',1)->get();
