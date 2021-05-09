@@ -199,7 +199,7 @@ class Migration2Controller extends Controller
             $debets->is_success=1;
             $debets->save();
         }else{
-            $debets->is_success=0;
+            $debets->is_success=2;
             $debets->keterangan_gagal=$status[1];
             $debets->save();
         }
