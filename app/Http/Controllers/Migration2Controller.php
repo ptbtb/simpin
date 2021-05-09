@@ -40,7 +40,12 @@ class Migration2Controller extends Controller
         {
             // bulan its 1 = january, 2 = feb, 3 = maret, 1 running for 1 month choosed
 
-            $jurnals = JurnalTemp::whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->orderBy('tgl_posting','asc')->get()->unique('unik_bukti');
+            $jurnals = JurnalTemp::whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)
+            ->orderBy('tgl_posting','asc')
+            ->orderBy('kd_bukti','desc')
+            ->get()
+            ->unique('unik_bukti');
+           //dd($jurnals);die;
             $jenisSimpanan = JenisSimpanan::pluck('kode_jenis_simpan')->toArray();
             $jenisPinjaman = JenisPinjaman::pluck('kode_jenis_pinjam')->toArray();
             
