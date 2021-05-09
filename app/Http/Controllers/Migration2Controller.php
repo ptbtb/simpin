@@ -131,7 +131,7 @@ class Migration2Controller extends Controller
                 $kredits->is_success=1;
                 $kredits->save();
             }else{
-                $kredits->is_success=0;
+                $kredits->is_success=2;
                 $kredits->keterangan_gagal=$status[1];
                 $kredits->save();
             }
