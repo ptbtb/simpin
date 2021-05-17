@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use App\Managers\AngsuranManager;
 use App\Managers\PinjamanManager;
+use App\Managers\JurnalManager;
 
 class PinjamanImport implements OnEachRow
 {
