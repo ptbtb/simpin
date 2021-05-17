@@ -49,6 +49,15 @@ class SimpananExport implements FromView
         {
             $listSimpanan = $listSimpanan->where('kode_anggota', $this->request->kode_anggota);
         }
+        if ($this->request->jenistrans=='A')
+        {
+            $listSimpanan = $listSimpanan->where('mutasi', 1);
+        }elseif ($this->request->jenistrans=='T')
+        {
+            $listSimpanan = $listSimpanan->where('mutasi', 0);
+        }else{
+            $listSimpanan = $listSimpanan;
+        }
         // $listSimpanan = $listSimpanan->get();
         $listSimpanan = $listSimpanan->orderBy('tgl_entri','desc')->get();
         return view('simpanan.excel', [

@@ -37,6 +37,11 @@
                         <input type="text" name="kode_anggota" value="{{ $request->kode_anggota }}" class="form-control" readonly style="background-color: #f4f6f9">
                     </div>
                 @endif
+                 <div class="col-md-4 form-group">
+                    <label>Jenis Transaksi</label>
+                    {!! Form::select('jenistrans', array('S'=>'Semua','A' => 'Saldo Awal', 'T' => 'Transaksi'),$request->jenistrans, ['id' => 'propinsi', 'class' => 'form-control']) !!}
+                </div>
+                 
                 <div class="col-md-4 form-group">
                     <label>Jenis Simpanan</label>
                     <select name="jenis_simpanan" id="jenisSimpanan" class="form-control">
@@ -66,7 +71,7 @@
                 <a class="btn btn-success" href="{{ route('simpanan-add', ['kode_anggota' => $request->kode_anggota]) }}"><i class="fas fa-plus"></i>Tambah Transaksi</a>
             @else -->
                 <a href="{{ route('simpanan-download-pdf', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan]) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
-                <a href="{{ route('simpanan-download-excel', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan]) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a>
+                <a href="{{ route('simpanan-download-excel', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan,'jenistrans'=>$request->jenistrans]) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a>
                 <a class="btn btn-success" href="{{ route('simpanan-add') }}"><i class="fas fa-plus"></i> Tambah Transaksi</a>
             <!-- @endif -->
         </div>
@@ -148,6 +153,7 @@
                     @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
                     @if(isset($request->jenis_simpanan)) data.jenis_simpanan = '{{ $request->jenis_simpanan }}'; @endif
                     @if(isset($request->kode_anggota)) data.kode_anggota = '{{ $request->kode_anggota }}'; @endif
+                    @if(isset($request->jenistrans)) data.jenistrans = '{{ $request->jenistrans }}'; @endif
                 }
             },
             aoColumns: [

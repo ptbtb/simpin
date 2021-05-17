@@ -16,7 +16,7 @@
                 <th>Besar Simpanan</th>
                 <th>Kode Anggota</th>
                 <th>User Entry</th>
-                <th>Tanggal Mulai</th>
+                <!-- <th>Tanggal Mulai</th> -->
                 <th>Tanggal Entri</th>
                 <th>Kode Jenis Simpan</th>
                 <th>Keterangan</th>
@@ -28,22 +28,15 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $simpanan->jenis_simpan }}</td>
                     <td>Rp. {{ number_format($simpanan->besar_simpanan,0,",",".") }}</td>
-                    <td>
+                    <!-- <td>
                         @if ($simpanan->tgl_mulai)
                             {{ $simpanan->tgl_mulai->format('d M Y') }}
                         @else
                             -
                         @endif
-                    </td>
+                    </td> -->
                     <td>{{ $simpanan->kode_anggota }}</td>
                     <td>{{ $simpanan->u_entry }}</td>
-                    <td>
-                        @if ($simpanan->tgl_mulai)
-                            {{ $simpanan->tgl_mulai->format('d M Y') }}
-                        @else
-                            -
-                        @endif
-                    </td>
                     <td>
                         @if ($simpanan->tgl_entri)
                             {{ $simpanan->tgl_entri->format('d M Y') }}

@@ -66,6 +66,14 @@ class SimpananController extends Controller
         if ($request->kode_anggota) {
             $simpanan = $simpanan->where('kode_anggota', $request->kode_anggota);
         }
+        if ($request->jenistrans=='A') {
+            $simpanan = $simpanan->where('mutasi', 1);
+        }else
+        if ($request->jenistrans=='T') {
+             $simpanan = $simpanan->where('mutasi', 0);
+        }else{
+             $simpanan = $simpanan;
+        }
         $simpanan = $simpanan->orderBy('tgl_entri', 'desc');
         return DataTables::eloquent($simpanan)->make(true);
     }
@@ -383,6 +391,14 @@ class SimpananController extends Controller
 
         if ($request->kode_anggota) {
             $listSimpanan = $listSimpanan->where('kode_anggota', $request->kode_anggota);
+        }
+        if ($request->jenistrans=='A') {
+            $listSimpanan = $listSimpanan->where('mutasi', 1);
+        }else
+        if ($request->jenistrans=='T') {
+             $listSimpanan = $listSimpanan->where('mutasi', 0);
+        }else{
+             $listSimpanan = $listSimpanan;
         }
 
         // $listSimpanan = $listSimpanan->get();
