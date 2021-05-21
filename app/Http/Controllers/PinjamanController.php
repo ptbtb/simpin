@@ -788,6 +788,9 @@ class PinjamanController extends Controller {
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $pinjaman->save();
+
+                // create JKM angsuran
+                JurnalManager::createJurnalAngsuran($angsuran);
             }
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {
