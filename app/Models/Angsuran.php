@@ -110,4 +110,8 @@ class Angsuran extends Model
     {
         return $this->id_status_angsuran == STATUS_ANGSURAN_LUNAS;
     }
+    public function menungguApproval()
+    {
+        return $this->id_status_angsuran == STATUS_ANGSURAN_MENUNGGU_APPROVAL;
+    }
 }

@@ -139,8 +139,15 @@
                                 <td>
                                     @if ($angsuran->isLunas())
                                         <a style="cursor: pointer" class="btn btn-sm btn-info text-white mt-1" data-action="jurnal" data-id="{{ $angsuran->kode_angsur }}"><i class="fa fa-eye"></i> Jurnal</a>
+                                        <a style="cursor: pointer" class="btn btn-sm btn-warning text-white mt-1" data-action="edit" data-id="{{ $angsuran->kode_angsur }}" data-tgl-transaksi="{{ $angsuran->tgl_transaksi }}" data-pembayaran="{{ $angsuran->besar_pembayaran }}" data-angsuran="{{ $angsuran->besar_angsuran }}" data-jasa="{{ $angsuran->jasa }}"><i class="fa fa-edit"></i> Edit</a>
                                     @endif
-                                    <a style="cursor: pointer" class="btn btn-sm btn-warning mt-1" data-action="info" data-id="{{ $angsuran->kode_angsur }}"><i class="fa fa-info"></i> Info</a>
+                                    @can('approve pengajuan pinjaman')
+                                        @if ($angsuran->menungguApproval())
+                                            <a data-id="{{ $angsuran->kode_angsur }}" data-status="{{ STATUS_ANGSURAN_DITERIMA }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
+                                            <a data-id="{{ $angsuran->kode_angsur }}" data-status="{{ STATUS_ANGSURAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>
+                                        @endif
+                                    @endcan
+                                    <a style="cursor: pointer" class="btn btn-sm btn-primary mt-1" data-action="info" data-id="{{ $angsuran->kode_angsur }}"><i class="fa fa-info"></i> Info</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -278,6 +285,43 @@
         </div>
     @endif
 @endif
+
+<div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="{{ route('pinjaman-edit-angsuran') }}" method="POST">
+        @csrf
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Edit Angsuran</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body row modal-edit-body">
+                    <input type="hidden" name="kode_angsur" id="kode_angsur" class="form-control" value="">
+                    <div class="form-group col-md-6">
+                        <label>Bulan</label>
+                        <input type="text" name="bulan" class="form-control" value="{{ ($pinjaman->tgl_tempo)? $pinjaman->tgl_tempo->format('d-m-Y'):'' }}" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Total Angsuran</label>
+                        <input type="text" name="total_angsuran" id="total_angsuran" class="form-control" value="" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="tgl_transaksi">Tgl Transaksi</label>
+                        <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Besar Pembayaran</label>
+                        <input type="text" name="besar_pembayaran" id="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
 @endsection
 
@@ -419,6 +463,89 @@
                     confirmButtonColor: "#00a65a",
                 });
             }
+            else if(action == 'edit')
+            {
+                var dataTglTransaksi = $(this).data('tgl-transaksi');
+                var dataBesarPembayaran = $(this).data('pembayaran');
+                var dataAngsuran = $(this).data('angsuran');
+                var dataJasa = $(this).data('jasa');
+                
+                $('#modal-edit').modal({
+                    backdrop: false 
+                });
+                $('#modal-edit').modal('show');
+                
+                $(".modal-edit-body #kode_angsur").val( dataId );
+                $(".modal-edit-body #tgl_transaksi").val( dataTglTransaksi );
+                $(".modal-edit-body #besar_pembayaran").val( dataBesarPembayaran );
+                $(".modal-edit-body #total_angsuran").val( dataAngsuran + dataJasa );
+            }
+        });
+
+        $(document).on('click', '.btn-approval', function ()
+        {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+            var url = '{{ route("pinjaman-angsuran-update-status") }}';
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                    validationMessage:'Password required',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    formData.append('_token', token);
+                    formData.append('id', id);
+                    formData.append('status', status);
+                    formData.append('password', password);
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,   
+                        contentType: false,
+                        processData: false,                     
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your has been changed',
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.responseJSON.message,
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                    })
+                }
+            })
+            
         });
     </script>
 @endsection

@@ -196,6 +196,8 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::get('generate-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'generateFormPinjaman'])->name('generate-form-pinjaman')->middleware(['pinjaman']);
         Route::post('bayar-angsuran/{id}', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuran'])->name('pinjaman-bayar-angsuran');
         Route::post('bayar-angsuran/{id}/dipercepat', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuranDipercepat'])->name('pinjaman-bayar-angsuran-dipercepat');
+        Route::post('edit-angsuran', [App\Http\Controllers\PinjamanController::class, 'editAngsuran'])->name('pinjaman-edit-angsuran');
+        Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusAngsuran'])->name('pinjaman-angsuran-update-status');
 
         // import batch saldo pinjaman
         Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');

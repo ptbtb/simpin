@@ -802,6 +802,103 @@ class PinjamanController extends Controller {
         }
     }
 
+    public function editAngsuran(Request $request) {
+        try {
+            $angsuran = Angsuran::with('pinjaman')->where('kode_angsur', $request->kode_angsur)->first();
+            $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
+            $pinjaman = $angsuran->pinjaman;
+
+            // save angsuran
+            $angsuran->temp_tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+            $angsuran->updated_by = Auth::user()->id;
+            $angsuran->temp_besar_pembayaran = $pembayaran;
+            $angsuran->updated_at = Carbon::now();
+            $angsuran->id_status_angsuran = STATUS_ANGSURAN_MENUNGGU_APPROVAL;
+            $angsuran->save();
+
+            return redirect()->back()->withSuccess('ubah data angsuran berhasil diajukan');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            $message = $e->getMessage();
+            return redirect()->back()->withError('gagal mengubah data angsuran');
+        }
+    }
+
+    public function updateStatusAngsuran(Request $request) {
+        try {
+            $user = Auth::user();
+            $check = Hash::check($request->password, $user->password);
+            if (!$check) {
+                Log::error('Wrong Password');
+                return response()->json(['message' => 'Wrong Password'], 412);
+            }
+
+            $angsuran = Angsuran::with('pinjaman')->where('kode_angsur', $request->id)->first();
+            $pinjaman = $angsuran->pinjaman;
+
+            if ($request->status == STATUS_ANGSURAN_DITERIMA) 
+            {
+                // save angsuran
+                $angsuran->tgl_transaksi = $angsuran->temp_tgl_transaksi;
+                $angsuran->besar_pembayaran = $angsuran->temp_besar_pembayaran;
+                $angsuran->save();
+
+                $angsuran = Angsuran::with('pinjaman')->where('kode_angsur', $request->id)->first();
+                
+                // set new angsuran status
+                if ($angsuran->besar_pembayaran >= $angsuran->totalAngsuran) 
+                {
+                    $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
+                } 
+                else 
+                {
+                    $angsuran->id_status_angsuran = STATUS_ANGSURAN_BELUM_LUNAS;
+                    $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran + 1;
+                    $pinjaman->sisa_pinjaman += $angsuran->sisaPinjaman;
+                    $pinjaman->save();
+                }
+                $angsuran->save();
+                
+                // set status pinjaman
+                if ($pinjaman->sisa_pinjaman <= 0) 
+                {
+                    $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;   
+                }
+                else
+                {
+                    $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
+                }
+                $pinjaman->save();
+
+                // update jurnal
+                $journals = $angsuran->jurnals;
+                foreach ($journals as $key => $journal) 
+                {
+                    if($journal)
+                    {
+                        if($journal->kredit != 0)
+                        {
+                            $jurnal->kredit = $angsuran->besar_pembayaran;
+                            $jurnal->updated_by = Auth::user()->id;
+                            $jurnal->save();
+                        }
+                    }
+                }
+            }
+            else if($request->status == STATUS_ANGSURAN_DITOLAK)
+            {
+                $angsuran->id_status_angsuran = STATUS_PINJAMAN_LUNAS;
+                $angsuran->save();
+            }
+
+            return response()->json(['message' => 'success'], 200);
+        } catch (\Exception $e) {
+            \Log::error($e);
+            $message = $e->getMessage();
+            return response()->json(['message' => $message], 500);
+        }
+    }
+
     public function create(Request $request) {
 
         $this->authorize('add pinjaman', Auth::user());
