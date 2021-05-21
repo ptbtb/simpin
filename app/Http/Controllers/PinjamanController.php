@@ -729,6 +729,7 @@ class PinjamanController extends Controller {
                 $angsuran->paid_at = Carbon::now();
                 $angsuran->u_entry = Auth::user()->name;
                 $angsuran->id_akun_kredit = ($request->id_akun_kredit)? $request->id_akun_kredit:null;
+                $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->save();
 
                 // create JKM angsuran
@@ -781,6 +782,7 @@ class PinjamanController extends Controller {
                 $angsuran->paid_at = Carbon::now();
                 $angsuran->u_entry = Auth::user()->name;
                 $angsuran->id_akun_kredit = ($request->id_akun_kredit)? $request->id_akun_kredit:null;
+                $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->save();
 
                 $pinjaman->sisa_angsuran = 0;
