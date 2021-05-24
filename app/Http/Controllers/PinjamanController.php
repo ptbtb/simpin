@@ -878,9 +878,9 @@ class PinjamanController extends Controller {
                     {
                         if($journal->kredit != 0)
                         {
-                            $jurnal->kredit = $angsuran->besar_pembayaran;
-                            $jurnal->updated_by = Auth::user()->id;
-                            $jurnal->save();
+                            $journal->kredit = $angsuran->besar_pembayaran;
+                            $journal->updated_by = Auth::user()->id;
+                            $journal->save();
                         }
                     }
                 }
