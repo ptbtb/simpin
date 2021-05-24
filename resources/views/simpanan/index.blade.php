@@ -92,12 +92,13 @@
             <thead>
                 <tr class="info">
                     <th>No</th>
-                    <th>Kode Simpan</th>
+                    <th style="width: 10%">Kode Simpan</th>
                     <th>Nama Anggota</th>
                     <th>Jenis Simpanan</th>
                     <th>Besar Simpanan</th>
                     <th>User Entry</th>
-                    <th style="width: 10%">Action</th>
+                    <th>Status</th>
+                    <th style="width: 1%">Action</th>
 
                 </tr>
             </thead>
@@ -107,6 +108,31 @@
     </div>
 </div><!-- /row -->
 @stop
+
+<div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="{{ route('simpanan-edit') }}" method="POST">
+        @csrf
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Edit Simpanan</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body row modal-edit-body">
+                    <input type="hidden" name="kode_simpan" id="kode_simpan" class="form-control" value="">
+                    <div class="form-group col-md-12">
+                        <label>Besar Simpanan</label>
+                        <input type="text" name="besar_simpanan" id="besar_simpanan" onkeypress="return isNumberKey(event)" class="form-control" placeholder="Besar Simpanan">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
 @section('js')
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
@@ -205,11 +231,32 @@
                     }			
                 },
                 { 
+                    mData: 'status_simpanan_view', sType: "string", 
+                    className: "dt-body-center", "name": "status_simpanan_view"	,		
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }		
+                },
+                { 
                     mData: 'kode_simpan', sType: "string", 
                     className: "dt-body-center", "name": "action"	,
                     mRender: function (data, type, full) {
-                        var mark = '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1" data-action="info" data-start-date="' + full['tanggal_mulai'] + '" data-entry-date="' + full['tanggal_entri'] + '" data-u-entry="' + full['u_entry'] + '"><i class="fa fa-info"></i> Info</a>';
+                        var mark = '<a style="cursor: pointer" class="btn btn-sm btn-primary mt-1" data-action="info" data-start-date="' + full['tanggal_mulai'] + '" data-entry-date="' + full['tanggal_entri'] + '" data-u-entry="' + full['u_entry'] + '"><i class="fa fa-info"></i> Info</a>';
                         mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
+                        if(full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }})
+                        {
+                            mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 text-white" data-action="edit" data-id="' + data + '" data-simpanan="' + full.besar_simpanan + '"><i class="fa fa-edit"></i> Edit</a>';
+                        }
+                        mark = mark + '@can("edit simpanan")';
+                            if(full.id_status_simpanan == {{ STATUS_SIMPANAN_MENUNGGU_APPROVAL }})
+                            {
+                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITERIMA }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
+                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                            }
+                        mark = mark + '@endcan';
                         return mark;
                     }			
                 },
@@ -329,7 +376,134 @@
                     }
                 });
             }
+            else if(action == 'edit')
+            {
+                var dataBesarSimpanan = $(this).data('simpanan');
+                var dataId = $(this).data('id');
+
+                $('#modal-edit').modal({
+                    backdrop: false 
+                });
+                $('#modal-edit').modal('show');
+                
+                $(".modal-edit-body #kode_simpan").val( dataId );
+                $(".modal-edit-body #besar_simpanan").val( toRupiah(dataBesarSimpanan) );
+            }
         });
+
+        $(document).on('keyup', '#besar_simpanan', function ()
+        {
+            var besarSimpanan = $(this).val().toString();
+            besarSimpanan = besarSimpanan.replace(/[^\d]/g, "",'');
+            $('#besar_simpanan').val(toRupiah(besarSimpanan));
+            /*if(tipeSimpanan === '502.01.000'){
+                if(besarSimpanan > besarSimpananSukarela) {
+                    errMessage('warningText', 'Jumlah besar simpanan melebihi 65% dari total gaji/bulan');
+                } else {
+                    clearErrMessage('warningText');
+                }
+            }*/
+            /*if(tipeSimpanan === '411.01.000'){
+                if(besarSimpanan > besarSimpananPokok) {
+                    errMessage('warningText', 'Jumlah besar simpanan melebihi sisa angsuran');
+
+                } else {
+                    clearErrMessage('warningText');
+                }
+            }*/
+        });
+
+        $(document).on('click', '.btn-approval', function ()
+        {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+            var url = '{{ route("simpanan-update-status") }}';
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                    validationMessage:'Password required',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    formData.append('_token', token);
+                    formData.append('id', id);
+                    formData.append('status', status);
+                    formData.append('password', password);
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,   
+                        contentType: false,
+                        processData: false,                     
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your has been changed',
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.responseJSON.message,
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                    })
+                }
+            })
+            
+        });
+    }
+
+    function toRupiah(number)
+    {
+        var stringNumber = number.toString();
+        var length = stringNumber.length;
+        var temp = length;
+        var res = "Rp ";
+        for (let i = 0; i < length; i++) {
+            res = res + stringNumber.charAt(i);
+            temp--;
+            if (temp%3 == 0 && temp > 0)
+            {
+                res = res + ".";
+            }
+        }
+        return res;
+    }
+
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+
+        return true;
     }
 </script>
 @stop

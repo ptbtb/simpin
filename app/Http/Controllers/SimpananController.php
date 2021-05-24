@@ -238,9 +238,27 @@ class SimpananController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        try {
+            $simpanan = Simpanan::where('kode_simpan', $request->kode_simpan)->first();
+            $besarSimpanan = filter_var($request->besar_simpanan, FILTER_SANITIZE_NUMBER_INT);
+            
+            // save simpanan
+            $simpanan->updated_by = Auth::user()->id;
+            $simpanan->temp_besar_simpanan = $besarSimpanan;
+            $simpanan->updated_at = Carbon::now();
+            $simpanan->id_status_simpanan = STATUS_SIMPANAN_MENUNGGU_APPROVAL;
+            $simpanan->save();
+
+            return redirect()->back()->withSuccess('ubah data simpanan berhasil diajukan');
+        } catch (\Throwable $e) {
+            dd($e);
+            \Log::error($e);
+            $message = $e->getMessage();
+            return redirect()->back()->withError('gagal mengubah data simpanan');
+        }
+        
     }
 
     /**
@@ -661,6 +679,52 @@ class SimpananController extends Controller
             Log::error($message);
 
             return response()->json(['message' => 'Terjadi Kesalahan'], 500);
+        }
+    }
+
+    public function updateStatusSimpanan(Request $request) {
+        try {
+            $user = Auth::user();
+            $check = Hash::check($request->password, $user->password);
+            if (!$check) {
+                Log::error('Wrong Password');
+                return response()->json(['message' => 'Wrong Password'], 412);
+            }
+
+            $simpanan = Simpanan::where('kode_simpan', $request->id)->first();
+
+            if ($request->status == STATUS_SIMPANAN_DITERIMA) 
+            {
+                // save simpanan
+                $simpanan->besar_simpanan = $simpanan->temp_besar_simpanan;
+                $simpanan->id_status_simpanan = STATUS_SIMPANAN_DITERIMA;
+                $simpanan->save();
+
+                // update jurnal
+                $journals = $simpanan->jurnals;
+                foreach ($journals as $key => $journal) 
+                {
+                    if($journal)
+                    {
+                        $journal->kredit = $simpanan->besar_simpanan;
+                        $journal->debet = $simpanan->besar_simpanan;
+                        $journal->updated_by = Auth::user()->id;
+                        $journal->save();
+                    }
+                }
+            }
+            else if($request->status == STATUS_SIMPANAN_DITOLAK)
+            {
+                // save simpanan
+                $simpanan->id_status_simpanan = STATUS_SIMPANAN_DITERIMA;
+                $simpanan->save();
+            }
+
+            return response()->json(['message' => 'success'], 200);
+        } catch (\Exception $e) {
+            \Log::error($e);
+            $message = $e->getMessage();
+            return response()->json(['message' => $message], 500);
         }
     }
 }

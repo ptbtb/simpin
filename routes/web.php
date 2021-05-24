@@ -243,6 +243,8 @@ Route::group(['prefix' => 'simpanan'], function () {
         Route::get('import/excel', [App\Http\Controllers\SimpananController::class, 'importExcel'])->name('simpanan-import-excel');
         Route::post('import/excel', [App\Http\Controllers\SimpananController::class, 'storeImportExcel'])->name('simpanan-import-excel');
         Route::get('ajax/payment-value', [App\Http\Controllers\SimpananController::class, 'paymentValue'])->name('ajax-simpanan-payment-value');
+        Route::post('edit-simpanan', [App\Http\Controllers\SimpananController::class, 'update'])->name('simpanan-edit');
+        Route::post('update-status', [App\Http\Controllers\SimpananController::class, 'updateStatusSimpanan'])->name('simpanan-update-status');
 
         Route::group(['prefix' => 'card'], function () {
             Route::get('', [App\Http\Controllers\SimpananController::class, 'indexCard'])->name('simpanan-index-card');
