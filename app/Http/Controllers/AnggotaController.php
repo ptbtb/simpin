@@ -15,6 +15,7 @@ use App\Models\JenisAnggota;
 use App\Models\KelasCompany;
 use App\Models\JenisPenghasilan;
 use App\Models\Penghasilan;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 use Auth;
 use Excel;
@@ -375,9 +376,21 @@ class AnggotaController extends Controller {
 
     public function createExcel(Request $request)
     {
-        ini_set('max_execution_time', 300);
+        // ini_set('max_execution_time', 300);
+        $anggotas = Anggota::with('jenisAnggota');
+        if ($request->status)
+        {
+            $anggotas = $anggotas->where('status', $this->request->status);
+        }
+        if ($request->id_jenis_anggota)
+        {
+            $anggotas = $anggotas->where('id_jenis_anggota', $this->request->id_jenis_anggota);
+        }
+
+        $anggotas = $anggotas->get();
         $filename = 'export_anggota_excel_'.Carbon::now()->format('d M Y').'.xlsx';
-        return Excel::download(new AnggotaExport($request), $filename);
+        return (new FastExcel($anggotas))->download($filename,);
+        // return Excel::download(new AnggotaExport($request), $filename);
     }
 
 	public function importExcel()
