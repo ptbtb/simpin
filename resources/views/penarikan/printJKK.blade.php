@@ -39,7 +39,7 @@
                                 <input type="text" name="no_jkk" id="noJkk" class="form-control" placeholder="Nomor JKK" autocomplete="off" required>
                             </div>
                             <div class="form-group">
-                                <label>Kode Pengajuan Pinjaman</label>
+                                <label>Kode Penarikan</label>
                                 <select name="kode_ambil[]" id="kodeAmbil" class="form-control select2" multiple required>
                                     @foreach ($listPenarikan as $penarikan)
                                         <option value="{{ $penarikan->kode_ambil }}">{{ $penarikan->kode_ambil }}</option>
