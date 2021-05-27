@@ -77,10 +77,12 @@ class TabunganController extends Controller
             {
                 Excel::import(new TabunganImport, $request->file); 
             });
+            DB::commit();
             return redirect()->back()->withSuccess('Import data berhasil');
         }
         catch (\Throwable $e)
         {
+             DB::rollBack();
             Log::error($e);
             return redirect()->back()->withError('Gagal import data');
         }
