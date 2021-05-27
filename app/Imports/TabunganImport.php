@@ -36,7 +36,9 @@ class TabunganImport implements OnEachRow
                         
         $nextSerialNumber = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
         $jenisSimpanan =  JenisSimpanan::where('kode_jenis_simpan',$row[1])->first();
-
+        if(!$jenisSimpanan){
+             Log::error('tesssstttttttt->'.$rowIndex);
+        }else{
             $simpanan = new Simpanan();
             $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
             $simpanan->besar_simpanan = $row[2];
@@ -50,7 +52,9 @@ class TabunganImport implements OnEachRow
             $simpanan->serial_number = $nextSerialNumber;
             $simpanan->mutasi = 1;
             $simpanan->save();
-             JurnalManager::createJurnalSaldoSimpanan($simpanan);
+            // JurnalManager::createJurnalSaldoSimpanan($simpanan);
         return $simpanan;
+        }
+            
     }
 }
