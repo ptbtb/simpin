@@ -137,7 +137,7 @@
                                     @else
                                         -
                                     @endif
-                                @else    
+                                @else
                                     @can('approve pengajuan pinjaman')
                                         @if ($pengajuan->menungguKonfirmasi())
                                             <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>
@@ -185,7 +185,7 @@
                             </td>
                         </tr>
                     @endforeach
-                </tbody> 
+                </tbody>
             </table>
         </div>
     </div>
@@ -308,9 +308,9 @@
                         $.ajax({
                             type: 'post',
                             url: url,
-                            data: formData,   
+                            data: formData,
                             contentType: false,
-                            processData: false,                     
+                            processData: false,
                         success: function(data) {
                             Swal.fire({
                                 icon: 'success',
@@ -346,12 +346,12 @@
             var id = $(this).data('id');
             var action = $(this).data('action');
             var url = baseURL + '/pinjaman/detail-pembayaran/'+id;
-            
+
             $.get(url, function( data ) {
                 $('#my-modal .form-detail').html(data);
                 $('.btn-approval').data('id', id);
                 $('#my-modal').modal({
-                    backdrop: false 
+                    backdrop: false
                 });
                 $('#my-modal').modal('show');
             });
@@ -369,7 +369,7 @@
                     htmlText = data;
                     Swal.fire({
                         title: 'Jurnal Pengajuan',
-                        html: htmlText, 
+                        html: htmlText,
                         icon: "info",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -386,7 +386,7 @@
                 error : function (xhr, status, error) {
                     Swal.fire({
                         title: 'Error',
-                        html: htmlText, 
+                        html: htmlText,
                         icon: "error",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -407,18 +407,18 @@
         {
             var id = $(this).data('id');
             var pengajuan = collect(@json($listPengajuanPinjaman)).where('kode_pengajuan', id).first();
-            var htmlText = '<div class="container-fluid">' + 
-                                '<div class="row">' + 
-                                    '<div class="col-md-6 mx-0 my-2">Created At <br> ' + pengajuan['created_at_view'] + '</div>' + 
-                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['created_by_view'] + '</div>' + 
-                                    '<div class="col-md-6 mx-0 my-2">Updated At <br> ' + pengajuan['updated_at_view'] + '</div>' + 
-                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['updated_by_view'] + '</div>' + 
-                                '</div>' + 
+            var htmlText = '<div class="container-fluid">' +
+                                '<div class="row">' +
+                                    '<div class="col-md-6 mx-0 my-2">Created At <br> ' + pengajuan['created_at_view'] + '</div>' +
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['created_by_view'] + '</div>' +
+                                    '<div class="col-md-6 mx-0 my-2">Updated At <br> ' + pengajuan['updated_at_view'] + '</div>' +
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['updated_by_view'] + '</div>' +
+                                '</div>' +
                             '</div>';
 
             Swal.fire({
                 title: 'Info',
-                html: htmlText, 
+                html: htmlText,
                 showCancelButton: false,
                 confirmButtonText: "Ok",
                 confirmButtonColor: "#00a65a",
@@ -443,9 +443,9 @@
                                 return n.id_jenis_penghasilan == 4;
                             });
             }
-            
-            var htmlText = '<div class="container-fluid">' + 
-                                '<div class="row">' + 
+
+            var htmlText = '<div class="container-fluid">' +
+                                '<div class="row">' +
                                     '<div class="col-md-6 mx-0 my-2 text-left">Form Pengajuan</div>';
 
                                     if(bukti_pembayaran != '' && bukti_pembayaran != null)
@@ -461,7 +461,7 @@
 
                                     if(foto_ktp != '' && foto_ktp != null)
                                     {
-                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="'+baseURL + '/' +foto_ktp+'" target="_blank"><i class="fa fa-eye"></i></a></div>' + 
+                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="'+baseURL + '/' +foto_ktp+'" target="_blank"><i class="fa fa-eye"></i></a></div>' +
                                         '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="'+baseURL + '/' +foto_ktp+'" download><i class="fa fa-download"></i></a></div>';
                                     }
                                     else
@@ -481,12 +481,12 @@
                                         htmlText += '<div class="col-md-6"></div>';
                                     }
 
-                    htmlText += '</div>' + 
+                    htmlText += '</div>' +
                             '</div>';
 
             Swal.fire({
                 title: 'Lampiran',
-                html: htmlText, 
+                html: htmlText,
                 showCancelButton: false,
                 confirmButtonText: "Ok",
                 confirmButtonColor: "#00a65a",
@@ -507,9 +507,9 @@
         @foreach($bankAccounts as $key => $bankAccount)
             bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
         @endforeach
-        
+
         // trigger to get kas or bank select option
-        $(document).on('change', '#jenisAkun', function () 
+        $(document).on('change', '#jenisAkun', function ()
         {
             // remove all option in code
             $('#code').empty();
@@ -520,7 +520,7 @@
             if(jenisAkun == 2)
             {
                 // loop through code bank
-                $.each(bankAccountArray, function(key, bankAccount) 
+                $.each(bankAccountArray, function(key, bankAccount)
                 {
                     // set dafault to 102.18.000
                     if(bankAccount.id == 22)
@@ -531,14 +531,14 @@
                     {
                         var selected = '';
                     }
-                    
+
                     // insert new option
                     $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
                 });
             }
             else if(jenisAkun == 1)
             {
-                // insert new option 
+                // insert new option
                 $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
             }
 
