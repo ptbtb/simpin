@@ -290,9 +290,21 @@ class AnggotaController extends Controller {
     {
         $search = $request->search;
         if($search == ''){
-            $anggotas = Anggota::orderby('nama_anggota','asc')->select('kode_anggota','nama_anggota')->limit(5)->where('status','aktif')->get();
+            $anggotas = Anggota::orderby('nama_anggota','asc')
+                                ->select('kode_anggota','nama_anggota')
+                                ->limit(5)
+                                ->where('status','aktif')
+                                ->get();
         }else{
-            $anggotas = Anggota::orderby('nama_anggota','asc')->select('kode_anggota','nama_anggota')->where('kode_anggota', $search)->limit(5)->where('status','aktif')->get();
+            $anggotas = Anggota::orderby('nama_anggota','asc')
+                                ->select('kode_anggota','nama_anggota')
+                                ->where('status','aktif')
+                                ->where('kode_anggota', $search)
+                                ->orWhere('nama_anggota', 'like', '%'.$search.'%')
+                                ->limit(5)
+                                ->get();
+
+                                \Log::info('search');
         }
         $response = $anggotas->map(function ($anggota)
         {
