@@ -22,7 +22,17 @@ class NeracaController extends Controller
         $this->authorize('view jurnal', Auth::user());
         try
         {
-            $codes = Code::where('is_parent', 0)->whereIn('code_type_id', [CODE_TYPE_ACTIVA, CODE_TYPE_PASSIVA])->get();
+            $groupNeraca = [101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 204, 205, 208, 210, 302, 400, 401, 
+                            402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 501, 502, 603, 604, 605, 606, 607];
+
+            $codes = Code::where('is_parent', 0)
+                            ->where(function ($query) use($groupNeraca) {
+                                for ($i = 0; $i < count($groupNeraca); $i++){
+                                $query->orWhere('CODE', 'like',  $groupNeraca[$i] .'%');
+                                }      
+                            })
+                            ->whereIn('code_type_id', [CODE_TYPE_ACTIVA, CODE_TYPE_PASSIVA])
+                            ->get();
 
             // aktiva collection
             $aktivas = collect();
