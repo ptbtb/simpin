@@ -127,7 +127,7 @@ class JurnalUmumController extends Controller
             // credit
             for ($i=0; $i < count($request->code_credit_id) ; $i++) 
             { 
-                $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
+                $nominal = filter_var($request->nominal[$i + count($request->code_debet_id)], FILTER_SANITIZE_NUMBER_INT);
 
                 $jurnalUmumItem = new JurnalUmumItem();
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
