@@ -179,7 +179,7 @@
                                         @endif --}}
                                         <a data-id="{{ $pengajuan->kode_pengajuan }}" data-code="{{ $pengajuan->kode_jenis_pinjam }}" data-nominal="{{ $pengajuan->besar_pinjam }}"  class="text-white btn mt-1 btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
                                         <a class="btn mt-1 btn-sm btn-warning btn-detail" data-id="{{ $pengajuan->kode_pengajuan }}" style="cursor: pointer"><i class="fa fa-info"></i> Info</a>
-                                        <a class="btn mt-1 btn-dark btn-sm btn-lampiran text-white"><i class="fa fa-file"></i> Lampiran</a>
+                                        <a class="btn mt-1 btn-dark btn-sm btn-lampiran text-white" data-id="{{ $pengajuan->kode_pengajuan }}"><i class="fa fa-file"></i> Lampiran</a>
                                     @endcan
                                 @endif
                             </td>
