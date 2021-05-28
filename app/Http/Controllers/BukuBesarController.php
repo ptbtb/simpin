@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 use App\Exports\BukuBesarExport;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 use Carbon\Carbon;
 use Excel;
@@ -191,8 +192,52 @@ class BukuBesarController extends Controller
     public function createExcel(Request $request) {
         $user = Auth::user();
         $this->authorize('view jurnal', $user);
+        $codes = Code::where('is_parent', 0)->get();
 
+        $jurnal = Jurnal::get();
+
+        // buku besar collection
+        $bukuBesars = collect();
+
+        foreach ($codes as $key => $code) 
+        {
+            $saldo = 0;
+            // get code's normal balance 
+            if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
+            {
+                $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
+                $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+
+                $saldo += $saldoDebet;
+                $saldo -= $saldoKredit;
+
+                $bukuBesars->push([
+                    'code' => $code->CODE,
+                    'name' => $code->NAMA_TRANSAKSI,
+                    'type' => $code->codeType->name,
+                    'saldo' => $saldo,
+                ]);
+            }
+            else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+            {
+                $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
+                $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+
+                $saldo -= $saldoDebet;
+                $saldo += $saldoKredit;
+
+                $bukuBesars->push([
+                    'code' => $code->CODE,
+                    'name' => $code->NAMA_TRANSAKSI,
+                    'type' => $code->codeType->name,
+                    'saldo' => $saldo,
+                ]);
+            }
+        }
+
+        $bukuBesars = $bukuBesars->sortBy('code');
         $filename = 'export_buku_besar_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
-        return Excel::download(new BukuBesarExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+         return (new FastExcel($bukuBesars))->download($filename,);
+        // return Excel::download(new BukuBesarExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 }
