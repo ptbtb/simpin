@@ -208,8 +208,8 @@
                     </table>
                 </div>
             </div>
-            
-            
+
+
             <div class="col-md-2">
                 <a href="anggota/edit/{{$searchResult->kode_anggota}}" class="btn btn-default btn-sm w-100 mt-1"><i class="fa fa-money-bill"></i> Edit Anggota</a>
                 <a href="{{ route('simpanan-add', ['kode_anggota'=>$searchResult->kode_anggota]) }}" class="btn btn-success btn-sm w-100 mt-1"><i class="fa fa-money-bill"></i> Simpanan</a>

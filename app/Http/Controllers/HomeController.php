@@ -63,10 +63,12 @@ class HomeController extends Controller
             // if search
             if ($request->search)
             {
-                $result = Anggota::find($request->kw_kode_anggota);
-                $result->tabungan = Tabungan::where('kode_anggota',$request->kw_kode_anggota)->get();
-                $result->pinjaman = Pinjaman::where('kode_anggota',$request->kw_kode_anggota)->get();
-                $result->sumtabungan = Tabungan::where('kode_anggota',$request->kw_kode_anggota)->sum('besar_tabungan');
+                $result = Anggota::where('kode_anggota',$request->kw_kode_anggota)
+                                    ->orWhere('nama_anggota','like', '%'.$request->kw_kode_anggota.'%')
+                                    ->first();
+                $result->tabungan = Tabungan::where('kode_anggota',$result->kode_anggota)->get();
+                $result->pinjaman = Pinjaman::where('kode_anggota',$result->kode_anggota)->get();
+                $result->sumtabungan = Tabungan::where('kode_anggota',$result->kode_anggota)->sum('besar_tabungan');
 
                 if(is_null($result))
                 {
