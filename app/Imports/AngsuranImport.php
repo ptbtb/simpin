@@ -7,6 +7,7 @@ use App\Models\Angsuran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
+use App\Models\Code;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 
 class AngsuranImport implements OnEachRow
@@ -23,6 +24,8 @@ class AngsuranImport implements OnEachRow
         $angsuran = Angsuran::where('kode_pinjam', $row[0])
                             ->where('angsuran_ke', $row[1])
                             ->first();
+        $idkredit=($row[4] == "\N" || $row[4] == '' || $row[4] == null) ? null : $row[4];
+        $idakunkredit=Code::where('CODE',$idkredit)->first();
         
         if ($angsuran)
         {
@@ -45,7 +48,7 @@ class AngsuranImport implements OnEachRow
             $pembayaran = $pembayaran - $angsuran->totalAngsuran;
             $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $payDate);
             $angsuran->updated_by = Auth::user()->id;
-            $angsuran->id_akun_kredit = null;
+            $angsuran->id_akun_kredit = ($idakunkredit->id) ? $idakunkredit->id : null;
             $angsuran->save();
 
             // create JKM angsuran
