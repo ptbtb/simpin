@@ -521,6 +521,12 @@ return [
                     'icon' => 'fas fa-upload nav-icon',
                     'can'  => ['import angsuran'],
                 ],
+                [
+                    'text' => 'Import Transaksi User',
+                    'url' => '/global/transaksiuser',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import angsuran'],
+                ],
 
             ],
         ],

@@ -375,3 +375,10 @@ Route::group(['prefix' => 'neraca'], function() {
         Route::get('download/excel', [App\Http\Controllers\NeracaController::class, 'createExcel'])->name('neraca-download-excel');
     });
 });
+
+Route::group(['prefix' => 'global'], function () {
+     Route::group(['middleware' => ['auth']], function () {
+        Route::get('transaksiuser', [App\Http\Controllers\GlobalTransaksiController::class, 'importTransaksiUser'])->name('global-transaksiuser-import-excel');
+        Route::post('', [App\Http\Controllers\GlobalTransaksiController::class, 'storeTransaksiUser'])->name('global-transaksiuser-import-excel');
+     });
+});

@@ -17,3 +17,12 @@ composer.lock
 log.csv
 nbproject/private/private.xml
 nbproject/project.properties
+.idea/deployment.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/modules.xml
+.idea/php.xml
+.idea/phpunit.xml
+.idea/simpin.iml
+.idea/vcs.xml
+.rnd
+.rnd
