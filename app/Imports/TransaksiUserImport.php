@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Managers\JurnalManager;
+use App\Managers\AngsuranManager;
 use App\Managers\SimpananManager;
 use App\Models\Angsuran;
 use App\Models\Anggota;
@@ -90,7 +91,7 @@ class TransaksiUserImport
 
 					if ($angsuran1)
 					{
-						$serialNumber=Angsuran::getSerialNumber(Carbon::now()->format('d-m-Y'));
+						$serialNumber=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran1->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran1->besar_pembayaran;
@@ -137,7 +138,7 @@ class TransaksiUserImport
 
 					if ($angsuran2)
 					{
-						$serialNumber2=Angsuran::getSerialNumber(Carbon::now()->format('d-m-Y'));
+						$serialNumber2=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran2->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran2->besar_pembayaran;
