@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Managers\JurnalManager;
+use App\Managers\AngsuranManager;
 use App\Models\Angsuran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,7 @@ class AngsuranImport implements OnEachRow
         
         if ($angsuran)
         {
+            $serialNumber=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
             $payDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3])->format('Y-m-d');
             $pinjaman = $angsuran->pinjaman;
             $pembayaran = $row[2];
@@ -49,6 +51,7 @@ class AngsuranImport implements OnEachRow
             $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $payDate);
             $angsuran->updated_by = Auth::user()->id;
             $angsuran->id_akun_kredit = ($idakunkredit->id) ? $idakunkredit->id : null;
+            $angsuran->serial_number=$serialNumber;
             $angsuran->save();
 
             // create JKM angsuran
