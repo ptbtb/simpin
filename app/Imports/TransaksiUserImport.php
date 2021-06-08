@@ -90,7 +90,7 @@ class TransaksiUserImport
 
 					if ($angsuran1)
 					{
-						
+						$serialNumber=Angsuran::getSerialNumber(Carbon::now()->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran1->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran1->besar_pembayaran;
@@ -109,6 +109,7 @@ class TransaksiUserImport
 						$angsuran1->paid_at =  Carbon::now();
 						$angsuran1->updated_by = Auth::user()->id;
 						$angsuran1->id_akun_kredit = ($idakun->id) ? $idakun->id : null;
+						$angsuran1->serial_number=$serialNumber;
 						$angsuran1->save();
 
             // create JKM angsuran
@@ -136,6 +137,7 @@ class TransaksiUserImport
 
 					if ($angsuran2)
 					{
+						$serialNumber2=Angsuran::getSerialNumber(Carbon::now()->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran2->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran2->besar_pembayaran;
@@ -154,6 +156,7 @@ class TransaksiUserImport
 						$angsuran2->paid_at =  Carbon::now();
 						$angsuran2->updated_by = Auth::user()->id;
 						$angsuran2->id_akun_kredit = ($idakun->id) ? $idakun->id : null;
+						$angsuran2->serial_number=$serialNumber2;
 						$angsuran2->save();
 
             // create JKM angsuran
