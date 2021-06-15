@@ -376,6 +376,15 @@ Route::group(['prefix' => 'neraca'], function() {
     });
 });
 
+// laba rugi
+Route::group(['prefix' => 'laba-rugi'], function() {
+    Route::group(['middleware' => ['auth']], function () {
+        Route::get('', [App\Http\Controllers\LabaRugiController::class, 'index'])->name('laba-rugi-list');
+        Route::post('', [App\Http\Controllers\LabaRugiController::class, 'index'])->name('laba-rugi-list');
+        Route::get('download/excel', [App\Http\Controllers\LabaRugiController::class, 'createExcel'])->name('laba-rugi-download-excel');
+    });
+});
+
 Route::group(['prefix' => 'global'], function () {
      Route::group(['middleware' => ['auth']], function () {
         Route::get('transaksiuser', [App\Http\Controllers\GlobalTransaksiController::class, 'importTransaksiUser'])->name('global-transaksiuser-import-excel');
