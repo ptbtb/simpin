@@ -712,10 +712,12 @@ class PinjamanController extends Controller {
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
             $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
             foreach ($listAngsuran as $angsuran) {
+                $serialNumber=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
                 if ($angsuran->besar_pembayaran) {
                     $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
                 }
                 if ($pembayaran >= $angsuran->totalAngsuran) {
+
                     $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
                     $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
                     $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
@@ -730,6 +732,7 @@ class PinjamanController extends Controller {
                 $angsuran->u_entry = Auth::user()->name;
                 $angsuran->id_akun_kredit = ($request->id_akun_kredit)? $request->id_akun_kredit:null;
                 $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $angsuran->serial_number=$serialNumber;
                 $angsuran->save();
 
                 // create JKM angsuran
@@ -776,24 +779,30 @@ class PinjamanController extends Controller {
             }
             $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
+            //$serialNumber=Anguran::getSerialNumber(Carbon::now()->format('d-m-Y'));
             foreach ($listAngsuran as $angsuran) {
+                $serialNumber=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
                 $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
                 $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
                 $angsuran->paid_at = Carbon::now();
                 $angsuran->u_entry = Auth::user()->name;
                 $angsuran->id_akun_kredit = ($request->id_akun_kredit)? $request->id_akun_kredit:null;
                 $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $angsuran->serial_number = $serialNumber;
                 $angsuran->save();
 
                 $pinjaman->sisa_angsuran = 0;
                 $pinjaman->sisa_pinjaman = 0;
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                
                 $pinjaman->save();
 
                 // create JKM angsuran
                 JurnalManager::createJurnalAngsuran($angsuran);
             }
+            //dd($angsuran);die;
+            //JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {
             \Log::error($e);

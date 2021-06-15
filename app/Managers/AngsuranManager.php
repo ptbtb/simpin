@@ -16,7 +16,7 @@ class AngsuranManager
             for ($i=1; $i <= $pinjaman->lama_angsuran; $i++)
             { 
                 // get next serial number
-                $nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                //$nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
 
                 $jatuhTempo = $pinjaman->tgl_entri->addMonths($i)->endOfMonth();
                 $sisaPinjaman = $sisaPinjaman-$pinjaman->besar_angsuran_pokok;
