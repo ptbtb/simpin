@@ -323,6 +323,12 @@ return [
                     'icon' => 'fas fa-file-invoice-dollar nav-icon',
                     'can'  => ['view penarikan'],
                 ],
+                [
+                    'text' => 'Keluar Anggota',
+                    'url' => '/penarikan/keluar-anggota',
+                    'icon' => 'fas fa-door-open nav-icon',
+                    'can'  => ['penarikan keluar anggota'],
+                ],
             ],
         ],
         // ['header' => 'ANGGOTA'],

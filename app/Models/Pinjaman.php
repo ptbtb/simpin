@@ -90,6 +90,7 @@ class Pinjaman extends Model {
     }
 
     public function getJasaPelunasanDipercepatAttribute() {
+        \Log::info($this->kode_jenis_pinjam);
         return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
     }
 
@@ -102,7 +103,7 @@ class Pinjaman extends Model {
         // ambil tunggakan angsuran
         $tunggakan = $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->where('besar_pembayaran', '>', 0)->first();
         if ($tunggakan)
-        {            
+        {
             return $tunggakan->besar_angsuran + $tunggakan->jasa - $tunggakan->besar_pembayaran;
         }
         return 0;
@@ -122,7 +123,7 @@ class Pinjaman extends Model {
                         ->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)
                         ->where('besar_pembayaran', '>', 0)
                         ->values();
-        
+
         return $tunggakan;
     }
 

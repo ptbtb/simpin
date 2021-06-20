@@ -17,7 +17,9 @@ use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Tabungan;
 use App\Models\Code;
+use App\Models\Pinjaman;
 use App\Models\SimpinRule;
+use App\Models\View\ViewSaldo;
 use Carbon\Carbon;
 use DB;
 use Excel;
@@ -428,5 +430,70 @@ class PenarikanController extends Controller
         $penarikan = Penarikan::find($id);
         $data['penarikan'] = $penarikan;
         return view('penarikan.viewJurnal', $data);
+    }
+
+    public function showFormKeluarAnggota()
+    {
+        $user = Auth::user();
+        $this->authorize('penarikan keluar anggota', $user);
+
+        $data['title'] = "Keluar Anggota";
+        return view('penarikan.keluar_anggota', $data);
+    }
+
+    public function storeFormKeluarAnggota(Request $request)
+    {
+        try
+        {
+            $user = Auth::user();
+            $this->authorize('penarikan keluar anggota', $user);
+
+            $saldo = ViewSaldo::where('kode_anggota', $request->kode_anggota)->first();
+            $pinjaman = Pinjaman::where('kode_anggota', $request->kode_anggota)->get();
+            $kalkulasiPinjaman = $saldo->jumlah - ($pinjaman->sum('sisa_pinjaman') + $pinjaman->sum('jasa_pelunasan_dipercepat'));
+            if ($kalkulasiPinjaman < 0)
+            {
+                $message = 'Tidak bisa keluar anggota. Saldo simpanan tidak mencukupi untuk membayar sisa pinjaman. Silahkan lunasi pinjaman anda terlebih dahulu';
+                return redirect()->back()->withError($message);
+            }
+
+            $query = 'SELECT SUM(besar_simpanan)AS besar_simpanan, kode_jenis_simpan FROM t_simpan WHERE kode_anggota = '.$request->kode_anggota.' GROUP BY kode_jenis_simpan';
+            $simpananList = DB::select($query);
+            foreach ($simpananList as $item)
+            {
+
+                // get next serial number
+                $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                $tabungan = Tabungan::where('kode_anggota', $request->kode_anggota)
+                                    ->where('kode_trans', $item->kode_jenis_simpan)
+                                    ->first();
+                $penarikan = new Penarikan();
+
+                DB::transaction(function () use ($penarikan, $item, $request, $user, $nextSerialNumber, $tabungan)
+                {
+                    $penarikan->kode_anggota = $request->kode_anggota;
+                    $penarikan->kode_tabungan = $tabungan->kode_tabungan;
+                    $penarikan->id_tabungan = $tabungan->id;
+                    $penarikan->besar_ambil = $item->besar_simpanan;
+                    $penarikan->code_trans = $tabungan->kode_trans;
+                    $penarikan->tgl_ambil = Carbon::now();
+                    $penarikan->u_entry = $user->name;
+                    $penarikan->created_by = $user->id;
+                    $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI;
+                    $penarikan->serial_number = $nextSerialNumber;
+                    $penarikan->is_exit_anggota = 1;
+                    $penarikan->save();
+                });
+
+                event(new PenarikanCreated($penarikan, $tabungan));
+            }
+
+            return redirect()->back()->withSuccess('Berhasil mengirim pengajuan.');
+        }
+        catch (\Throwable $th)
+        {
+            $error = $th->getMessage().' || file'.$th->getFile().' || line'. $th->getLine();
+            return redirect()->back()->withError($error);
+        }
     }
 }

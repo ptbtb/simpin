@@ -48,6 +48,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\Penarikan\PenarikanApproved' => [
              'App\Listeners\SimpananListener@onPenarikanApproved',
+             'App\Listeners\AnggotaListener@onPenarikanApproved',
             // 'App\Listeners\EmailListener@onPenarikanApproved',
         ],
 

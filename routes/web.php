@@ -287,6 +287,9 @@ Route::group(['prefix' => 'penarikan'], function () {
         Route::get('detail-transfer/{id}', [App\Http\Controllers\PenarikanController::class, 'detailTransfer'])->name('penarikan-detail-transfer');
 
         Route::get('data-jurnal/{id}', [App\Http\Controllers\PenarikanController::class, 'viewDataJurnalPenarikan'])->name('view-data-jurnal-penarikan');
+
+        Route::get('keluar-anggota', [App\Http\Controllers\PenarikanController::class, 'showFormKeluarAnggota'])->name('show-form-keluar-anggota');
+        Route::post('keluar-anggota', [App\Http\Controllers\PenarikanController::class, 'storeFormKeluarAnggota'])->name('store-form-keluar-anggota');
     });
 });
 
