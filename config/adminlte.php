@@ -536,6 +536,21 @@ return [
 
             ],
         ],
+        [
+            'text' => 'Export Tools',
+            //'url' => '/saldo-awal',
+            'icon' => 'fas fa-download nav-icon',
+            //'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal'],
+            'submenu' => [
+                [
+                    'text' => 'Export Saldo Awal Pinjaman',
+                    'url' => 'pinjaman/saldo-awal/excel',
+                    'icon' => 'fas fa-download nav-icon',
+                    'can'  => ['add saldo awal'],
+                ],
+
+            ],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

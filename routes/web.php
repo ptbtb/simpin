@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PinjamanController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -221,6 +222,8 @@ Route::group(['prefix' => 'pinjaman'], function () {
             Route::get('calculate-angsuran', [App\Http\Controllers\PinjamanController::class, 'calculateAngsuran'])->name('pengajuan-pinjaman-calculate-angsuran');
             Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
         });
+
+        Route::get('saldo-awal/excel', [PinjamanController::class, 'exportSaldoAwalPinjaman'])->name('export-saldo-awal-pinjaman');
     });
 });
 

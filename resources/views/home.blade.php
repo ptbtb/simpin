@@ -113,7 +113,7 @@
 </div>
  <div class="px-3 pb-3 text-red">
         <hr style="border-color: #fff">
-        *{!! $settings[COMPANY_SETTING_SPLASH] !!}
+        *{!! $settings[COMPANY_SETTING_SPLASH] ?? '-' !!}
     </div>
 
 @if (!\Auth::user()->isAnggota())
