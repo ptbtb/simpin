@@ -13,10 +13,11 @@ class SaldoAwalPinjamanExport implements FromView, ShouldAutoSize, WithEvents
 {
     public function view(): View
     {
-        $pinjaman = Pinjaman::notPaid()
-                            ->join('t_anggota', 't_pinjam.kode_anggota', 't_anggota.kode_anggota')
+        $pinjaman = Pinjaman::
+                            join('t_anggota', 't_pinjam.kode_anggota', 't_anggota.kode_anggota')
                             ->join('t_jenis_pinjam', 't_pinjam.kode_jenis_pinjam', 't_jenis_pinjam.kode_jenis_pinjam')
                             ->whereNotNull('saldo_mutasi')
+                            ->where('saldo_mutasi','>',0)
                             ->select(
                                         't_pinjam.kode_pinjam',
                                         't_anggota.nama_anggota',
