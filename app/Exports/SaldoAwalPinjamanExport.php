@@ -26,7 +26,6 @@ class SaldoAwalPinjamanExport implements FromView, ShouldAutoSize, WithEvents
                                         't_pinjam.besar_pinjam',
                                         't_pinjam.saldo_mutasi'
                                     )
-                            ->take(10)
                             ->get();
         return view('pinjaman.exportSaldoAwalPinjaman', ['listPinjaman' => $pinjaman]);
     }
