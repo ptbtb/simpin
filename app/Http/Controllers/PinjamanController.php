@@ -18,6 +18,7 @@ use App\Models\StatusPengajuan;
 use App\Models\Code;
 use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
+use App\Exports\SaldoAwalPinjamanExport;
 use App\Imports\PinjamanImport;
 use App\Managers\JurnalManager;
 use App\Managers\PengajuanManager;
@@ -752,7 +753,7 @@ class PinjamanController extends Controller {
             // save tgl transaksi
             $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
             $pinjaman->save();
-            
+
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {
             \Log::error($e);
@@ -795,7 +796,7 @@ class PinjamanController extends Controller {
                 $pinjaman->sisa_pinjaman = 0;
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
-                
+
                 $pinjaman->save();
 
                 // create JKM angsuran
@@ -845,7 +846,7 @@ class PinjamanController extends Controller {
             $angsuran = Angsuran::with('pinjaman')->where('kode_angsur', $request->id)->first();
             $pinjaman = $angsuran->pinjaman;
 
-            if ($request->status == STATUS_ANGSURAN_DITERIMA) 
+            if ($request->status == STATUS_ANGSURAN_DITERIMA)
             {
                 // save angsuran
                 $angsuran->tgl_transaksi = $angsuran->temp_tgl_transaksi;
@@ -853,13 +854,13 @@ class PinjamanController extends Controller {
                 $angsuran->save();
 
                 $angsuran = Angsuran::with('pinjaman')->where('kode_angsur', $request->id)->first();
-                
+
                 // set new angsuran status
-                if ($angsuran->besar_pembayaran >= $angsuran->totalAngsuran) 
+                if ($angsuran->besar_pembayaran >= $angsuran->totalAngsuran)
                 {
                     $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
-                } 
-                else 
+                }
+                else
                 {
                     $angsuran->id_status_angsuran = STATUS_ANGSURAN_BELUM_LUNAS;
                     $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran + 1;
@@ -867,11 +868,11 @@ class PinjamanController extends Controller {
                     $pinjaman->save();
                 }
                 $angsuran->save();
-                
+
                 // set status pinjaman
-                if ($pinjaman->sisa_pinjaman <= 0) 
+                if ($pinjaman->sisa_pinjaman <= 0)
                 {
-                    $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;   
+                    $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 }
                 else
                 {
@@ -881,7 +882,7 @@ class PinjamanController extends Controller {
 
                 // update jurnal
                 $journals = $angsuran->jurnals;
-                foreach ($journals as $key => $journal) 
+                foreach ($journals as $key => $journal)
                 {
                     if($journal)
                     {
@@ -1068,5 +1069,14 @@ class PinjamanController extends Controller {
         $data['pengajuan'] = $pengajuan;
         return view('pinjaman.viewjurnal', $data);
         // return response()->json(['message' => 'error'], 500);
+    }
+
+    public function exportSaldoAwalPinjaman()
+    {
+        $user = Auth::user();
+        $this->authorize('view saldo awal', $user);
+
+        $filename = 'export_saldo_awal_pinjaman_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+        return Excel::download(new SaldoAwalPinjamanExport, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 }
