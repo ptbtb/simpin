@@ -52,6 +52,7 @@ class PinjamanImport implements OnEachRow
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
             $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
             $pinjaman->serial_number = $nextSerialNumber;
+            $pinjaman->saldo_mutasi =  $pinjaman->sisa_pinjaman;
             $pinjaman->save();
 
 
