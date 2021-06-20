@@ -273,7 +273,7 @@
                             $saldoAdm = 0;
                             $saldoUntilMonthAdm = 0;
                         @endphp
-                        @for ($i = 23; $i <= 24; $i++)
+                        @for ($i ==23; $i <= 24; $i++)
                             <tr>
                                 <td>{{ substr($labaRugis[$i]['code']->CODE, 0, 3) }}</td>
                                 <td>{{ $labaRugis[$i]['code']->NAMA_TRANSAKSI }}</td>
