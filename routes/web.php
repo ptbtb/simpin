@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\PinjamanController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +63,8 @@ Route::group(['prefix' => 'anggota'], function () {
 
         Route::get('import/excel', [App\Http\Controllers\AnggotaController::class, 'importExcel'])->name('anggota-import-excel');
         Route::post('import/excel', [App\Http\Controllers\AnggotaController::class, 'storeImportExcel'])->name('anggota-import-excel');
+
+        Route::get('search-pinjaman/{id}', [PinjamanController::class, 'searchPinjamanAnggota'])->name('searchPinjamanAnggota');
     });
 });
 

@@ -136,6 +136,10 @@ class Pinjaman extends Model {
 
     public function getSerialNumberViewAttribute()
     {
-        return 'PIJ' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        if ($this->tgl_entri && $this->serial_number)
+        {
+            return 'PIJ' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        }
+        return '-';
     }
 }

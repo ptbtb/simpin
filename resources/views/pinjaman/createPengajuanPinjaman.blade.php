@@ -77,6 +77,19 @@
                             @endforeach
                         </select>
                     </div>
+                @else
+                    <div class="col-md-6 form-group" id="jenisPengajuanCover" style="display: none">
+                        <label>Jenis Pengajuan</label>
+                        <select name="jenis_pengajuan" class="form-control" id="jenisPengajuan">
+                            <option value="0">Pengajuan Pinjaman</option>
+                            <option value="1">Top Up</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group" style="display: none" id="panelTopup">
+                        <label>Topup Pinjaman</label>
+                        <select name="topup_pinjaman[]" class="form-control select2" id="topupPinjaman" multiple>
+                        </select>
+                    </div>
                 @endif
                 <div class="col-md-6 form-group">
                     <label>Jenis Pinjaman</label>
@@ -146,6 +159,7 @@
 @section('js')
     <script src="{{ asset('js/collect.min.js') }}"></script>
     <script>
+        var baseURL = {!! json_encode(url('/')) !!};
         var jenisPinjaman = collect({!!$listJenisPinjaman!!});
 
         $(document).ready(function ()
@@ -155,7 +169,7 @@
             @endif
             initialEvent();
         });
-        
+
        function initialEvent()
        {
             $('#jenisPinjaman').on('change', function ()
@@ -219,7 +233,27 @@
                 {
                     kode_anggota = $(this).find(":selected").val();
                 }
+
                 updateInfo(selectedId, kode_anggota);
+
+                // search pinjaman
+                $.ajax({
+                    url: "{{ route('searchPinjamanAnggota', ['']) }}/" + kode_anggota,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.length > 0)
+                        {
+                            $('#jenisPengajuanCover').show('slow');
+                            var res = collect(data);
+                            var pattern = '';
+                            res.each(function (pinjaman)
+                            {
+                                pattern = pattern + '<option value="'+pinjaman.kode_pinjam+'">'+pinjaman.nama_pinjaman+'</option>';
+                            });
+                            $('#topupPinjaman').html(pattern);
+                        }
+                    }
+                });
             });
 
             $('#jenisPengajuan').on('change', function ()

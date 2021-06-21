@@ -1079,4 +1079,14 @@ class PinjamanController extends Controller {
         $filename = 'export_saldo_awal_pinjaman_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
         return Excel::download(new SaldoAwalPinjamanExport, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
+
+    public function searchPinjamanAnggota($kode_anggota)
+    {
+        return Pinjaman::japan()
+                        ->join('t_jenis_pinjam', 't_pinjam.kode_jenis_pinjam', 't_jenis_pinjam.kode_jenis_pinjam')
+                        ->where('kode_anggota', $kode_anggota)
+                        ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                        ->select('kode_pinjam', 'nama_pinjaman')
+                        ->get();
+    }
 }
