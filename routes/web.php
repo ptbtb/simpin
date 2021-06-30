@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\PinjamanController;
+use App\Http\Controllers\TransferredSHUController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -400,3 +401,7 @@ Route::group(['prefix' => 'global'], function () {
         Route::post('', [App\Http\Controllers\GlobalTransaksiController::class, 'storeTransaksiUser'])->name('global-transaksiuser-import-excel');
      });
 });
+
+Route::get('transferred-shu', [TransferredSHUController::class, 'index'])->middleware('auth')->name('transferred-shu.index');
+Route::get('transferred-shu/import-excel', [TransferredSHUController::class, 'import'])->middleware('auth')->name('transferred-shu.import');
+Route::post('transferred-shu/import-excel', [TransferredSHUController::class, 'storeImport'])->middleware('auth')->name('transferred-shu.storeImport');

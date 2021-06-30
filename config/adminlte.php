@@ -486,6 +486,12 @@ return [
             ],
         ],
         [
+            'text' => 'SHU',
+            'url' => '/transferred-shu',
+            'icon' => 'fas fa-handshake nav-icon',
+            'can'  => ['add saldo awal'],
+        ],
+        [
             'text' => 'Import Tools',
             //'url' => '/saldo-awal',
             'icon' => 'fas fa-upload nav-icon',
@@ -536,6 +542,12 @@ return [
                 [
                     'text' => 'Import Transaksi User',
                     'url' => '/global/transaksiuser',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import angsuran'],
+                ],
+                [
+                    'text' => 'Import SHU Ditransfer',
+                    'url' => '/transferred-shu/import-excel',
                     'icon' => 'fas fa-upload nav-icon',
                     'can'  => ['import angsuran'],
                 ],
