@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\View\ViewSaldo;
 use App\Models\Pinjaman;
 use App\Models\Tabungan;
-
+use App\Models\TransferredSHU;
 use Auth;
 
 class HomeController extends Controller
@@ -50,6 +50,7 @@ class HomeController extends Controller
                                         ->get();
 
             $data['sisaPinjaman'] = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
+            $data['transferredShu'] = TransferredSHU::where('kode_anggota', $anggota->kode_anggota)->sum('amount');
         }
         else
         {

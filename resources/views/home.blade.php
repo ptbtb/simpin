@@ -37,7 +37,7 @@
                     <div class="small-box bg-success">
                         <div class="inner" style="min-height: 123px;">
                             <h3><a href="{{ route('simpanan-index-card') }}" class="link-dashboard">
-                                @if ($saldo)
+                                @if (isset($saldo))
                                     Rp. {{ number_format($saldo->jumlah,0,",",".") }}
                                 @else
                                     0
@@ -62,6 +62,26 @@
                             <i class="fas fa-exchange-alt"></i>
                         </div>
                         <a href="{{ route('transaksi-list-anggota') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner" style="min-height: 123px;">
+                            <h3>
+                                @if (isset($transferredShu))
+                                    Rp. {{ number_format($transferredShu,0,",",".") }}
+                                @else
+                                    0
+                                @endif
+                            </h3>
+
+                            <p class="font-weight-bold">SHU Ditransfer </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             @else
