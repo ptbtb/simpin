@@ -162,7 +162,7 @@ class Pengajuan extends Model
 
     public function getViewCreditBankAttribute()
     {
-        $provisi = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        $provisi = round($this->jenisPinjaman->provisi*$this->besar_pinjam, 2);
         $admin = $this->jenisPinjaman->biaya_admin;
         $asuransi = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
         $total = $this->besar_pinjam - $provisi - $admin - $asuransi;
