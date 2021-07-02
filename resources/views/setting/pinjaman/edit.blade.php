@@ -80,7 +80,7 @@
                     <input type="text" class="form-control nominal-rupiah" name="biaya_admin" size="54" placeholder="Biaya Admin" value={{ $pinjaman->biaya_admin }} />
                 </div>
                 <div class="form-group col-md-6">
-                    <label>Provisi (%)</label>
+                    <label>Provisi</label>
                     <input type="number" step="any" class="form-control" name="provisi" size="54" placeholder="Provisi" value={{ $pinjaman->provisi }} />
                 </div>
                 <div class="form-group col-md-6">
