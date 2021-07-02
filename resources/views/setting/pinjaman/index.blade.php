@@ -31,7 +31,7 @@
                     <th><a href="#">Nama Pinjaman</a></th>
                     <th><a href="#">Lama Angsuran(BLN)</a></th>
                     <th><a href="#">Maks Pinjaman</a></th>
-                    <th><a href="#">Jasa(%)</a></th>
+                    <th><a href="#">Jasa</a></th>
 
                     <th><a href="#">Action</a></th>
 
@@ -52,10 +52,10 @@
                         <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="{{ route('jenis-pinjaman-delete', ['id'=>$pinjaman->kode_jenis_pinjam]) }}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
                     </td>
 
-                </tr>   
+                </tr>
                 <?php $i++; ?>
                 @endforeach
-            </tbody> </table>        
+            </tbody> </table>
     </div>
 
 </div>

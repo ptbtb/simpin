@@ -48,7 +48,7 @@
                     <select name="kategori_jenis_pinjaman_id" class="form-control" required id="kategoriJenisPinjamanOption">
 						<option value="">Choose One</option>
 						@foreach ($kategori_jenis_pinjaman as $category)
-                            <option value="{{ $category->id }}" 
+                            <option value="{{ $category->id }}"
                                 {{ $category->id == $pinjaman->kategori_jenis_pinjaman_id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
@@ -84,13 +84,13 @@
                     <input type="number" step="any" class="form-control" name="provisi" size="54" placeholder="Provisi" value={{ $pinjaman->provisi }} />
                 </div>
                 <div class="form-group col-md-6">
-                    <label>Jasa (%)</label>
+                    <label>Jasa</label>
                     <input type="number" step="any" class="form-control" name="jasa" placeholder="Jasa" value={{ $pinjaman->jasa }} />
-                </div> 
+                </div>
                 <div class="form-group col-md-6">
                     <label>Jasa Pelunasan Dipercepat</label>
                     <input type="number" step="any" class="form-control" name="jasa_pelunasan_dipercepat" placeholder="Jasa Pelunasan Dipercepat" value={{ $pinjaman->jasa_pelunasan_dipercepat }} />
-                </div> 
+                </div>
                 <div class="form-group col-md-6">
                     <label>Minimal Angsur Pelunasan</label>
                     <input type="number" step="any" class="form-control" name="minimal_angsur_pelunasan" placeholder="Minimal Angsur Pelunasan" value={{ $pinjaman->minimal_angsur_pelunasan }} />

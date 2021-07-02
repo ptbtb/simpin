@@ -78,17 +78,17 @@
                     <input type="number" step="any" class="form-control" name="provisi" size="54" placeholder="Provisi"/>
                 </div>
                 <div class="form-group col-md-6">
-                    <label>Jasa (%)</label>
+                    <label>Jasa</label>
                     <input type="number" step="any" class="form-control" name="jasa" placeholder="Jasa" />
-                </div> 
+                </div>
                 <div class="form-group col-md-6">
                     <label>Jasa Pelunasan Dipercepat</label>
                     <input type="number" step="any" class="form-control" name="jasa_pelunasan_dipercepat" placeholder="Jasa Pelunasan Dipercepat" />
-                </div> 
+                </div>
                 <div class="form-group col-md-6">
                     <label>Minimal Angsur Pelunasan</label>
                     <input type="number" step="any" class="form-control" name="minimal_angsur_pelunasan" placeholder="Minimal Angsur Pelunasan" />
-                </div> 
+                </div>
                 <div class="form-group col-md-6">
                     <label>User Entri</label>
                     <input type="text" class="form-control" name="u_entry" size="54" value="{{ Auth::user()->name }}" readonly />
