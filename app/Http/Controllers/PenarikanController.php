@@ -20,6 +20,7 @@ use App\Models\Code;
 use App\Models\Pinjaman;
 use App\Models\SimpinRule;
 use App\Models\View\ViewSaldo;
+use App\Models\StatusPenarikan;
 use Carbon\Carbon;
 use DB;
 use Excel;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PDF;
+use Yajra\DataTables\Facades\DataTables;
 
 class PenarikanController extends Controller
 {
@@ -272,12 +274,69 @@ class PenarikanController extends Controller
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
+            $statusPenarikans = StatusPenarikan::get();
+
             $data['title'] = "List Penarikan Simpanan";
             $data['listPenarikan'] = $listPenarikan;
             $data['request'] = $request;
             $data['bankAccounts'] = $bankAccounts;
+            $data['statusPenarikans'] = $statusPenarikans;
             return view('penarikan.index', $data);
         } catch (\Throwable $e) {
+            Log::error($e);
+            return redirect()->back()->withError('Terjadi Kesalahan');
+        }
+    }
+
+    /**
+     * Display a listing of the resource through ajax.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexAjax(Request $request)
+    {
+
+        try {
+            $user = Auth::user();
+            
+            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet');
+
+            if($request->status_penarikan != "")
+            {
+                $listPenarikan->where('status_pengambilan', $request->status_penarikan);
+            }
+
+            if ($user->isAnggota()) 
+            {
+                $anggota = $user->anggota;
+
+                $listPenarikan = Penarikan::where('kode_anggota', $anggota->kode_anggota);
+            } 
+
+            $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+
+            return Datatables::eloquent($listPenarikan)
+                                ->editColumn('tgl_ambil', function ($request) {
+                                    if($request->tgl_ambil)
+                                    {
+                                        return $request->tgl_ambil->format('d M Y');
+                                    }
+                                })
+                                ->editColumn('besar_ambil', function ($request) {
+                                    return "Rp ". number_format($request->besar_ambil,0,",",".");
+                                })
+                                ->editColumn('tgl_acc', function ($request) {
+                                    if($request->tgl_acc)
+                                    {
+                                        return $request->tgl_acc->format('d M Y');
+                                    }
+                                })
+                                ->addIndexColumn()
+                                ->make(true);
+
+        } 
+        catch (\Throwable $e) 
+        {
             Log::error($e);
             return redirect()->back()->withError('Terjadi Kesalahan');
         }
