@@ -51,15 +51,13 @@
                                 <label for="isParent">Summary</label>
                                 <br>
                                 <div class="form-check">
-
-                                    {!! Form::checkbox('kode_summary', '1', ($codes->is_parent=='1')?true:false,['id' => 'kode_summary_induk', 'class' => 'form-check-input']) !!}
+                                    <input class="form-check-input" type="radio" name="kode_summary" id="kode_summary_induk" value="1" @if($codes->is_parent==1) checked @endif>
                                     <label class="form-check-label" for="kode_summary_induk">
                                         Induk
                                     </label>
                                 </div>
                                 <div class="form-check">
-
-                                    {!! Form::checkbox('kode_summary', '1', ($codes->is_parent=='0')?true:false,['id' => 'kode_summary_anak', 'class' => 'form-check-input']) !!}
+                                    <input class="form-check-input" type="radio" name="kode_summary" id="kode_summary_anak" value="0" @if($codes->is_parent==0) checked @endif>
                                     <label class="form-check-label" for="kode_summary_anak">
                                         Anak
                                     </label>
