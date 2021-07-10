@@ -98,7 +98,7 @@ Route::group(['prefix' => 'setting'], function () {
     Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index'])->name('kode-transaksi-list');
     Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit'])->name('kode-transaksi-edit');
     Route::post('/codetrans/update/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'update'])->name('kode-transaksi-update');
-    Route::get('/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy']);
+    Route::get('/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy'])->name('kode-transaksi-delete');
     Route::get('/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create'])->name('kode-transaksi-create');
     Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store'])->name('kode-transaksi-store');
 

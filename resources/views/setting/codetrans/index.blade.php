@@ -41,8 +41,8 @@
                     <td >{{$codetrans->CODE}}</td>
                     <td >{{$codetrans->NAMA_TRANSAKSI}}</td>
                     <td class="text-center">
-                        <a class="btn btn-info" href="/setting/codetrans/edit/{{$codetrans->id}}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
-                        <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="/setting/codetrans/destroy/{{$codetrans->id}}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
+                        <a class="btn btn-info" href="{{ route('kode-transaksi-edit', $codetrans->id) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
+                        <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="{{ route('kode-transaksi-delete', $codetrans->id) }}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
                     </td>
 
                 </tr>
