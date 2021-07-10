@@ -290,7 +290,9 @@
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_ASMAN }})
                                 {
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    // temporary skip manager, bendahara, ketua
+                                    // markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
                                     markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }})
