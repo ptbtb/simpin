@@ -22,6 +22,7 @@
 
 @section('css')
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css" rel="stylesheet" />
     <style>
         .btn-sm{
             font-size: .8rem;
@@ -37,25 +38,21 @@
 @section('content')
     <div class="card">
         <div class="card-header text-left">
-            <h5>Filter</h5>
+            <label class="m-0">Filter</label>
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="form-group col-md-6">
-                    <div class="form-group">
-                        <h6>Status</h6>
-                        <select name="status_penarikan" class="form-control input" id="select_status_penarikan">
-                            <option value="" selected>All</option>
-                            @foreach ($statusPenarikans as $statusPenarikan)
-                                <option value="{{ $statusPenarikan->id }}">{{ $statusPenarikan->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="form-group col-md-4">
+                    <label>Status</label>
+                    <select name="status_penarikan" class="form-control input" id="select_status_penarikan">
+                        <option value="" selected>All</option>
+                        @foreach ($statusPenarikans as $statusPenarikan)
+                            <option value="{{ $statusPenarikan->id }}">{{ $statusPenarikan->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <a class="btn btn-primary" id="btnFiterSubmitSearch" style="color:white"><span class="fa fa-search"></span> Cari</a>
+                <div class="col-md-1 form-group" style="margin-top: 26px">
+                    <a class="btn btn-sm btn-success form-control" id="btnFiterSubmitSearch" style="color:white; padding-top:8px"><i class="fa fa-filter"></i> Filter</a>
                 </div>
             </div>
         </div>
@@ -70,6 +67,8 @@
             <table class="table table-striped" id="penarikan-table">
                 <thead>
                     <tr>
+                        <th>Kode Ambil</th>
+                        <th>#</th>
                         <th>No</th>
                         <th>Tanggal Penarikan</th>
                         <th>Nama Anggota</th>
@@ -135,10 +134,12 @@
 @section('js')
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
         
-        $('#penarikan-table').DataTable({
+        var table = $('#penarikan-table').on('xhr.dt', function ( e, settings, json, xhr ) {
+            }).DataTable({
             bProcessing: true,
             bServerSide: true,
             responsive: true, 
@@ -152,6 +153,13 @@
             },
             aoColumns: 
             [
+                {
+                    mData: 'kode_ambil', visible: false,
+                },
+                { 
+                    data: null, orderable: false, 
+                    className: 'select-checkbox', defaultContent: "",
+                },
                 { 
                     mData: 'DT_RowIndex',
                     className: "dt-body-center", 'name': 'DT_RowIndex',
@@ -343,10 +351,10 @@
                 },
             ],
             columnDefs: [
-                { "targets": 0,"searchable": false, "orderable": false },
-                { "targets": 1,"searchable": true, "orderable": false },
+                { "targets": 0,"searchable": false, "orderable": false, 'checkboxes' : { 'selectRow': true } },
+                { "targets": 1,"searchable": false, "orderable": false },
                 { "targets": 2,"searchable": true, "orderable": true },
-                { "targets": 3,"searchable": false, "orderable": false },
+                { "targets": 3,"searchable": true, "orderable": false },
                 { "targets": 4,"searchable": false, "orderable": false },
                 { "targets": 5,"searchable": false, "orderable": false },
                 { "targets": 6,"searchable": false, "orderable": false },
@@ -354,7 +362,13 @@
                 { "targets": 8,"searchable": false, "orderable": false },
                 { "targets": 9,"searchable": false, "orderable": false },
                 { "targets": 10,"searchable": false, "orderable": false },
+                { "targets": 11,"searchable": false, "orderable": false },
+                { "targets": 12,"searchable": false, "orderable": false },
             ],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
             fnInitComplete: function (oSettings, json) {
 
                 var _that = this;
@@ -427,6 +441,21 @@
                     formData.append('bukti_pembayaran', files[0]);
                     formData.append('password', password);
                     formData.append('id_akun_debet', id_akun_debet);
+                    // getting selected checkboxes kode ambil(s) 
+                    var ids_array = table
+                                    .rows({ selected: true })
+                                    .data()
+                                    .pluck('kode_ambil')
+                                    .toArray();
+                    if (ids_array.length != 0) 
+                    {
+                        // append ids array into form 
+                        formData.append('kode_ambil_ids', JSON.stringify(ids_array));
+                    }
+                    else
+                    {
+                        formData.append('kode_ambil_ids', '['+id+']');
+                    }
                     $.ajax({
                         type: 'post',
                         url: url,

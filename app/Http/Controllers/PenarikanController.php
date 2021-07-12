@@ -352,72 +352,81 @@ class PenarikanController extends Controller
                 return response()->json(['message' => 'Wrong Password'], 412);
             }
 
-            $penarikan = Penarikan::find($request->id);
-            if ($request->status == STATUS_PENGAMBILAN_DIBATALKAN) {
-                $penarikan->status_penarikan = STATUS_PENGAMBILAN_DIBATALKAN;
+            // get kode ambil's data when got from check boxes
+            if (isset($request->kode_ambil_ids)) 
+            {
+                $kodeAmbilIds = json_decode($request->kode_ambil_ids);
+            }
+            // return response()->json(['message' => $kodeAmbilIds], 404);
+            foreach ($kodeAmbilIds as $key => $kodeAmbilId) 
+            {
+                $penarikan = Penarikan::find($kodeAmbilId);
+                if ($request->status == STATUS_PENGAMBILAN_DIBATALKAN) {
+                    $penarikan->status_penarikan = STATUS_PENGAMBILAN_DIBATALKAN;
+                    $penarikan->save();
+                    return response()->json(['message' => 'success'], 200);
+                }
+
+                $this->authorize('approve penarikan', $user);
+                if (is_null($penarikan)) {
+                    return response()->json(['message' => 'not found'], 404);
+                }
+
+                if ($request->status == STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA) {
+                    $statusPenarikanSekarang = $penarikan->statusPenarikan;
+                    if ($penarikan->besar_pinjam <= $statusPenarikanSekarang->batas_pengajuan) {
+                        $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN;
+                    } else {
+                        $penarikan->status_pengambilan = $request->status;
+                    }
+                } elseif ($request->status == STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA) {
+                    $statusPenarikanSekarang = $penarikan->statusPenarikan;
+                    if ($penarikan->besar_pinjam <= $statusPenarikanSekarang->batas_pengajuan) {
+                        $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN;
+                    } else {
+                        $penarikan->status_pengambilan = $request->status;
+                    }
+                } else {
+                    $penarikan->status_pengambilan = $request->status;
+                }
+
+                $penarikan->tgl_acc = Carbon::now();
+                $penarikan->approved_by = $user->id;
+
+                if ($request->status == STATUS_PENGAMBILAN_DITERIMA) {
+                    $penarikan->paid_by_cashier = $user->id;
+                    $file = $request->bukti_pembayaran;
+
+                    if ($file) {
+                        $config['disk'] = 'upload';
+                        $config['upload_path'] = '/pinjaman/pengajuan/' . $penarikan->kode_ambil . '/bukti-pembayaran/';
+                        $config['public_path'] = env('APP_URL') . '/upload/pinjaman/pengajuan/' . $penarikan->kode_ambil . '/bukti-pembayaran/';
+
+                        // create directory if doesn't exist
+                        if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
+                            Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                        }
+
+                        // upload file if valid
+                        if ($file->isValid()) {
+                            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+                            Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                            $penarikan->bukti_pembayaran = $config['disk'] . $config['upload_path'] . '/' . $filename;
+                        }
+                    }
+
+                    $penarikan->id_akun_debet = ($request->id_akun_debet) ? $request->id_akun_debet : null;
+                }
+
                 $penarikan->save();
-                return response()->json(['message' => 'success'], 200);
-            }
-
-            $this->authorize('approve penarikan', $user);
-            if (is_null($penarikan)) {
-                return response()->json(['message' => 'not found'], 404);
-            }
-
-            if ($request->status == STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA) {
-                $statusPenarikanSekarang = $penarikan->statusPenarikan;
-                if ($penarikan->besar_pinjam <= $statusPenarikanSekarang->batas_pengajuan) {
-                    $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN;
-                } else {
-                    $penarikan->status_pengambilan = $request->status;
+                if ($penarikan->menungguPembayaran()) {
+                    event(new PenarikanApproved($penarikan));
+                } elseif ($penarikan->diterima()) {
+                    JurnalManager::createJurnalPenarikan($penarikan);
                 }
-            } elseif ($request->status == STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA) {
-                $statusPenarikanSekarang = $penarikan->statusPenarikan;
-                if ($penarikan->besar_pinjam <= $statusPenarikanSekarang->batas_pengajuan) {
-                    $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN;
-                } else {
-                    $penarikan->status_pengambilan = $request->status;
-                }
-            } else {
-                $penarikan->status_pengambilan = $request->status;
+                event(new PenarikanUpdated($penarikan));
             }
-
-            $penarikan->tgl_acc = Carbon::now();
-            $penarikan->approved_by = $user->id;
-
-            if ($request->status == STATUS_PENGAMBILAN_DITERIMA) {
-                $penarikan->paid_by_cashier = $user->id;
-                $file = $request->bukti_pembayaran;
-
-                if ($file) {
-                    $config['disk'] = 'upload';
-                    $config['upload_path'] = '/pinjaman/pengajuan/' . $penarikan->kode_ambil . '/bukti-pembayaran/';
-                    $config['public_path'] = env('APP_URL') . '/upload/pinjaman/pengajuan/' . $penarikan->kode_ambil . '/bukti-pembayaran/';
-
-                    // create directory if doesn't exist
-                    if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
-                        Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-                    }
-
-                    // upload file if valid
-                    if ($file->isValid()) {
-                        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-
-                        Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
-                        $penarikan->bukti_pembayaran = $config['disk'] . $config['upload_path'] . '/' . $filename;
-                    }
-                }
-
-                $penarikan->id_akun_debet = ($request->id_akun_debet) ? $request->id_akun_debet : null;
-            }
-
-            $penarikan->save();
-            if ($penarikan->menungguPembayaran()) {
-                event(new PenarikanApproved($penarikan));
-            } elseif ($penarikan->diterima()) {
-                JurnalManager::createJurnalPenarikan($penarikan);
-            }
-            event(new PenarikanUpdated($penarikan));
 
             return response()->json(['message' => 'success'], 200);
         } catch (\Exception $e) {
