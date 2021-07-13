@@ -310,7 +310,7 @@ class PenarikanController extends Controller
             {
                 $anggota = $user->anggota;
 
-                $listPenarikan = Penarikan::where('kode_anggota', $anggota->kode_anggota);
+                $listPenarikan->where('kode_anggota', $anggota->kode_anggota);
             } 
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
