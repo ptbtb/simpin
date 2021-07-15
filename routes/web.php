@@ -217,6 +217,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
 
         Route::group(['prefix' => 'pengajuan'], function () {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
+            Route::get('list/data/', [App\Http\Controllers\PinjamanController::class, 'indexPengajuanAjax'])->name('pengajuan-pinjaman-ajax');
             Route::get('data-jurnal/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'viewDataJurnalPinjaman'])->name('view-data-jurnal-pengajuan-pinjaman');
             Route::get('print-jkk', [App\Http\Controllers\PengajuanController::class, 'indexJkk'])->name('pengajuan-pinjaman-print-jkk');
             Route::post('print-jkk', [App\Http\Controllers\PengajuanController::class, 'printJkk'])->name('pengajuan-pinjaman-print-jkk');

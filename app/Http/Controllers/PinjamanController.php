@@ -36,6 +36,7 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class PinjamanController extends Controller {
 
@@ -94,11 +95,77 @@ class PinjamanController extends Controller {
 
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
+        $statusPengajuans = StatusPengajuan::get();
+
         $data['title'] = "List Pengajuan Pinjaman";
         $data['listPengajuanPinjaman'] = $listPengajuanPinjaman;
         $data['request'] = $request;
         $data['bankAccounts'] = $bankAccounts;
+        $data['statusPengajuans'] = $statusPengajuans;
         return view('pinjaman.indexPengajuan', $data);
+    }
+
+    
+    /**
+     * Display a listing of the resource through ajax.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexPengajuanAjax(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $this->authorize('view pengajuan pinjaman', $user);
+            
+            $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan');
+
+            if($request->status_pengajuan != "")
+            {
+                $listPengajuanPinjaman->where('id_status_pengajuan', $request->status_pengajuan);
+            }
+
+            if ($user->isAnggota()) 
+            {
+                $anggota = $user->anggota;
+                if (is_null($anggota)) 
+                {
+                    return redirect()->back()->withError('Your account has no members');
+                }
+
+                $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota);
+            }
+
+            return Datatables::eloquent($listPengajuanPinjaman)
+                                ->editColumn('tgl_pengajuan', function ($request) {
+                                    if($request->tgl_pengajuan)
+                                    {
+                                        return $request->tgl_pengajuan->format('d M Y');
+                                    }
+                                })
+                                ->editColumn('nama_pinjaman', function ($request) {
+                                    return ucwords(strtolower($request->jenisPinjaman->nama_pinjaman));
+                                })
+                                ->editColumn('besar_pinjam', function ($request) {
+                                    return "Rp ". number_format($request->besar_pinjam,0,",",".");
+                                })
+                                ->editColumn('status_pengajuan', function ($request) {
+                                    return ucfirst($request->statusPengajuan->name);
+                                })
+                                ->editColumn('tgl_acc', function ($request) {
+                                    if($request->tgl_acc)
+                                    {
+                                        return $request->tgl_acc->format('d M Y');
+                                    }
+                                })
+                                ->addIndexColumn()
+                                ->make(true);
+
+        } 
+        catch (\Throwable $e) 
+        {
+            Log::error($e);
+            return redirect()->back()->withError('Terjadi Kesalahan');
+        }
     }
 
     public function history(Request $request) {
@@ -359,90 +426,105 @@ class PinjamanController extends Controller {
                 return response()->json(['message' => 'Wrong Password'], 412);
             }
 
-            $pengajuan = Pengajuan::find($request->id);
-            if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN) {
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN;
-                $pengajuan->save();
-                return response()->json(['message' => 'success'], 200);
+            // get kode ambil's data when got from check boxes
+            if (isset($request->ids)) 
+            {
+                $ids = json_decode($request->ids);
             }
+           
+            foreach ($ids as $key => $id) 
+            {
+                $pengajuan = Pengajuan::where('id', $id)->first();
 
-            $this->authorize('approve pengajuan pinjaman', $user);
-            if (is_null($pengajuan)) {
-                return response()->json(['message' => 'not found'], 404);
-            }
-
-            if ($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA) {
-                $statusPengajuanSekarang = $pengajuan->statusPengajuan;
-                if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan) {
-                    $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
-                } else {
-                    $pengajuan->id_status_pengajuan = $request->status;
-                }
-            } elseif ($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA) {
-                $statusPengajuanSekarang = $pengajuan->statusPengajuan;
-                if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan) {
-                    $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
-                } else {
-                    $pengajuan->id_status_pengajuan = $request->status;
-                }
-            } else {
-                $pengajuan->id_status_pengajuan = $request->status;
-            }
-
-            $pengajuan->tgl_acc = Carbon::now();
-            $pengajuan->approved_by = $user->id;
-
-            if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DITERIMA) {
-                $pengajuan->paid_by_cashier = $user->id;
-                $file = $request->bukti_pembayaran;
-
-                if ($file) {
-                    $config['disk'] = 'upload';
-                    $config['upload_path'] = '/pinjaman/pengajuan/' . $pengajuan->kode_pengajuan . '/bukti-pembayaran/';
-                    $config['public_path'] = env('APP_URL') . '/upload/pinjaman/pengajuan/' . $pengajuan->kode_pengajuan . '/bukti-pembayaran/';
-
-                    // create directory if doesn't exist
-                    if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
-                        Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
-                    }
-
-                    // upload file if valid
-                    if ($file->isValid()) {
-                        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-
-                        Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
-                        $pengajuan->bukti_pembayaran = $config['disk'] . $config['upload_path'] . '/' . $filename;
-                    }
-                }
-
-                if($request->id_akun_debet)
+                // check pengajuan's status must same as old_status
+                if($pengajuan && $pengajuan->id_status_pengajuan == $request->old_status)
                 {
-                    $pengajuan->id_akun_debet = $request->id_akun_debet;
 
-                    $pinjaman = $pengajuan->pinjaman;
-
-                    if($pinjaman)
-                    {
-                        $pinjaman->id_akun_debet = $request->id_akun_debet;
-                        $pinjaman->save();
+                    if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN) {
+                        $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN;
+                        $pengajuan->save();
+                        return response()->json(['message' => 'success'], 200);
                     }
+
+                    $this->authorize('approve pengajuan pinjaman', $user);
+                    if (is_null($pengajuan)) {
+                        return response()->json(['message' => 'not found'], 404);
+                    }
+
+                    if ($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA) {
+                        $statusPengajuanSekarang = $pengajuan->statusPengajuan;
+                        if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan) {
+                            $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                        } else {
+                            $pengajuan->id_status_pengajuan = $request->status;
+                        }
+                    } elseif ($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA) {
+                        $statusPengajuanSekarang = $pengajuan->statusPengajuan;
+                        if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan) {
+                            $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                        } else {
+                            $pengajuan->id_status_pengajuan = $request->status;
+                        }
+                    } else {
+                        $pengajuan->id_status_pengajuan = $request->status;
+                    }
+
+                    $pengajuan->tgl_acc = Carbon::now();
+                    $pengajuan->approved_by = $user->id;
+
+                    if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DITERIMA) {
+                        $pengajuan->paid_by_cashier = $user->id;
+                        $file = $request->bukti_pembayaran;
+
+                        if ($file) {
+                            $config['disk'] = 'upload';
+                            $config['upload_path'] = '/pinjaman/pengajuan/' . $pengajuan->kode_pengajuan . '/bukti-pembayaran/';
+                            $config['public_path'] = env('APP_URL') . '/upload/pinjaman/pengajuan/' . $pengajuan->kode_pengajuan . '/bukti-pembayaran/';
+
+                            // create directory if doesn't exist
+                            if (!Storage::disk($config['disk'])->has($config['upload_path'])) {
+                                Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+                            }
+
+                            // upload file if valid
+                            if ($file->isValid()) {
+                                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+                                Storage::disk($config['disk'])->putFileAs($config['upload_path'], $file, $filename);
+                                $pengajuan->bukti_pembayaran = $config['disk'] . $config['upload_path'] . '/' . $filename;
+                            }
+                        }
+
+                        if($request->id_akun_debet)
+                        {
+                            $pengajuan->id_akun_debet = $request->id_akun_debet;
+
+                            $pinjaman = $pengajuan->pinjaman;
+
+                            if($pinjaman)
+                            {
+                                $pinjaman->id_akun_debet = $request->id_akun_debet;
+                                $pinjaman->save();
+                            }
+                        }
+
+                        $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
+                    }
+
+                    $pengajuan->save();
+                    if ($pengajuan->menungguPembayaran() && is_null($pengajuan->pinjaman))
+                    {
+                        event(new PengajuanApproved($pengajuan));
+                    }
+
+                    if ($pengajuan->diterima() && $pengajuan->pinjaman)
+                    {
+                        JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
+                    }
+
+                    event(new PengajuanUpdated($pengajuan));
                 }
-
-                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
             }
-
-            $pengajuan->save();
-            if ($pengajuan->menungguPembayaran() && is_null($pengajuan->pinjaman))
-            {
-                event(new PengajuanApproved($pengajuan));
-            }
-
-            if ($pengajuan->diterima() && $pengajuan->pinjaman)
-            {
-                JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
-            }
-
-            event(new PengajuanUpdated($pengajuan));
 
             return response()->json(['message' => 'success'], 200);
         } catch (\Exception $e) {
