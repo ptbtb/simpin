@@ -276,7 +276,7 @@
                         @if (Auth::user()->isAnggota())
                             if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI }})
                             {
-                                markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DIBATALKAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Cancel</a>';
+                                markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAMBILAN_DIBATALKAN }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Cancel</a>';
                             }
                             else
                             {
@@ -286,37 +286,37 @@
                             @can('approve penarikan')
                                 if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI }})
                                 {
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_SPV }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_SPV }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_SPV }})
                                 {
                                     @can('approve penarikan spv')
-                                        markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                        markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                        markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                        markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                     @endcan
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_ASMAN }})
                                 {
                                     // temporary skip manager, bendahara, ketua
-                                    // markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                    // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }})
                                 {
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }})
                                 {
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';   
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';   
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA }})
                                 {
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }})
                                 {
@@ -353,15 +353,15 @@
             columnDefs: [
                 { "targets": 0,"searchable": false, "orderable": false, 'checkboxes' : { 'selectRow': true } },
                 { "targets": 1,"searchable": false, "orderable": false },
-                { "targets": 2,"searchable": true, "orderable": true },
-                { "targets": 3,"searchable": true, "orderable": false },
-                { "targets": 4,"searchable": false, "orderable": false },
+                { "targets": 2,"searchable": false, "orderable": false },
+                { "targets": 3,"searchable": false, "orderable": false },
+                { "targets": 4,"searchable": true, "orderable": false },
                 { "targets": 5,"searchable": false, "orderable": false },
                 { "targets": 6,"searchable": false, "orderable": false },
                 { "targets": 7,"searchable": false, "orderable": false },
-                { "targets": 8,"searchable": false, "orderable": false },
-                { "targets": 9,"searchable": false, "orderable": false },
-                { "targets": 10,"searchable": false, "orderable": false },
+                { "targets": 8,"searchable": true, "orderable": false },
+                { "targets": 9,"searchable": true, "orderable": false },
+                { "targets": 10,"searchable": true, "orderable": false },
                 { "targets": 11,"searchable": false, "orderable": false },
                 { "targets": 12,"searchable": false, "orderable": false },
             ],
@@ -411,6 +411,7 @@
         {
             var id = $(this).data('id');
             var status = $(this).data('status');
+            var old_status = $(this).data('old-status');
             var url = '{{ route("penarikan-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
@@ -441,6 +442,7 @@
                     formData.append('bukti_pembayaran', files[0]);
                     formData.append('password', password);
                     formData.append('id_akun_debet', id_akun_debet);
+                    formData.append('old_status', old_status);
                     // getting selected checkboxes kode ambil(s) 
                     var ids_array = table
                                     .rows({ selected: true })
