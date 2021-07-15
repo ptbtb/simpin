@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\PinjamanController;
+use App\Http\Controllers\SHUController;
 use App\Http\Controllers\TransferredSHUController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -403,6 +404,11 @@ Route::group(['prefix' => 'global'], function () {
         Route::post('', [App\Http\Controllers\GlobalTransaksiController::class, 'storeTransaksiUser'])->name('global-transaksiuser-import-excel');
      });
 });
+
+Route::get('list-shu', [SHUController::class, 'index'])->middleware('auth')->name('list-shu');
+Route::get('list-shu/import-excel', [SHUController::class, 'import'])->middleware('auth')->name('list-shu.import');
+Route::post('list-shu/import-excel', [SHUController::class, 'storeImport'])->middleware('auth')->name('list-shu.storeImport');
+Route::get('list-shu/{id}/download-card', [SHUController::class, 'downloadCard'])->middleware('auth')->name('list-shu.downloadCard');
 
 Route::get('transferred-shu', [TransferredSHUController::class, 'index'])->middleware('auth')->name('transferred-shu.index');
 Route::get('transferred-shu/import-excel', [TransferredSHUController::class, 'import'])->middleware('auth')->name('transferred-shu.import');

@@ -122,3 +122,22 @@ define('CODE_TYPE_LABA', 4);
 
 define('SIMPIN_RULE_MAX_PENGAMBILAN_DALAM_SETAHUN', 1);
 define('SIMPIN_RULE_ADMINISTRASI', 2);
+
+define('SHU_DETAIL_TYPE_SALDO_AWAL', 1);
+define('SHU_DETAIL_TYPE_BULAN', 2);
+define('SHU_DETAIL_TYPE_JUMLAH', 3);
+
+const ARR_BULAN = [
+    '1' => 'Januari',
+    '2' => 'Februari',
+    '3' => 'Maret',
+    '4' => 'April',
+    '5' => 'Mei',
+    '6' => 'Juni',
+    '7' => 'Juli',
+    '8' => 'Agustus',
+    '9' => 'September',
+    '10' => 'Oktober',
+    '11' => 'November',
+    '12' => 'Desember',
+];
