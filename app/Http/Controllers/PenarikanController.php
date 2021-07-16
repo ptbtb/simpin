@@ -276,11 +276,14 @@ class PenarikanController extends Controller
 
             $statusPenarikans = StatusPenarikan::get();
 
+            $anggotas = Anggota::get();
+
             $data['title'] = "List Penarikan Simpanan";
             $data['listPenarikan'] = $listPenarikan;
             $data['request'] = $request;
             $data['bankAccounts'] = $bankAccounts;
             $data['statusPenarikans'] = $statusPenarikans;
+            $data['anggotas'] = $anggotas;
             return view('penarikan.index', $data);
         } catch (\Throwable $e) {
             Log::error($e);
@@ -304,6 +307,18 @@ class PenarikanController extends Controller
             if($request->status_penarikan != "")
             {
                 $listPenarikan->where('status_pengambilan', $request->status_penarikan);
+            }
+
+            if($request->tgl_ambil != "")
+            {
+                $tgl_ambil = Carbon::createFromFormat('d-m-Y', $request->tgl_ambil)->toDateString();
+
+                $listPenarikan->where('tgl_ambil', $tgl_ambil);
+            }
+
+            if($request->anggota != "")
+            {
+                $listPenarikan->where('kode_anggota', $anggota);
             }
 
             if ($user->isAnggota()) 
