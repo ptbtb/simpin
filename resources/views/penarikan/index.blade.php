@@ -137,45 +137,46 @@
     <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
-        
+        $.fn.dataTable.ext.errMode = 'none';
+
         var table = $('#penarikan-table').on('xhr.dt', function ( e, settings, json, xhr ) {
             }).DataTable({
             bProcessing: true,
             bServerSide: true,
-            responsive: true, 
+            responsive: true,
             ajax:
             {
-                url : baseURL+'/penarikan/list/data',    
+                url : baseURL+'/penarikan/list/data',
                 dataSrc: 'data',
                 data: function(data){
                     data.status_penarikan = $('#select_status_penarikan').val();
                 },
             },
-            aoColumns: 
+            aoColumns:
             [
                 {
                     mData: 'kode_ambil', visible: false,
                 },
-                { 
-                    data: null, orderable: false, 
+                {
+                    data: null, orderable: false,
                     className: 'select-checkbox', defaultContent: "",
                 },
-                { 
+                {
                     mData: 'DT_RowIndex',
                     className: "dt-body-center", 'name': 'DT_RowIndex',
                 },
-                { 
+                {
                     mData: 'tgl_ambil', sType: "string",
                     className: "dt-body-center", "name": "tgl_ambil"
                 },
-                { 
-                    mData: 'nama_anggota', sType: "string", 
+                {
+                    mData: 'nama_anggota', sType: "string",
                     className: "dt-body-center", "name": "nama_anggota",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.anggota) 
+
+                        if (full.anggota)
                         {
                             markup += full.anggota.nama_anggota;
                         }
@@ -183,18 +184,18 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'besar_ambil', sType: "string",
-                    className: "dt-body-center", "name": "besar_ambil" 
+                    className: "dt-body-center", "name": "besar_ambil"
                 },
-                { 
+                {
                     mData: 'status_penarikan', sType: "string",
                     className: "dt-body-center", "name": "status_penarikan",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.status_penarikan) 
+
+                        if (full.status_penarikan)
                         {
                             markup += full.status_penarikan.name;
                         }
@@ -202,18 +203,18 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'tgl_acc', sType: "string",
-                    className: "dt-body-center", "name": "tgl_acc" 
+                    className: "dt-body-center", "name": "tgl_acc"
                 },
-                { 
+                {
                     mData: 'created_by', sType: "string",
                     className: "dt-body-center", "name": "created_by",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.created_by) 
+
+                        if (full.created_by)
                         {
                             markup += full.created_by.name;
                         }
@@ -221,14 +222,14 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'approved_by', sType: "string",
                     className: "dt-body-center", "name": "approved_by",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.approved_by) 
+
+                        if (full.approved_by)
                         {
                             markup += full.approved_by.name;
                         }
@@ -236,14 +237,14 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'paid_by_cashier', sType: "string",
                     className: "dt-body-center", "name": "paid_by_cashier",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.paid_by_cashier) 
+
+                        if (full.paid_by_cashier)
                         {
                             markup += full.paid_by_cashier.name;
                         }
@@ -251,14 +252,14 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'bukti_pembayaran', sType: "string",
                     className: "dt-body-center", "name": "bukti_pembayaran",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.bukti_pembayaran) 
+
+                        if (full.bukti_pembayaran)
                         {
                             markup += '<a class="btn btn-warning btn-sm" href="'+baseURL+'/'+full.bukti_pembayaran+'" target="_blank"><i class="fa fa-file"></i></a>';
                         }
@@ -266,7 +267,7 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'kode_ambil', sType: "string",
                     className: "dt-body-center", "name": "kode_ambil",
                     mRender : function(data, type, full)
@@ -311,7 +312,7 @@
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }})
                                 {
                                     markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA}}" class="text-white btn btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';   
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAMBILAN_DITOLAK }}" class="text-white btn btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 }
                                 else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA }})
                                 {
@@ -443,15 +444,15 @@
                     formData.append('password', password);
                     formData.append('id_akun_debet', id_akun_debet);
                     formData.append('old_status', old_status);
-                    // getting selected checkboxes kode ambil(s) 
+                    // getting selected checkboxes kode ambil(s)
                     var ids_array = table
                                     .rows({ selected: true })
                                     .data()
                                     .pluck('kode_ambil')
                                     .toArray();
-                    if (ids_array.length != 0) 
+                    if (ids_array.length != 0)
                     {
-                        // append ids array into form 
+                        // append ids array into form
                         formData.append('kode_ambil_ids', JSON.stringify(ids_array));
                     }
                     else
@@ -461,9 +462,9 @@
                     $.ajax({
                         type: 'post',
                         url: url,
-                        data: formData,   
+                        data: formData,
                         contentType: false,
-                        processData: false,                     
+                        processData: false,
                     success: function(data) {
                         Swal.fire({
                             icon: 'success',
@@ -498,12 +499,12 @@
             var id = $(this).data('id');
             var action = $(this).data('action');
             var url = baseURL + '/penarikan/detail-transfer/'+id;
-            
+
             $.get(url, function( data ) {
                 $('#my-modal .form-detail').html(data);
                 $('.btn-approval').data('id', id);
                 $('#my-modal').modal({
-                    backdrop: false 
+                    backdrop: false
                 });
                 $('#my-modal').modal('show');
             });
@@ -520,7 +521,7 @@
                     htmlText = data;
                     Swal.fire({
                         title: 'Jurnal Penarikan',
-                        html: htmlText, 
+                        html: htmlText,
                         icon: "info",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -537,7 +538,7 @@
                 error : function (xhr, status, error) {
                     Swal.fire({
                         title: 'Error',
-                        html: htmlText, 
+                        html: htmlText,
                         icon: "error",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -565,9 +566,9 @@
         @foreach($bankAccounts as $key => $bankAccount)
             bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
         @endforeach
-        
+
         // trigger to get kas or bank select option
-        $(document).on('change', '#jenisAkun', function () 
+        $(document).on('change', '#jenisAkun', function ()
         {
             // remove all option in code
             $('#code').empty();
@@ -578,7 +579,7 @@
             if(jenisAkun == 2)
             {
                 // loop through code bank
-                $.each(bankAccountArray, function(key, bankAccount) 
+                $.each(bankAccountArray, function(key, bankAccount)
                 {
                     // set dafault to 102.18.000
                     if(bankAccount.id == 22)
@@ -589,14 +590,14 @@
                     {
                         var selected = '';
                     }
-                    
+
                     // insert new option
                     $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
                 });
             }
             else if(jenisAkun == 1)
             {
-                // insert new option 
+                // insert new option
                 $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
             }
 

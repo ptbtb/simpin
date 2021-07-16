@@ -149,45 +149,46 @@
     <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
+        $.fn.dataTable.ext.errMode = 'none';
 
         var table = $('#pengajuan-table').on('xhr.dt', function ( e, settings, json, xhr ) {
             }).DataTable({
             bProcessing: true,
             bServerSide: true,
-            responsive: true, 
+            responsive: true,
             ajax:
             {
-                url : baseURL+'/pinjaman/pengajuan/list/data',    
+                url : baseURL+'/pinjaman/pengajuan/list/data',
                 dataSrc: 'data',
                 data: function(data){
                     data.status_pengajuan = $('#select_status_pengajuan').val();
                 },
             },
-            aoColumns: 
+            aoColumns:
             [
                 {
                     mData: 'id', visible: false,
                 },
-                { 
-                    data: null, orderable: false, 
+                {
+                    data: null, orderable: false,
                     className: 'select-checkbox', defaultContent: "",
                 },
-                { 
+                {
                     mData: 'DT_RowIndex',
                     className: "dt-body-center", 'name': 'DT_RowIndex',
                 },
-                { 
+                {
                     mData: 'tgl_pengajuan', sType: "string",
                     className: "dt-body-center", "name": "tgl_pengajuan"
                 },
-                { 
-                    mData: 'nama_anggota', sType: "string", 
+                {
+                    mData: 'nama_anggota', sType: "string",
                     className: "dt-body-center", "name": "nama_anggota",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.anggota) 
+
+                        if (full.anggota)
                         {
                             markup += full.anggota.nama_anggota;
                         }
@@ -195,22 +196,22 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'nama_pinjaman', sType: "string",
-                    className: "dt-body-center", "name": "nama_pinjaman" 
+                    className: "dt-body-center", "name": "nama_pinjaman"
                 },
-                { 
+                {
                     mData: 'besar_pinjam', sType: "string",
-                    className: "dt-body-center", "name": "besar_pinjam" 
+                    className: "dt-body-center", "name": "besar_pinjam"
                 },
-                { 
+                {
                     mData: 'form_persetujuan', sType: "string",
                     className: "dt-body-center", "name": "form_persetujuan",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.form_persetujuan) 
+
+                        if (full.form_persetujuan)
                         {
                             markup += '<a class="btn btn-warning btn-sm" href="'+baseURL+'/'+full.form_persetujuan+'" target="_blank"><i class="fa fa-file"></i></a>';
                         }
@@ -218,22 +219,22 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'status_pengajuan', sType: "string",
                     className: "dt-body-center", "name": "status_pengajuan"
                 },
-                { 
+                {
                     mData: 'tgl_acc', sType: "string",
-                    className: "dt-body-center", "name": "tgl_acc" 
+                    className: "dt-body-center", "name": "tgl_acc"
                 },
-                { 
+                {
                     mData: 'created_by', sType: "string",
                     className: "dt-body-center", "name": "created_by",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.created_by) 
+
+                        if (full.created_by)
                         {
                             markup += full.created_by.name;
                         }
@@ -245,14 +246,14 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'approved_by', sType: "string",
                     className: "dt-body-center", "name": "approved_by",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.approved_by) 
+
+                        if (full.approved_by)
                         {
                             markup += full.approved_by.name;
                         }
@@ -264,14 +265,14 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'paid_by_cashier', sType: "string",
                     className: "dt-body-center", "name": "paid_by_cashier",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
-                        
-                        if (full.paid_by_cashier) 
+
+                        if (full.paid_by_cashier)
                         {
                             markup += full.paid_by_cashier.name;
                         }
@@ -283,7 +284,7 @@
                         return markup;
                     },
                 },
-                { 
+                {
                     mData: 'id', sType: "string",
                     className: "dt-body-center", "name": "id",
                     mRender : function(data, type, full)
@@ -328,7 +329,7 @@
                                 else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }})
                                 {
                                     markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA}}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';   
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 }
                                 else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }})
                                 {
@@ -353,7 +354,7 @@
                                 markup += '<a data-id="'+full.kode_pengajuan+'" data-code="'+full.kode_jenis_pinjam+'" data-nominal="'+full.besar_ambil+'"  class="text-white btn btn-sm mt-1 btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>';
                                 markup += '<a class="btn mt-1 btn-sm btn-warning btn-detail" data-id="'+full.kode_pengajuan+'" style="cursor: pointer"><i class="fa fa-info"></i> Info</a>';
                                 markup += '<a class="btn mt-1 btn-dark btn-sm btn-lampiran text-white" data-id="'+full.kode_pengajuan+'"><i class="fa fa-file"></i> Lampiran</a>';
-                                
+
                             @endcan
                         @endif
 
@@ -467,15 +468,15 @@
                         formData.append('password', password);
                         formData.append('id_akun_debet', id_akun_debet);
                         formData.append('old_status', old_status);
-                        // getting selected checkboxes kode ambil(s) 
+                        // getting selected checkboxes kode ambil(s)
                         var ids_array = table
                                         .rows({ selected: true })
                                         .data()
                                         .pluck('id')
                                         .toArray();
-                        if (ids_array.length != 0) 
+                        if (ids_array.length != 0)
                         {
-                            // append ids array into form 
+                            // append ids array into form
                             formData.append('ids', JSON.stringify(ids_array));
                         }
                         else
