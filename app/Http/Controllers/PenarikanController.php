@@ -330,6 +330,8 @@ class PenarikanController extends Controller
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
+            $jenisSimpanan = JenisSimpanan::all();
+
             return Datatables::eloquent($listPenarikan)
                                 ->editColumn('tgl_ambil', function ($request) {
                                     if($request->tgl_ambil)
@@ -345,6 +347,9 @@ class PenarikanController extends Controller
                                     {
                                         return $request->tgl_acc->format('d M Y');
                                     }
+                                })
+                                ->editColumn('jenis_simpanan', function ($request) use($jenisSimpanan){
+                                    return strtoupper($jenisSimpanan->where('kode_jenis_simpan', $request->code_trans)->first()->nama_simpanan);
                                 })
                                 ->addIndexColumn()
                                 ->make(true);

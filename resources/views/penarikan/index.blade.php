@@ -86,6 +86,7 @@
                         <th>No</th>
                         <th>Tanggal Penarikan</th>
                         <th>Nama Anggota</th>
+                        <th>Jenis Simpanan</th>
                         <th>Besar Penarikan</th>
                         <th>Status</th>
                         <th>Tanggal Acc</th>
@@ -201,6 +202,10 @@
 
                         return markup;
                     },
+                },
+                {
+                    mData: 'jenis_simpanan', sType: "string",
+                    className: "dt-body-center", "name": "jenis_simpanan",
                 },
                 {
                     mData: 'besar_ambil', sType: "string",
