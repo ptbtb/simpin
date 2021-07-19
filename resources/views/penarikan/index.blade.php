@@ -59,9 +59,9 @@
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
                     <select name="anggota" class="form-control select2" id="select_anggota">
-                        <option value="" selected disabled>Pilih nama anggota</option>
+                        <option value="" selected>All</option>
                         @foreach ($anggotas as $anggota)
-                            <option value="{{ $anggota->id }}">{{ $anggota->nama_anggota }}</option>
+                            <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
                         @endforeach
                     </select>
                 </div>

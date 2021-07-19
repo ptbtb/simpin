@@ -318,7 +318,7 @@ class PenarikanController extends Controller
 
             if($request->anggota != "")
             {
-                $listPenarikan->where('kode_anggota', $anggota);
+                $listPenarikan->where('kode_anggota', $request->anggota);
             }
 
             if ($user->isAnggota()) 
