@@ -97,11 +97,14 @@ class PinjamanController extends Controller {
 
         $statusPengajuans = StatusPengajuan::get();
 
+        $anggotas = Anggota::get();
+
         $data['title'] = "List Pengajuan Pinjaman";
         $data['listPengajuanPinjaman'] = $listPengajuanPinjaman;
         $data['request'] = $request;
         $data['bankAccounts'] = $bankAccounts;
         $data['statusPengajuans'] = $statusPengajuans;
+        $data['anggotas'] = $anggotas;
         return view('pinjaman.indexPengajuan', $data);
     }
 
@@ -122,6 +125,18 @@ class PinjamanController extends Controller {
             if($request->status_pengajuan != "")
             {
                 $listPengajuanPinjaman->where('id_status_pengajuan', $request->status_pengajuan);
+            }
+
+            if($request->tgl_pengajuan != "")
+            {
+                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->tgl_pengajuan)->toDateString();
+
+                $listPengajuanPinjaman->where('tgl_pengajuan', $tgl_pengajuan);
+            }
+
+            if($request->anggota != "")
+            {
+                $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
             }
 
             if ($user->isAnggota()) 
