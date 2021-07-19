@@ -35,6 +35,10 @@
                     <div class="form-group">
                         <a href="{{ asset('template-excel/template shu.xlsx') }}">Download Template Excel Here</a>
                     </div>
+                    <div class="form-group">
+                        <label>Tahun SHU</label>
+                        <input type="number" name="year" class="form-control" placeholder="Tahun SHU" required min="0">
+                    </div>
                     <div class="form-group ">
                         <label>Choose File</label><br>
                         <input type="file" name="file" id="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"><br>

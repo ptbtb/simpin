@@ -34,7 +34,7 @@ class SHUController extends Controller
         $this->authorize('import user', Auth::user());
         try
         {
-            Excel::import(new SHUImport, $request->file);
+            Excel::import(new SHUImport($request->year), $request->file);
             return redirect()->back()->withSuccess('Import data berhasil');
         }
         catch (\Throwable $e)
