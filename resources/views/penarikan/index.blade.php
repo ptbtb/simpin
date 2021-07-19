@@ -22,7 +22,8 @@
 
 @section('css')
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" rel="stylesheet" />
     <style>
         .btn-sm{
             font-size: .8rem;
@@ -51,6 +52,19 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group col-md-4">
+                    <label>Tgl. Penarikan</label>
+                    <input type="text" name="tgl_ambil" id="input_tgl_ambil" value="{{ old('tgl_ambil') }}" class="form-control" placeholder="dd-mm-yyyy" autocomplete="off">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Anggota</label>
+                    <select name="anggota" class="form-control select2" id="select_anggota">
+                        <option value="" selected>All</option>
+                        @foreach ($anggotas as $anggota)
+                            <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col-md-1 form-group" style="margin-top: 26px">
                     <a class="btn btn-sm btn-success form-control" id="btnFiterSubmitSearch" style="color:white; padding-top:8px"><i class="fa fa-filter"></i> Filter</a>
                 </div>
@@ -72,6 +86,7 @@
                         <th>No</th>
                         <th>Tanggal Penarikan</th>
                         <th>Nama Anggota</th>
+                        <th>Jenis Simpanan</th>
                         <th>Besar Penarikan</th>
                         <th>Status</th>
                         <th>Tanggal Acc</th>
@@ -134,7 +149,8 @@
 @section('js')
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
         $.fn.dataTable.ext.errMode = 'none';
@@ -143,13 +159,16 @@
             }).DataTable({
             bProcessing: true,
             bServerSide: true,
-            responsive: true,
+            responsive: true, 
+            searching: false, 
             ajax:
             {
                 url : baseURL+'/penarikan/list/data',
                 dataSrc: 'data',
                 data: function(data){
                     data.status_penarikan = $('#select_status_penarikan').val();
+                    data.tgl_ambil = $('#input_tgl_ambil').val();
+                    data.anggota = $('#select_anggota').val();
                 },
             },
             aoColumns:
@@ -183,6 +202,10 @@
 
                         return markup;
                     },
+                },
+                {
+                    mData: 'jenis_simpanan', sType: "string",
+                    className: "dt-body-center", "name": "jenis_simpanan",
                 },
                 {
                     mData: 'besar_ambil', sType: "string",
@@ -366,6 +389,11 @@
                 { "targets": 11,"searchable": false, "orderable": false },
                 { "targets": 12,"searchable": false, "orderable": false },
             ],
+            dom: 'lBrtip',
+            buttons: [
+                'selectAll',
+                'selectNone',
+            ],
             select: {
                 style: 'multi',
                 selector: 'td:first-child'
@@ -398,15 +426,10 @@
 		});
 
         $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-        $('#from').datepicker({
+        $('#input_tgl_ambil').datepicker({
             uiLibrary: 'bootstrap4',
-            format: 'yyyy-mm-dd'
+            format: 'dd-mm-yyyy'
         });
-        $('#to').datepicker({
-            uiLibrary: 'bootstrap4',
-            format: 'yyyy-mm-dd'
-        });
-        $('.table').DataTable();
 
         $(document).on('click','.btn-approval', function ()
         {

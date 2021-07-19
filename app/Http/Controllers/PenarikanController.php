@@ -276,11 +276,14 @@ class PenarikanController extends Controller
 
             $statusPenarikans = StatusPenarikan::get();
 
+            $anggotas = Anggota::get();
+
             $data['title'] = "List Penarikan Simpanan";
             $data['listPenarikan'] = $listPenarikan;
             $data['request'] = $request;
             $data['bankAccounts'] = $bankAccounts;
             $data['statusPenarikans'] = $statusPenarikans;
+            $data['anggotas'] = $anggotas;
             return view('penarikan.index', $data);
         } catch (\Throwable $e) {
             Log::error($e);
@@ -306,6 +309,18 @@ class PenarikanController extends Controller
                 $listPenarikan->where('status_pengambilan', $request->status_penarikan);
             }
 
+            if($request->tgl_ambil != "")
+            {
+                $tgl_ambil = Carbon::createFromFormat('d-m-Y', $request->tgl_ambil)->toDateString();
+
+                $listPenarikan->where('tgl_ambil', $tgl_ambil);
+            }
+
+            if($request->anggota != "")
+            {
+                $listPenarikan->where('kode_anggota', $request->anggota);
+            }
+
             if ($user->isAnggota()) 
             {
                 $anggota = $user->anggota;
@@ -314,6 +329,8 @@ class PenarikanController extends Controller
             } 
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+
+            $jenisSimpanan = JenisSimpanan::all();
 
             return Datatables::eloquent($listPenarikan)
                                 ->editColumn('tgl_ambil', function ($request) {
@@ -330,6 +347,9 @@ class PenarikanController extends Controller
                                     {
                                         return $request->tgl_acc->format('d M Y');
                                     }
+                                })
+                                ->editColumn('jenis_simpanan', function ($request) use($jenisSimpanan){
+                                    return strtoupper($jenisSimpanan->where('kode_jenis_simpan', $request->code_trans)->first()->nama_simpanan);
                                 })
                                 ->addIndexColumn()
                                 ->make(true);
