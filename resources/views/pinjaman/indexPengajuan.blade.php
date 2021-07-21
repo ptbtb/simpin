@@ -185,7 +185,7 @@
             aoColumns:
             [
                 {
-                    mData: 'kode_pengajuan', visible: false,
+                    mData: 'id', visible: false,
                 },
                 {
                     data: null, orderable: false,
@@ -303,7 +303,7 @@
                     },
                 },
                 {
-                    mData: 'kode_pengajuan', sType: "string",
+                    mData: 'id', sType: "string",
                     className: "dt-body-center", "name": "id",
                     mRender : function(data, type, full)
                     {
@@ -440,7 +440,7 @@
 
         $(document).on('click', '.btn-approval', function ()
         {
-            var id = $(this).data('kode_pengajuan');
+            var id = $(this).data('id');
             var status = $(this).data('status');
             var old_status = $(this).data('old-status');
             var url = '{{ route("pengajuan-pinjaman-update-status") }}';
