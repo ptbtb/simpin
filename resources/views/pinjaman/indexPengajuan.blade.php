@@ -440,7 +440,7 @@
 
         $(document).on('click', '.btn-approval', function ()
         {
-            var id = $(this).data('id');
+            var id = $(this).data('kode_pengajuan');
             var status = $(this).data('status');
             var old_status = $(this).data('old-status');
             var url = '{{ route("pengajuan-pinjaman-update-status") }}';
