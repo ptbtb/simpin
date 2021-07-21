@@ -449,7 +449,7 @@ class PinjamanController extends Controller {
            
             foreach ($ids as $key => $id) 
             {
-                $pengajuan = Pengajuan::where('id', $id)->first();
+                $pengajuan = Pengajuan::where('kode_pengajuan', $id)->first();
 
                 // check pengajuan's status must same as old_status
                 if($pengajuan && $pengajuan->id_status_pengajuan == $request->old_status)

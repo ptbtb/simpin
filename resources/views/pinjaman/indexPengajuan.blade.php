@@ -185,7 +185,7 @@
             aoColumns:
             [
                 {
-                    mData: 'id', visible: false,
+                    mData: 'kode_pengajuan', visible: false,
                 },
                 {
                     data: null, orderable: false,
