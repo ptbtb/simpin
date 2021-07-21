@@ -303,7 +303,7 @@
                     },
                 },
                 {
-                    mData: 'id', sType: "string",
+                    mData: 'kode_pengajuan', sType: "string",
                     className: "dt-body-center", "name": "id",
                     mRender : function(data, type, full)
                     {
