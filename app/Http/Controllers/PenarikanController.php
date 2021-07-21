@@ -173,7 +173,7 @@ class PenarikanController extends Controller
         $user = Auth::user();
         $this->authorize('view history penarikan', $user);
 
-        $listPenarikan = Penarikan::with('anggota')->whereraw('paid_by_cashier is not null');
+        $listPenarikan = Penarikan::with('anggota')->whereraw('paid_by_cashier is not null')->orderBy('tgl_ambil','desc');
 
         if ($request->kode_anggota) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);
@@ -266,10 +266,10 @@ class PenarikanController extends Controller
                     return redirect()->back()->withError('Your account has no members');
                 }
 
-                $listPenarikan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
+                $listPenarikan = Penarikan::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_ambil','desc')
                     ->get();
             } else {
-                $listPenarikan = Penarikan::with('anggota')->get();
+                $listPenarikan = Penarikan::with('anggota')->orderBy('tgl_ambil','desc')->get();
             }
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
@@ -302,7 +302,7 @@ class PenarikanController extends Controller
         try {
             $user = Auth::user();
             
-            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet');
+            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet')->orderBy('tgl_ambil','desc');
 
             if($request->status_penarikan != "")
             {

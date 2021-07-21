@@ -44,7 +44,7 @@ class SimpananController extends Controller
     public function indexAjax(Request $request)
     {
         $this->authorize('view simpanan', Auth::user());
-        $simpanan = Simpanan::with('anggota');
+        $simpanan = Simpanan::with('anggota')->orderBy('tgl_entri','desc');
         if ($request->from || $request->to) {
             if ($request->from) {
                 $simpanan = $simpanan->where('tgl_entri', '>=', $request->from);

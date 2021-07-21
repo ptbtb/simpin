@@ -51,7 +51,7 @@ class PinjamanController extends Controller {
                 return redirect()->back()->withError('Your account has no members');
             }
 
-            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_entri','asc')
                     ->notPaid();
         } else {
             if ($request->id) {
@@ -87,10 +87,10 @@ class PinjamanController extends Controller {
                 return redirect()->back()->withError('Your account has no members');
             }
 
-            $listPengajuanPinjaman = Pengajuan::where('kode_anggota', $anggota->kode_anggota)
+            $listPengajuanPinjaman = Pengajuan::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_pengajuan','asc')
                     ->get();
         } else {
-            $listPengajuanPinjaman = Pengajuan::with('anggota')->get();
+            $listPengajuanPinjaman = Pengajuan::with('anggota')->orderBy('tgl_pengajuan','asc')->get();
         }
 
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
@@ -120,7 +120,7 @@ class PinjamanController extends Controller {
             $user = Auth::user();
             $this->authorize('view pengajuan pinjaman', $user);
             
-            $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan');
+            $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan')->orderBy('tgl_pengajuan','asc');
 
             if($request->status_pengajuan != "")
             {
@@ -185,7 +185,7 @@ class PinjamanController extends Controller {
 
     public function history(Request $request) {
         $user = Auth::user();
-        $this->authorize('view history pinjaman', $user);
+        $this->authorize('view history pinjaman', $user)->orderBy('created_at','desc');
 
         if ($user->roles->first()->id == ROLE_ANGGOTA) {
             $anggota = $user->anggota;
