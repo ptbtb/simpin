@@ -24,10 +24,18 @@ class BukuBesarController extends Controller
         try
         {
             $codes = Code::where('is_parent', 0)->get();
+            if(!$request->period)
+            {          
+                $request->period = Carbon::today()->format('d-m-Y');
+            }
 
             // buku besar collection
             $bukuBesars = collect();
-
+            $todays=Carbon::createFromFormat('d-m-Y', $request->period);
+            $today=Carbon::createFromFormat('d-m-Y', $request->period)->format('d-m-Y');
+             //dd($today);
+            $startOfYear = $todays->subYear()->endOfYear()->format('d-m-Y');
+            //dd($startOfYear);
             foreach ($codes as $key => $code) 
             {
 
@@ -38,16 +46,15 @@ class BukuBesarController extends Controller
                     // if first char of COA is 7 or 8 get jurnal from first date of year until today
                     if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
                     {
-                        $startOfYear = Carbon::today()->startOfYear()->format('Y-m-d');
-                        $today = Carbon::today()->format('Y-m-d');
+                        
 
                         $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
                         $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
 
                     $saldo += $saldoDebet;
@@ -64,16 +71,15 @@ class BukuBesarController extends Controller
                     // if first char of COA is 7 or 8 get jurnal from first date of year until today
                     if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
                     {
-                        $startOfYear = Carbon::today()->startOfYear()->format('Y-m-d');
-                        $today = Carbon::today()->format('Y-m-d');
+                        
 
                         $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
                         $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
 
                     $saldo -= $saldoDebet;
@@ -121,16 +127,15 @@ class BukuBesarController extends Controller
                     // if first char of COA is 7 or 8 get jurnal from first date of year until today
                     if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
                     {
-                        $startOfYear = Carbon::today()->startOfYear()->format('Y-m-d');
-                        $today = Carbon::today()->format('Y-m-d');
+                        
 
                         $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
                         $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
 
                     $saldo += $saldoDebet;
@@ -148,16 +153,15 @@ class BukuBesarController extends Controller
                     // if first char of COA is 7 or 8 get jurnal from first date of year until today
                     if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
                     {
-                        $startOfYear = Carbon::today()->startOfYear()->format('Y-m-d');
-                        $today = Carbon::today()->format('Y-m-d');
+                        
 
                         $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
                         $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear, $today])->sum('kredit');
                     }
 
                     $saldo -= $saldoDebet;
@@ -198,6 +202,15 @@ class BukuBesarController extends Controller
 
         // buku besar collection
         $bukuBesars = collect();
+        if(!$request->period)
+            {          
+                $request->period = Carbon::today()->format('d-m-Y');
+            }
+
+            $todays=Carbon::createFromFormat('d-m-Y', $request->period);
+            $today=Carbon::createFromFormat('d-m-Y', $request->period)->format('d-m-Y');
+             //dd($today);
+            $startOfYear = $todays->subYear()->endOfYear()->format('d-m-Y');
 
         foreach ($codes as $key => $code) 
         {
@@ -205,8 +218,8 @@ class BukuBesarController extends Controller
             // get code's normal balance 
             if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
             {
-                $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet');
-                $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit');
+                $saldoDebet = $jurnal->where('akun_debet', $code->CODE)->sum('debet')->whereBetween('created_at', [$startOfYear, $today]);
+                $saldoKredit = $jurnal->where('akun_kredit', $code->CODE)->sum('kredit')->whereBetween('created_at', [$startOfYear, $today]);
 
                 $saldo += $saldoDebet;
                 $saldo -= $saldoKredit;

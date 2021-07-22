@@ -19,6 +19,7 @@
 @section('plugins.Datatables', true)
 
 @section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous" />
     <style>
         .btn-sm{
             font-size: .8rem;
@@ -28,9 +29,23 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header text-right">
-            <a href="{{ route('buku-besar-download-excel') }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+        <div class="card-header">
+            <div class="col-md-12">
+                <form id="myForm" role="form" method="GET" enctype="multipart/form-data" action="{{ route('buku-besar-list') }}">
+                    {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
+                    
+                    <div class="col-md-6">
+                        <label>Tanggal</label>
+                        <input class="form-control datepicker" placeholder="mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->period)->format('d-m-Y') }}" autocomplete="off" />
+                    </div>
+                    <div class="col-md-6 text-right" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
+                        <a href="{{ route('buku-besar-download-excel') }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+                    </div>
+                </form>
+            </div>
         </div>
+
         <div class="card-body row">
             <div class="col-md-6 table-responsive">
                 <h5 class="text-center">Aktiva</h5>
@@ -90,9 +105,22 @@
 @endsection
 
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function ()
         {
+            $("#period").change(function(){
+                console.log($('#period').val());
+                console.log({{ $request->period }});
+            });
+
+            $('.datepicker').datepicker({
+                format: "dd-mm-yyyy"
+            });
+
+            $('input.datepicker').bind('keyup keydown keypress', function (evt) {
+                return false;
+            });
             initiateDatatables();
         });
         function initiateDatatables()
