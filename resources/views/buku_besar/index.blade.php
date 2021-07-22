@@ -36,7 +36,7 @@
                     
                     <div class="col-md-6">
                         <label>Tanggal</label>
-                        <input class="form-control datepicker" placeholder="mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->period)->format('d-m-Y') }}" autocomplete="off" />
+                        <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->period)->format('d-m-Y') }}" autocomplete="off" />
                     </div>
                     <div class="col-md-6 text-right" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
@@ -139,6 +139,7 @@
                     dataSrc: 'data',
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_ACTIVA }};
+                         data.period = $('#period').val();
                     }
                 },
                 aoColumns: [
@@ -179,6 +180,7 @@
                     dataSrc: 'data',
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_PASSIVA }};
+                         data.period = $('#period').val();
                     }
                 },
                 aoColumns: [
@@ -219,6 +221,7 @@
                     dataSrc: 'data',
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_RUGI }};
+                         data.period = $('#period').val();
                     }
                 },
                 aoColumns: [
@@ -259,6 +262,7 @@
                     dataSrc: 'data',
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_LABA }};
+                        data.period = $('#period').val();
                     }
                 },
                 aoColumns: [
