@@ -36,7 +36,7 @@
                     
                     <div class="col-md-6">
                         <label>Tanggal</label>
-                        <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->period)->format('d-m-Y') }}" autocomplete="off" />
+                        <input class="form-control datepicker" placeholder="yyyy-mm-dd" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d') }}" autocomplete="off" />
                     </div>
                     <div class="col-md-6 text-right" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
@@ -115,7 +115,7 @@
             });
 
             $('.datepicker').datepicker({
-                format: "dd-mm-yyyy"
+                format: "yyyy-mm-dd"
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
