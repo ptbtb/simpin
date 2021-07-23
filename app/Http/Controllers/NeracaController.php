@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
-use App\Exports\BukuBesarExport;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 use Carbon\Carbon;
 use Excel;
@@ -136,16 +136,123 @@ class NeracaController extends Controller
         }
     }
 
-    public function createExcel(Request $request) {
-        $user = Auth::user();
-        $this->authorize('view jurnal', $user);
+    public function createExcel($period) {
+        $this->authorize('view jurnal', Auth::user());
+        try
+        {
+            $groupNeraca = [101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 204, 205, 208, 210, 302, 400, 401, 
+                            402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 501, 502, 603, 604, 605, 606, 607];
 
-        $filename = 'export_buku_besar_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
-        return Excel::download(new BukuBesarExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+            $codes = Code::where('is_parent', 0)
+                            ->where(function ($query) use($groupNeraca) {
+                                for ($i = 0; $i < count($groupNeraca); $i++){
+                                $query->orWhere('CODE', 'like',  $groupNeraca[$i] .'%');
+                                }      
+                            })
+                            ->whereIn('code_type_id', [CODE_TYPE_ACTIVA, CODE_TYPE_PASSIVA])
+                            ->get();
+
+            // aktiva collection
+            $neracas = collect();
+
+            $groupCodes = $codes->groupBy(function ($item, $key) {
+                return substr($item['CODE'], 0, 3);
+            });
+
+            // period
+            // check if period date has been selected
+            if(!$period)
+            {          
+                $period = Carbon::today()->format('m-Y');
+            }
+
+            // create compare period, sub month from selected period
+            $compare_period = Carbon::createFromFormat('m-Y', $period)->subMonth()->format('m-Y');
+
+            // get start/end period and sub period
+            $startPeriod = Carbon::createFromFormat('m-Y', $period)->startOfMonth()->format('Y-m-d');
+            $endPeriod = Carbon::createFromFormat('m-Y', $period)->endOfMonth()->format('Y-m-d');
+
+            $startComparePeriod = Carbon::createFromFormat('m-Y', $compare_period)->startOfMonth()->format('Y-m-d');
+            $endComparePeriod = Carbon::createFromFormat('m-Y', $compare_period)->endOfMonth()->format('Y-m-d');
+            
+            foreach ($groupCodes as $key => $groupCode) 
+            {
+                $saldo = 0;
+                $saldoLastMonth = 0;
+                foreach ($groupCode as $key1 => $code) 
+                {
+                    // get code's normal balance 
+                    if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
+                    {
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('kredit');
+
+                        $saldo += $saldoDebet;
+                        $saldo -= $saldoKredit;
+
+                        $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startComparePeriod, $endComparePeriod])->sum('debet');
+                        $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+
+                        $saldoLastMonth += $saldoDebetLastMonth;
+                        $saldoLastMonth -= $saldoKreditLastMonth;
+                    }
+                    else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+                    {
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('kredit');
+
+                        $saldo -= $saldoDebet;
+                        $saldo += $saldoKredit;
+
+                        $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startComparePeriod, $endComparePeriod])->sum('debet');
+                        $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+
+                        $saldoLastMonth -= $saldoDebetLastMonth;
+                        $saldoLastMonth += $saldoKreditLastMonth;
+                    }
+                }
+                
+                $parentCode = Code::where('CODE', $key . '.00.000')->first();
+
+                if($groupCode->first()->code_type_id == CODE_TYPE_ACTIVA)
+                {
+                    $neracas->push([
+                        'type' => 'Aktiva',
+                        'rek' => substr($parentCode->CODE, 0, 3),
+                        'nama_rekening' => $parentCode->NAMA_TRANSAKSI,
+                        'bulan_ini' => $saldo,
+                        'bulan_lalu' => $saldoLastMonth,
+                    ]);
+                }
+                else if($groupCode->first()->code_type_id == CODE_TYPE_PASSIVA)
+                {
+                    $neracas->push([
+                        'type' => 'Pasiva',
+                        'rek' => substr($parentCode->CODE, 0, 3),
+                        'nama_rekening' => $parentCode->NAMA_TRANSAKSI,
+                        'bulan_ini' => $saldo,
+                        'bulan_lalu' => $saldoLastMonth,
+                    ]);
+                }
+                
+            }
+
+            $neracas = $neracas->sortBy('type')->sortBy('rek');
+            
+            $filename = 'export_neraca_excel_' .$period. '_'. Carbon::now()->format('d M Y') . '.xlsx';
+            return (new FastExcel($neracas))->download($filename);
+        }
+        catch (\Throwable $e)
+        {
+            Log::error($e);
+            return redirect()->back()->withError('Terjadi Kesalahan');
+        }
     }
 
     public function createPdf($period)
     {
+        $this->authorize('view jurnal', Auth::user());
         try
         {
             $groupNeraca = [101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 204, 205, 208, 210, 302, 400, 401, 
