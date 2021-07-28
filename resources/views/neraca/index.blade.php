@@ -40,7 +40,8 @@
                     </div>
                     <div class="col-md-12 text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
-                        {{-- <a href="{{ route('neraca-download-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Download Excel</a> --}}
+                        <a href="{{ route('neraca-download-pdf', ['period' => $request->period]) }}" class="btn btn-info"><i class="fas fa-print"></i> Print</a>
+                        <a href="{{ route('neraca-download-excel', ['period' => $request->period]) }}" class="btn btn-success"><i class="fa fa-download"></i> Excel</a>
                     </div>
                 </form>
             </div>
@@ -54,7 +55,7 @@
                             <th>Rek</th>
                             <th>Nama Rekening</th>
                             <th style="width: 30%">Bulan ini</th>
-                            <th style="width: 30%">Bulan ini</th>
+                            <th style="width: 30%">Bulan lalu</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,7 +84,7 @@
                             <th>Rek</th>
                             <th>Nama Rekening</th>
                             <th style="width: 30%">Bulan ini</th>
-                            <th style="width: 30%">Bulan ini</th>
+                            <th style="width: 30%">Bulan lalu</th>
                         </tr>
                     </thead>
                     <tbody>

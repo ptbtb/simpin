@@ -53,15 +53,15 @@
 						@endif
 						<div class="col-md-12 form-group">
 							<label>Jenis Simpanan</label>
-							<select name="jenis_simpanan" class="form-control">
+							<select id="selectJenisSimpanan" name="jenis_simpanan[]" multiple="multiple" class="form-control" autocomplete="off">
 								@foreach ($jenisSimpanan as $jenis)
-									<option value="{{ $jenis->kode_jenis_simpan }}">{{ $jenis->nama_simpanan }}</option>
+									<option value="{{ $jenis->kode_jenis_simpan }}" data-id="{{ $jenis->kode_jenis_simpan }}">{{ $jenis->nama_simpanan }}</option>
 								@endforeach
 							</select>
 						</div>
-						<div class="col-md-12 form-group">
-							<label>Besar Penarikan</label>
-							<input type="text" name="besar_penarikan" class="form-control penarikan" placeholder="Besar Penarikan" autocomplete="off" required>
+						<div class="col-md-12" id="besar-penarikan">
+							{{-- <label>Besar Penarikan</label>
+							<input type="text" name="besar_penarikan" class="form-control penarikan" placeholder="Besar Penarikan" autocomplete="off" required> --}}
 						</div>
 						<div class="col-md-12 form-group">
 							<label>Password</label>
@@ -83,15 +83,17 @@
 @endsection
 
 @section('js')
-	<script src="{{ asset('js/cleave.min.js') }}"></script>
+	{{-- <script src="{{ asset('js/cleave.min.js') }}"></script> --}}
+    <script src="{{ asset('js/collect.min.js') }}"></script>
 	<script>
 		var baseURL = {!! json_encode(url('/')) !!};
-		var cleave = new Cleave('.penarikan', {
-			numeral: true,
-			prefix: 'Rp ',
-			noImmediatePrefix: true,
-			numeralThousandsGroupStyle: 'thousand'
-		});
+        var jenisSimpanan = collect(@json($jenisSimpanan));
+		// var cleave = new Cleave('.penarikan', {
+		// 	numeral: true,
+		// 	prefix: 'Rp ',
+		// 	noImmediatePrefix: true,
+		// 	numeralThousandsGroupStyle: 'thousand'
+		// });
 
 		$(document).ready(function ()
 		{
@@ -121,7 +123,7 @@
                     };
                 }
             }
-        });	
+        });
 
 		$('#anggotaName').on('change', function ()
 		{
@@ -129,6 +131,65 @@
 			$.get(baseURL + "/penarikan/anggota/detail/" + selectedValue, function( data ) {
 				$('#detailAnggota').html(data);
 			});
-		});	
+		});
+
+        $('#selectJenisSimpanan').select2({
+            placeholder: 'Pilih Jenis Simpanan'
+        });
+
+        // Event ketika select jenis pinjaman berubah
+        $(document).on('change','#selectJenisSimpanan', function ()
+        {
+            var selected = $('#selectJenisSimpanan').val();
+            var content = '';
+            var parentId = '#besar-penarikan';
+            selected.forEach(value => {
+                var childId = '#besar-penarikan-'+value;
+
+                var namaSimpanan = jenisSimpanan.where('kode_jenis_simpan', value).first().nama_simpanan;
+                namaSimpanan = namaSimpanan.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                    return letter.toUpperCase();
+                });
+
+                content = content + '<div class="form-group" id="' + childId + '">' +
+                                '<label>Besar Penarikan '+ namaSimpanan +'</label>' +
+							    '<input type="text" name="besar_penarikan['+value+']" class="form-control toRupiah penarikan" placeholder="Besar Penarikan" autocomplete="off" required>' +
+                            '</div>';
+            });
+            $(parentId).html(content);
+
+            $('.toRupiah').each(function (index)
+            {
+                var value = $(this).val();
+                if (value != null && value != '')
+                {
+                    $(this).val(toRupiah(value));
+                }
+            });
+
+            $('.toRupiah').on('keyup', function () {
+                var val = $(this).val();
+                val = val.replace(/[^\d]/g, "",'');
+                $(this).val(toRupiah(val));
+            });
+        })
+
+        function toRupiah(number)
+        {
+            var stringNumber = number.toString();
+            var length = stringNumber.length;
+            var temp = length;
+            var res = "Rp ";
+            for (let i = 0; i < length; i++) {
+                res = res + stringNumber.charAt(i);
+                temp--;
+                if (temp%3 == 0 && temp > 0)
+                {
+                    res = res + ".";
+                }
+            }
+            return res;
+        }
+
 	</script>
 @endsection

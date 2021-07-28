@@ -385,7 +385,8 @@ Route::group(['prefix' => 'neraca'], function() {
     Route::group(['middleware' => ['auth']], function () {
         Route::get('', [App\Http\Controllers\NeracaController::class, 'index'])->name('neraca-list');
         Route::post('', [App\Http\Controllers\NeracaController::class, 'index'])->name('neraca-list');
-        Route::get('download/excel', [App\Http\Controllers\NeracaController::class, 'createExcel'])->name('neraca-download-excel');
+        Route::get('download/excel/{period}', [App\Http\Controllers\NeracaController::class, 'createExcel'])->name('neraca-download-excel');
+        Route::get('download/pdf/{period}', [App\Http\Controllers\NeracaController::class, 'createPdf'])->name('neraca-download-pdf');
     });
 });
 
