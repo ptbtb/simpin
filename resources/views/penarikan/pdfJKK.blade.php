@@ -33,8 +33,8 @@
     }
 </style>
 <body>
-    <h5 style="margin: 0">REKAP PENARIKAN </h5>
-    <h5 style="margin-top: 0">TGL {{ \Carbon\Carbon::now()->format('d F Y') }}</h5>
+    <h5 style="margin: 0">DAFTAR TRANSFER PENARIKAN SIMPANAN </h5>
+    <h5 style="margin-top: 0">TGL {{  $tgl_print->format('d F Y') }}</h5>
 
     <table class="border-collapse">
         <tr>
@@ -54,13 +54,13 @@
         @foreach ($listPenarikan as $penarikan)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $penarikan->kode_ambil }}</td>
+                <td>{{ $penarikan->kode_anggota }}</td>
                 <td>{{ strtoupper($penarikan->anggota->nama_anggota) }}</td>
                 <td>{{ strtoupper($settings[COMPANY_SETTING_BANK_NAME]) }}</td>
                 <td>{{ "Rp " . number_format($penarikan->besar_ambil,2,',','.') }}</td>
                 <td>PENARIKAN {{ strtoupper($jenisSimpanan->where('kode_jenis_simpan', $penarikan->code_trans)->first()->nama_simpanan) }}</td>
                 <td>{{ $settings[COMPANY_SETTING_BANK_ACCOUNT] }}</td>
-                <td>{{ "Rp " . number_format($penarikan->besar_ambil,2,',','.') }}</td>
+                <td>{{ "Rp " . number_format($penarikan->besar_ambil,0,',','.') }}</td>
             </tr>
             @php
                 $totalcredited += $penarikan->besar_ambil;

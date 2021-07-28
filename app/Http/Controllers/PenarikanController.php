@@ -499,6 +499,7 @@ class PenarikanController extends Controller
                 $penarikan->status_jkk = 1;
                 $penarikan->save();
             }
+             $data['tgl_print']=Carbon::createFromFormat('Y-m-d', $request->tgl_print);
 
             $data['listPenarikan'] = $listPenarikan;
             $data['jenisSimpanan'] = JenisSimpanan::all();
@@ -507,7 +508,7 @@ class PenarikanController extends Controller
             $pdf = PDF::loadView('penarikan.pdfJKK', $data)->setPaper('a4', 'landscape');
 
             // download PDF file with download method
-            $filename = $request->no_jkk . '-' . Carbon::now()->toDateString() . '.pdf';
+            $filename = $request->no_jkk . '-' . $data['tgl_print'] . '.pdf';
             return $pdf->download($filename);
 
             // return view('penarikan.pdfJKK', $data);

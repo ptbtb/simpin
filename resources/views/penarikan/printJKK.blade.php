@@ -42,10 +42,19 @@
                                 <label>Kode Penarikan</label>
                                 <select name="kode_ambil[]" id="kodeAmbil" class="form-control select2" multiple required>
                                     @foreach ($listPenarikan as $penarikan)
-                                        <option value="{{ $penarikan->kode_ambil }}">{{ $penarikan->kode_ambil }}</option>
+                                        <option value="{{ $penarikan->kode_ambil }}">
+                                            {{ $penarikan->kode_anggota }} 
+                                            {{ $penarikan->anggota->nama_anggota }} 
+                                            {{ $penarikan->jenisSimpanan->nama_simpanan }} 
+                                            {{number_format($penarikan->besar_ambil,0,',','.') }}
+                                            {{ $penarikan->tgl_ambil->format('Y-m-d') }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group">
+                        <label for="tgl_print">Tgl Print</label>
+                        <input id="tgl_print" type="date" name="tgl_print" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
+                    </div>
                         </div>
                         <div class="col-md-12 text-center">
                             <button type="submit" name="submit" class="btn btn-sm btn-success"><i class="fas fa-print"></i> Print JKK</button>

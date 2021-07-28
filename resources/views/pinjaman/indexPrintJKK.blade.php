@@ -43,7 +43,7 @@
                                 <select name="kode_pengajuan[]" id="kodePengajuan" class="form-control select2" multiple required>
                                     <option value="">Pilih</option>
                                     @foreach ($listPengajuanPinjaman as $pengajuan)
-                                        <option value="{{ $pengajuan->kode_pengajuan }}">{{ $pengajuan->kode_anggota }} {{ $pengajuan->anggota->nama_anggota }} {{ $pengajuan->jenisPinjaman->nama_pinjaman }} {{ $pengajuan->besar_pinjam }} {{ $pengajuan->tgl_pengajuan->format('Y-m-d') }}</option>
+                                        <option value="{{ $pengajuan->kode_pengajuan }}">{{ $pengajuan->kode_anggota }} {{ $pengajuan->anggota->nama_anggota }} {{ $pengajuan->jenisPinjaman->nama_pinjaman }} {{ number_format($pengajuan->besar_pinjam,0,',','.') }} {{ $pengajuan->tgl_pengajuan->format('Y-m-d') }}</option>
                                     @endforeach
                                 </select>
                             </div>

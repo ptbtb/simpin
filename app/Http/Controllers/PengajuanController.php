@@ -43,12 +43,13 @@ class PengajuanController extends Controller
             }
             
             $data['listPengajuan'] = $listPengajuan;
+            $data['tgl_print']=Carbon::createFromFormat('Y-m-d', $request->tgl_print);
             view()->share('data',$data);
             PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
             $pdf = PDF::loadView('pinjaman.printJKK', $data)->setPaper('a4', 'landscape');
 
             // download PDF file with download method
-            $filename = $request->no_jkk.'-'.Carbon::now()->toDateString().'.pdf';
+            $filename = $request->no_jkk.'-'.$data['tgl_print'].'.pdf';
             return $pdf->download($filename);
 
             // return view('pinjaman.printJKK', $data);

@@ -24,6 +24,10 @@ class Penarikan extends Model
     {
         return $this->belongsTo(Tabungan::class, 'id_tabungan');
     }
+    public function jenisSimpanan()
+    {
+        return $this->belongsTo(jenisSimpanan::class, 'code_trans');
+    }
 
     public function statusPenarikan()
     {
