@@ -43,10 +43,14 @@
                                 <select name="kode_pengajuan[]" id="kodePengajuan" class="form-control select2" multiple required>
                                     <option value="">Pilih</option>
                                     @foreach ($listPengajuanPinjaman as $pengajuan)
-                                        <option value="{{ $pengajuan->kode_pengajuan }}">{{ $pengajuan->kode_pengajuan }}</option>
+                                        <option value="{{ $pengajuan->kode_pengajuan }}">{{ $pengajuan->kode_anggota }} {{ $pengajuan->anggota->nama_anggota }} {{ $pengajuan->jenisPinjaman->nama_pinjaman }} {{ $pengajuan->besar_pinjam }} {{ $pengajuan->tgl_pengajuan->format('Y-m-d') }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group">
+                        <label for="tgl_print">Tgl Print</label>
+                        <input id="tgl_print" type="date" name="tgl_print" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
+                    </div>
                         </div>
                         <div class="col-md-12 text-center">
                             <button type="submit" name="submit" class="btn btn-sm btn-success"><i class="fas fa-print"></i> Print JKK</button>
