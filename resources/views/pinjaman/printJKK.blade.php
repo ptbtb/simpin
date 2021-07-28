@@ -33,7 +33,7 @@
     }
 </style>
 <body>
-    <h5 style="margin: 0">REKAP PEMBAYARAN SIMPANAN&UTIP DAERAH</h5>
+    <h5 style="margin: 0">REKAP TRANSFER PEMBAYARAN PINJAMAN</h5>
     <h5 style="margin-top: 0">TGL {{ $tgl_print->format('d F Y') }}</h5>
 
     <table class="border-collapse">
