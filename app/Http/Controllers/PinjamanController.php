@@ -64,12 +64,14 @@ class PinjamanController extends Controller {
             }
         }
 
-        if ($request->from) {
-            $listPinjaman = $listPinjaman->where('tgl_entri', '>=', $request->from);
+        if (!$request->from) {
+            $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
+          
         }
-        if ($request->to) {
-            $listPinjaman = $listPinjaman->where('tgl_entri', '<=', $request->to);
+        if (!$request->to) {
+            $request->to = Carbon::today()->format('Y-m-d');
         }
+        $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from,$request->to]);
         $listPinjaman = $listPinjaman->get();
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
