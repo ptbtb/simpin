@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-md-6 text-right" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
-                        <a href="{{ route('buku-besar-download-excel') }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+                        <a href="{{ route('buku-besar-download-excel',['period' =>$request->period]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
                     </div>
                 </form>
             </div>

@@ -61,9 +61,9 @@ class BukuBesarExport implements FromView
         }
 
         $bukuBesars = $bukuBesars->sortBy('code');
-
-        return view('buku_besar.excel', [
-            'bukuBesars' => $bukuBesars
-        ]);
+        return $bukuBesars;
+        // return view('buku_besar.excel', [
+        //     'bukuBesars' => $bukuBesars
+        // ]);
     }
 }

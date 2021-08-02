@@ -208,7 +208,7 @@ class BukuBesarController extends Controller
         $this->authorize('view jurnal', $user);
         $codes = Code::where('is_parent', 0)->get();
 
-        $jurnal = Jurnal::get();
+        //$jurnal = Jurnal::get();
 
         // buku besar collection
         $bukuBesars = collect();
@@ -222,40 +222,62 @@ class BukuBesarController extends Controller
             $startOfYear = $todays->subYear()->endOfYear()->format('Y-m-d');
 
         foreach ($codes as $key => $code) 
-        {
-            $saldo = 0;
-            // get code's normal balance 
-            if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
             {
-                $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                $saldo = 0;
+                // get code's normal balance 
+                if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
+                {
+                    // if first char of COA is 7 or 8 get jurnal from first date of year until today
+                    if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
+                    {
+                        
 
-                $saldo += $saldoDebet;
-                $saldo -= $saldoKredit;
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('kredit');
+                    }
+                    else
+                    {
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                    }
 
-                $bukuBesars->push([
+                    $saldo += $saldoDebet;
+                    $saldo -= $saldoKredit;
+
+                    $bukuBesars->push([
+                        'code' => $code->CODE,
+                        'name' => $code->NAMA_TRANSAKSI,
+                        'type' => $code->codeType->name,
+                        'saldo' => $saldo,
+                    ]);
+                }
+                else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+                {
+                    // if first char of COA is 7 or 8 get jurnal from first date of year until today
+                    if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
+                    {
+                        
+
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('kredit');
+                    }
+                    else
+                    {
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                    }
+
+                    $saldo -= $saldoDebet;
+                    $saldo += $saldoKredit;
+
+                    $bukuBesars->push([
                     'code' => $code->CODE,
                     'name' => $code->NAMA_TRANSAKSI,
                     'type' => $code->codeType->name,
                     'saldo' => $saldo,
                 ]);
+                }
             }
-            else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
-            {
-                $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
-
-                $saldo -= $saldoDebet;
-                $saldo += $saldoKredit;
-
-                $bukuBesars->push([
-                    'code' => $code->CODE,
-                    'name' => $code->NAMA_TRANSAKSI,
-                    'type' => $code->codeType->name,
-                    'saldo' => $saldo,
-                ]);
-            }
-        }
 
         $bukuBesars = $bukuBesars->sortBy('code');
         $filename = 'export_buku_besar_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
