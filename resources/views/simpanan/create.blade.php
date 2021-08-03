@@ -224,7 +224,7 @@
                          $('#jenisSimpanan').prop('disabled', false);
                     }else{
                         $('#jenisSimpanan').prop('disabled', true);
-                        errMessage('warningTextAnggota', 'Anggota ini belum memiliki gaji bulanan');
+                        errMessage('warningTextAnggota', 'Mohon Diisi dahulu Gaji Anggota,Unit dan Kelas Unit ');
                     }
 
                 }
