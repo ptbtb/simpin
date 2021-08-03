@@ -102,6 +102,7 @@ class SaldoAwalController extends Controller
                     $saldoAwal = new SaldoAwal();
                     $saldoAwal->code_id = $request->code_id[$i];
                     $saldoAwal->nominal = $nominal;
+                    $saldoAwal->created_at = Carbon::today()->subYear()->endOfYear()->format('Y-m-d');
                     $saldoAwal->save();
                 }
 
