@@ -74,10 +74,10 @@ class PinjamanController extends Controller {
         }
         if($request->jenistrans){
             if($request->jenistrans=='A'){
-                $listPinjaman = Pinjaman::where('saldo_mutasi','>',0)->limit(10);
+                $listPinjaman = Pinjaman::where('saldo_mutasi','>',0);
             }
             if($request->jenistrans=='T'){
-                $listPinjaman = Pinjaman::where('saldo_mutasi',0)->limit(10);
+                $listPinjaman = Pinjaman::where('saldo_mutasi',0);
             }
 
         }
