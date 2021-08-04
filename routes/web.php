@@ -95,6 +95,7 @@ Route::group(['prefix' => 'setting'], function () {
     Route::get('/pinjaman/import/excel', [App\Http\Controllers\SettingPinjamanController::class, 'importExcel'])->name('saldopinjaman-import-excel');
     Route::post('/pinjaman/import/excel', [App\Http\Controllers\SettingPinjamanController::class, 'storeImportExcel'])->name('saldopinjaman-import-excel');
 
+
     //codetrans
     Route::get('/codetrans', [App\Http\Controllers\SettingCodeTransController::class, 'index'])->name('kode-transaksi-list');
     Route::get('/codetrans/edit/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'edit'])->name('kode-transaksi-edit');
@@ -204,6 +205,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::post('bayar-angsuran/{id}/dipercepat', [App\Http\Controllers\PinjamanController::class, 'bayarAngsuranDipercepat'])->name('pinjaman-bayar-angsuran-dipercepat');
         Route::post('edit-angsuran', [App\Http\Controllers\PinjamanController::class, 'editAngsuran'])->name('pinjaman-edit-angsuran');
         Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusAngsuran'])->name('pinjaman-angsuran-update-status');
+        Route::post('/pinjaman/editsaldo', [App\Http\Controllers\PinjamanController::class, 'updatesaldoawal'])->name('edit-saldo-awalpinjaman');
 
         // import batch saldo pinjaman
         Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');
@@ -227,6 +229,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
             Route::post('create', [App\Http\Controllers\PinjamanController::class, 'storePengajuanPinjaman'])->name('pengajuan-pinjaman-add');
             Route::get('calculate-angsuran', [App\Http\Controllers\PinjamanController::class, 'calculateAngsuran'])->name('pengajuan-pinjaman-calculate-angsuran');
             Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
+
         });
 
         Route::get('saldo-awal/excel', [PinjamanController::class, 'exportSaldoAwalPinjaman'])->name('export-saldo-awal-pinjaman');

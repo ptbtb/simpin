@@ -42,6 +42,7 @@ class PinjamanController extends Controller {
 
     public function index(Request $request) {
         $user = Auth::user();
+        $role = $user->roles->first();
         $this->authorize('view pinjaman', $user);
 
         // check role user
@@ -52,13 +53,13 @@ class PinjamanController extends Controller {
             }
 
             $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_entri','asc')
-                    ->notPaid();
+            ->notPaid();
         } else {
             if ($request->id) {
                 $anggota = Anggota::find($request->id);
 
                 $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                        ->notPaid();
+                ->notPaid();
             } else {
                 $listPinjaman = Pinjaman::notPaid();
             }
@@ -66,16 +67,26 @@ class PinjamanController extends Controller {
 
         if (!$request->from) {
             $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
-          
+
         }
         if (!$request->to) {
             $request->to = Carbon::today()->format('Y-m-d');
+        }
+        if($request->jenistrans){
+            if($request->jenistrans=='A'){
+                $listPinjaman = Pinjaman::where('saldo_mutasi','>',0)->limit(10);
+            }
+            if($request->jenistrans=='T'){
+                $listPinjaman = Pinjaman::where('saldo_mutasi',0)->limit(10);
+            }
+
         }
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from,$request->to]);
         $listPinjaman = $listPinjaman->get();
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
         $data['request'] = $request;
+        $data['role'] = $role;
         return view('pinjaman.index', $data);
     }
 
@@ -90,7 +101,7 @@ class PinjamanController extends Controller {
             }
 
             $listPengajuanPinjaman = Pengajuan::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_pengajuan','asc')
-                    ->get();
+            ->get();
         } else {
             $listPengajuanPinjaman = Pengajuan::with('anggota')->orderBy('tgl_pengajuan','asc')->get();
         }
@@ -153,29 +164,29 @@ class PinjamanController extends Controller {
             }
 
             return Datatables::eloquent($listPengajuanPinjaman)
-                                ->editColumn('tgl_pengajuan', function ($request) {
-                                    if($request->tgl_pengajuan)
-                                    {
-                                        return $request->tgl_pengajuan->format('d M Y');
-                                    }
-                                })
-                                ->editColumn('nama_pinjaman', function ($request) {
-                                    return ucwords(strtolower($request->jenisPinjaman->nama_pinjaman));
-                                })
-                                ->editColumn('besar_pinjam', function ($request) {
-                                    return "Rp ". number_format($request->besar_pinjam,0,",",".");
-                                })
-                                ->editColumn('status_pengajuan', function ($request) {
-                                    return ucfirst($request->statusPengajuan->name);
-                                })
-                                ->editColumn('tgl_acc', function ($request) {
-                                    if($request->tgl_acc)
-                                    {
-                                        return $request->tgl_acc->format('d M Y');
-                                    }
-                                })
-                                ->addIndexColumn()
-                                ->make(true);
+            ->editColumn('tgl_pengajuan', function ($request) {
+                if($request->tgl_pengajuan)
+                {
+                    return $request->tgl_pengajuan->format('d M Y');
+                }
+            })
+            ->editColumn('nama_pinjaman', function ($request) {
+                return ucwords(strtolower($request->jenisPinjaman->nama_pinjaman));
+            })
+            ->editColumn('besar_pinjam', function ($request) {
+                return "Rp ". number_format($request->besar_pinjam,0,",",".");
+            })
+            ->editColumn('status_pengajuan', function ($request) {
+                return ucfirst($request->statusPengajuan->name);
+            })
+            ->editColumn('tgl_acc', function ($request) {
+                if($request->tgl_acc)
+                {
+                    return $request->tgl_acc->format('d M Y');
+                }
+            })
+            ->addIndexColumn()
+            ->make(true);
 
         } 
         catch (\Throwable $e) 
@@ -196,7 +207,7 @@ class PinjamanController extends Controller {
             }
 
             $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                    ->paid();
+            ->paid();
         } else {
             $listPinjaman = Pinjaman::paid();
         }
@@ -219,8 +230,8 @@ class PinjamanController extends Controller {
         $this->authorize('view pinjaman', $user);
 
         $pinjaman = Pinjaman::with('anggota', 'listAngsuran.jurnals')
-                ->where('kode_pinjam', $id)
-                ->first();
+        ->where('kode_pinjam', $id)
+        ->first();
 
         $listAngsuran = $pinjaman->listAngsuran->sortBy('angsuran_ke')->values();
         $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
@@ -305,9 +316,9 @@ class PinjamanController extends Controller {
         if ($user->isAnggota())
         {
             $listPinjaman = Pinjaman::japan()
-                                    ->where('kode_anggota', $user->anggota->kode_anggota)
-                                    ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
-                                    ->get();
+            ->where('kode_anggota', $user->anggota->kode_anggota)
+            ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+            ->get();
         }
 
         $data['title'] = 'Buat Pengajuan Pinjaman';
@@ -327,9 +338,9 @@ class PinjamanController extends Controller {
         //  chek pengajuan yang belum accepted
         $jenisPinjaman = JenisPinjaman::find($request->jenis_pinjaman);
         $checkPengajuan = Pengajuan::whereraw("SUBSTRING(kode_jenis_pinjam,1,6)=" . substr($jenisPinjaman->kode_jenis_pinjam, 0, 6) . " ")
-                ->notApproved()
-                ->where('kode_anggota', $request->kode_anggota)
-                ->get();
+        ->notApproved()
+        ->where('kode_anggota', $request->kode_anggota)
+        ->get();
 
         if ($checkPengajuan->count()) {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda sudah pernah mengajukan pinjaman untuk jenis pinjaman ' . $jenisPinjaman->nama_pinjaman);
@@ -352,9 +363,9 @@ class PinjamanController extends Controller {
         {
             // check pinjaman yang belum lunas
             $checkPinjaman = Pinjaman::whereraw("SUBSTRING(kode_jenis_pinjam,1,6)=" . substr($jenisPinjaman->kode_jenis_pinjam, 0, 6) . " ")
-                    ->notPaid()
-                    ->where('kode_anggota', $request->kode_anggota)
-                    ->get();
+            ->notPaid()
+            ->where('kode_anggota', $request->kode_anggota)
+            ->get();
 
             if ($checkPinjaman->count()) {
                 return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda masih memiliki pinjaman dengan jenis pinjaman ' . $jenisPinjaman->nama_pinjaman . ' yang belum lunas');
@@ -367,8 +378,8 @@ class PinjamanController extends Controller {
 
         //check gaji
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
-                        ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
-                        ->first();
+        ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
+        ->first();
 
         if (is_null($gaji))
         {
@@ -448,7 +459,7 @@ class PinjamanController extends Controller {
             {
                 $ids = json_decode($request->ids);
             }
-           
+
             foreach ($ids as $key => $id) 
             {
                 $pengajuan = Pengajuan::where('id', $id)->first();
@@ -585,8 +596,8 @@ class PinjamanController extends Controller {
             }
         } elseif ($jenisPinjaman->isJangkaPendek()) {
             $penghasilanTertentu = Penghasilan::where('kode_anggota', $anggota->kode_anggota)
-                    ->penghasilanTertentu()
-                    ->get();
+            ->penghasilanTertentu()
+            ->get();
             if (!$penghasilanTertentu->count()) {
                 return response()->json(['message' => 'Tidak memiliki penghasilan tertentu'], 412);
             }
@@ -623,8 +634,8 @@ class PinjamanController extends Controller {
 
         //check gaji
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
-                ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
-                ->first();
+        ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
+        ->first();
 
         if (is_null($gaji)) {
             return redirect()->back()->withError($anggota->nama_anggota . ' tidak memiliki gaji bulanan');
@@ -708,17 +719,17 @@ class PinjamanController extends Controller {
 
         $sisaPinjaman = json_decode("{}");
         $japan = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                ->where('kode_jenis_pinjam', 'like', Str::of(JENIS_PINJAM_JAPAN)->append('%'))
-                ->sum('sisa_pinjaman');
+        ->where('kode_jenis_pinjam', 'like', Str::of(JENIS_PINJAM_JAPAN)->append('%'))
+        ->sum('sisa_pinjaman');
         $japen = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                ->where('kode_jenis_pinjam', 'like', Str::of(JENIS_PINJAM_JAPEN)->append('%'))
-                ->sum('sisa_pinjaman');
+        ->where('kode_jenis_pinjam', 'like', Str::of(JENIS_PINJAM_JAPEN)->append('%'))
+        ->sum('sisa_pinjaman');
         $kredit_barang = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_BARANG)
-                ->sum('sisa_pinjaman');
+        ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_BARANG)
+        ->sum('sisa_pinjaman');
         $kredit_motor = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_MOTOR)
-                ->sum('sisa_pinjaman');
+        ->where('kode_jenis_pinjam', JENIS_PINJAM_KREDIT_MOTOR)
+        ->sum('sisa_pinjaman');
 
         $sisaPinjaman->japan = $japan;
         $sisaPinjaman->japen = $japen;
@@ -1182,10 +1193,37 @@ class PinjamanController extends Controller {
     public function searchPinjamanAnggota($kode_anggota)
     {
         return Pinjaman::japan()
-                        ->join('t_jenis_pinjam', 't_pinjam.kode_jenis_pinjam', 't_jenis_pinjam.kode_jenis_pinjam')
-                        ->where('kode_anggota', $kode_anggota)
-                        ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
-                        ->select('kode_pinjam', 'nama_pinjaman')
-                        ->get();
+        ->join('t_jenis_pinjam', 't_pinjam.kode_jenis_pinjam', 't_jenis_pinjam.kode_jenis_pinjam')
+        ->where('kode_anggota', $kode_anggota)
+        ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+        ->select('kode_pinjam', 'nama_pinjaman')
+        ->get();
     }
+    public function updatesaldoawal(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->roles->first();
+        $this->authorize('edit saldo awal pinjaman', $user);
+        try{
+            $pinjam=Pinjaman::where('kode_pinjam',$request->kode_pinjam)->first();
+            
+            $nominal = filter_var($request->saldo_mutasi, FILTER_SANITIZE_NUMBER_INT);
+            
+            if($pinjam){
+                $pinjam->saldo_mutasi=$nominal;
+                $pinjam->save();
+                 return response()->json(['message' => 'Edit data success','status' => true], 200);
+             }else{
+                 return response()->json(['message' => 'Edit failed','status' => false], 404);
+             }
+        }catch (\Throwable $e)
+        {
+            return response()->json(['message' => 'Terjadi Kesalahan','status' => false], 500);
+        }
+            
+            
+            
+        
+
+ }
 }
