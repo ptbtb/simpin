@@ -123,7 +123,7 @@
                     <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
                     @if ($request->jenistrans=='A')
                     <th>Rp. {{ number_format($pinjaman->saldo_mutasi,0,",",".") }}  @can('edit saldo awal pinjaman')
-                        <button type="button" class="btn btn-danger openedit" data-toggle="modal" data-target="#modal-default" data-id="{{$pinjaman->kode_pinjam}}" data-nama="{{$pinjaman->anggota->nama_anggota}}" data-kode="{{$pinjaman->anggota->kode_anggota}}" data-jumlah="{{$pinjaman->saldo_mutasi}}">
+                        <button type="button" class="btn btn-danger openedit" data-toggle="modal" data-target="#modal-default" data-id="{{$pinjaman->kode_pinjam}}" data-nama="{{($pinjaman->anggota)?$pinjaman->anggota->nama_anggota:'-'}}" data-kode="{{($pinjaman->anggota)?$pinjaman->anggota->kode_anggota:0}}" data-jumlah="{{$pinjaman->saldo_mutasi}}">
                          <i class="fa fa-edit"></i> edit
                       </button>
                   @endcan</th>
