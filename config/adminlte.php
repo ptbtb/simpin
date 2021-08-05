@@ -442,6 +442,12 @@ return [
                     'icon' => 'fas fa-book nav-icon',
                     'can'  => ['view jurnal'],
                 ],
+                [
+                    'text' => 'simpanan',
+                    'url' => '/simpanan/laporan',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view simpanan'],
+                ],
             ],
         ],
         [
