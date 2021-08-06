@@ -745,8 +745,8 @@ class SimpananController extends Controller
 
             if($year)
             {
-                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(created_at) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(created_at) = '.$year));
-                $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(created_at) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(created_at) = '.$year));
+                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_entri) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_entri) = '.$year));
+                $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year));
                 $simpananPerbulan = $simpanan->groupBy('month')
                                             ->map(function ($s)
                                             {
@@ -807,8 +807,8 @@ class SimpananController extends Controller
                                                     ->get();
         if($year)
         {
-            $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(created_at) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(created_at) = '.$year));
-            $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(created_at) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(created_at) = '.$year));
+            $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_entri) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_entri) = '.$year));
+            $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year));
             $simpananPerbulan = $simpanan->groupBy('month')
                                         ->map(function ($s)
                                         {
