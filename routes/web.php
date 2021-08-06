@@ -264,6 +264,10 @@ Route::group(['prefix' => 'simpanan'], function () {
             Route::get('download/pdf/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadPDFCard'])->name('simpanan-download-pdf-card');
             Route::get('download/excel/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadExcelCard'])->name('simpanan-download-pdf-card');
         });
+
+        Route::get('laporan', [App\Http\Controllers\SimpananController::class, 'laporan'])->name('laporan-simpanan');
+        Route::post('laporan', [App\Http\Controllers\SimpananController::class, 'laporan'])->name('filter-laporan-simpanan');
+        Route::get('laporan/excel', [App\Http\Controllers\SimpananController::class, 'laporanExcel'])->name('laporan-simpanan-excel');
     });
 });
 

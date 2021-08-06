@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\KartuSimpananExport;
+use App\Exports\LaporanExcelExport;
 use App\Exports\SimpananExport;
 use App\Imports\SimpananImport;
 use App\Models\Anggota;
@@ -243,7 +244,7 @@ class SimpananController extends Controller
         try {
             $simpanan = Simpanan::where('kode_simpan', $request->kode_simpan)->first();
             $besarSimpanan = filter_var($request->besar_simpanan, FILTER_SANITIZE_NUMBER_INT);
-            
+
             // save simpanan
             $simpanan->updated_by = Auth::user()->id;
             $simpanan->temp_besar_simpanan = $besarSimpanan;
@@ -258,7 +259,7 @@ class SimpananController extends Controller
             $message = $e->getMessage();
             return redirect()->back()->withError('gagal mengubah data simpanan');
         }
-        
+
     }
 
     /**
@@ -693,7 +694,7 @@ class SimpananController extends Controller
 
             $simpanan = Simpanan::where('kode_simpan', $request->id)->first();
 
-            if ($request->status == STATUS_SIMPANAN_DITERIMA) 
+            if ($request->status == STATUS_SIMPANAN_DITERIMA)
             {
                 // save simpanan
                 $simpanan->besar_simpanan = $simpanan->temp_besar_simpanan;
@@ -702,7 +703,7 @@ class SimpananController extends Controller
 
                 // update jurnal
                 $journals = $simpanan->jurnals;
-                foreach ($journals as $key => $journal) 
+                foreach ($journals as $key => $journal)
                 {
                     if($journal)
                     {
@@ -725,6 +726,134 @@ class SimpananController extends Controller
             \Log::error($e);
             $message = $e->getMessage();
             return response()->json(['message' => $message], 500);
+        }
+    }
+
+    public function laporan(Request $request)
+    {
+        try
+        {
+            $years = range(Carbon::now()->year, 2000);
+            $data['title'] = 'Laporan Simpanan';
+            $data['years'] = $years;
+            $data['request'] = $request;
+            $data['listJenisSimpanan'] = JenisSimpanan::select('nama_simpanan as name', 'kode_jenis_simpan as id')
+                                                        ->take(5)
+                                                        ->get();
+
+            $year = $request->tahun;
+
+            if($year)
+            {
+                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(created_at) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(created_at) = '.$year));
+                $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(created_at) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(created_at) = '.$year));
+                $simpananPerbulan = $simpanan->groupBy('month')
+                                            ->map(function ($s)
+                                            {
+                                                return $s->sum('val');
+                                            });
+
+                $penarikanPerbulan = $penarikan->groupBy('month')
+                                                ->map(function ($p)
+                                                {
+                                                    return $p->sum('val');
+                                                });
+
+                $simpananPerjenis = $simpanan->groupBy('jenis_simpanan')
+                                            ->map(function ($s, $k)
+                                            {
+                                                $perbulan = $s->groupBy('month')
+                                                            ->map(function ($val)
+                                                            {
+                                                                return $val->sum('val');
+                                                            });
+                                                return collect($perbulan);
+                                            });
+
+                $penarikanPerjenis = $penarikan->groupBy('jenis_simpanan')
+                                            ->map(function ($s, $k)
+                                            {
+                                                $perbulan = $s->groupBy('month')
+                                                            ->map(function ($val)
+                                                            {
+                                                                return $val->sum('val');
+                                                            });
+                                                return collect($perbulan);
+                                            });
+
+                $data['simpananPerbulan'] = $simpananPerbulan;
+                $data['simpananPerjenis'] = $simpananPerjenis;
+                $data['penarikanPerbulan'] = $penarikanPerbulan;
+                $data['penarikanPerjenis'] = $penarikanPerjenis;
+            }
+
+            return view('simpanan.laporan', $data);
+            // return view('simpanan.laporan-excel', $data);
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            // return redirect()->back()->withError($message);
+        }
+    }
+
+    public function laporanExcel(Request $request)
+    {
+        $years = range(Carbon::now()->year, 2000);
+        $data['years'] = $years;
+        $year = $request->tahun;
+        $data['listJenisSimpanan'] = JenisSimpanan::select('nama_simpanan as name', 'kode_jenis_simpan as id')
+                                                    ->take(5)
+                                                    ->get();
+        if($year)
+        {
+            $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(created_at) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(created_at) = '.$year));
+            $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(created_at) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(created_at) = '.$year));
+            $simpananPerbulan = $simpanan->groupBy('month')
+                                        ->map(function ($s)
+                                        {
+                                            return $s->sum('val');
+                                        });
+
+            $penarikanPerbulan = $penarikan->groupBy('month')
+                                            ->map(function ($p)
+                                            {
+                                                return $p->sum('val');
+                                            });
+
+            $simpananPerjenis = $simpanan->groupBy('jenis_simpanan')
+                                        ->map(function ($s, $k)
+                                        {
+                                            $perbulan = $s->groupBy('month')
+                                                        ->map(function ($val)
+                                                        {
+                                                            return $val->sum('val');
+                                                        });
+                                            return collect($perbulan);
+                                        });
+
+            $penarikanPerjenis = $penarikan->groupBy('jenis_simpanan')
+                                        ->map(function ($s, $k)
+                                        {
+                                            $perbulan = $s->groupBy('month')
+                                                        ->map(function ($val)
+                                                        {
+                                                            return $val->sum('val');
+                                                        });
+                                            return collect($perbulan);
+                                        });
+
+            $data['simpananPerbulan'] = $simpananPerbulan;
+            $data['simpananPerjenis'] = $simpananPerjenis;
+            $data['penarikanPerbulan'] = $penarikanPerbulan;
+            $data['penarikanPerjenis'] = $penarikanPerjenis;
+
+            $filename = 'laporan_simpanan_' . Carbon::now()->format('d M Y') . '.xlsx';
+            return Excel::download(new LaporanExcelExport($data), $filename);
+        }
+        else
+        {
+            return redirect()->back()->withError('Link invalid');
         }
     }
 }
