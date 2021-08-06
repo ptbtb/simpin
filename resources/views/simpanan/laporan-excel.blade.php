@@ -85,6 +85,13 @@
                 </td>
             @endif
         </tr>
+        @if ($key == 6)
+            <tr>
+                <td colspan="3" style="text-align: center; font-weight: bold"></td>
+                <td style="width: 3%"></td>
+                <td colspan="14" style="text-align: center; font-weight: bold">Penarikan Simpanan 2021</td>
+            </tr>
+        @endif
     @endforeach
     <tr>
         <td style="text-align: center; font-weight: bold">Grand Total</td>
