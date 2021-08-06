@@ -436,12 +436,12 @@ return [
                     'icon' => 'fas fa-book nav-icon',
                     'can'  => ['view jurnal'],
                 ],
-                [
-                    'text' => 'Laba Rugi',
-                    'url' => '/laba-rugi',
-                    'icon' => 'fas fa-book nav-icon',
-                    'can'  => ['view jurnal'],
-                ],
+                // [
+                //     'text' => 'Laba Rugi',
+                //     'url' => '/laba-rugi',
+                //     'icon' => 'fas fa-book nav-icon',
+                //     'can'  => ['view jurnal'],
+                // ],
                 [
                     'text' => 'simpanan',
                     'url' => '/simpanan/laporan',
