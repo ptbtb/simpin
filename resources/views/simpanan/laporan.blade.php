@@ -55,7 +55,7 @@
                 <div class="text-right mb-2">
                     <a target="_blank" href="{{ route('laporan-simpanan-excel', ['tahun' => $request->tahun]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Laporan</a>
                 </div>
-                @include('simpanan.laporan-excel')
+                @include('simpanan.laporan-view')
             </div>
         </div>
     @endif

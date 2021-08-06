@@ -35,10 +35,10 @@
         <tr>
             <td style="text-align: center">{{ $key }}</td>
             <td style="text-align: right">
-                {{ (isset($simpananPerbulan[$key]))? $simpananPerbulan[$key]:'' }}
+                {{ (isset($simpananPerbulan[$key]))? number_format($simpananPerbulan[$key],0,",","."):'' }}
             </td>
             <td style="text-align: right">
-                {{ (isset($penarikanPerbulan[$key]))? $penarikanPerbulan[$key]:'' }}
+                {{ (isset($penarikanPerbulan[$key]))? number_format($penarikanPerbulan[$key],0,",","."):'' }}
             </td>
             <td></td>
             @if ($key < 6)
@@ -48,21 +48,21 @@
                 @endphp
                 @foreach ($month as $k => $value)
                     <td style="text-align: right">
-                        {{ (isset($simpananPerjenis[$id][$k]))? $simpananPerjenis[$id][$k]:'' }}
+                        {{ (isset($simpananPerjenis[$id][$k]))? number_format($simpananPerjenis[$id][$k],0,",","."):'' }}
                     </td>
                 @endforeach
                 <td style="text-align: right;">
-                    {{ (isset($simpananPerjenis[$id]))? $simpananPerjenis[$id]->sum():'' }}
+                    {{ (isset($simpananPerjenis[$id]))? number_format($simpananPerjenis[$id]->sum(),0,",","."):'' }}
                 </td>
             @elseif($key < 7)
                 <td style="text-align: center; font-weight: bold">Grand Total</td>
                 @foreach ($month as $k => $v)
                     <td style="text-align: right;">
-                        {{ (isset($simpananPerbulan[$k]))? $simpananPerbulan[$k]:'' }}
+                        {{ (isset($simpananPerbulan[$k]))? number_format($simpananPerbulan[$k],0,",","."):'' }}
                     </td>
                 @endforeach
                 <td style="text-align: right;">
-                    {{ (isset($simpananPerbulan))? $simpananPerbulan->sum():'' }}
+                    {{ (isset($simpananPerbulan))? number_format($simpananPerbulan->sum(),0,",","."):'' }}
                 </td>
             @elseif($key < 8)
                 <td style="text-align: center; font-weight: bold">Jenis Simpanan</td>
@@ -77,11 +77,11 @@
                 @endphp
                 @foreach ($month as $k => $v)
                     <td style="text-align: right">
-                        {{ (isset($penarikanPerjenis[$id][$k]))? $penarikanPerjenis[$id][$k]:'' }}
+                        {{ (isset($penarikanPerjenis[$id][$k]))? number_format($penarikanPerjenis[$id][$k],0,",","."):'' }}
                     </td>
                 @endforeach
                 <td style="text-align: right">
-                    {{ (isset($penarikanPerjenis[$id]))? $penarikanPerjenis[$id]->sum():'' }}
+                    {{ (isset($penarikanPerjenis[$id]))? number_format($penarikanPerjenis[$id]->sum(),0,",","."):'' }}
                 </td>
             @endif
         </tr>
@@ -96,20 +96,20 @@
     <tr>
         <td style="text-align: center; font-weight: bold">Grand Total</td>
         <td style="text-align: right">
-            {{ $simpananPerbulan->sum() }}
+            {{ number_format($simpananPerbulan->sum(), 0, ',', '.') }}
         </td>
         <td style="text-align: right">
-            {{ $penarikanPerbulan->sum() }}
+            {{ number_format($penarikanPerbulan->sum(), 0, ',', '.') }}
         </td>
         <td></td>
         <td style="text-align: center; font-weight: bold">Grand Total</td>
         @foreach ($month as $k => $v)
             <td style="text-align: right">
-                {{ (isset($penarikanPerbulan[$k]))? $penarikanPerbulan[$k]:'' }}
+                {{ (isset($penarikanPerbulan[$k]))? number_format($penarikanPerbulan[$k],0,",","."):'' }}
             </td>
         @endforeach
         <td style="text-align: right">
-            {{ (isset($penarikanPerbulan))? $penarikanPerbulan->sum():'' }}
+            {{ (isset($penarikanPerbulan))? number_format($penarikanPerbulan->sum(),0,",","."):'' }}
         </td>
     </tr>
 </table>
