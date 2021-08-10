@@ -135,9 +135,7 @@
 										@if ($listPenghasilan)
 											value="{{ $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->value }}"
 										@endif
-										@if($jenisPenghasilan->id == 4)
-											required
-										@endif
+										
 										onkeypress="return isNumberKey(event)">
 									</div>
 									<div class="col-md-6 form-group">
