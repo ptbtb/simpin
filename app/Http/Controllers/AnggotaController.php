@@ -336,11 +336,13 @@ class AnggotaController extends Controller {
             return response()->json($anggotacheck, 200);
         }
         $anggota = DB::table('t_anggota')
-            ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
+            // ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
             ->join('t_kelas_company', 't_anggota.kelas_company_id', 't_kelas_company.id')
-            ->select('t_anggota.kode_anggota', 't_anggota.nama_anggota', 't_penghasilan.value as gaji_bulanan', 't_kelas_company.nama', 't_kelas_company.id')
+            ->select('t_anggota.kode_anggota', 't_anggota.nama_anggota', 
+                // 't_penghasilan.value as gaji_bulanan',
+                 't_kelas_company.nama as kelas', 't_kelas_company.id')
             ->where('t_anggota.kode_anggota', '=', $anggotaId)
-            ->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
+            // ->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
             ->first();
         return response()->json($anggota, 200);
     }

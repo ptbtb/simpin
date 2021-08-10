@@ -219,7 +219,7 @@
                 'anggotaId' : anggotaId
             },
             success: function (response) {
-                if (!response.hasOwnProperty('gaji_bulanan')){
+                if (!response.hasOwnProperty('kelas')){
                     if (response.id_jenis_anggota==3){
                          $('#jenisSimpanan').prop('disabled', false);
                     }else{
