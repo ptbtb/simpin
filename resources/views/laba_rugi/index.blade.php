@@ -140,7 +140,7 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td style="text-align:right;">Jumlah Pendapatan</td>
+                            <td style="text-align:right;">Jumlah Hpp</td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($saldoUntilBeforeMonthHpp, 0, ',', '.') }}</td>
