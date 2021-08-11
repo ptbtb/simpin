@@ -35,15 +35,19 @@
             <form action="{{ route('jurnal-list') }}" method="post">
                 @csrf
                 <div class="row">
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                         <label>Tipe Jurnal</label>
                         {!! Form::select('id_tipe_jurnal', $tipeJurnal, $request->id_tipe_jurnal, ['class' => 'form-control', 'placeholder' => 'All']) !!}
                     </div>
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                         <label>Nomor</label>
                         <input type="text" name="serial_number" id="serial_number" class="form-control" placeholder="Nomor Transaksi" autocomplete="off" value="{{ old('serial_number', $request->serial_number) }}">
                     </div>
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
+                        <label>AKUN</label>
+                        <input type="text" name="code" id="code" class="form-control" placeholder="COA" autocomplete="off" value="{{ old('code', $request->code) }}">
+                    </div>
+                    <div class="col-md-3 form-group">
                         <label>Keterangan</label>
                         <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Keterangan" autocomplete="off" value="{{ old('keterangan', $request->keterangan) }}">
                     </div>
@@ -100,6 +104,8 @@
                         
                         var serial_number = '{{ $request->serial_number }}';
                         data.serial_number = serial_number;
+                        var code = '{{ $request->code }}';
+                        data.code = code;
 
                         var keterangan = '{{ $request->keterangan }}';
                         data.keterangan = keterangan;

@@ -107,6 +107,11 @@ class JurnalController extends Controller
                                     });
                 }
             }
+            if($request->code){
+                 $jurnal = $jurnal
+                 ->where('akun_debet', 'like', '%' . $request->code . '%')
+                 ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+            }
 
             if($request->keterangan)
             {
