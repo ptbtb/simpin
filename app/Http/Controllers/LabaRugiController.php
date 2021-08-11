@@ -51,7 +51,8 @@ class LabaRugiController extends Controller
 
 
             $groupCodes = $codes->groupBy(function ($item, $key) {
-                return substr($item['CODE'], 0, 3);
+                return $item['CODE'];
+                // return substr($item['CODE'], 0, 8);
             });
 
             // period
@@ -132,21 +133,7 @@ class LabaRugiController extends Controller
                     }
                 }
 
-                if($key == 701 or $key == 702)
-                {
-                    $parentCode = Code::where('CODE', $key . '.02.000')->first();
-
-                    
-                    $pendapatan->prepend([
-                        'code' => $parentCode,
-                        'saldo' => $saldo,
-                        'saldoUntilMonth' => $saldoUntilMonth,
-                        'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
-                    ]);
-                }
-                else
-                {
-                    $parentCode = Code::where('CODE', $key . '.00.000')->first();
+                    $parentCode = Code::where('CODE', $key)->first();
                     if($parentCode->codeCategory->name=='PENDAPATAN'){
                         $pendapatan->push([
                         'code' => $parentCode,
@@ -154,7 +141,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA PEGAWAI'){
                         $biayapegawai ->push([
                         'code' => $parentCode,
@@ -162,7 +149,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA OPERASIONAL'){
                         $biayaoperasional  ->push([
                         'code' => $parentCode,
@@ -170,7 +157,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA PERAWATAN'){
                         $biayaperawatan->push([
                         'code' => $parentCode,
@@ -178,7 +165,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA PENYUSUTAN'){
                         $biayapenyusutan->push([
                         'code' => $parentCode,
@@ -186,7 +173,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA ADMINISTRASI DAN UMUM'){
                         $biayaadminum->push([
                         'code' => $parentCode,
@@ -194,7 +181,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if(($parentCode->codeCategory->name=='PENDAPATAN LUAR USAHA') || ($parentCode->codeCategory->name=='BIAYA LUAR USAHA')){
                         $luarusaha->push([
                         'code' => $parentCode,
@@ -204,12 +191,11 @@ class LabaRugiController extends Controller
                     ]);
                     }
                     
-                }
+                
             }
             
             // year data
             $request->year = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y');
-            
             $data['title'] = 'Laporan Laba Rugi';
             $data['labaRugis'] = $labaRugis;
             $data['pendapatan'] = $pendapatan;
