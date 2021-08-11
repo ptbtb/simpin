@@ -9,6 +9,10 @@ use App\Models\CodeCategory;
 use App\Models\CodeType;
 use App\Models\NormalBalance;
 use App\Models\Code;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use App\Exports\CoaExport;
+use Excel;
 
 use Auth;
 
@@ -28,10 +32,9 @@ class SettingCodeTransController extends Controller
     public function index()
     {
         $this->authorize('view kode transaksi', Auth::user());
-        $codetrans = DB::table('t_code')
-            ->get();
+        $codetrans = Code::all();
         $data['codetrans'] = $codetrans;
-        return view('/setting/codetrans/index', ['data' => $data]);
+        return view('setting.codetrans.index',  $data);
     }
 
     /**
@@ -173,6 +176,20 @@ class SettingCodeTransController extends Controller
         }
 
 
+    }
+    public function createExcel()
+    {
+        try {
+            $codetrans = Code::all();
+            $data['codetrans'] = $codetrans;
+            $filename = 'export_coa_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+            return Excel::download(new CoaExport($data), $filename);
+        } catch (Exception $e) 
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+            abort(500);
+        }
     }
 
 }

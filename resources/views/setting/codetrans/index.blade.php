@@ -10,6 +10,7 @@
 <div class="card">
     <div class="card-header">
         <a class="btn btn-success" href="{{ route('kode-transaksi-create') }}"><i class="glyphicon glyphicon-subtitles"></i>+ Add Kode Transaksi</a>
+        <a href="{{ route('kode-transaksi-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Download Excel</a>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
@@ -23,32 +24,7 @@
             </div>
             @endif
         </div>
-        <table id="table_work" class="table table-bordered table-striped ">
-            <thead>
-                <tr class="info">
-                    <th><a href="#">No</a></th>
-                    <th><a href="#">Kode</a></th>
-                    <th><a href="#">Nama Transaksi</a></th>
-                    <th><a href="#">Action</a></th>
-
-                </tr>
-            </thead>
-            <tbody id="fbody">
-                <?php $i = 1; ?>
-                @foreach($data['codetrans'] as $codetrans)
-                <tr>
-                    <td class="text-center">{{$loop->iteration}}</td>
-                    <td >{{$codetrans->CODE}}</td>
-                    <td >{{$codetrans->NAMA_TRANSAKSI}}</td>
-                    <td class="text-center">
-                        <a class="btn btn-info" href="{{ route('kode-transaksi-edit', $codetrans->id) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
-                        <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="{{ route('kode-transaksi-delete', $codetrans->id) }}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
-                    </td>
-
-                </tr>
-                <?php $i++; ?>
-                @endforeach
-            </tbody> </table>
+        @include('setting.codetrans.excel')
 
 
     </div>

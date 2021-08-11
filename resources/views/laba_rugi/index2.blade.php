@@ -28,11 +28,6 @@
 @endsection
 
 @section('content')
-@php
-                            $saldoUntilBeforeMonthPend = 0;
-                            $saldoPend = 0;
-                            $saldoUntilMonthPend =0;
-                        @endphp
     <div class="card">
         <div class="card-header">
             <div class="col-md-12">
@@ -45,7 +40,7 @@
                     </div>
                     <div class="col-md-12 text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
-                         <a href="{{ route('laba-rugi-download-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Download Excel</a> 
+                        {{-- <a href="{{ route('neraca-download-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Download Excel</a> --}}
                     </div>
                 </form>
             </div>
@@ -75,24 +70,33 @@
                             <td></td>
                             <td colspan="8"><b>PENDAPATAN</b></td>
                         </tr>
-                        @foreach ($pendapatan as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td>{{ substr($labaRugis[0]['code']->CODE, 0, 6) }}</td>
+                            <td>{{ $labaRugis[0]['code']->NAMA_TRANSAKSI }}</td>
+                            <td>()</td>
+                            <td>()</td>
+                            <td>({{ number_format($labaRugis[0]['saldoUntilBeforeMonth'], 0, ',', '.') }})</td>
+                            <td>({{ number_format($labaRugis[0]['saldo'], 0, ',', '.') }})</td>
+                            <td>({{ number_format($labaRugis[0]['saldoUntilMonth'], 0, ',', '.') }})</td>
                             <td></td>
                             <td></td>
                         </tr>
-                         @php
-                            $saldoUntilBeforeMonthPend += $item['saldoUntilBeforeMonth'];
-                            $saldoPend += $item['saldo'];
-                            $saldoUntilMonthPend += $item['saldoUntilMonth'];
+                        <tr>
+                            <td>{{ substr($labaRugis[1]['code']->CODE, 0, 6) }}</td>
+                            <td>{{ $labaRugis[1]['code']->NAMA_TRANSAKSI }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ number_format($labaRugis[1]['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($labaRugis[1]['saldo'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($labaRugis[1]['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @php
+                            $saldoUntilBeforeMonthPend = $labaRugis[0]['saldoUntilBeforeMonth'] - $labaRugis[1]['saldoUntilBeforeMonth'];
+                            $saldoPend = $labaRugis[0]['saldo'] - $labaRugis[1]['saldo'];
+                            $saldoUntilMonthPend = $labaRugis[0]['saldoUntilMonth'] - $labaRugis[1]['saldoUntilMonth'];
                         @endphp
-                        @endforeach
                         <tr>
                             <td></td>
                             <td style="text-align:right;">Jumlah Pendapatan</td>
@@ -112,29 +116,29 @@
                             <td></td>
                             <td colspan="8"><b>BIAYA PEGAWAI</b></td>
                         </tr>
-                         @php
+                        @php
                             $saldoUntilBeforeMonthPegawai = 0;
                             $saldoPegawai = 0;
                             $saldoUntilMonthPegawai = 0;
                         @endphp
-                        @foreach ($biayapegawai as $item)
-                        <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                         @php
-                            $saldoUntilBeforeMonthPegawai += $item['saldoUntilBeforeMonth'];
-                            $saldoPegawai += $item['saldo'];
-                            $saldoUntilMonthPegawai += $item['saldoUntilMonth'];
-                        @endphp
-                        @endforeach
+                        @for ($i = 2; $i <= 11; $i++)
+                            <tr>
+                                <td>{{ substr($labaRugis[$i]['code']->CODE, 0, 3) }}</td>
+                                <td>{{ $labaRugis[$i]['code']->NAMA_TRANSAKSI }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldo'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @php
+                                $saldoUntilBeforeMonthPegawai += $labaRugis[$i]['saldoUntilBeforeMonth'];
+                                $saldoPegawai += $labaRugis[$i]['saldo'];
+                                $saldoUntilMonthPegawai += $labaRugis[$i]['saldoUntilMonth'];
+                            @endphp
+                        @endfor
                         <tr>
                             <td></td>
                             <td style="text-align:right;">Jumlah Biaya Pegawai</td>
@@ -155,24 +159,24 @@
                             $saldoOp = 0;
                             $saldoUntilMonthOp = 0;
                         @endphp
-                        @foreach ($biayaoperasional as $item)
-                        <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                         @php
-                            $saldoUntilBeforeMonthOp += $item['saldoUntilBeforeMonth'];
-                            $saldoOp += $item['saldo'];
-                            $saldoUntilMonthOp += $item['saldoUntilMonth'];
-                        @endphp
-                        @endforeach
+                        @for ($i = 12; $i <= 15; $i++)
+                            <tr>
+                                <td>{{ substr($labaRugis[$i]['code']->CODE, 0, 3) }}</td>
+                                <td>{{ $labaRugis[$i]['code']->NAMA_TRANSAKSI }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldo'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @php
+                                $saldoUntilBeforeMonthOp += $labaRugis[$i]['saldoUntilBeforeMonth'];
+                                $saldoOp += $labaRugis[$i]['saldo'];
+                                $saldoUntilMonthOp += $labaRugis[$i]['saldoUntilMonth'];
+                            @endphp
+                        @endfor
                         <tr>
                             <td></td>
                             <td style="text-align:right;">Jumlah Biaya Operasional</td>
@@ -193,24 +197,24 @@
                             $saldoPrwt = 0;
                             $saldoUntilMonthPrwt = 0;
                         @endphp
-                        @foreach ($biayaperawatan as $item)
-                        <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                         @php
-                            $saldoUntilBeforeMonthPrwt += $item['saldoUntilBeforeMonth'];
-                            $saldoPrwt += $item['saldo'];
-                            $saldoUntilMonthPrwt += $item['saldoUntilMonth'];
-                        @endphp
-                        @endforeach
+                        @for ($i = 16; $i <= 16; $i++)
+                            <tr>
+                                <td>{{ substr($labaRugis[$i]['code']->CODE, 0, 3) }}</td>
+                                <td>{{ $labaRugis[$i]['code']->NAMA_TRANSAKSI }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldo'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @php
+                                $saldoUntilBeforeMonthPrwt += $labaRugis[$i]['saldoUntilBeforeMonth'];
+                                $saldoPrwt += $labaRugis[$i]['saldo'];
+                                $saldoUntilMonthPrwt += $labaRugis[$i]['saldoUntilMonth'];
+                            @endphp
+                        @endfor
                         <tr>
                             <td></td>
                             <td style="text-align:right;">Jumlah Biaya Perawatan</td>
@@ -231,24 +235,24 @@
                             $saldoPnyust = 0;
                             $saldoUntilMonthPnyust = 0;
                         @endphp
-                         @foreach ($biayapenyusutan as $item)
-                        <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                         @php
-                            $saldoUntilBeforeMonthPnyust += $item['saldoUntilBeforeMonth'];
-                            $saldoPnyust += $item['saldo'];
-                            $saldoUntilMonthPnyust += $item['saldoUntilMonth'];
-                        @endphp
-                        @endforeach
+                        @for ($i = 17; $i <= 22; $i++)
+                            <tr>
+                                <td>{{ substr($labaRugis[$i]['code']->CODE, 0, 3) }}</td>
+                                <td>{{ $labaRugis[$i]['code']->NAMA_TRANSAKSI }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldo'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @php
+                                $saldoUntilBeforeMonthPnyust += $labaRugis[$i]['saldoUntilBeforeMonth'];
+                                $saldoPnyust += $labaRugis[$i]['saldo'];
+                                $saldoUntilMonthPnyust += $labaRugis[$i]['saldoUntilMonth'];
+                            @endphp
+                        @endfor
                         <tr>
                             <td></td>
                             <td style="text-align:right;">Jumlah Biaya Penyusutan</td>
@@ -269,24 +273,24 @@
                             $saldoAdm = 0;
                             $saldoUntilMonthAdm = 0;
                         @endphp
-                        @foreach ($biayaadminum as $item)
-                        <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                         @php
-                            $saldoUntilBeforeMonthAdm += $item['saldoUntilBeforeMonth'];
-                            $saldoAdm += $item['saldo'];
-                            $saldoUntilMonthAdm += $item['saldoUntilMonth'];
-                        @endphp
-                        @endforeach
+                        @for ($i = 19 ; $i <= 20; $i++)
+                            <tr>
+                                <td>{{ substr($labaRugis[$i]['code']->CODE, 0, 3) }}</td>
+                                <td>{{ $labaRugis[$i]['code']->NAMA_TRANSAKSI }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldo'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @php
+                                $saldoUntilBeforeMonthAdm += $labaRugis[$i]['saldoUntilBeforeMonth'];
+                                $saldoAdm += $labaRugis[$i]['saldo'];
+                                $saldoUntilMonthAdm += $labaRugis[$i]['saldoUntilMonth'];
+                            @endphp
+                        @endfor
                         <tr>
                             <td></td>
                             <td style="text-align:right;">Jumlah Biaya Administrasi dan Umum</td>
@@ -334,24 +338,24 @@
                             $saldoLu = 0;
                             $saldoUntilMonthLu = 0;
                         @endphp
-                        @foreach ($luarusaha as $item)
-                        <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                         @php
-                            $saldoUntilBeforeMonthLu += $item['saldoUntilBeforeMonth'];
-                            $saldoLu += $item['saldo'];
-                            $saldoUntilMonthLu += $item['saldoUntilMonth'];
-                        @endphp
-                        @endforeach
+                        @for ($i = 21; $i <= 22; $i++)
+                            <tr>
+                                <td>{{ substr($labaRugis[$i]['code']->CODE, 0, 3) }}</td>
+                                <td>{{ $labaRugis[$i]['code']->NAMA_TRANSAKSI }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldo'], 0, ',', '.') }}</td>
+                                <td>{{ number_format($labaRugis[$i]['saldoUntilMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @php
+                                $saldoUntilBeforeMonthLu += $labaRugis[$i]['saldoUntilBeforeMonth'];
+                                $saldoLu += $labaRugis[$i]['saldo'];
+                                $saldoUntilMonthLu += $labaRugis[$i]['saldoUntilMonth'];
+                            @endphp
+                        @endfor
                         <tr>
                             <td></td>
                             <td style="text-align:right;">Sls Pend dan Biaya di Luar Usaha</td>

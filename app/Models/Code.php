@@ -24,6 +24,10 @@ class Code extends Model
     {
         return $this->belongsTo(CodeType::class, 'code_type_id');
     }
+    public function normalBalance()
+    {
+        return $this->belongsTo(NormalBalance::class, 'normal_balance_id');
+    }
 
     public function saldoAwals()
     {

@@ -103,6 +103,7 @@ Route::group(['prefix' => 'setting'], function () {
     Route::get('/codetrans/destroy/{id}', [App\Http\Controllers\SettingCodeTransController::class, 'destroy'])->name('kode-transaksi-delete');
     Route::get('/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create'])->name('kode-transaksi-create');
     Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store'])->name('kode-transaksi-store');
+    Route::get('/codetrans/excel', [App\Http\Controllers\SettingCodeTransController::class, 'createExcel'])->name('kode-transaksi-excel');
 
     // Jenis Anggota
     Route::group(['prefix' => 'jenis-anggota'], function () {
