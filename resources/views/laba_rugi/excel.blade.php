@@ -62,6 +62,40 @@
                             <td></td>
                             <td></td>
                         </tr>
+                        @php
+                            $saldoUntilBeforeMonthHpp = 0;
+                            $saldoHpp = 0;
+                            $saldoUntilMonthHpp = 0;
+                        @endphp
+                        @foreach ($hpp as $item)
+                        <tr>
+                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
+                            <td>{{$item['saldo']}}</td>
+                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                       @php
+                            $saldoUntilBeforeMonthHpp += $item['saldoUntilBeforeMonth'];
+                            $saldoHpp += $item['saldo'];
+                            $saldoUntilMonthHpp += $item['saldoUntilMonth'];
+                        @endphp
+                        @endforeach
+                        <tr>
+                            <td></td>
+                            <td style="text-align:right;">Jumlah Pendapatan</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{$saldoUntilBeforeMonthPend}}</td>
+                            <td>{{$saldoPend}}</td>
+                            <td>{{$saldoUntilMonthPend}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         <tr>
                             <td></td>
                             <td colspan="8"><b>BIAYA</b></td>

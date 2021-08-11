@@ -27,7 +27,9 @@ class LabaRugiController extends Controller
             // $groupLabaRugi = ['702.02', '701.02', 101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 201, 202, 203, 204, 205, 208, 210, 301, 302, 303, 304, 401, 
             //                 402, 403, 404, 405, 407, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 891, 791];
         $groupLabaRugi = CodeCategory::where('name','like','PENDAPATAN%')
-                            ->orWhere('name','like','BIAYA%')->get();
+                            ->orWhere('name','like','BIAYA%')
+                            ->orWhere('name','like','HPP%')
+                            ->get();
 
                            
             $codes = Code::where('is_parent', 0)
@@ -41,6 +43,7 @@ class LabaRugiController extends Controller
             // laba rugi collection
             $labaRugis = collect();
             $pendapatan = collect();
+            $hpp = collect();
             $biayapegawai = collect();
             $biayaoperasional = collect();
             $biayaperawatan = collect();
@@ -134,6 +137,14 @@ class LabaRugiController extends Controller
                 }
 
                     $parentCode = Code::where('CODE', $key)->first();
+                    if($parentCode->codeCategory->name=='HPP'){
+                        $hpp->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoUntilMonth' => $saldoUntilMonth,
+                        'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
+                    ]);
+                    }else
                     if($parentCode->codeCategory->name=='PENDAPATAN'){
                         $pendapatan->push([
                         'code' => $parentCode,

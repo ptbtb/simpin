@@ -106,6 +106,44 @@
                         </tr>
                         <tr>
                             <td></td>
+                            <td colspan="8"><b>HPP</b></td>
+                        </tr>
+                         @php
+                            $saldoUntilBeforeMonthHpp = 0;
+                            $saldoHpp = 0;
+                            $saldoUntilMonthHpp = 0;
+                        @endphp
+                        @foreach ($hpp as $item)
+                        <tr>
+                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                         @php
+                            $saldoUntilBeforeMonthHpp += $item['saldoUntilBeforeMonth'];
+                            $saldoHpp += $item['saldo'];
+                            $saldoUntilMonthHpp += $item['saldoUntilMonth'];
+                        @endphp
+                        @endforeach
+                        <tr>
+                            <td></td>
+                            <td style="text-align:right;">Jumlah Pendapatan</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ number_format($saldoUntilBeforeMonthHpp, 0, ',', '.') }}</td>
+                            <td>{{ number_format($saldoHpp, 0, ',', '.') }}</td>
+                            <td>{{ number_format($saldoUntilMonthHpp, 0, ',', '.') }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
                             <td colspan="8"><b>BIAYA</b></td>
                         </tr>
                         <tr>
