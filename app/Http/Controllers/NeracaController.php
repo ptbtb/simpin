@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Jurnal;
 use App\Models\Code;
+use App\Models\CodeCategory;
 use Illuminate\Http\Request;
+use App\Exports\NeracaExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
@@ -23,21 +25,26 @@ class NeracaController extends Controller
         $this->authorize('view jurnal', Auth::user());
         try
         {
-            $groupNeraca = [101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 204, 205, 208, 210, 302, 400, 401, 
-                            402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 501, 502, 603, 604, 605, 606, 607];
+           $groupNeraca = CodeCategory::where('name','like','AKTIVA%')
+                            ->orWhere('name','like','KEWAJIBAN%')
+                            ->orWhere('name','like','KEKAYAAN%')
+                            ->get();
 
             $codes = Code::where('is_parent', 0)
                             ->where(function ($query) use($groupNeraca) {
                                 for ($i = 0; $i < count($groupNeraca); $i++){
-                                $query->orWhere('CODE', 'like',  $groupNeraca[$i] .'%');
+                               $query->orWhere('code_category_id',  $groupNeraca[$i]->id );
                                 }      
                             })
-                            ->whereIn('code_type_id', [CODE_TYPE_ACTIVA, CODE_TYPE_PASSIVA])
+                            //->whereIn('code_type_id', [CODE_TYPE_ACTIVA, CODE_TYPE_PASSIVA])
                             ->get();
 
             // aktiva collection
-            $aktivas = collect();
-            $passivas = collect();
+            $aktivalancar = collect();
+            $aktivatetap = collect();
+            $kewajibanlancar = collect();
+            $kewajibanjangkapanjang = collect();
+            $kekayaanbersih = collect();
 
             $groupCodes = $codes->groupBy(function ($item, $key) {
                 return substr($item['CODE'], 0, 3);
@@ -54,10 +61,10 @@ class NeracaController extends Controller
             $request->compare_period = Carbon::createFromFormat('m-Y', $request->period)->subMonth()->format('m-Y');
 
             // get start/end period and sub period
-            $startPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfMonth()->format('Y-m-d');
+            $startPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
             $endPeriod = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
 
-            $startComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->startOfMonth()->format('Y-m-d');
+            $startComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->startOfYear()->format('Y-m-d');
             $endComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->endOfMonth()->format('Y-m-d');
             
             foreach ($groupCodes as $key => $groupCode) 
@@ -97,19 +104,44 @@ class NeracaController extends Controller
                     }
                 }
                 
-                $parentCode = Code::where('CODE', $key . '.00.000')->first();
-
-                if($groupCode->first()->code_type_id == CODE_TYPE_ACTIVA)
+                if ($key==965 || $key==974){
+                    $parentCode = Code::where('CODE', 'like',''.$key . '%')->first();
+                }else{
+                     $parentCode = Code::where('CODE', $key . '.00.000')->first();
+                }
+                
+                if($parentCode->codeCategory->name=='AKTIVA LANCAR')
                 {
-                    $aktivas->push([
+                    $aktivalancar->push([
                         'code' => $parentCode,
                         'saldo' => $saldo,
                         'saldoLastMonth' => $saldoLastMonth,
                     ]);
                 }
-                else if($groupCode->first()->code_type_id == CODE_TYPE_PASSIVA)
+                else if($parentCode->codeCategory->name=='AKTIVA TETAP')
                 {
-                    $passivas->push([
+                    $aktivatetap->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
+                    ]);
+                }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
+                {
+                    $kewajibanlancar->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
+                    ]);
+                }else if($parentCode->codeCategory->name=='KEWAJIBAN JANGKA PANJANG')
+                {
+                    $kewajibanjangkapanjang->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
+                    ]);
+                }else if($parentCode->codeCategory->name=='KEKAYAAN BERSIH')
+                {
+                    $kekayaanbersih->push([
                         'code' => $parentCode,
                         'saldo' => $saldo,
                         'saldoLastMonth' => $saldoLastMonth,
@@ -118,12 +150,20 @@ class NeracaController extends Controller
                 
             }
 
-            $aktivas = $aktivas->sortBy('code');
-            $passivas = $passivas->sortBy('code');
+            $aktivatetap = $aktivatetap->sortBy('code');
+            $aktivalancar = $aktivalancar->sortBy('code');
+            $kewajibanlancar = $kewajibanlancar->sortBy('code');
+            $kewajibanjangkapanjang = $kewajibanjangkapanjang->sortBy('code');
+            $kekayaanbersih = $kekayaanbersih->sortBy('code');
+           
             
             $data['title'] = 'Laporan Neraca';
-            $data['aktivas'] = $aktivas;
-            $data['passivas'] = $passivas;
+            $data['aktivatetap'] = $aktivatetap;
+            $data['aktivalancar'] = $aktivalancar;
+            $data['kewajibanlancar'] = $kewajibanlancar;
+            $data['kewajibanjangkapanjang'] = $kewajibanjangkapanjang;
+            $data['kekayaanbersih'] = $kekayaanbersih;
+           
             $data['request'] = $request;
             
             return view('neraca.index', $data);
@@ -136,24 +176,30 @@ class NeracaController extends Controller
         }
     }
 
-    public function createExcel($period) {
+    public function createExcel(Request $request) {
         $this->authorize('view jurnal', Auth::user());
         try
         {
-            $groupNeraca = [101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 204, 205, 208, 210, 302, 400, 401, 
-                            402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 501, 502, 603, 604, 605, 606, 607];
+            $groupNeraca = CodeCategory::where('name','like','AKTIVA%')
+                            ->orWhere('name','like','KEWAJIBAN%')
+                            ->orWhere('name','like','KEKAYAAN%')
+                            ->get();
 
             $codes = Code::where('is_parent', 0)
                             ->where(function ($query) use($groupNeraca) {
                                 for ($i = 0; $i < count($groupNeraca); $i++){
-                                $query->orWhere('CODE', 'like',  $groupNeraca[$i] .'%');
+                               $query->orWhere('code_category_id',  $groupNeraca[$i]->id );
                                 }      
                             })
-                            ->whereIn('code_type_id', [CODE_TYPE_ACTIVA, CODE_TYPE_PASSIVA])
+                            //->whereIn('code_type_id', [CODE_TYPE_ACTIVA, CODE_TYPE_PASSIVA])
                             ->get();
 
             // aktiva collection
-            $neracas = collect();
+            $aktivalancar = collect();
+            $aktivatetap = collect();
+            $kewajibanlancar = collect();
+            $kewajibanjangkapanjang = collect();
+            $kekayaanbersih = collect();
 
             $groupCodes = $codes->groupBy(function ($item, $key) {
                 return substr($item['CODE'], 0, 3);
@@ -161,20 +207,20 @@ class NeracaController extends Controller
 
             // period
             // check if period date has been selected
-            if(!$period)
+            if(!$request->period)
             {          
-                $period = Carbon::today()->format('m-Y');
+                $request->period = Carbon::today()->format('m-Y');
             }
 
             // create compare period, sub month from selected period
-            $compare_period = Carbon::createFromFormat('m-Y', $period)->subMonth()->format('m-Y');
+            $request->compare_period = Carbon::createFromFormat('m-Y', $request->period)->subMonth()->format('m-Y');
 
             // get start/end period and sub period
-            $startPeriod = Carbon::createFromFormat('m-Y', $period)->startOfMonth()->format('Y-m-d');
-            $endPeriod = Carbon::createFromFormat('m-Y', $period)->endOfMonth()->format('Y-m-d');
+            $startPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
+            $endPeriod = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
 
-            $startComparePeriod = Carbon::createFromFormat('m-Y', $compare_period)->startOfMonth()->format('Y-m-d');
-            $endComparePeriod = Carbon::createFromFormat('m-Y', $compare_period)->endOfMonth()->format('Y-m-d');
+            $startComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->startOfYear()->format('Y-m-d');
+            $endComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->endOfMonth()->format('Y-m-d');
             
             foreach ($groupCodes as $key => $groupCode) 
             {
@@ -213,35 +259,73 @@ class NeracaController extends Controller
                     }
                 }
                 
-                $parentCode = Code::where('CODE', $key . '.00.000')->first();
-
-                if($groupCode->first()->code_type_id == CODE_TYPE_ACTIVA)
+                if ($key==965 || $key==974){
+                    $parentCode = Code::where('CODE', 'like',''.$key . '%')->first();
+                }else{
+                     $parentCode = Code::where('CODE', $key . '.00.000')->first();
+                }
+                
+               
+                if($parentCode->codeCategory->name=='AKTIVA LANCAR')
                 {
-                    $neracas->push([
-                        'type' => 'Aktiva',
-                        'rek' => substr($parentCode->CODE, 0, 3),
-                        'nama_rekening' => $parentCode->NAMA_TRANSAKSI,
-                        'bulan_ini' => $saldo,
-                        'bulan_lalu' => $saldoLastMonth,
+                    $aktivalancar->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
                     ]);
                 }
-                else if($groupCode->first()->code_type_id == CODE_TYPE_PASSIVA)
+                else if($parentCode->codeCategory->name=='AKTIVA TETAP')
                 {
-                    $neracas->push([
-                        'type' => 'Pasiva',
-                        'rek' => substr($parentCode->CODE, 0, 3),
-                        'nama_rekening' => $parentCode->NAMA_TRANSAKSI,
-                        'bulan_ini' => $saldo,
-                        'bulan_lalu' => $saldoLastMonth,
+                    $aktivatetap->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
+                    ]);
+                }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
+                {
+                    $kewajibanlancar->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
+                    ]);
+                }else if($parentCode->codeCategory->name=='KEWAJIBAN JANGKA PANJANG')
+                {
+                    $kewajibanjangkapanjang->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
+                    ]);
+                }else if($parentCode->codeCategory->name=='KEKAYAAN BERSIH')
+                {
+                    $kekayaanbersih->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo,
+                        'saldoLastMonth' => $saldoLastMonth,
                     ]);
                 }
                 
             }
 
-            $neracas = $neracas->sortBy('type')->sortBy('rek');
+            $aktivatetap = $aktivatetap->sortBy('code');
+            $aktivalancar = $aktivalancar->sortBy('code');
+            $kewajibanlancar = $kewajibanlancar->sortBy('code');
+            $kewajibanjangkapanjang = $kewajibanjangkapanjang->sortBy('code');
+            $kekayaanbersih = $kekayaanbersih->sortBy('code');
+           
             
-            $filename = 'export_neraca_excel_' .$period. '_'. Carbon::now()->format('d M Y') . '.xlsx';
-            return (new FastExcel($neracas))->download($filename);
+            $data['title'] = 'Laporan Neraca';
+            $data['aktivatetap'] = $aktivatetap;
+            $data['aktivalancar'] = $aktivalancar;
+            $data['kewajibanlancar'] = $kewajibanlancar;
+            $data['kewajibanjangkapanjang'] = $kewajibanjangkapanjang;
+            $data['kekayaanbersih'] = $kekayaanbersih;
+           
+            
+
+            
+            
+            $filename = 'export_neraca_excel_' .$request->period. '_'. Carbon::now()->format('d M Y') . '.xlsx';
+             return Excel::download(new NeracaExport($data), $filename);
         }
         catch (\Throwable $e)
         {

@@ -52,26 +52,66 @@
                 <table class="table table-striped table-aktiva">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Rek</th>
-                            <th>Nama Rekening</th>
-                            <th style="width: 30%">Bulan ini</th>
-                            <th style="width: 30%">Bulan lalu</th>
+                            <th style="width: 30%">Nama Rekening</th>
+                            <th>Bulan ini</th>
+                            <th >Bulan lalu</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($aktivas as $aktiva)
+                        <tr>
+                            <td>I</td>
+                            <td>AKTIVA LANCAR</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @foreach ($aktivalancar as $item)
                             <tr>
-                                <td>{{ substr($aktiva['code']->CODE, 0, 3) }}</td>
-                                <td>{{ $aktiva['code']->NAMA_TRANSAKSI }}</td>
-                                <td>Rp. {{ number_format($aktiva['saldo'], 0, ',', '.') }}</td>
-                                <td>Rp. {{ number_format($aktiva['saldoLastMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td>{{ substr($item['code']->CODE, 0, 3) }}</td>
+                                <td><a href="{{ route('jurnal-list',['code'=>substr($item['code']->CODE, 0, 3) ,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
+                                <td>Rp. {{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($item['saldoLastMonth'], 0, ',', '.') }}</td>
                             </tr>
                         @endforeach
                         <tr>
                             <td></td>
-                            <td>TOTAL</td>
-                            <td>Rp. {{ number_format($aktivas->sum('saldo'), 0, ',', '.') }}</td>
-                            <td>Rp. {{ number_format($aktivas->sum('saldoLastMonth'), 0, ',', '.') }}</td>
+                            <td></td>
+                            <td>Jumlah Aktiva Lancar</td>
+                            <td>Rp. {{ number_format($aktivalancar->sum('saldo'), 0, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($aktivalancar->sum('saldoLastMonth'), 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>II</td>
+                            <td>AKTIVA TETAP</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @foreach ($aktivatetap as $item)
+                            <tr>
+                                <td></td>
+                                <td>{{ substr($item['code']->CODE, 0, 3) }}</td>
+                               <td><a href="{{ route('jurnal-list',['code'=>substr($item['code']->CODE, 0, 3) ,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
+                                <td>Rp. {{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($item['saldoLastMonth'], 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Jumlah Aktiva Tetap</td>
+                            <td>Rp. {{ number_format($aktivatetap->sum('saldo'), 0, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($aktivatetap->sum('saldoLastMonth'), 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL AKTIVA</td>
+                            <td>Rp. {{ number_format($aktivatetap->sum('saldo')+$aktivalancar->sum('saldo'), 0, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($aktivatetap->sum('saldoLastMonth')+$aktivalancar->sum('saldoLastMonth'), 0, ',', '.') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -81,26 +121,89 @@
                 <table class="table table-striped table-passiva">
                     <thead>
                         <tr>
+                             <th></th>
                             <th>Rek</th>
-                            <th>Nama Rekening</th>
-                            <th style="width: 30%">Bulan ini</th>
-                            <th style="width: 30%">Bulan lalu</th>
+                            <th style="width: 30%">Nama Rekening</th>
+                            <th >Bulan ini</th>
+                            <th >Bulan lalu</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($passivas as $passiva)
+                        <tr>
+                            <td>III</td>
+                            <td>KEWAJIBAN LANCAR</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @foreach ($kewajibanlancar as $item)
                             <tr>
-                                <td>{{ substr($passiva['code']->CODE, 0, 3) }}</td>
-                                <td>{{ $passiva['code']->NAMA_TRANSAKSI }}</td>
-                                <td>Rp. {{ number_format($passiva['saldo'], 0, ',', '.') }}</td>
-                                <td>Rp. {{ number_format($passiva['saldoLastMonth'], 0, ',', '.') }}</td>
+                                <td></td>
+                                <td>{{ substr($item['code']->CODE, 0, 3) }}</td>
+                               <td><a href="{{ route('jurnal-list',['code'=>substr($item['code']->CODE, 0, 3) ,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
+                                <td>Rp. {{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($item['saldoLastMonth'], 0, ',', '.') }}</td>
                             </tr>
                         @endforeach
                         <tr>
                             <td></td>
-                            <td>TOTAL</td>
-                            <td>Rp. {{ number_format($passivas->sum('saldo'), 0, ',', '.') }}</td>
-                            <td>Rp. {{ number_format($passivas->sum('saldoLastMonth'), 0, ',', '.') }}</td>
+                            <td></td>
+                            <td>Jumlah Kewajiban Lancar</td>
+                            <td>Rp. {{ number_format($kewajibanlancar->sum('saldo'), 0, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($kewajibanlancar->sum('saldoLastMonth'), 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>IV</td>
+                            <td>KEWAJIBAN JANGKA PANJANG</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @foreach ($kewajibanjangkapanjang as $item)
+                            <tr>
+                                <td></td>
+                                <td>{{ substr($item['code']->CODE, 0, 3) }}</td>
+                               <td><a href="{{ route('jurnal-list',['code'=>substr($item['code']->CODE, 0, 3) ,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
+                                <td>Rp. {{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($item['saldoLastMonth'], 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Jumlah Kewajiban Jangka Panjang</td>
+                            <td>Rp. {{ number_format($kewajibanjangkapanjang->sum('saldo'), 0, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($kewajibanjangkapanjang->sum('saldoLastMonth'), 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>V</td>
+                            <td>KEKAYAAN BERSIH</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @foreach ($kekayaanbersih as $item)
+                            <tr>
+                                <td></td>
+                                <td>{{ substr($item['code']->CODE, 0, 3) }}</td>
+                               <td><a href="{{ route('jurnal-list',['code'=>substr($item['code']->CODE, 0, 3) ,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
+                                <td>Rp. {{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($item['saldoLastMonth'], 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Jumlah Kekayaan Bersih</td>
+                            <td>Rp. {{ number_format($kekayaanbersih->sum('saldo'), 0, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($kekayaanbersih->sum('saldoLastMonth'), 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL PASIVA</td>
+                            <td>Rp. {{ number_format($kekayaanbersih->sum('saldo')+$kewajibanjangkapanjang->sum('saldo')+$kewajibanlancar->sum('saldo'), 0, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($kekayaanbersih->sum('saldoLastMonth')+$kewajibanjangkapanjang->sum('saldoLastMonth')+$kewajibanlancar->sum('saldoLastMonth'), 0, ',', '.') }}</td>
                         </tr>
                     </tbody>
                 </table>
