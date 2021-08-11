@@ -120,8 +120,13 @@ class JurnalController extends Controller
         }
         if($request->code){
          $jurnal = $jurnal
-         ->where('akun_debet', 'like', '%' . $request->code . '%')
-         ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+         ->where(function ($query) use($jurnal,$request) {
+                                for ($i = 0; $i < count($jurnal); $i++){
+                               $query->orwhere('akun_debit', 'like', '%' . $request->code . '%')
+                               ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+                                }      
+                            });
+         
      }
      
 
