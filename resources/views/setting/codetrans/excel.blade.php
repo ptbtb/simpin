@@ -16,7 +16,7 @@
                     <th><a href="#">Kategory</a></th>
                     <th><a href="#">Normal Balance</a></th>
                     <th><a href="#">Induk</a></th>
-                    <th><a href="#">Action</a></th>
+                   
 
                 </tr>
             </thead>
@@ -31,10 +31,7 @@
                     <td >{{$codetrans->codeCategory->name}}</td>
                     <td >{{$codetrans->normalBalance->name}}</td>
                     <td >{{($codetrans->is_parent==1)?'Induk':'Anak'}}</td>
-                    <td class="text-center">
-                        <a class="btn btn-info" href="{{ route('kode-transaksi-edit', $codetrans->id) }}"><i class="glyphicon glyphicon-subtitles"></i>edit</a>
-                        <a class="btn btn-danger" onclick="return confirm('Yakin Untuk Dihapus?')" href="{{ route('kode-transaksi-delete', $codetrans->id) }}"><i class="glyphicon glyphicon-subtitles"></i>hapus</a>
-                    </td>
+                   
 
                 </tr>
                 <?php $i++; ?>
