@@ -48,11 +48,11 @@ class JurnalController extends Controller
     {
         try
         {
-         $startUntilPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
-         $endUntilPeriod = Carbon::createFromFormat   ('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
-         $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
-         if ($request->id_tipe_jurnal)
-         {
+           $startUntilPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
+           $endUntilPeriod = Carbon::createFromFormat   ('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
+           $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
+           if ($request->id_tipe_jurnal)
+           {
             $jurnal = $jurnal->where('id_tipe_jurnal', $request->id_tipe_jurnal);
         }
 
@@ -118,28 +118,29 @@ class JurnalController extends Controller
                 });
             }
         }
+        if($request->keterangan)
+        {
+            $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
+        }
         if($request->code){
-         $jurnal = $jurnal
-         ->where(function ($query) use($jurnal,$request) {
-                                for ($i = 0; $i < count($jurnal); $i++){
-                               $query->orwhere('akun_debit', 'like', '%' . $request->code . '%')
-                               ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
-                                }      
-                            });
-         
-     }
-     
+           $jurnal = $jurnal
+           ->where(function ($query) use($request) {
 
-     if($request->keterangan)
-     {
-        $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
-    }
+             $query->where('akun_debet', 'like', '%' . $request->code . '%')
+             ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+             
+     });
 
-    $jurnal = $jurnal->orderBy('created_at', 'desc');
-    return DataTables::eloquent($jurnal)->addIndexColumn()->make(true);
-}
-catch (\Throwable $e)
-{
+       }
+
+
+
+
+       $jurnal = $jurnal->orderBy('created_at', 'desc');
+       return DataTables::eloquent($jurnal)->addIndexColumn()->make(true);
+   }
+   catch (\Throwable $e)
+   {
     $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
     Log::error($message);
     return response()->json(['message' => 'error'], 500);
@@ -220,16 +221,16 @@ public function createExcel(Request $request)
             }
         }
         if($request->code){
-         $jurnal = $jurnal
-         ->where('akun_debet', 'like', '%' . $request->code . '%')
-         ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
-     }
-     if($request->period){
-         $jurnal = $jurnal->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
-     }
+           $jurnal = $jurnal
+           ->where('akun_debet', 'like', '%' . $request->code . '%')
+           ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+       }
+       if($request->period){
+           $jurnal = $jurnal->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
+       }
 
-     if($request->keterangan)
-     {
+       if($request->keterangan)
+       {
         $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
     }
 
