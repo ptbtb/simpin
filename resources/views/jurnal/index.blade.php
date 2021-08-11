@@ -90,6 +90,20 @@
         $(document).ready(function ()
         {
             initiateDatatables();
+             $("#period").change(function(){
+                console.log($('#period').val());
+                console.log({{ $request->period }});
+            });
+
+            $('.datepicker').datepicker({
+                format: "mm-yyyy",
+                viewMode: "months", 
+                minViewMode: "months"
+            });
+
+            $('input.datepicker').bind('keyup keydown keypress', function (evt) {
+                return false;
+            });
         });
         function initiateDatatables()
         {
