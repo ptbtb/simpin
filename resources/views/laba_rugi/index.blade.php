@@ -80,13 +80,13 @@
                         @foreach ($pendapatan as $item)
                         <tr>
                             <td></td>
-                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
+                            <td class="text-right">{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -102,9 +102,9 @@
                             <td style="text-align:right;">Jumlah Pendapatan</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthPend, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoPend, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthPend, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthPend, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoPend, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthPend, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -125,9 +125,9 @@
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -143,9 +143,9 @@
                             <td style="text-align:right;">Jumlah Pendapatan</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthHpp, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoHpp, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthHpp, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthHpp, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoHpp, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthHpp, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -160,9 +160,9 @@
                             <td><b>Hasil Usaha Bruto=(I-II)</b></td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthHasil, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoHasil, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthHasil, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthHasil, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoHasil, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthHasil, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -188,9 +188,9 @@
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -206,9 +206,9 @@
                             <td style="text-align:right;">Jumlah Biaya Pegawai</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthPegawai, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoPegawai, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthPegawai, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthPegawai, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoPegawai, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthPegawai, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -229,9 +229,9 @@
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -247,9 +247,9 @@
                             <td style="text-align:right;">Jumlah Biaya Operasional</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthOp, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoOp, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthOp, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthOp, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoOp, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthOp, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -270,9 +270,9 @@
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -288,9 +288,9 @@
                             <td style="text-align:right;">Jumlah Biaya Perawatan</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthPrwt, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoPrwt, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthPrwt, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthPrwt, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoPrwt, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthPrwt, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -311,9 +311,9 @@
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -329,9 +329,9 @@
                             <td style="text-align:right;">Jumlah Biaya Penyusutan</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthPnyust, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoPnyust, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthPnyust, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthPnyust, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoPnyust, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthPnyust, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -354,9 +354,9 @@
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -372,9 +372,9 @@
                             <td style="text-align:right;">Jumlah Biaya Penyisihan</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthPnyish, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoPnyish, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthPnyish, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthPnyish, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoPnyish, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthPnyish, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -396,9 +396,9 @@
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                            <td>{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -414,9 +414,9 @@
                             <td style="text-align:right;">Jumlah Biaya Administrasi dan Umum</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthAdm, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoAdm, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthAdm, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthAdm, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoAdm, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthAdm, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -431,9 +431,9 @@
                             <td style="text-align:right;">Jumlah Biaya</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthTotalBiaya, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoTotalBiaya, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthTotalBiaya, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthTotalBiaya, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoTotalBiaya, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthTotalBiaya, 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -444,9 +444,9 @@
                             <td style="text-align:right;">SHU Operasional</td>
                             <td></td>
                             <td></td>
-                            <td>{{ number_format($saldoUntilBeforeMonthHasil - $saldoUntilBeforeMonthTotalBiaya , 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoHasil - $saldoTotalBiaya, 0, ',', '.') }}</td>
-                            <td>{{ number_format($saldoUntilMonthHasil - $saldoUntilMonthTotalBiaya , 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilBeforeMonthHasil - $saldoUntilBeforeMonthTotalBiaya , 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoHasil - $saldoTotalBiaya, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($saldoUntilMonthHasil - $saldoUntilMonthTotalBiaya , 0, ',', '.') }}</td>
                             <td></td>
                             <td></td>
                         </tr>
