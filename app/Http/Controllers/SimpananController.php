@@ -552,9 +552,10 @@ class SimpananController extends Controller
                     }
                 }
             }
-            //dd($listSimpanan);die;
+
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
+            // dd($data);
 
             return view('simpanan.card.detail', $data);
         } catch (\Throwable $e) {
@@ -598,6 +599,7 @@ class SimpananController extends Controller
             $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
                 ->whereYear('tgl_ambil', $thisYear)
                 ->whereIn('code_trans', $simpananKeys)
+                ->whereraw('paid_by_cashier is not null')
                 ->orderBy('tgl_ambil', 'asc')
                 ->get();
             /*
@@ -616,7 +618,7 @@ class SimpananController extends Controller
                 if ($jenisSimpanan) {
                     $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = $listTabungan->where('kode_trans', $key)->values()->sum('besar_tabungan');
+                    $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan : 0;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('besar_simpanan');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
@@ -634,7 +636,7 @@ class SimpananController extends Controller
 
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
-
+            // dd($data);
             // share data to view
             view()->share('data', $data);
             PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
