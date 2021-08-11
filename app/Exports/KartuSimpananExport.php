@@ -54,6 +54,7 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
        $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
                                    ->whereYear('tgl_ambil', $thisYear)
                                    ->whereIn('code_trans', $simpananKeys)
+                                   ->whereraw('paid_by_cashier is not null')
                                    ->orderBy('tgl_ambil', 'asc')
                                    ->get();
        /*
