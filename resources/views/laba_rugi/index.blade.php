@@ -58,13 +58,13 @@
                         <tr>
                             <th rowspan="2"></th>
                             <th rowspan="2">Rek</th>
-                            <th rowspan="2">Nama</th>
-                            <th rowspan="2" style="width: 20%">Anggaran Tahun {{ $request->year }}</th>
-                            <th rowspan="2" style="width: 20%">Anggaran Triwulan</th>
-                            <th rowspan="2" style="width: 20%">S/D Bulan Lalu</th>
-                            <th rowspan="2" style="width: 20%">Bulan Ini</th>
-                            <th rowspan="2" style="width: 20%">S/D Bulan Ini</th>
-                            <th colspan="2" style="width: 20%">TREND</th>
+                            <th rowspan="2" style="width: 20%">Nama</th>
+                            <th rowspan="2" >Anggaran Tahun {{ $request->year }}</th>
+                            <th rowspan="2" >Anggaran Triwulan</th>
+                            <th rowspan="2" >S/D Bulan Lalu</th>
+                            <th rowspan="2" >Bulan Ini</th>
+                            <th rowspan="2" >S/D Bulan Ini</th>
+                            <th colspan="2" >TREND</th>
                         </tr>
                         <tr>
                             <th style="width: 20%">7/3</th>
@@ -428,7 +428,7 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td style="text-align:right;">Jumlah Biaya</td>
+                            <td style="text-align:right;"><b>Jumlah Biaya (IV)</b></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($saldoUntilBeforeMonthTotalBiaya, 0, ',', '.') }}</td>
@@ -441,7 +441,7 @@
                         <tr>
                             <td>V</td>
                             <td></td>
-                            <td style="text-align:right;">SHU Operasional</td>
+                            <td style="text-align:right;"><b>SHU Operasional (III-IV)</b></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($saldoUntilBeforeMonthHasil - $saldoUntilBeforeMonthTotalBiaya , 0, ',', '.') }}</td>

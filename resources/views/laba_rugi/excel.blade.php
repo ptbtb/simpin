@@ -98,7 +98,7 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td style="text-align:right;">Jumlah Pendapatan</td>
+                            <td style="text-align:right;">Jumlah HPP</td>
                             <td></td>
                             <td></td>
                             <td>{{ $saldoUntilBeforeMonthHpp }}</td>
@@ -386,7 +386,7 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td style="text-align:right;">Jumlah Biaya</td>
+                            <td style="text-align:right;"><b>Jumlah Biaya (IV)</b></td>
                             <td></td>
                             <td></td>
                             <td>{{ $saldoUntilBeforeMonthTotalBiaya }}</td>
@@ -399,7 +399,7 @@
                         <tr>
                             <td>V</td>
                             <td></td>
-                            <td style="text-align:right;">SHU Operasional</td>
+                            <td style="text-align:right;"><b>SHU Operasional (III-IV)</b></td>
                             <td></td>
                             <td></td>
                             <td>{{ $saldoUntilBeforeMonthHasil - $saldoUntilBeforeMonthTotalBiaya  }}</td>
