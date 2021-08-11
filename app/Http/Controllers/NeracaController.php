@@ -61,10 +61,10 @@ class NeracaController extends Controller
             $request->compare_period = Carbon::createFromFormat('m-Y', $request->period)->subMonth()->format('m-Y');
 
             // get start/end period and sub period
-            $startPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
+            $startPeriod = Carbon::createFromFormat('m-Y', $request->period)->subYear()->endOfYear()->format('Y-m-d');
             $endPeriod = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
 
-            $startComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->startOfYear()->format('Y-m-d');
+            $startComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->subYear()->endOfYear()->format('Y-m-d');
             $endComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->endOfMonth()->format('Y-m-d');
             
             foreach ($groupCodes as $key => $groupCode) 
