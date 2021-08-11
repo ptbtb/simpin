@@ -348,6 +348,7 @@ Route::group(['prefix' => 'jurnal'], function() {
     Route::group(['middleware' => ['auth']], function () {
         Route::get('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
         Route::get('data', [App\Http\Controllers\JurnalController::class, 'indexAjax'])->name('jurnal-list-ajax');
+        Route::get('excel', [App\Http\Controllers\JurnalController::class, 'createExcel'])->name('jurnal-export-excel');
         Route::post('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
     });
 });
