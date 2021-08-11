@@ -50,7 +50,7 @@ class JurnalController extends Controller
         {
          $startUntilPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
          $endUntilPeriod = Carbon::createFromFormat   ('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
-         $jurnal = Jurnal::with('tipeJurnal','createdBy');
+         $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
          if ($request->id_tipe_jurnal)
          {
             $jurnal = $jurnal->where('id_tipe_jurnal', $request->id_tipe_jurnal);
@@ -130,7 +130,7 @@ class JurnalController extends Controller
         $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
     }
 
-    $jurnal = $jurnal->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->orderBy('created_at', 'desc');
+    $jurnal = $jurnal->orderBy('created_at', 'desc');
     return DataTables::eloquent($jurnal)->addIndexColumn()->make(true);
 }
 catch (\Throwable $e)
