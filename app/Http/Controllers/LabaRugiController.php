@@ -210,6 +210,7 @@ class LabaRugiController extends Controller
             $data['title'] = 'Laporan Laba Rugi';
             $data['labaRugis'] = $labaRugis;
             $data['pendapatan'] = $pendapatan;
+            $data['hpp'] = $hpp;
             $data['biayapegawai'] = $biayapegawai;
             $data['biayaoperasional'] = $biayaoperasional;
             $data['biayaperawatan'] = $biayaperawatan;
@@ -237,7 +238,9 @@ class LabaRugiController extends Controller
             // $groupLabaRugi = ['702.02', '701.02', 101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 201, 202, 203, 204, 205, 208, 210, 301, 302, 303, 304, 401, 
             //                 402, 403, 404, 405, 407, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 891, 791];
         $groupLabaRugi = CodeCategory::where('name','like','PENDAPATAN%')
-                            ->orWhere('name','like','BIAYA%')->get();
+                            ->orWhere('name','like','BIAYA%')
+                            ->orWhere('name','like','HPP%')
+                            ->get();
 
                            
             $codes = Code::where('is_parent', 0)
@@ -251,6 +254,7 @@ class LabaRugiController extends Controller
             // laba rugi collection
             $labaRugis = collect();
             $pendapatan = collect();
+            $hpp = collect();
             $biayapegawai = collect();
             $biayaoperasional = collect();
             $biayaperawatan = collect();
@@ -261,7 +265,8 @@ class LabaRugiController extends Controller
 
 
             $groupCodes = $codes->groupBy(function ($item, $key) {
-                return substr($item['CODE'], 0, 3);
+                return $item['CODE'];
+                // return substr($item['CODE'], 0, 8);
             });
 
             // period
@@ -342,21 +347,15 @@ class LabaRugiController extends Controller
                     }
                 }
 
-                if($key == 701 or $key == 702)
-                {
-                    $parentCode = Code::where('CODE', $key . '.02.000')->first();
-
-                    
-                    $pendapatan->prepend([
+                    $parentCode = Code::where('CODE', $key)->first();
+                    if($parentCode->codeCategory->name=='HPP'){
+                        $hpp->push([
                         'code' => $parentCode,
                         'saldo' => $saldo,
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                }
-                else
-                {
-                    $parentCode = Code::where('CODE', $key . '.00.000')->first();
+                    }else
                     if($parentCode->codeCategory->name=='PENDAPATAN'){
                         $pendapatan->push([
                         'code' => $parentCode,
@@ -364,7 +363,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA PEGAWAI'){
                         $biayapegawai ->push([
                         'code' => $parentCode,
@@ -372,7 +371,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA OPERASIONAL'){
                         $biayaoperasional  ->push([
                         'code' => $parentCode,
@@ -380,7 +379,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA PERAWATAN'){
                         $biayaperawatan->push([
                         'code' => $parentCode,
@@ -388,7 +387,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA PENYUSUTAN'){
                         $biayapenyusutan->push([
                         'code' => $parentCode,
@@ -396,7 +395,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if($parentCode->codeCategory->name=='BIAYA ADMINISTRASI DAN UMUM'){
                         $biayaadminum->push([
                         'code' => $parentCode,
@@ -404,7 +403,7 @@ class LabaRugiController extends Controller
                         'saldoUntilMonth' => $saldoUntilMonth,
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
-                    }
+                    }else
                     if(($parentCode->codeCategory->name=='PENDAPATAN LUAR USAHA') || ($parentCode->codeCategory->name=='BIAYA LUAR USAHA')){
                         $luarusaha->push([
                         'code' => $parentCode,
@@ -414,15 +413,15 @@ class LabaRugiController extends Controller
                     ]);
                     }
                     
-                }
+                
             }
             
             // year data
             $request->year = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y');
-            
             $data['title'] = 'Laporan Laba Rugi';
             $data['labaRugis'] = $labaRugis;
             $data['pendapatan'] = $pendapatan;
+            $data['hpp'] = $hpp;
             $data['biayapegawai'] = $biayapegawai;
             $data['biayaoperasional'] = $biayaoperasional;
             $data['biayaperawatan'] = $biayaperawatan;
