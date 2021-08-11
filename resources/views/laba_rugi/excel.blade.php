@@ -14,6 +14,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th rowspan="2"></th>
                             <th rowspan="2">Rek</th>
                             <th rowspan="2">Nama</th>
                             <th rowspan="2" >Anggaran Tahun {{ $request->year }}</th>
@@ -30,18 +31,20 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
+                            <td>I</td>
+                            <td>{{ substr($pendapatan[0]['code']->CODE, 0, 6)}}</td>
                             <td colspan="8"><b>PENDAPATAN</b></td>
                         </tr>
                         @foreach ($pendapatan as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -53,33 +56,40 @@
                         @endforeach
                         <tr>
                             <td></td>
+                            <td></td>
                             <td style="text-align:right;">Jumlah Pendapatan</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthPend}}</td>
-                            <td>{{$saldoPend}}</td>
-                            <td>{{$saldoUntilMonthPend}}</td>
+                            <td>{{ $saldoUntilBeforeMonthPend }}</td>
+                            <td>{{ $saldoPend }}</td>
+                            <td>{{ $saldoUntilMonthPend }}</td>
                             <td></td>
                             <td></td>
                         </tr>
-                        @php
+                        <tr>
+                            <td>II</td>
+                            <td>{{ substr($hpp[0]['code']->CODE, 0, 6)}}</td>
+                            <td colspan="8"><b>HPP</b></td>
+                        </tr>
+                         @php
                             $saldoUntilBeforeMonthHpp = 0;
                             $saldoHpp = 0;
                             $saldoUntilMonthHpp = 0;
                         @endphp
                         @foreach ($hpp as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
                             <td></td>
                             <td></td>
                         </tr>
-                       @php
+                         @php
                             $saldoUntilBeforeMonthHpp += $item['saldoUntilBeforeMonth'];
                             $saldoHpp += $item['saldo'];
                             $saldoUntilMonthHpp += $item['saldoUntilMonth'];
@@ -87,21 +97,41 @@
                         @endforeach
                         <tr>
                             <td></td>
+                            <td></td>
                             <td style="text-align:right;">Jumlah Pendapatan</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthPend}}</td>
-                            <td>{{$saldoPend}}</td>
-                            <td>{{$saldoUntilMonthPend}}</td>
+                            <td>{{ $saldoUntilBeforeMonthHpp }}</td>
+                            <td>{{ $saldoHpp }}</td>
+                            <td>{{ $saldoUntilMonthHpp }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @php
+                        $saldoUntilBeforeMonthHasil=$saldoUntilBeforeMonthPend-$saldoUntilBeforeMonthHpp;
+                        $saldoHasil = $saldoPend-$saldoHpp;
+                        $saldoUntilMonthHasil=$saldoUntilMonthPend-$saldoUntilMonthHpp;
+                        @endphp
+                        <tr>
+                            <td>III</td>
+                            <td></td>
+                            <td><b>Hasil Usaha Bruto=(I-II)</b></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $saldoUntilBeforeMonthHasil }}</td>
+                            <td>{{ $saldoHasil }}</td>
+                            <td>{{ $saldoUntilMonthHasil }}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
+                            <td>IV</td>
                             <td></td>
-                            <td colspan="8"><b>BIAYA</b></td>
+                            <td colspan="8"><b>BEBAN USAHA</b></td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>A</td>
+                            <td>{{ substr($biayapegawai[0]['code']->CODE, 0, 6) }}</td>
                             <td colspan="8"><b>BIAYA PEGAWAI</b></td>
                         </tr>
                          @php
@@ -111,13 +141,14 @@
                         @endphp
                         @foreach ($biayapegawai as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -129,17 +160,19 @@
                         @endforeach
                         <tr>
                             <td></td>
+                            <td></td>
                             <td style="text-align:right;">Jumlah Biaya Pegawai</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthPegawai}}</td>
-                            <td>{{$saldoPegawai}}</td>
-                            <td>{{$saldoUntilMonthPegawai}}</td>
+                            <td>{{ $saldoUntilBeforeMonthPegawai }}</td>
+                            <td>{{ $saldoPegawai }}</td>
+                            <td>{{ $saldoUntilMonthPegawai }}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>B</td>
+                            <td>{{ substr($biayaoperasional[0]['code']->CODE, 0, 6) }}</td>
                             <td colspan="8"><b>BIAYA OPERASIONAL</b></td>
                         </tr>
                         @php
@@ -149,13 +182,14 @@
                         @endphp
                         @foreach ($biayaoperasional as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                             <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -166,18 +200,20 @@
                         @endphp
                         @endforeach
                         <tr>
+                             <td></td>
                             <td></td>
                             <td style="text-align:right;">Jumlah Biaya Operasional</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthOp}}</td>
-                            <td>{{$saldoOp}}</td>
-                            <td>{{$saldoUntilMonthOp}}</td>
+                            <td>{{ $saldoUntilBeforeMonthOp }}</td>
+                            <td>{{ $saldoOp }}</td>
+                            <td>{{ $saldoUntilMonthOp }}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>C</td>
+                             <td>{{ substr($biayaperawatan[0]['code']->CODE, 0, 6) }}</td>
                             <td colspan="8"><b>BIAYA PERAWATAN</b></td>
                         </tr>
                         @php
@@ -187,13 +223,14 @@
                         @endphp
                         @foreach ($biayaperawatan as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -205,17 +242,19 @@
                         @endforeach
                         <tr>
                             <td></td>
+                            <td></td>
                             <td style="text-align:right;">Jumlah Biaya Perawatan</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthPrwt}}</td>
-                            <td>{{$saldoPrwt}}</td>
-                            <td>{{$saldoUntilMonthPrwt}}</td>
+                            <td>{{ $saldoUntilBeforeMonthPrwt }}</td>
+                            <td>{{ $saldoPrwt }}</td>
+                            <td>{{ $saldoUntilMonthPrwt }}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>D</td>
+                            <td>{{ substr($biayapenyusutan[0]['code']->CODE, 0, 6) }}</td>
                             <td colspan="8"><b>BIAYA PENYUSUTAN</b></td>
                         </tr>
                         @php
@@ -225,13 +264,14 @@
                         @endphp
                          @foreach ($biayapenyusutan as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -243,17 +283,63 @@
                         @endforeach
                         <tr>
                             <td></td>
+                            <td></td>
                             <td style="text-align:right;">Jumlah Biaya Penyusutan</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthPnyust}}</td>
-                            <td>{{$saldoPnyust}}</td>
-                            <td>{{$saldoUntilMonthPnyust}}</td>
+                            <td>{{ $saldoUntilBeforeMonthPnyust }}</td>
+                            <td>{{ $saldoPnyust }}</td>
+                            <td>{{ $saldoUntilMonthPnyust }}</td>
                             <td></td>
                             <td></td>
                         </tr>
+                        @php
+                            $saldoUntilBeforeMonthPnyish = 0;
+                            $saldoPnyish = 0;
+                            $saldoUntilMonthPnyish = 0;
+                        @endphp
+                        @if ($biayapenyisihan->count()>0)
+                        <tr>
+                            <td>E</td>
+                            <td>{{ substr($biayapenyisihan[0]['code']->CODE, 0, 6) }}</td>
+                            <td colspan="8"><b>BIAYA Penyisihan</b></td>
+                        </tr>
+                        
+                         @foreach ($biayapenyusutan as $item)
                         <tr>
                             <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
+                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                         @php
+                            $saldoUntilBeforeMonthPnyish += $item['saldoUntilBeforeMonth'];
+                            $saldoPnyish += $item['saldo'];
+                            $saldoUntilMonthPnyish += $item['saldoUntilMonth'];
+                        @endphp
+                        @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td style="text-align:right;">Jumlah Biaya Penyisihan</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $saldoUntilBeforeMonthPnyish }}</td>
+                            <td>{{ $saldoPnyish }}</td>
+                            <td>{{ $saldoUntilMonthPnyish }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td>F</td>
+                            <td>{{ substr($biayaadminum[0]['code']->CODE, 0, 6) }}</td>
                             <td colspan="8"><b>BIAYA ADMINISTRASI DAN UMUM</b></td>
                         </tr>
                         @php
@@ -263,13 +349,14 @@
                         @endphp
                         @foreach ($biayaadminum as $item)
                         <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
+                            <td></td>
+                            <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
                             <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
+                            <td>{{ $item['saldoUntilBeforeMonth'] }}</td>
+                            <td>{{ $item['saldo'] }}</td>
+                            <td>{{ $item['saldoUntilMonth'] }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -281,88 +368,43 @@
                         @endforeach
                         <tr>
                             <td></td>
+                            <td></td>
                             <td style="text-align:right;">Jumlah Biaya Administrasi dan Umum</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthAdm}}</td>
-                            <td>{{$saldoAdm}}</td>
-                            <td>{{$saldoUntilMonthAdm}}</td>
+                            <td>{{ $saldoUntilBeforeMonthAdm }}</td>
+                            <td>{{ $saldoAdm }}</td>
+                            <td>{{ $saldoUntilMonthAdm }}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         @php
-                            $saldoUntilBeforeMonthTotalBiaya = $saldoUntilBeforeMonthAdm + $saldoUntilBeforeMonthPegawai + $saldoUntilBeforeMonthOp + $saldoUntilBeforeMonthPrwt + $saldoUntilBeforeMonthPnyust;
-                            $saldoTotalBiaya = $saldoAdm + $saldoPegawai + $saldoOp + $saldoPrwt + $saldoPnyust;
-                            $saldoUntilMonthTotalBiaya = $saldoUntilMonthAdm + $saldoUntilMonthPegawai + $saldoUntilMonthOp + $saldoUntilMonthPrwt + $saldoUntilMonthPnyust;
+                            $saldoUntilBeforeMonthTotalBiaya = $saldoUntilBeforeMonthAdm + $saldoUntilBeforeMonthPegawai + $saldoUntilBeforeMonthOp + $saldoUntilBeforeMonthPrwt + $saldoUntilBeforeMonthPnyust+$saldoUntilBeforeMonthPnyish;
+                            $saldoTotalBiaya = $saldoAdm + $saldoPegawai + $saldoOp + $saldoPrwt + $saldoPnyust+$saldoPnyish;
+                            $saldoUntilMonthTotalBiaya = $saldoUntilMonthAdm + $saldoUntilMonthPegawai + $saldoUntilMonthOp + $saldoUntilMonthPrwt + $saldoUntilMonthPnyust+$saldoUntilMonthPnyish;
                         @endphp
                         <tr>
+                            <td></td>
                             <td></td>
                             <td style="text-align:right;">Jumlah Biaya</td>
                             <td></td>
                             <td></td>
-                            <td>{{$saldoUntilBeforeMonthTotalBiaya}}</td>
-                            <td>{{$saldoTotalBiaya}}</td>
-                            <td>{{$saldoUntilMonthTotalBiaya}}</td>
+                            <td>{{ $saldoUntilBeforeMonthTotalBiaya }}</td>
+                            <td>{{ $saldoTotalBiaya }}</td>
+                            <td>{{ $saldoUntilMonthTotalBiaya }}</td>
                             <td></td>
                             <td></td>
                         </tr>
+
                         <tr>
+                            <td>V</td>
                             <td></td>
-                            <td style="text-align:right;">Laba/Rugi sebelum luar usaha</td>
-                            <td></td>
-                            <td></td>
-                            <td> {{$saldoUntilBeforeMonthPend - $saldoUntilBeforeMonthTotalBiaya}}</td>
-                            <td> {{$saldoPend - $saldoTotalBiaya}}</td>
-                            <td> {{$saldoUntilMonthPend - $saldoUntilMonthTotalBiaya}}</td>
+                            <td style="text-align:right;">SHU Operasional</td>
                             <td></td>
                             <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td colspan="8"><b>Pend dan Biaya di Luar Usaha</b></td>
-                        </tr>
-                        @php
-                            $saldoUntilBeforeMonthLu = 0;
-                            $saldoLu = 0;
-                            $saldoUntilMonthLu = 0;
-                        @endphp
-                        @foreach ($luarusaha as $item)
-                        <tr>
-                            <td>{{ substr($item['code']->CODE, 0, 6) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{$item['saldoUntilBeforeMonth']}}</td>
-                            <td>{{$item['saldo']}}</td>
-                            <td>{{$item['saldoUntilMonth']}}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                         @php
-                            $saldoUntilBeforeMonthLu += $item['saldoUntilBeforeMonth'];
-                            $saldoLu += $item['saldo'];
-                            $saldoUntilMonthLu += $item['saldoUntilMonth'];
-                        @endphp
-                        @endforeach
-                        <tr>
-                            <td></td>
-                            <td style="text-align:right;">Sls Pend dan Biaya di Luar Usaha</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{$saldoUntilBeforeMonthLu}}</td>
-                            <td>{{$saldoLu}}</td>
-                            <td>{{$saldoUntilMonthLu}}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td style="text-align:right;">Laba/Rugi setelah luar usaha</td>
-                            <td></td>
-                            <td></td>
-                            <td>{{$saldoUntilBeforeMonthPend-($saldoUntilBeforeMonthLu + $saldoUntilBeforeMonthTotalBiaya) }} </td>
-                            <td>{{$saldoPend-($saldoLu + $saldoTotalBiaya )}} </td>
-                            <td>{{$saldoUntilMonthPend-($saldoUntilMonthLu + $saldoUntilMonthTotalBiaya)}}</td>
+                            <td>{{ $saldoUntilBeforeMonthHasil - $saldoUntilBeforeMonthTotalBiaya  }}</td>
+                            <td>{{ $saldoHasil - $saldoTotalBiaya }}</td>
+                            <td>{{ $saldoUntilMonthHasil - $saldoUntilMonthTotalBiaya  }}</td>
                             <td></td>
                             <td></td>
                         </tr>

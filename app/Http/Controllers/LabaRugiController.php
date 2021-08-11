@@ -49,7 +49,7 @@ class LabaRugiController extends Controller
             $biayaperawatan = collect();
             $biayapenyusutan = collect();
             $biayaadminum = collect();
-            $luarusaha = collect();
+            $biayapenyisihan = collect();
             
 
 
@@ -193,8 +193,8 @@ class LabaRugiController extends Controller
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
                     }else
-                    if(($parentCode->codeCategory->name=='PENDAPATAN LUAR USAHA') || ($parentCode->codeCategory->name=='BIAYA LUAR USAHA')){
-                        $luarusaha->push([
+                    if($parentCode->codeCategory->name=='BIAYA PENYISIHAN'){
+                        $penyisihan->push([
                         'code' => $parentCode,
                         'saldo' => $saldo,
                         'saldoUntilMonth' => $saldoUntilMonth,
@@ -216,9 +216,8 @@ class LabaRugiController extends Controller
             $data['biayaperawatan'] = $biayaperawatan;
             $data['biayapenyusutan'] = $biayapenyusutan;
             $data['biayaadminum'] = $biayaadminum;
-            $data['luarusaha'] = $luarusaha;
+            $data['biayapenyisihan'] = $biayapenyisihan;
             $data['request'] = $request;
-            //dd($labaRugis);
             
             return view('laba_rugi.index', $data);
         }
@@ -260,7 +259,7 @@ class LabaRugiController extends Controller
             $biayaperawatan = collect();
             $biayapenyusutan = collect();
             $biayaadminum = collect();
-            $luarusaha = collect();
+            $biayapenyisihan = collect();
             
 
 
@@ -404,8 +403,8 @@ class LabaRugiController extends Controller
                         'saldoUntilBeforeMonth' => $saldoUntilBeforeMonth,
                     ]);
                     }else
-                    if(($parentCode->codeCategory->name=='PENDAPATAN LUAR USAHA') || ($parentCode->codeCategory->name=='BIAYA LUAR USAHA')){
-                        $luarusaha->push([
+                    if($parentCode->codeCategory->name=='BIAYA PENYISIHAN'){
+                        $penyisihan->push([
                         'code' => $parentCode,
                         'saldo' => $saldo,
                         'saldoUntilMonth' => $saldoUntilMonth,
@@ -427,7 +426,7 @@ class LabaRugiController extends Controller
             $data['biayaperawatan'] = $biayaperawatan;
             $data['biayapenyusutan'] = $biayapenyusutan;
             $data['biayaadminum'] = $biayaadminum;
-            $data['luarusaha'] = $luarusaha;
+            $data['biayapenyisihan'] = $biayapenyisihan;
             $data['request'] = $request;
             //dd($labaRugis);
             $filename = 'export_labarugi_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
