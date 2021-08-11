@@ -123,16 +123,14 @@ class JurnalController extends Controller
          ->where('akun_debet', 'like', '%' . $request->code . '%')
          ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
      }
-     if($request->period){
-         $jurnal = $jurnal->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
-     }
+     
 
      if($request->keterangan)
      {
         $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
     }
 
-    $jurnal = $jurnal->orderBy('created_at', 'desc');
+    $jurnal = $jurnal->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->orderBy('created_at', 'desc');
     return DataTables::eloquent($jurnal)->addIndexColumn()->make(true);
 }
 catch (\Throwable $e)
