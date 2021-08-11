@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
+use Excel;
+use DB;
 
 class JurnalController extends Controller
 {
@@ -22,6 +25,11 @@ class JurnalController extends Controller
         $this->authorize('view jurnal', Auth::user());
         try
         {
+            if(!$reqeust->period)
+            {          
+                $reqeust->period = Carbon::today()->format('m-Y');
+            }
+
             $data['title'] = 'List Jurnal';
             $data['tipeJurnal'] = TipeJurnal::get()->pluck('name','id');
             $data['request'] = $reqeust;
@@ -39,6 +47,8 @@ class JurnalController extends Controller
     {
         try
         {
+             $startUntilPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
+            $endUntilPeriod = Carbon::createFromFormat   ('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
             $jurnal = Jurnal::with('tipeJurnal','createdBy');
             if ($request->id_tipe_jurnal)
             {
@@ -111,6 +121,9 @@ class JurnalController extends Controller
                  $jurnal = $jurnal
                  ->where('akun_debet', 'like', '%' . $request->code . '%')
                  ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+            }
+            if($request->period){
+                 $jurnal = $jurnal->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
             }
 
             if($request->keterangan)

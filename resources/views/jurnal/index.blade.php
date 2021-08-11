@@ -51,6 +51,10 @@
                         <label>Keterangan</label>
                         <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Keterangan" autocomplete="off" value="{{ old('keterangan', $request->keterangan) }}">
                     </div>
+                    <div class="col-md-3">
+                        <label>Periode</label>
+                        <input class="form-control datepicker" placeholder="mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y') }}" autocomplete="off" />
+                    </div>
                     <div class="col-md-12 form-group text-center">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
                     </div>
@@ -108,7 +112,9 @@
                         data.code = code;
 
                         var keterangan = '{{ $request->keterangan }}';
-                        data.keterangan = keterangan;
+                        data.keterangan = keterangan; 
+                        var period = '{{ $request->period }}';
+                        data.period = period;
                     }
                 },
                 aoColumns: [

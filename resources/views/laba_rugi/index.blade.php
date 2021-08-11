@@ -81,7 +81,7 @@
                         <tr>
                             <td></td>
                             <td class="text-right">{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
@@ -122,7 +122,7 @@
                         <tr>
                             <td></td>
                             <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
@@ -185,7 +185,7 @@
                         <tr>
                             <td></td>
                             <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
@@ -226,7 +226,7 @@
                         <tr>
                              <td></td>
                             <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
@@ -267,7 +267,7 @@
                         <tr>
                             <td></td>
                             <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
@@ -308,7 +308,7 @@
                         <tr>
                             <td></td>
                             <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
@@ -351,7 +351,7 @@
                         <tr>
                             <td></td>
                             <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
@@ -393,7 +393,7 @@
                         <tr>
                             <td></td>
                             <td>{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td>{{ $item['code']->NAMA_TRANSAKSI }}</td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
