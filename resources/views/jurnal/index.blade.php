@@ -76,8 +76,8 @@
                         <th>Akun Kredit</th>
                         <th style="width: 10%">Kredit</th>
                         <th>Keterangan</th>
-                        <th>Created At</th>
-                        <th>Updated By</th>
+                        <th>Tanggal</th>
+                        
                     </tr>
                 </thead>
             </table>
@@ -172,10 +172,10 @@
                         mData: 'view_created_at', sType: "string",
                         className: "dt-body-center", "name": "view_created_at",
                     },
-                    {
+                    /*{
                         mData: 'created_by.name', sType: "string",
                         className: "dt-body-center", "name": "created_by.name",
-                    },
+                    },*/
                 ]
             });
 
