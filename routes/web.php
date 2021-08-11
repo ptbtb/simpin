@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\SHUController;
 use App\Http\Controllers\TransferredSHUController;
@@ -425,3 +426,13 @@ Route::get('list-shu/{id}/download-card', [SHUController::class, 'downloadCard']
 Route::get('transferred-shu', [TransferredSHUController::class, 'index'])->middleware('auth')->name('transferred-shu.index');
 Route::get('transferred-shu/import-excel', [TransferredSHUController::class, 'import'])->middleware('auth')->name('transferred-shu.import');
 Route::post('transferred-shu/import-excel', [TransferredSHUController::class, 'storeImport'])->middleware('auth')->name('transferred-shu.storeImport');
+
+Route::Group(['prefix' => 'pendapatan', 'middleware' => 'auth'], function ()
+{
+    /*Route::get('laporan', [App\Http\Controllers\SimpananController::class, 'laporan'])->name('laporan-simpanan');
+    Route::post('laporan', [App\Http\Controllers\SimpananController::class, 'laporan'])->name('filter-laporan-simpanan');
+    Route::get('laporan/excel', [App\Http\Controllers\SimpananController::class, 'laporanExcel'])->name('laporan-simpanan-excel');*/
+
+    Route::get('laporan', [PendapatanController::class,  'laporan'])->name('laporan.pendapatan');
+    Route::post('laporan', [PendapatanController::class,  'laporan'])->name('filter.laporan.pendapatan');
+});
