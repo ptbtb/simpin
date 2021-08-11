@@ -10,6 +10,7 @@ use Wildside\Userstamps\Userstamps;
 class Code extends Model
 {
     use HasFactory;
+    use Userstamps;
 
     protected $table = "t_code";
     protected $primaryKey = "id";

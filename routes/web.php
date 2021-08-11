@@ -104,6 +104,8 @@ Route::group(['prefix' => 'setting'], function () {
     Route::get('/codetrans/create', [App\Http\Controllers\SettingCodeTransController::class, 'create'])->name('kode-transaksi-create');
     Route::post('/codetrans/store', [App\Http\Controllers\SettingCodeTransController::class, 'store'])->name('kode-transaksi-store');
     Route::get('/codetrans/excel', [App\Http\Controllers\SettingCodeTransController::class, 'createExcel'])->name('kode-transaksi-excel');
+    Route::get('/codetrans/import/excel', [App\Http\Controllers\SettingCodeTransController::class, 'importExcel'])->name('coa-import-excel');
+    Route::post('/codetrans/import/excel', [App\Http\Controllers\SettingCodeTransController::class, 'storeImportExcel'])->name('coa-import-excel');
 
     // Jenis Anggota
     Route::group(['prefix' => 'jenis-anggota'], function () {

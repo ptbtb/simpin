@@ -11,6 +11,7 @@
     <div class="card-header">
         <a class="btn btn-success" href="{{ route('kode-transaksi-create') }}"><i class="glyphicon glyphicon-subtitles"></i>+ Add Kode Transaksi</a>
         <a href="{{ route('kode-transaksi-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Download Excel</a>
+        <a href="{{ route('coa-import-excel') }}" class="btn btn-primary"><i class="fa fa-upload"></i> Import Excel</a>
     </div>
     <!-- /.card-header -->
     <div class="card-body">

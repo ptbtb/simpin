@@ -12,6 +12,7 @@ use App\Models\Code;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Exports\CoaExport;
+use App\Imports\CoaImport;
 use Excel;
 
 use Auth;
@@ -190,6 +191,27 @@ class SettingCodeTransController extends Controller
             Log::error($message);
             abort(500);
         }
+    }
+    public function importExcel()
+    {
+        $this->authorize('add kode transaksi', Auth::user());
+        $data['title'] = 'Import COA';
+        return view('setting.codetrans.import', $data);
+    }
+
+    public function storeImportExcel(Request $request)
+    {
+        $this->authorize('add kode transaksi', Auth::user());
+        try {
+            DB::transaction(function () use ($request) {
+                Excel::import(new CoaImport, $request->file);
+            });
+            return redirect()->back()->withSuccess('Import data berhasil');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            return redirect()->back()->withError('Gagal import data');
+        }
+
     }
 
 }
