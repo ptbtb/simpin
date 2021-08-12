@@ -43,6 +43,7 @@
                         <th>Tgl. Transaksi</th>
                         <th>Description</th>
                         <th>Lampiran</th>
+                        <th>Oleh</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -106,6 +107,10 @@
                 }
             },
             { 
+                mData: 'created_by.name', sType: "string", 
+                className: "dt-body-center", "name": "created_by.name"        
+            },
+            { 
                 mData: 'id', sType: "string", 
                 className: "dt-body-center", "name": "id",	
                 mRender: function(data, type, full) 
@@ -120,6 +125,7 @@
                     return markup;
                 }
             },
+             
         ]
     });
 

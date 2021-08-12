@@ -33,7 +33,7 @@ class JurnalUmumController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
 
         $data['title'] = "List Jurnal Umum";
@@ -46,7 +46,7 @@ class JurnalUmumController extends Controller
     public function indexAjax(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
         return DataTables::eloquent($listJurnalUmum)->make(true);
     }
@@ -194,7 +194,7 @@ class JurnalUmumController extends Controller
         $user = Auth::user();
         $this->authorize('view jurnal umum', $user);
 
-        $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans')
+        $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy')
                         ->find($id);
 
         $itemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);
@@ -217,7 +217,7 @@ class JurnalUmumController extends Controller
     public function edit($id)
     {
         $this->authorize('edit jurnal umum', Auth::user());
-        $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans')->find($id);
+        $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy')->find($id);
         $debetCodes = Code::where('is_parent', 0)
                         ->where('CODE', 'not like', "411%")
                         ->where('CODE', 'not like', "106%")

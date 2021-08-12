@@ -21,6 +21,14 @@ class JurnalUmum extends Model
     {
         return $this->hasMany(JurnalUmumItem::class);
     }
+    public function createdBy()
+    {
+        return $this->belongsto(User::class,'created_by');
+    }
+    public function updatedBy()
+    {
+        return $this->belongsto(User::class,'updated_by');
+    }
 
     public function jurnalUmumLampirans()
     {
