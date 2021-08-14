@@ -68,6 +68,14 @@ class Pinjaman extends Model {
         });
     }
 
+    public function scopeJapen($query)
+    {
+        return $query->whereHas('jenisPinjaman', function ($q)
+        {
+            return $q->japen();
+        });
+    }
+
     public function getPinjamanDiTransferAttribute() {
         return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi - $this->biaya_asuransi - $this->biaya_jasa - $this->totalPinjamanTopup;
     }

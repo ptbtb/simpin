@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Events\Pinjaman\PengajuanCreated;
 use App\Events\Pinjaman\PengajuanUpdated;
 use App\Exports\PinjamanExport;
+use App\Exports\PinjamanReportExport;
 use App\Models\Anggota;
 use App\Models\JenisPenghasilan;
 use App\Models\Pengajuan;
@@ -1220,10 +1221,164 @@ class PinjamanController extends Controller {
         {
             return response()->json(['message' => 'Terjadi Kesalahan','status' => false], 500);
         }
-            
-            
-            
-        
+     
+    }
 
- }
+    public function report(Request $request) 
+    {
+        $user = Auth::user();
+        $this->authorize('view jurnal', $user);
+
+        // data collection
+        $reports = collect();
+
+        $today = Carbon::today();
+
+        // get start and end of year
+        $startOfYear = $today->copy()->startOfYear()->toDateTimeString();
+        $endOfYear   = $today->copy()->endOfYear()->toDateTimeString();
+
+        $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_entri')
+                                ->japen()
+                                ->get()
+                                ->groupBy(function($query) {
+                                    return Carbon::parse($query->tgl_entri)->format('m');
+                                });
+
+        $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_entri')
+                                ->japan()
+                                ->get()
+                                ->groupBy(function($query) {
+                                    return Carbon::parse($query->tgl_entri)->format('m');
+                                });
+        
+        $totalJapenDiterima = 0;
+        $totalJapenApproved = 0;
+        $totalJapanDiterima = 0;
+        $totalJapanApproved = 0;
+        $totalJapanTrx = 0;
+        $totalJapenTrx = 0;
+
+        // loop for every month in year
+        for ($i=1; $i <=12 ; $i++) 
+        { 
+            $japenDiterima = 0;
+            $japenApproved = 0;
+            $japanDiterima = 0;
+            $japanApproved = 0;
+            $japenTemp = [];
+            $japanTemp = [];
+            
+            if($i < 10)
+            {
+                if(property_exists((object)$pinjamanJapens->toArray(), '0' . $i))
+                {
+                    
+                    $japenTemp = $pinjamanJapens['0' . $i];
+                }
+
+                if(property_exists((object)$pinjamanJapans->toArray(), '0' . $i))
+                {
+                    $japanTemp = $pinjamanJapans['0' . $i];
+                }
+            }
+            else
+            {
+                if(property_exists((object)$pinjamanJapens->toArray(), $i))
+                {
+                    $japenTemp = $pinjamanJapens[$i];
+                }
+
+                if(property_exists((object)$pinjamanJapans->toArray(), $i))
+                {
+                    $japanTemp = $pinjamanJapans[$i];
+                }
+            }
+
+            $trxJapen = count($japenTemp);
+            $trxJapan = count($japanTemp);
+
+            foreach($japenTemp as $japen)
+            {
+                if($japen->pengajuan)
+                {
+                    if($japen->pengajuan->bukti_pembayaran == null)
+                    {
+                        $japenApproved += (int)$japen->besar_pinjam;
+                    }
+                    else
+                    {
+                        $japenDiterima += (int)$japen->besar_pinjam;
+                    }
+                }
+                else
+                {
+                    $japenDiterima += (int)$japen->besar_pinjam;
+                }
+            }
+            
+            foreach($japanTemp as $japan)
+            {
+                if($japan->pengajuan)
+                {
+                    if($japan->pengajuan->bukti_pembayaran == null)
+                    {
+                        $japanApproved += (int)$japan->besar_pinjam;
+                    }
+                    else
+                    {
+                        $japanDiterima += (int)$japan->besar_pinjam;
+                    }
+                }
+                else
+                {
+                    $japanDiterima += (int)$japan->besar_pinjam;
+                }
+            }
+
+            $reports->put($i, ['trxJapen' => $trxJapen, 
+                                    'trxJapan' => $trxJapan, 
+                                    'japenDiterima' => $japenDiterima, 
+                                    'japenApproved' => $japenApproved,
+                                    'japanDiterima' => $japanDiterima,
+                                    'japanApproved' => $japanApproved
+                                ]);
+            
+            // total data
+            $totalJapanTrx += $trxJapan;
+            $totalJapenTrx += $trxJapen;
+            $totalJapenApproved += $japenApproved;
+            $totalJapanApproved += $japanApproved;
+            $totalJapanDiterima += $japanDiterima;
+            $totalJapenDiterima += $japenDiterima;
+        }
+
+        $data['totalJapanTrx'] = $totalJapanTrx;
+        $data['totalJapenTrx'] = $totalJapenTrx;
+        $data['totalJapenApproved'] = $totalJapenApproved; 
+        $data['totalJapanApproved'] = $totalJapanApproved;
+        $data['totalJapanDiterima'] = $totalJapanDiterima;
+        $data['totalJapenDiterima'] = $totalJapenDiterima;
+
+        $data['title'] = "Laporan Pinjaman";
+        $data['reports'] = $reports;
+        return view('pinjaman.report', $data);
+    }
+
+    public function createExcelReport(Request $request) 
+    {
+        $this->authorize('view jurnal', Auth::user());
+        try
+        {
+            $filename = 'export_pinjaman_report_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+            return Excel::download(new PinjamanReportExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+        }
+        catch (\Throwable $e)
+        {
+            Log::error($e);
+            return redirect()->back()->withError('Terjadi Kesalahan');
+        }
+    }
 }

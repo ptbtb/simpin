@@ -75,6 +75,11 @@ class JenisPinjaman extends Model
         return $query->where('kategori_jenis_pinjaman_id', KATEGORI_JENIS_PINJAMAN_JANGKA_PANJANG);
     }
 
+    public function scopeJapen($query)
+    {
+        return $query->where('kategori_jenis_pinjaman_id', KATEGORI_JENIS_PINJAMAN_JANGKA_PENDEK);
+    }
+
     public function maxPinjaman(User $user)
     {
         $jenisPinjaman = $this;

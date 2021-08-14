@@ -419,6 +419,12 @@ return [
             'can'  => ['view jurnal'],
             'submenu' => [
                 [
+                    'text' => 'Pinjaman',
+                    'url' => 'pinjaman/report',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view jurnal'],
+                ],
+                [
                     'text' => 'Jurnal',
                     'url' => '/jurnal',
                     'icon' => 'fas fa-book nav-icon',

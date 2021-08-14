@@ -210,7 +210,8 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::post('edit-angsuran', [App\Http\Controllers\PinjamanController::class, 'editAngsuran'])->name('pinjaman-edit-angsuran');
         Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusAngsuran'])->name('pinjaman-angsuran-update-status');
         Route::post('/pinjaman/editsaldo', [App\Http\Controllers\PinjamanController::class, 'updatesaldoawal'])->name('edit-saldo-awalpinjaman');
-
+        Route::get('report/download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcelReport'])->name('laporan-pinjaman-download-excel');
+        
         // import batch saldo pinjaman
         Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');
         Route::get('importData', [App\Http\Controllers\PinjamanController::class, 'importDataPinjaman'])->name('pinjaman-importdata');
@@ -221,6 +222,9 @@ Route::group(['prefix' => 'pinjaman'], function () {
         // import angsuran
         Route::get('import-angsuran', [App\Http\Controllers\AngsuranController::class, 'importAngsuran'])->name('import_angsuran');
         Route::post('import-angsuran', [App\Http\Controllers\AngsuranController::class, 'storeImportAngsuran'])->name('import_angsuran');
+
+        // laporan
+        Route::get('report', [App\Http\Controllers\PinjamanController::class, 'report'])->name('pinjaman-report');
 
         Route::group(['prefix' => 'pengajuan'], function () {
             Route::get('list', [App\Http\Controllers\PinjamanController::class, 'indexPengajuan'])->name('pengajuan-pinjaman-list');
