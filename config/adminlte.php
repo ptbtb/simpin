@@ -454,6 +454,12 @@ return [
                     'icon' => 'fas fa-book nav-icon',
                     'can'  => ['view simpanan'],
                 ],
+                [
+                    'text' => 'pendapatan',
+                    'url' => '/pendapatan/laporan',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view simpanan'],
+                ],
             ],
         ],
         [
