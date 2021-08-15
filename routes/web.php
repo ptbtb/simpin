@@ -211,7 +211,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusAngsuran'])->name('pinjaman-angsuran-update-status');
         Route::post('/pinjaman/editsaldo', [App\Http\Controllers\PinjamanController::class, 'updatesaldoawal'])->name('edit-saldo-awalpinjaman');
         Route::get('report/download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcelReport'])->name('laporan-pinjaman-download-excel');
-        
+
         // import batch saldo pinjaman
         Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');
         Route::get('importData', [App\Http\Controllers\PinjamanController::class, 'importDataPinjaman'])->name('pinjaman-importdata');
@@ -439,4 +439,5 @@ Route::Group(['prefix' => 'pendapatan', 'middleware' => 'auth'], function ()
 
     Route::get('laporan', [PendapatanController::class,  'laporan'])->name('laporan.pendapatan');
     Route::post('laporan', [PendapatanController::class,  'laporan'])->name('filter.laporan.pendapatan');
+    Route::get('laporan/excel', [PendapatanController::class,  'downloadExcel'])->name('excel.laporan.pendapatan');
 });

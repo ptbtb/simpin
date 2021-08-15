@@ -20,17 +20,17 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $pendapatan->code->NAMA_TRANSAKSI }}</td>
                 @foreach (ARR_BULAN as $key => $val)
-                    <th></th>
+                    <th>{{ number_format($pendapatan->saldoMonth[$key], 0, ',', '.') }}</th>
                 @endforeach
-                <th>{{ $pendapatan->saldo }}</th>
+                <th>{{ number_format($pendapatan->saldo, 0, ',', '.') }}</th>
             </tr>
         @endforeach
         <tr>
             <td colspan="2">Grand Total</td>
             @foreach (ARR_BULAN as $key => $val)
-                <th></th>
+                <th>{{ number_format($saldoMonthGroup[$key], 0, ',', '.') }}</th>
             @endforeach
-            <th>{{ $pendapatanByJenis->sum('saldo') }}</th>
+            <th>{{ number_format($pendapatanByJenis->sum('saldo'), 0, ',', '.') }}</th>
         </tr>
     </table>
 </div>
