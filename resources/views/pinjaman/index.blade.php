@@ -50,6 +50,14 @@
                 </div>
                 @endif
                 <div class="col-md-4 form-group">
+                    <label>Unit Kerja</label>
+                    {!! Form::select('unit_kerja', $unitKerja, $request->unit_kerja, ['class' => 'form-control unitkerja', 'placeholder' => 'Semua']) !!}
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Tenor</label>
+                    <input type="text" name="tenor" class="tenor" autocomplete="off">
+                </div>
+                <div class="col-md-4 form-group">
                     <label>From</label>
                     <input id="from" type="text" name="from" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->from)? $request->from:'' }}">
                 </div>
@@ -66,8 +74,8 @@
 </div>
 <div class="card">
     <div class="card-header text-right">
-        <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => STATUS_PINJAMAN_BELUM_LUNAS]) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
-        <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => STATUS_PINJAMAN_BELUM_LUNAS]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+        <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => STATUS_PINJAMAN_BELUM_LUNAS, 'unit_kerja' => $rquest->unit_kerja, 'tenor' => $request->tenor]) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
+        <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => STATUS_PINJAMAN_BELUM_LUNAS, 'unit_kerja' => $rquest->unit_kerja, 'tenor' => $request->tenor]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
     </div>
     <div class="card-body table-responsive">
         <table class="table table-striped">
@@ -137,11 +145,11 @@
                         <a class="btn btn-sm btn-danger text-white btn-delete" style="cursor: pointer" data-action='delete' data-id='{{ $pinjaman->kode_pinjam }}' data-token='{{ csrf_token() }}'><i class="fa fa-trash"></i> Delete</a>
                         @endcan
                         {{-- <a data-id="{{ $pinjaman->kode_pinjam }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a> --}}
-                        
+
                   </td>
               </tr>
               @endforeach
-          </tbody> 
+          </tbody>
       </table>
   </div>
 </div>
@@ -229,7 +237,7 @@
 
         let kode_pinjam = $('#kode_pinjam').val();
         let saldo_mutasi = $('#saldo_mutasi').val();
-       
+
 
         $.ajax({
           url: "{{ route('edit-saldo-awalpinjaman') }}",
@@ -243,7 +251,7 @@
                     htmlText = data;
                     Swal.fire({
                         title: 'Update Sukses',
-                        
+
                         icon: "info",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -263,7 +271,7 @@
                 error : function (xhr, status, error) {
                     Swal.fire({
                         title: 'Error',
-                        
+
                         icon: "error",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -317,7 +325,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         contentType: false,
-                        processData: false,                     
+                        processData: false,
                         success: function(data) {
                             Swal.fire({
                                 icon: 'success',
@@ -356,5 +364,11 @@
             numeralThousandsGroupStyle: 'thousand',
         });
     }
+
+    var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    $('.tenor').datepicker({
+        format: 'dd-mm-yyyy',
+        uiLibrary: 'bootstrap4'
+    });
 </script>
 @endsection

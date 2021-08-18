@@ -26,6 +26,7 @@ use App\Managers\PengajuanManager;
 use App\Managers\PinjamanManager;
 use App\Managers\AngsuranManager;
 use App\Models\Angsuran;
+use App\Models\Company;
 use App\Models\SimpinRule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,19 @@ class PinjamanController extends Controller {
             }
 
         }
+        if ($request->unit_kerja)
+        {
+            $listPinjaman = $listPinjaman->whereHas('anggota', function ($query) use ($request)
+                                        {
+                                            return $query->where('company_id', $request->unit_kerja);
+                                        });
+        }
+        if ($request->tenor)
+        {
+            $date = Carbon::createFromFormat('d-m-Y', $request->tenor);
+            $listPinjaman = $listPinjaman->whereDate('tgl_tempo', $date->toDateString());
+        }
+        $data['unitKerja'] = Company::get()->pluck('nama','id');
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from,$request->to]);
         $listPinjaman = $listPinjaman->get();
         $data['title'] = "List Pinjaman";
@@ -122,7 +136,7 @@ class PinjamanController extends Controller {
         return view('pinjaman.indexPengajuan', $data);
     }
 
-    
+
     /**
      * Display a listing of the resource through ajax.
      *
@@ -133,7 +147,7 @@ class PinjamanController extends Controller {
         try {
             $user = Auth::user();
             $this->authorize('view pengajuan pinjaman', $user);
-            
+
             $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan')->orderBy('tgl_pengajuan','asc');
 
             if($request->status_pengajuan != "")
@@ -153,10 +167,10 @@ class PinjamanController extends Controller {
                 $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
             }
 
-            if ($user->isAnggota()) 
+            if ($user->isAnggota())
             {
                 $anggota = $user->anggota;
-                if (is_null($anggota)) 
+                if (is_null($anggota))
                 {
                     return redirect()->back()->withError('Your account has no members');
                 }
@@ -189,8 +203,8 @@ class PinjamanController extends Controller {
             ->addIndexColumn()
             ->make(true);
 
-        } 
-        catch (\Throwable $e) 
+        }
+        catch (\Throwable $e)
         {
             Log::error($e);
             return redirect()->back()->withError('Terjadi Kesalahan');
@@ -288,6 +302,18 @@ class PinjamanController extends Controller {
         }
         if ($request->status) {
             $listPinjaman = $listPinjaman->where('id_status_pinjaman', $request->status);
+        }
+        if ($request->unit_kerja)
+        {
+            $listPinjaman = $listPinjaman->whereHas('anggota', function ($query) use ($request)
+                                        {
+                                            return $query->where('company_id', $request->unit_kerja);
+                                        });
+        }
+        if ($request->tenor)
+        {
+            $date = Carbon::createFromFormat('d-m-Y', $request->tenor);
+            $listPinjaman = $listPinjaman->whereDate('tgl_tempo', $date->toDateString());
         }
 
         $listPinjaman = $listPinjaman->get();
@@ -456,12 +482,12 @@ class PinjamanController extends Controller {
             }
 
             // get kode ambil's data when got from check boxes
-            if (isset($request->ids)) 
+            if (isset($request->ids))
             {
                 $ids = json_decode($request->ids);
             }
 
-            foreach ($ids as $key => $id) 
+            foreach ($ids as $key => $id)
             {
                 $pengajuan = Pengajuan::where('id', $id)->first();
 
@@ -1207,9 +1233,9 @@ class PinjamanController extends Controller {
         $this->authorize('edit saldo awal pinjaman', $user);
         try{
             $pinjam=Pinjaman::where('kode_pinjam',$request->kode_pinjam)->first();
-            
+
             $nominal = filter_var($request->saldo_mutasi, FILTER_SANITIZE_NUMBER_INT);
-            
+
             if($pinjam){
                 $pinjam->saldo_mutasi=$nominal;
                 $pinjam->save();
@@ -1221,10 +1247,10 @@ class PinjamanController extends Controller {
         {
             return response()->json(['message' => 'Terjadi Kesalahan','status' => false], 500);
         }
-     
+
     }
 
-    public function report(Request $request) 
+    public function report(Request $request)
     {
         $user = Auth::user();
         $this->authorize('view jurnal', $user);
@@ -1253,7 +1279,7 @@ class PinjamanController extends Controller {
                                 ->groupBy(function($query) {
                                     return Carbon::parse($query->tgl_entri)->format('m');
                                 });
-        
+
         $totalJapenDiterima = 0;
         $totalJapenApproved = 0;
         $totalJapanDiterima = 0;
@@ -1262,20 +1288,20 @@ class PinjamanController extends Controller {
         $totalJapenTrx = 0;
 
         // loop for every month in year
-        for ($i=1; $i <=12 ; $i++) 
-        { 
+        for ($i=1; $i <=12 ; $i++)
+        {
             $japenDiterima = 0;
             $japenApproved = 0;
             $japanDiterima = 0;
             $japanApproved = 0;
             $japenTemp = [];
             $japanTemp = [];
-            
+
             if($i < 10)
             {
                 if(property_exists((object)$pinjamanJapens->toArray(), '0' . $i))
                 {
-                    
+
                     $japenTemp = $pinjamanJapens['0' . $i];
                 }
 
@@ -1318,7 +1344,7 @@ class PinjamanController extends Controller {
                     $japenDiterima += (int)$japen->besar_pinjam;
                 }
             }
-            
+
             foreach($japanTemp as $japan)
             {
                 if($japan->pengajuan)
@@ -1338,14 +1364,14 @@ class PinjamanController extends Controller {
                 }
             }
 
-            $reports->put($i, ['trxJapen' => $trxJapen, 
-                                    'trxJapan' => $trxJapan, 
-                                    'japenDiterima' => $japenDiterima, 
+            $reports->put($i, ['trxJapen' => $trxJapen,
+                                    'trxJapan' => $trxJapan,
+                                    'japenDiterima' => $japenDiterima,
                                     'japenApproved' => $japenApproved,
                                     'japanDiterima' => $japanDiterima,
                                     'japanApproved' => $japanApproved
                                 ]);
-            
+
             // total data
             $totalJapanTrx += $trxJapan;
             $totalJapenTrx += $trxJapen;
@@ -1357,7 +1383,7 @@ class PinjamanController extends Controller {
 
         $data['totalJapanTrx'] = $totalJapanTrx;
         $data['totalJapenTrx'] = $totalJapenTrx;
-        $data['totalJapenApproved'] = $totalJapenApproved; 
+        $data['totalJapenApproved'] = $totalJapenApproved;
         $data['totalJapanApproved'] = $totalJapanApproved;
         $data['totalJapanDiterima'] = $totalJapanDiterima;
         $data['totalJapenDiterima'] = $totalJapenDiterima;
@@ -1367,7 +1393,7 @@ class PinjamanController extends Controller {
         return view('pinjaman.report', $data);
     }
 
-    public function createExcelReport(Request $request) 
+    public function createExcelReport(Request $request)
     {
         $this->authorize('view jurnal', Auth::user());
         try

@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Http\Request;
 use App\Models\Pinjaman;
+use Carbon\Carbon;
 
 class PinjamanExport implements FromView
 {
@@ -23,7 +24,7 @@ class PinjamanExport implements FromView
         }
         if (!$this->request->from) {
             $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
-          
+
         }
         if (!$this->request->to) {
             $request->to = Carbon::today()->format('Y-m-d');
@@ -40,6 +41,19 @@ class PinjamanExport implements FromView
                 $listPinjaman = Pinjaman::where('saldo_mutasi',0);
             }
 
+        }
+        if ($this->request->unit_kerja)
+        {
+            $r = $this->request;
+            $listPinjaman = $listPinjaman->whereHas('anggota', function ($query) use ($r)
+                                        {
+                                            return $query->where('company_id', $r->unit_kerja);
+                                        });
+        }
+        if ($this->request->tenor)
+        {
+            $date = Carbon::createFromFormat('d-m-Y', $this->request->tenor);
+            $listPinjaman = $listPinjaman->whereDate('tgl_tempo', $date->toDateString());
         }
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$this->request->from,$this->request->to]);
         $listPinjaman = $listPinjaman->get();
