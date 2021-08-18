@@ -11,7 +11,7 @@ class Anggota extends Model
     use HasFactory, SoftDeletes;
     protected $table = "t_anggota";
     protected $primaryKey = 'kode_anggota';
-    protected $appends = ['kode_anggota_prefix'];
+    protected $appends = ['kode_anggota_prefix', 'unit_kerja'];
     public $incrementing = false;
     public $dates = ['tgl_lahir', 'tgl_masuk'];
     protected $fillable = ['kode_anggota',
@@ -39,13 +39,13 @@ class Anggota extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'kode_anggota', 'kode_anggota');
-    } 
+    }
 
     public function listPenghasilan()
     {
         return $this->hasMany(Penghasilan::class, 'kode_anggota');
     }
-    
+
     public function jenisAnggota()
     {
         return $this->belongsTo(JenisAnggota::class, 'id_jenis_anggota', 'id_jenis_anggota');
@@ -64,7 +64,7 @@ class Anggota extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
-    
+
     public function kelasCompany()
     {
         return $this->belongsTo(KelasCompany::class, 'kelas_company_id', 'id');
@@ -79,7 +79,7 @@ class Anggota extends Model
     {
         return $this->hasMany(Penarikan::class, 'kode_anggota');
     }
-    
+
     public function listSimpanan()
     {
         return $this->hasMany(Simpanan::class, 'kode_anggota');
@@ -118,5 +118,15 @@ class Anggota extends Model
     public function isPensiunan()
     {
         return $this->id_jenis_anggota == JENIS_ANGGOTA_PENSIUNAN;
+    }
+
+    public function getUnitKerjaAttribute()
+    {
+        if ($this->company)
+        {
+            return $this->company->nama;
+        }
+
+        return '-';
     }
 }

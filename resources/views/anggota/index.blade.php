@@ -79,14 +79,15 @@
                     <th><a href="#">Jenis Anggota</a></th>
                     <!--<th ><a href="#">Tempat</a></th>-->
                     <th ><a href="#">Tanggal Lahir</a></th>
-                    <th><a href="#">Pekerjaan</a></th>
+                    <th><a href="#">Unit Kerja</a></th>
+                    {{-- <th><a href="#">Pekerjaan</a></th> --}}
                     <!--<th><a href="#">Tanggal Masuk</a></th>-->
                     <th><a href="#">Status</a></th>
                     <th><a href="#">Aksi</a></th>
                 </tr>
             </thead>
             <tbody id="fbody">
-            </tbody> 
+            </tbody>
         </table>
     </div>
 
@@ -110,26 +111,26 @@
             }
         },
         aoColumns: [
-            { 
-                mData: 'null ', sType: "string", 
+            {
+                mData: 'null ', sType: "string",
                 className: "dt-body-center", "name": "index",
             },
-            { 
-                mData: 'kode_anggota_prefix', sType: "string", 
-                className: "dt-body-center", "name": "kodeAnggotaPrefix"						
+            {
+                mData: 'kode_anggota_prefix', sType: "string",
+                className: "dt-body-center", "name": "kodeAnggotaPrefix"
             },
-            { 
-                mData: 'nipp', sType: "string", 
-                className: "dt-body-center", "name": "nipp"						
+            {
+                mData: 'nipp', sType: "string",
+                className: "dt-body-center", "name": "nipp"
             },
-            { 
-                mData: 'nama_anggota', sType: "string", 
-                className: "dt-body-center", "name": "namaAnggota"						
+            {
+                mData: 'nama_anggota', sType: "string",
+                className: "dt-body-center", "name": "namaAnggota"
             },
-            { 
-                mData: 'jenis_anggota', sType: "string", 
+            {
+                mData: 'jenis_anggota', sType: "string",
                 className: "dt-body-center", "name": "jenisAnggota",
-                mRender: function(data, type, full) 
+                mRender: function(data, type, full)
                 {
                     if (data != null)
                     {
@@ -141,10 +142,10 @@
                     return '-';
                 }
             },
-            { 
-                mData: 'tgl_lahir', sType: "string", 
+            {
+                mData: 'tgl_lahir', sType: "string",
                 className: "dt-body-center", "name": "tglLahi",
-                mRender: function(data, type, full) 
+                mRender: function(data, type, full)
                 {
                     if (data != null)
                     {
@@ -153,20 +154,20 @@
                     return '-';
                 }
             },
-            { 
-                mData: 'lokasi_kerja', sType: "string", 
-                className: "dt-body-center", "name": "lokasiKerja"						
+            {
+                mData: 'unit_kerja', sType: "string",
+                className: "dt-body-center", "name": "unit_kerja"
             },
-            { 
-                mData: 'status', sType: "string", 
-                className: "dt-body-center", "name": "status"						
+            {
+                mData: 'status', sType: "string",
+                className: "dt-body-center", "name": "status"
             },
-            { 
-                mData: 'kode_anggota', sType: "string", 
-                className: "dt-body-center", "name": "action",	
-                mRender: function(data, type, full) 
+            {
+                mData: 'kode_anggota', sType: "string",
+                className: "dt-body-center", "name": "action",
+                mRender: function(data, type, full)
                 {
-                    var markup = ''; 
+                    var markup = '';
                     var baseURL = {!! json_encode(url('/')) !!};
                     @can('edit anggota')
                         markup += '<a href="' + baseURL + '/anggota/edit/' + data + '" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
