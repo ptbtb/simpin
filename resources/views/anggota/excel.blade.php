@@ -29,7 +29,7 @@
                 <th>Jenis Kelamin</th>
                 <th>Alamat Anggota</th>
                 <th>KTP</th>
-                <th>Lokasi Kerja</th>
+                <th>Unit Kerja</th>
                 <th>Tanggal Masuk</th>
                 <th>Email</th>
                 <th>No Telepon</th>
@@ -64,7 +64,7 @@
                     <td>{{ $anggota->jenis_kelamin }}</td>
                     <td>{{ $anggota->alamat_anggota }}</td>
                     <td>{{ $anggota->ktp."" }}</td>
-                    <td>{{ $anggota->lokasi_kerja }}</td>
+                    <td>{{ $anggota->unit_kerja }}</td>
                     <td>{{ $anggota->tgl_masuk }}</td>
                     <td>{{ $anggota->email }}</td>
                     <td>{{ $anggota->telp }}</td>
