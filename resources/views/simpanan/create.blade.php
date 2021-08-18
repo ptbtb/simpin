@@ -48,13 +48,12 @@
                 <div class="col-md-6 form-group">
                     <label for="jenisSimpanan">Jenis Simpanan</label>
                     <select name="jenis_simpanan" id="jenisSimpanan" class="form-control" disabled=true required>
-                        <option value="">Pilih salah satu</option>
                         @foreach ($listJenisSimpanan as $jenisSimpanan)
                             <option value="{{ $jenisSimpanan->kode_jenis_simpan }}">{{ strtoupper($jenisSimpanan->nama_simpanan) }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-12 form-group" id="besaSimpananDetail">
+                <div class="col-md-6 form-group" id="besaSimpananDetail">
                     <label for="besarSimpanan">Besar Simpanan</label>
                     <input type="text" name="besar_simpanan" id="besarSimpanan" onkeypress="return isNumberKey(event)"  class="form-control" placeholder="Besar Simpanan" autocomplete="off" required disabled >
                     <div class="text-danger" id="warningText"></div>
@@ -81,6 +80,10 @@
                         <option value="" selected disabled>Pilih Akun</option>
                     </select>
                 </div>
+                <div class="col-12 form-group">
+                    <label>Tgl Transaksi</label>
+                    <input type="text" name="tgl_transaksi" class="form-control datepicker" autocomplete="off" required>
+                </div>
                 <div class="col-md-12 form-group">
                     <label for="keterangan">Keterangan</label>
                     <textarea name="keterangan" id="keterangan" rows="5" class="form-control"></textarea>
@@ -99,6 +102,8 @@
 @stop
 
 @section('js')
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="{{ asset('js/collect.min.js') }}"></script>
 <script src="{{ asset('js/cleave.min.js') }}"></script>
 <script src="{{ asset('js/moment.js') }}"></script>
@@ -108,6 +113,8 @@
     var besarSimpananSukarela;
     var besarSimpananPokok;
     var tipeSimpanan;
+    var today;
+
     $(document).ready(function ()
     {
         initiateSelect2();
@@ -116,6 +123,7 @@
          $('#periodeDetail').hide();
 
         $('#jenisAkun').trigger( "change" );
+        today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
     });
 
     $('#jenisSimpanan').on('change', function ()
@@ -163,6 +171,7 @@
     function initiateSelect2()
     {
         $("#jenisSimpanan").select2({
+            placeholder: 'pilih salah satu',
             ajax: {
                 url: '{{ route('jenis-simpanan-searchByUser') }}',
                 dataType: 'json',
@@ -340,8 +349,6 @@
         })
     }
 
-
-
     function toRupiah(number)
     {
         var stringNumber = number.toString();
@@ -428,6 +435,13 @@
         }
 
         $('#code').trigger( "change" );
+    });
+
+    // initiate datepicker
+    $('.datepicker').datepicker({
+        maxDate: today,
+        uiLibrary: 'bootstrap4',
+        format: 'dd-mm-yyyy'
     });
 
 </script>

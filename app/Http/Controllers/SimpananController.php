@@ -148,6 +148,7 @@ class SimpananController extends Controller
                     $angsurSimpanan->kode_anggota = $request->kode_anggota;
                     $angsurSimpanan->u_entry = Auth::user()->name;
                     $angsurSimpanan->tgl_entri = Carbon::now();
+                    $angsurSimpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi);
                     $angsurSimpanan->created_at = Carbon::now();
                     $angsurSimpanan->updated_at = Carbon::now();
                     $angsurSimpanan->save();
@@ -159,6 +160,7 @@ class SimpananController extends Controller
                     $simpanan->kode_anggota = $anggotaId;
                     $simpanan->u_entry = Auth::user()->name;
                     $simpanan->tgl_entri = Carbon::now();
+                    $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi);
                     $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                     $simpanan->keterangan = ($request->keterangan) ? $request->keterangan : null;
                     $simpanan->id_akun_debet = ($request->id_akun_debet) ? $request->id_akun_debet : null;
@@ -177,6 +179,7 @@ class SimpananController extends Controller
                         $angsurSimpanan->kode_anggota = $request->kode_anggota;
                         $angsurSimpanan->u_entry = Auth::user()->name;
                         $angsurSimpanan->tgl_entri = Carbon::now();
+                        $angsurSimpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi);
                         $angsurSimpanan->created_at = Carbon::now();
                         $angsurSimpanan->updated_at = Carbon::now();
                         $angsurSimpanan->save();
@@ -193,6 +196,7 @@ class SimpananController extends Controller
                 $simpanan->kode_anggota = $anggotaId;
                 $simpanan->u_entry = Auth::user()->name;
                 $simpanan->tgl_entri = Carbon::now();
+                $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi);
                 $simpanan->periode = date("Y-m-d", $periodeTime);
                 $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                 $simpanan->keterangan = ($request->keterangan) ? $request->keterangan : null;
@@ -206,6 +210,7 @@ class SimpananController extends Controller
             // return redirect()->route('simpanan-list', ['kode_anggota' => $request->kode_anggota])->withSuccess('Berhasil menambah transaksi');
             return redirect()->route('simpanan-list')->withSuccess('Berhasil menambah transaksi');
         } catch (\Throwable $th) {
+            Log::error($th->getMessage().'||'.$th->getFile().'||'.$th->getLine());
             return redirect()->back()->withError('Gagal menyimpan data');
         }
     }
