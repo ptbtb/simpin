@@ -41,11 +41,15 @@
                     <label>Jenis Transaksi</label>
                     {!! Form::select('jenistrans', array('S'=>'Semua','A' => 'Saldo Awal', 'T' => 'Transaksi'),$request->jenistrans, ['id' => 'propinsi', 'class' => 'form-control']) !!}
                 </div>
-                 
+
                 <div class="col-md-4 form-group">
                     <label>Jenis Simpanan</label>
                     <select name="jenis_simpanan" id="jenisSimpanan" class="form-control">
                     </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Unit Kerja</label>
+                    {!! Form::select('unit_kerja', $unitKerja, $request->unit_kerja, ['class' => 'form-control unitkerja', 'placeholder' => 'Pilih Satu']) !!}
                 </div>
                 <div class="col-md-4 form-group">
                     <label>From</label>
@@ -183,65 +187,65 @@
                 }
             },
             aoColumns: [
-                { 
-                    mData: null		
+                {
+                    mData: null
                 },
-                { 
-                    mData: 'kode_simpan', sType: "string", 
-                    className: "dt-body-center", "name": "kode_simpan"				
+                {
+                    mData: 'kode_simpan', sType: "string",
+                    className: "dt-body-center", "name": "kode_simpan"
                 },
-                { 
-                    mData: 'anggota.nama_anggota', sType: "string", 
+                {
+                    mData: 'anggota.nama_anggota', sType: "string",
                     className: "dt-body-center", "name": "anggota.nama_anggota"	,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';
                         }
                         return data;
-                    }			
+                    }
                 },
-                { 
-                    mData: 'jenis_simpan', sType: "string", 
+                {
+                    mData: 'jenis_simpan', sType: "string",
                     className: "dt-body-center", "name": "jenis_simpan"	,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';
                         }
                         return data;
-                    }			
+                    }
                 },
-                { 
-                    mData: 'besar_simpanan_rupiah', sType: "string", 
+                {
+                    mData: 'besar_simpanan_rupiah', sType: "string",
                     className: "dt-body-center", "name": "besar_simpanan_rupiah"	,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';
                         }
                         return data;
-                    }			
+                    }
                 },
-                { 
-                    mData: 'u_entry', sType: "string", 
+                {
+                    mData: 'u_entry', sType: "string",
                     className: "dt-body-center", "name": "u_entry"	,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';
                         }
                         return data;
-                    }			
+                    }
                 },
-                { 
-                    mData: 'status_simpanan_view', sType: "string", 
-                    className: "dt-body-center", "name": "status_simpanan_view"	,		
+                {
+                    mData: 'status_simpanan_view', sType: "string",
+                    className: "dt-body-center", "name": "status_simpanan_view"	,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';
                         }
                         return data;
-                    }		
+                    }
                 },
-                { 
-                    mData: 'kode_simpan', sType: "string", 
+                {
+                    mData: 'kode_simpan', sType: "string",
                     className: "dt-body-center", "name": "action"	,
                     mRender: function (data, type, full) {
                         var mark = '<a style="cursor: pointer" class="btn btn-sm btn-primary mt-1" data-action="info" data-start-date="' + full['tanggal_mulai'] + '" data-entry-date="' + full['tanggal_entri'] + '" data-u-entry="' + full['u_entry'] + '"><i class="fa fa-info"></i> Info</a>';
@@ -258,7 +262,7 @@
                             }
                         mark = mark + '@endcan';
                         return mark;
-                    }			
+                    }
                 },
             ]
         });
@@ -271,6 +275,7 @@
     }
 
     function initiateSelect2() {
+        $(".unitKerja").select2();
         $("#jenisSimpanan").select2({
             placeholder: 'Pilih Semua',
             allowClear: true,
@@ -330,18 +335,18 @@
                 var entryDate = ($(this).data('entry-date') == null)? '-':$(this).data('entry-date');
                 var uEntry = ($(this).data('u-entry') == null)? '-':$(this).data('u-entry');
 
-                var htmlText = '<div class="container-fluid" style="font-size : 14px">' + 
-                                    '<div class="row">' + 
-                                        '<div class="col-md-6 mx-0 my-2">Tanggal Mulai <br> <b>' + startDate + '</b></div>' + 
-                                        '<div class="col-md-6 mx-0 my-2">Tangggal Entri <br> <b>' + entryDate + '</b></div>' + 
-                                        '<div class="col-md-6 mx-0 my-2"></div>' + 
-                                        '<div class="col-md-6 mx-0 my-2">User Entri <br> <b>' + uEntry + '</b></div>' + 
-                                    '</div>' + 
+                var htmlText = '<div class="container-fluid" style="font-size : 14px">' +
+                                    '<div class="row">' +
+                                        '<div class="col-md-6 mx-0 my-2">Tanggal Mulai <br> <b>' + startDate + '</b></div>' +
+                                        '<div class="col-md-6 mx-0 my-2">Tangggal Entri <br> <b>' + entryDate + '</b></div>' +
+                                        '<div class="col-md-6 mx-0 my-2"></div>' +
+                                        '<div class="col-md-6 mx-0 my-2">User Entri <br> <b>' + uEntry + '</b></div>' +
+                                    '</div>' +
                                 '</div>';
-                
+
                 Swal.fire({
                     title: 'Info',
-                    html: htmlText, 
+                    html: htmlText,
                     showCancelButton: false,
                     confirmButtonText: "Tutup",
                     confirmButtonColor: "#00ff00",
@@ -357,7 +362,7 @@
                         var htmlText = data;
                         Swal.fire({
                             title: 'Info',
-                            html: htmlText, 
+                            html: htmlText,
                             showCancelButton: false,
                             confirmButtonText: "Tutup",
                             confirmButtonColor: "#00ff00",
@@ -367,7 +372,7 @@
                     {
                         Swal.fire({
                             title: 'Error',
-                            html: 'Terjadi Kesalahan', 
+                            html: 'Terjadi Kesalahan',
                             icon: "error",
                             showCancelButton: false,
                             confirmButtonText: "Tutup",
@@ -382,10 +387,10 @@
                 var dataId = $(this).data('id');
 
                 $('#modal-edit').modal({
-                    backdrop: false 
+                    backdrop: false
                 });
                 $('#modal-edit').modal('show');
-                
+
                 $(".modal-edit-body #kode_simpan").val( dataId );
                 $(".modal-edit-body #besar_simpanan").val( toRupiah(dataBesarSimpanan) );
             }
@@ -446,9 +451,9 @@
                     $.ajax({
                         type: 'post',
                         url: url,
-                        data: formData,   
+                        data: formData,
                         contentType: false,
-                        processData: false,                     
+                        processData: false,
                     success: function(data) {
                         Swal.fire({
                             icon: 'success',
@@ -476,7 +481,7 @@
                     })
                 }
             })
-            
+
         });
     }
 

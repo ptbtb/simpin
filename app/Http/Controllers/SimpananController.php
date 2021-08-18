@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 
 use App\Managers\JurnalManager;
 use App\Managers\SimpananManager;
-
+use App\Models\Company;
 use Auth;
 use DB;
 use Hash;
@@ -39,6 +39,7 @@ class SimpananController extends Controller
         $this->authorize('view simpanan', Auth::user());
         $data['title'] = "List Transaksi Simpanan";
         $data['request'] = $request;
+        $data['unitKerja'] = Company::get()->pluck('nama','id');
         return view('simpanan.index', $data);
     }
 
@@ -46,6 +47,14 @@ class SimpananController extends Controller
     {
         $this->authorize('view simpanan', Auth::user());
         $simpanan = Simpanan::with('anggota')->orderBy('tgl_entri','desc');
+        if ($request->unit_kerja)
+        {
+            $simpanan = $simpanan->whereHas('anggota', function ($query) use ($request)
+                                {
+                                    return $query->where('company_id', $request->unit_kerja);
+                                });
+        }
+
         if ($request->from || $request->to) {
             if ($request->from) {
                 $simpanan = $simpanan->where('tgl_entri', '>=', $request->from);
