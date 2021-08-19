@@ -46,7 +46,7 @@ class PinjamanController extends Controller {
         $user = Auth::user();
         $role = $user->roles->first();
         $this->authorize('view pinjaman', $user);
-
+        $listtenor = JenisPinjaman::pluck('lama_angsuran','lama_angsuran')->sortBy('lama_angsuran');
         // check role user
         if ($user->roles->first()->id == ROLE_ANGGOTA) {
             $anggota = $user->anggota;
@@ -92,8 +92,7 @@ class PinjamanController extends Controller {
         }
         if ($request->tenor)
         {
-            $date = Carbon::createFromFormat('d-m-Y', $request->tenor);
-            $listPinjaman = $listPinjaman->whereDate('tgl_tempo', $date->toDateString());
+            $listPinjaman = $listPinjaman->where('lama_angsuran',$request->tenor);
         }
         $data['unitKerja'] = Company::get()->pluck('nama','id');
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from,$request->to]);
@@ -102,6 +101,7 @@ class PinjamanController extends Controller {
         $data['listPinjaman'] = $listPinjaman;
         $data['request'] = $request;
         $data['role'] = $role;
+        $data['listtenor'] = $listtenor;
         return view('pinjaman.index', $data);
     }
 

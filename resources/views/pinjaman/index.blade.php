@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Tenor</label>
-                    <input type="text" name="tenor" class="form-control" autocomplete="off">
+                    {!! Form::select('tenor', $listtenor, $request->tenor, ['class' => 'form-control tenor', 'placeholder' => 'Semua']) !!}
                 </div>
                 <div class="col-md-4 form-group">
                     <label>From</label>
