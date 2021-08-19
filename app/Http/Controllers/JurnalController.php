@@ -26,9 +26,13 @@ class JurnalController extends Controller
         $this->authorize('view jurnal', Auth::user());
         try
         {
-            if(!$reqeust->period)
+            if(!$reqeust->from)
             {          
-                $reqeust->period = Carbon::today()->format('m-Y');
+                $reqeust->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+            }
+            if(!$reqeust->to)
+            {          
+                $reqeust->to = Carbon::today()->endOfMonth()->format('d-m-Y');
             }
 
             $data['title'] = 'List Jurnal';
@@ -48,8 +52,8 @@ class JurnalController extends Controller
     {
         try
         {
-           $startUntilPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
-           $endUntilPeriod = Carbon::createFromFormat   ('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
+           $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
+           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
            $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod]);
            if ($request->id_tipe_jurnal)
            {
@@ -150,8 +154,8 @@ class JurnalController extends Controller
 public function createExcel(Request $request)
 {
     try{
-        $startUntilPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('Y-m-d');
-        $endUntilPeriod = Carbon::createFromFormat   ('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
+         $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
+           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
         $jurnal = Jurnal::with('tipeJurnal','createdBy');
         if ($request->id_tipe_jurnal)
         {

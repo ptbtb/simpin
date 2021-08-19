@@ -53,12 +53,16 @@
                         <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Keterangan" autocomplete="off" value="{{ old('keterangan', $request->keterangan) }}">
                     </div>
                     <div class="col-md-3">
-                        <label>Periode</label>
-                        <input class="form-control datepicker" placeholder="mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y') }}" autocomplete="off" />
+                        <label>Dari</label>
+                        <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="from" name="from" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y') }}" autocomplete="off" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Sampai</label>
+                        <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}" autocomplete="off" />
                     </div>
                     <div class="col-md-12 form-group text-center">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
-                        <a href="{{ route('jurnal-export-excel',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'period'=>Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-success"><i class="fa fa-download"></i> export Excel</a>
+                        <a href="{{ route('jurnal-export-excel',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'from'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'),'to'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-success"><i class="fa fa-download"></i> export Excel</a>
                     </div>
                 </div>
             </form>
@@ -92,13 +96,13 @@
         $(document).ready(function ()
         {
             initiateDatatables();
-             $("#period").change(function(){
-                console.log($('#period').val());
-                console.log({{ $request->period }});
+             $("#from").change(function(){
+                console.log($('#from').val());
+                console.log({{ $request->from }});
             });
 
             $('.datepicker').datepicker({
-                format: "mm-yyyy",
+                format: "dd-mm-yyyy",
                 viewMode: "months", 
                 minViewMode: "months"
             });
@@ -130,8 +134,10 @@
 
                         var keterangan = '{{ $request->keterangan }}';
                         data.keterangan = keterangan; 
-                        var period = '{{ $request->period }}';
-                        data.period = period;
+                        var from = '{{ $request->from }}';
+                        data.from = from;
+                        var to = '{{ $request->to }}';
+                        data.to = to;
                     }
                 },
                 aoColumns: [
@@ -185,8 +191,8 @@
                         className: "dt-body-center", "name": "keterangan",
                     },
                     {
-                        mData: 'view_created_at', sType: "string",
-                        className: "dt-body-center", "name": "view_created_at",
+                        mData: 'tgl_transaksi', sType: "string",
+                        className: "dt-body-center", "name": "tgl_transaksi",
                     },
                     /*{
                         mData: 'created_by.name', sType: "string",

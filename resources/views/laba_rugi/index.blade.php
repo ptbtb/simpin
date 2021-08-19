@@ -81,7 +81,7 @@
                         <tr>
                             <td></td>
                             <td class="text-right">{{ substr($item['code']->CODE, 7, 3) }}</td>
-                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'period'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
+                            <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'from'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('d-m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
                             <td></td>
                             <td></td>
                             <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>

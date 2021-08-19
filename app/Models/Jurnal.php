@@ -19,6 +19,7 @@ class Jurnal extends Model
         'kredit',
         'akun_debet',
         'debet',
+        'tgl_transaksi',
         
         ];
 
@@ -62,7 +63,7 @@ class Jurnal extends Model
     {
         return $this->created_at->format('d F Y');
     }
-
+    
     public function getJurnalableViewAttribute()
     {
         if($this->jurnalable)
