@@ -59,11 +59,11 @@
                 </div>
                 <div class="col-md-4 form-group">
                     <label>From</label>
-                    <input id="from" type="text" name="from" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->from)? $request->from:'' }}">
+                    <input id="from" type="text" name="from" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{{ ($request->from)? $request->from:'' }}">
                 </div>
                 <div class="col-md-4 form-group">
                     <label>To</label>
-                    <input id="to" type="text" name="to" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->to)? $request->to:'' }}">
+                    <input id="to" type="text" name="to" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{{ ($request->to)? $request->to:'' }}">
                 </div>
                 <div class="col-md-1 form-group" style="margin-top: 26px">
                     <button type="submit" class="btn btn-sm btn-success form-control"><i class="fa fa-filter"></i> Filter</button>
@@ -366,7 +366,7 @@
     }
 
     var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    $('.tenor').datepicker({
+    $('.datepicker').datepicker({
         format: 'dd-mm-yyyy',
         uiLibrary: 'bootstrap4'
     });
