@@ -49,14 +49,14 @@ class BukuBesarController extends Controller
                     {
                         
 
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at',[$startOfYear,$today])->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi',[$startOfYear,$today])->sum('kredit');
 
                     }
                     else
                     {
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
 
                     }
 
@@ -77,13 +77,13 @@ class BukuBesarController extends Controller
                     {
                         
 
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
                     }
 
                     $saldo -= $saldoDebet;
@@ -138,13 +138,13 @@ class BukuBesarController extends Controller
                     {
                         
 
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
                     }
 
                     $saldo += $saldoDebet;
@@ -164,13 +164,13 @@ class BukuBesarController extends Controller
                     {
                         
 
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
                     }
 
                     $saldo -= $saldoDebet;
@@ -232,13 +232,13 @@ class BukuBesarController extends Controller
                     {
                         
 
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
                     }
 
                     $saldo += $saldoDebet;
@@ -258,13 +258,13 @@ class BukuBesarController extends Controller
                     {
                         
 
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startOfYear,$today])->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
                     }
                     else
                     {
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('created_at', '<=',$today)->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('created_at', '<=',$today)->sum('kredit');
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
                     }
 
                     $saldo -= $saldoDebet;

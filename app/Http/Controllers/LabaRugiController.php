@@ -91,22 +91,22 @@ class LabaRugiController extends Controller
                     if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
                     {
                         // period's month
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
 
                         $saldo += $saldoDebet;
                         $saldo -= $saldoKredit;
 
                         // until period's month
-                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
-                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
+                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
+                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
 
                         $saldoUntilMonth += $saldoDebetUntilPeriod;
                         $saldoUntilMonth -= $saldoKreditUntilPeriod;
 
                         // until before period's month
-                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
-                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
+                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
+                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
 
                         $saldoUntilBeforeMonth += $saldoDebetUntilBeforeMonth;
                         $saldoUntilBeforeMonth -= $saldoKreditUntilBeforeMonth;
@@ -114,22 +114,22 @@ class LabaRugiController extends Controller
                     else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                     {
                         // period's month
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
 
                         $saldo -= $saldoDebet;
                         $saldo += $saldoKredit;
 
                         // until period's month
-                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
-                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
+                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
+                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
 
                         $saldoUntilMonth -= $saldoDebetUntilPeriod;
                         $saldoUntilMonth += $saldoKreditUntilPeriod;
 
                         // until before period's month
-                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
-                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
+                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
+                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
 
                         $saldoUntilBeforeMonth -= $saldoDebetUntilBeforeMonth;
                         $saldoUntilBeforeMonth += $saldoKreditUntilBeforeMonth;
@@ -301,22 +301,22 @@ class LabaRugiController extends Controller
                     if($code->normal_balance_id == NORMAL_BALANCE_DEBET)
                     {
                         // period's month
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
 
                         $saldo += $saldoDebet;
                         $saldo -= $saldoKredit;
 
                         // until period's month
-                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
-                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
+                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
+                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
 
                         $saldoUntilMonth += $saldoDebetUntilPeriod;
                         $saldoUntilMonth -= $saldoKreditUntilPeriod;
 
                         // until before period's month
-                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
-                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
+                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
+                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
 
                         $saldoUntilBeforeMonth += $saldoDebetUntilBeforeMonth;
                         $saldoUntilBeforeMonth -= $saldoKreditUntilBeforeMonth;
@@ -324,22 +324,22 @@ class LabaRugiController extends Controller
                     else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                     {
                         // period's month
-                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startPeriod, $endPeriod])->sum('kredit');
+                        $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
+                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
 
                         $saldo -= $saldoDebet;
                         $saldo += $saldoKredit;
 
                         // until period's month
-                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
-                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
+                        $saldoDebetUntilPeriod = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('debet');
+                        $saldoKreditUntilPeriod = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])->sum('kredit');
 
                         $saldoUntilMonth -= $saldoDebetUntilPeriod;
                         $saldoUntilMonth += $saldoKreditUntilPeriod;
 
                         // until before period's month
-                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
-                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('created_at', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
+                        $saldoDebetUntilBeforeMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('debet');
+                        $saldoKreditUntilBeforeMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startUntilBeforePeriod, $endUntilBeforePeriod])->sum('kredit');
 
                         $saldoUntilBeforeMonth -= $saldoDebetUntilBeforeMonth;
                         $saldoUntilBeforeMonth += $saldoKreditUntilBeforeMonth;
