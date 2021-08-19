@@ -18,6 +18,7 @@
                         <th>Akun Kredit</th>
                         <th >Kredit</th>
                         <th>Keterangan</th>
+                        <th>Tanggal</th>
                         
                     </tr>
                 </thead>
@@ -30,12 +31,13 @@
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td>{{$item->nomer}}</td>
-                        <td>{{$item->tipeJurnal->name}}</td>
+                        <td>{{($item->tipeJurnal)?$item->tipeJurnal->name:''}}</td>
                         <td>{{$item->akun_debet}}</td>
                         <td>{{$item->debet}}</td>
                         <td>{{$item->akun_kredit}}</td>
                         <td>{{$item->kredit}}</td>
                         <td>{{$item->keterangan}}</td>
+                        <td>{{$item->tgl_transaksi}}</td>
                         
                     </tr>
                     @php
@@ -49,6 +51,7 @@
                         <td>{{$totaldebet}}</td>
                         <td></td>
                         <td>{{$totalkredit}}</td>
+                        <td></td>
                         <td></td>
                     </tr>
                 </tbody>
