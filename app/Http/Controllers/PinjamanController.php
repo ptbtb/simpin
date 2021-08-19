@@ -312,8 +312,7 @@ class PinjamanController extends Controller {
         }
         if ($request->tenor)
         {
-            $date = Carbon::createFromFormat('d-m-Y', $request->tenor);
-            $listPinjaman = $listPinjaman->whereDate('tgl_tempo', $date->toDateString());
+            $listPinjaman = $listPinjaman->where('lama_angsuran',$request->tenor);
         }
 
         $listPinjaman = $listPinjaman->get();

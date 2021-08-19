@@ -50,10 +50,9 @@ class PinjamanExport implements FromView
                                             return $query->where('company_id', $r->unit_kerja);
                                         });
         }
-        if ($this->request->tenor)
+       if ($request->tenor)
         {
-            $date = Carbon::createFromFormat('d-m-Y', $this->request->tenor);
-            $listPinjaman = $listPinjaman->whereDate('tgl_tempo', $date->toDateString());
+            $listPinjaman = $listPinjaman->where('lama_angsuran',$request->tenor);
         }
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$this->request->from,$this->request->to]);
         $listPinjaman = $listPinjaman->get();
