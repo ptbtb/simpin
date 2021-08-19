@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Tenor</label>
-                    <input type="text" name="tenor" class="tenor" autocomplete="off">
+                    <input type="text" name="tenor" class="form-control" autocomplete="off">
                 </div>
                 <div class="col-md-4 form-group">
                     <label>From</label>
