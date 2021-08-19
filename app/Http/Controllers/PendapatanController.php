@@ -24,8 +24,8 @@ class PendapatanController extends Controller
 
         if ($year)
         {
-            // $groupLabaRugi = CodeCategory::where('name', 'like', 'PENDAPATAN%')
-            $groupLabaRugi = CodeCategory::where('name', 'like', 'LABA%')
+            $groupLabaRugi = CodeCategory::where('name', 'like', 'PENDAPATAN%')
+            // $groupLabaRugi = CodeCategory::where('name', 'like', 'LABA%')
                                             ->get();
 
             $codes = Code::where('is_parent', 0)
@@ -154,8 +154,8 @@ class PendapatanController extends Controller
 
                 $parentCode = Code::where('CODE', $key)->first();
 
-                // if($parentCode->codeCategory->name=='PENDAPATAN')
-                if($parentCode->codeCategory->name=='LABA/RUGI')
+                if($parentCode->codeCategory->name=='PENDAPATAN')
+                // if($parentCode->codeCategory->name=='LABA/RUGI')
                 {
                     $pendapatan->push((object)[
                         'code' => $parentCode,
