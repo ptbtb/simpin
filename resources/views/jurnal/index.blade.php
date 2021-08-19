@@ -191,8 +191,8 @@
                         className: "dt-body-center", "name": "keterangan",
                     },
                     {
-                        mData: 'view_tgl_transaksi', sType: "string",
-                        className: "dt-body-center", "name": "view_tgl_transaksi",
+                        mData: 'tgl_transaksi', sType: "string",
+                        className: "dt-body-center", "name": "tgl_transaksi",
                     },
                     /*{
                         mData: 'created_by.name', sType: "string",

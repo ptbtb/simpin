@@ -63,11 +63,7 @@ class Jurnal extends Model
     {
         return $this->created_at->format('d F Y');
     }
-    public function getViewTglTransaksiAttribute()
-    {
-        return $this->tgl_transaksi->format('d F Y');
-    }
-
+    
     public function getJurnalableViewAttribute()
     {
         if($this->jurnalable)
