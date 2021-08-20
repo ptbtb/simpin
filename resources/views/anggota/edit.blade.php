@@ -137,7 +137,7 @@
 										<label>{{ $jenisPenghasilan->name }}</label>
 										<input type="text" id="penghasilanTertentu{{ $jenisPenghasilan->id }}" name="penghasilan[{{ $jenisPenghasilan->id }}]" class="form-control toRupiah" placeholder="{{ $jenisPenghasilan->name }}"
 										@if ($listPenghasilan)
-											value="{{ $listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first()->value }}"
+											value="{{ ($listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first())?$listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first()->value:'0' }}"
 										@endif
 										
 										onkeypress="return isNumberKey(event)">
