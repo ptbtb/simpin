@@ -29,7 +29,7 @@
 
 @section('content')
     <div class="card">
-        @can('add bank')
+        @can('add Bank')
             <div class="card-header text-right">
                 <a href="{{ route('bank.create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Bank</a>
             </div>
