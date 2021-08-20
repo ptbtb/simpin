@@ -81,6 +81,7 @@ class AnggotaController extends Controller {
         {
             $data['listPenghasilan'] = $listPenghasilan;
         }
+         // dd($data['listPenghasilan']->where('id_jenis_penghasilan', 4)->first());
         $data['listJenisPenghasilan'] = $listJenisPenghasilan;
         $data['title'] = 'Tambah Anggota';
         $data['companies'] = Company::all();
