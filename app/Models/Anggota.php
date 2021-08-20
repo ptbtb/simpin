@@ -35,6 +35,7 @@ class Anggota extends Model
         'email',
         'emergency_kontak',
         'status',
+        'id_bank',
         ];
 
     public function user()
