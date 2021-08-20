@@ -51,10 +51,10 @@
                             <td>{{ $item->kode }}</td>
                             @if (auth()->user()->can('edit bank') || auth()->user()->can('delete bank'))
                                 <td>
-                                    @can('edit jenis anggota')
+                                    @can('edit Bank')
                                         <a href="{{ route('bank.edit', ['id'=>$item->id]) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
                                     @endcan
-                                    @can('delete jenis anggota')
+                                    @can('delete Bank')
                                         <form action="{{ route('bank.delete', ['id'=>$item->id]) }}" method="post" style="display: inline">
                                             <button  class="btn btn-sm btn-danger" type="submit" value="Delete">
                                                 <i class="fa fa-trash"></i> Hapus
