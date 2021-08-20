@@ -16,15 +16,23 @@ class PinjamanReportExport implements FromView
     }
 
     public function view(): View
-    {// data collection
+    {
+        // data collection
         $reports = collect();
 
         $today = Carbon::today();
 
-        // get start and end of year
-        $startOfYear = $today->copy()->startOfYear()->toDateTimeString();
-        $endOfYear   = $today->copy()->endOfYear()->toDateTimeString();
+        // period
+        // check if period date has been selected
+        if(!$this->request->period)
+        {          
+            $this->request->period = Carbon::today()->format('Y');
+        }
 
+        // get start and end of year
+        $startOfYear = Carbon::createFromFormat('Y', $this->request->period)->startOfYear()->toDateTimeString();
+        $endOfYear   = Carbon::createFromFormat('Y', $this->request->period)->endOfYear()->toDateTimeString();
+        
         $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
                                 ->orderBy('tgl_entri')
                                 ->japen()
@@ -150,6 +158,7 @@ class PinjamanReportExport implements FromView
             'totalJapanApproved' => $totalJapanApproved,
             'totalJapanDiterima' => $totalJapanDiterima,
             'totalJapenDiterima' => $totalJapenDiterima,
+            'request' => $this->request,
         ]);
     }
 }
