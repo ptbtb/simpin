@@ -1259,9 +1259,16 @@ class PinjamanController extends Controller {
 
         $today = Carbon::today();
 
+        // period
+        // check if period date has been selected
+        if(!$request->period)
+        {          
+            $request->period = Carbon::today()->format('Y');
+        }
+
         // get start and end of year
-        $startOfYear = $today->copy()->startOfYear()->toDateTimeString();
-        $endOfYear   = $today->copy()->endOfYear()->toDateTimeString();
+        $startOfYear = Carbon::createFromFormat('Y', $request->period)->startOfYear()->toDateTimeString();
+        $endOfYear   = Carbon::createFromFormat('Y', $request->period)->endOfYear()->toDateTimeString();
 
         $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
                                 ->orderBy('tgl_entri')
@@ -1386,6 +1393,7 @@ class PinjamanController extends Controller {
         $data['totalJapanApproved'] = $totalJapanApproved;
         $data['totalJapanDiterima'] = $totalJapanDiterima;
         $data['totalJapenDiterima'] = $totalJapenDiterima;
+        $data['request'] = $request;
 
         $data['title'] = "Laporan Pinjaman";
         $data['reports'] = $reports;

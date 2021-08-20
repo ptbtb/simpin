@@ -31,17 +31,17 @@
     <div class="card">
         <div class="card-header">
             <div class="col-md-12">
-                {{-- <form id="myForm" role="form" method="GET" enctype="multipart/form-data" action="{{ route('neraca-list') }}">
-                    <div class="col-md-6">
+                <form id="myForm" role="form" method="GET" enctype="multipart/form-data" action="{{ route('pinjaman-report') }}">
+                    <div class="col-md-4">
                         <label>Periode</label>
-                        <input class="form-control datepicker" placeholder="mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y') }}" autocomplete="off" />
-                    </div> --}}
-                    <div class="col-md-12 text-left" style="margin-top: 10px;">
-                        {{-- <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button> --}}
-                        {{-- <a href="{{ route('neraca-download-pdf', ['period' => $request->period]) }}" class="btn btn-info"><i class="fas fa-print"></i> Print</a> --}}
-                        <a href="{{ route('laporan-pinjaman-download-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Excel</a>
+                        <input class="form-control datepicker" placeholder="yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('Y', $request->period)->format('Y') }}" autocomplete="off" />
                     </div>
-                {{-- </form> --}}
+                    <div class="col-md-12 text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
+                        {{-- <a href="{{ route('neraca-download-pdf', ['period' => $request->period]) }}" class="btn btn-info"><i class="fas fa-print"></i> Print</a> --}}
+                        <a href="{{ route('laporan-pinjaman-download-excel', ['period' => $request->period]) }}" class="btn btn-success"><i class="fa fa-download"></i> Excel</a>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="card-body row">
@@ -97,9 +97,10 @@
         {
 
             $('.datepicker').datepicker({
-                format: "mm-yyyy",
-                viewMode: "months", 
-                minViewMode: "months"
+                format: "yyyy",
+                viewMode: "years", 
+                minViewMode: "years",
+                autoclose: true
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
