@@ -86,7 +86,7 @@
 								</div>
 								<div class="col-md-6 form-group">
 									<label>Tanggal Lahir</label>
-									<input type="date" class="form-control" name="tgl_lahir" class="required" title="Tanggal Lahir harus diisi" value={{ $anggota->tgl_lahir }} placeholder="Tanggla Lahir">
+									<input type="date" class="form-control" name="tgl_lahir" class="required" title="Tanggal Lahir harus diisi" value={{ $anggota->tgl_lahir }} placeholder="Tanggal Lahir">
 								</div>
 								<div class="col-md-6 form-group">
 									<label>Jenis Kelamin</label>
@@ -124,9 +124,13 @@
 									<label>Emergency Kontak</label>
 									<input type="text" name="emergency_kontak" size="54" value="{{ $anggota->emergency_kontak }}" class="form-control" placeholder="Emergency Kontak"/>
 								</div>
-								<div class="col-md-12 form-group">
-									<label>Nomer Rekening Mandiri</label>
-									<input type="text" name="no_rek" size="54" class="form-control" value="{{ $anggota->no_rek }}"  placeholder="Nomor Rekening Mandiri"/>
+								<div class="col-md-6 form-group">
+									<label>Nomer Rekening</label>
+									<input type="text" name="no_rek" class="form-control" value="{{ $anggota->no_rek }}"  placeholder="Nomor Rekening Mandiri"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Bank</label>
+									{!! Form::select('bank', $bank,$anggota->id_bank, ['class' => 'form-control bank', 'placeholder' => 'Nama Bank']) !!}
 								</div>
 								@foreach ($listJenisPenghasilan as $jenisPenghasilan)
 									<div class="col-md-6 form-group">

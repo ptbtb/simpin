@@ -85,6 +85,11 @@ class Anggota extends Model
         return $this->hasMany(Simpanan::class, 'kode_anggota');
     }
 
+    public function Bank()
+    {
+        return $this->belongsTo(Bank::class, 'id_bank');
+    }
+
     public function getKodeAnggotaPrefixAttribute()
     {
         if ($this->jenisAnggota)

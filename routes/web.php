@@ -441,3 +441,12 @@ Route::Group(['prefix' => 'pendapatan', 'middleware' => 'auth'], function ()
     Route::post('laporan', [PendapatanController::class,  'laporan'])->name('filter.laporan.pendapatan');
     Route::get('laporan/excel', [PendapatanController::class,  'downloadExcel'])->name('excel.laporan.pendapatan');
 });
+
+Route::Group(['prefix' => 'bank', 'middleware' => 'auth'], function (){
+    Route::get('list', [App\Http\Controllers\BankController::class,  'index'])->name('bank.list');
+    Route::get('create', [App\Http\Controllers\BankController::class,  'create'])->name('bank.create');
+    Route::post('create', [App\Http\Controllers\BankController::class,  'store'])->name('bank.create');
+    Route::get('edit/{id}', [App\Http\Controllers\BankController::class,  'edit'])->name('bank.edit');
+    Route::post('edit/{id}', [App\Http\Controllers\BankController::class,  'update'])->name('bank.edit');
+    Route::post('delete/{id}', [App\Http\Controllers\BankController::class,  'destroy'])->name('bank.delete');
+});

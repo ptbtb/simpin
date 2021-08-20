@@ -294,6 +294,13 @@ return [
                     'can'  => ['view simpin rule'],
                     'active' => ['/setting/simpin-rule/list', '/setting/simpin-rule/create', 'regex:@^setting/simpin-rule/edit/[0-9]+$@'],
                 ],
+                [
+                    'text' => 'Bank',
+                    'url' => '/bank/list',
+                    'icon' => 'fas fa-donate nav-icon',
+                    'can'  => ['view bank'],
+                    'active' => ['/setting/bank/list', '/setting/bank/create', 'regex:@^setting/bank/edit/[0-9]+$@'],
+                ],
             ],
         ],
         ['header' => 'OPERATOR','can'  => ['add penarikan', 'view history penarikan']],

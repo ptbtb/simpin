@@ -94,10 +94,7 @@
 									<label>KTP</label>
 									<input type="text" name="ktp" size="54" class="form-control" placeholder="KTP"/>
 								</div>
-								<div class="col-md-6 form-group">
-									<label>Lokasi Kerja</label>
-									<input type="text" name="lokasi_kerja" size="54" class="form-control" placeholder="Lokasi Kerja"/>
-								</div>
+								
 								<div class="col-md-6 form-group">
 									<label>Tanggal Masuk</label>
 									<input type="date" name="tgl_masuk" class="form-control" value="<?php echo date("Y-m-d"); ?>" placeholder="Tanggal Masuk" >
@@ -115,8 +112,12 @@
 									<input type="text" name="emergency_kontak" size="54" class="form-control" placeholder="Emergency Kontak"/>
 								</div>
 								<div class="col-md-6 form-group">
-									<label>Nomer Rekening Mandiri</label>
-									<input type="text" name="no_rek" size="54" class="form-control"  placeholder="Nomor Rekening Mandiri"/>
+									<label>Nomer Rekening</label>
+									<input type="text" name="no_rek" class="form-control"  placeholder="Nomor Rekening Mandiri"/>
+								</div>
+								<div class="col-md-6 form-group">
+									<label>Bank</label>
+									{!! Form::select('bank', $bank,'', ['class' => 'form-control bank', 'placeholder' => 'Semua']) !!}
 								</div>
 								<div class="col-md-6 form-group">
 									<label>Password</label>

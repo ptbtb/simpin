@@ -11,6 +11,7 @@ use App\Exports\AnggotaExport;
 use App\Imports\AnggotaImport;
 use App\Models\Anggota;
 use App\Models\Company;
+use App\Models\Bank;
 use App\Models\JenisAnggota;
 use App\Models\KelasCompany;
 use App\Models\JenisPenghasilan;
@@ -60,6 +61,7 @@ class AnggotaController extends Controller {
         $data['nomer'] = $nomer + 1;
         $data['companies'] = Company::all();
         $data['jenisAnggotas'] = JenisAnggota::all();
+        $data['bank'] = Bank::pluck('nama','id');
         $data['kelasCompany'] = "";
         return view('/anggota/create', $data);
     }
@@ -67,6 +69,8 @@ class AnggotaController extends Controller {
     public function edit($id) {
         $this->authorize('edit anggota', Auth::user());
         $anggota = Anggota::find($id);
+        $data['bank'] = Bank::pluck('nama','id');
+
         $listJenisPenghasilan = JenisPenghasilan::show()
 												->orderBy('sequence','asc')
                                                 ->get();
@@ -127,6 +131,7 @@ class AnggotaController extends Controller {
                     'ktp' => $request->ktp,
                     'nipp' => $request->nipp,
                     'no_rek' => $request->no_rek,
+                    'id_bank' => $request->bank,
                     'email' => $request->email,
                     'emergency_kontak' => $request->emergency_kontak,
                     'status' => 'aktif'
@@ -169,6 +174,7 @@ class AnggotaController extends Controller {
             $Anggota->ktp = $request->ktp;
             $Anggota->nipp = $request->nipp;
             $Anggota->no_rek = $request->no_rek;
+            $Anggota->id_bank = $request->bank;
             $Anggota->email = $request->email;
             $Anggota->emergency_kontak = $request->emergency_kontak;
             $Anggota->status = 'aktif';
