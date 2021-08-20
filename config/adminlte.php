@@ -298,7 +298,7 @@ return [
                     'text' => 'Bank',
                     'url' => '/bank/list',
                     'icon' => 'fas fa-donate nav-icon',
-                    'can'  => ['view bank'],
+                    'can'  => ['view Bank'],
                     'active' => ['/setting/bank/list', '/setting/bank/create', 'regex:@^setting/bank/edit/[0-9]+$@'],
                 ],
             ],
