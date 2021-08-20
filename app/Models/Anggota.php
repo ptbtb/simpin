@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Anggota extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = "t_anggota";
     protected $primaryKey = 'kode_anggota';
-    protected $appends = ['kode_anggota_prefix', 'unit_kerja'];
+    protected $appends = ['kode_anggota_prefix', 'unit_kerja','tgl_lahir_view'];
     public $incrementing = false;
     public $dates = ['tgl_lahir', 'tgl_masuk'];
     protected $fillable = ['kode_anggota',
@@ -88,6 +89,10 @@ class Anggota extends Model
     public function Bank()
     {
         return $this->belongsTo(Bank::class, 'id_bank');
+    }
+    public function getTglLahirViewAttribute()
+    {
+        return $this->tgl_lahir->format('d M Y');
     }
 
     public function getKodeAnggotaPrefixAttribute()

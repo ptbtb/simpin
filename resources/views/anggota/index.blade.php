@@ -143,7 +143,7 @@
                 }
             },
             {
-                mData: 'tgl_lahir', sType: "string",
+                mData: 'tgl_lahir_view', sType: "string",
                 className: "dt-body-center", "name": "tglLahi",
                 mRender: function(data, type, full)
                 {
