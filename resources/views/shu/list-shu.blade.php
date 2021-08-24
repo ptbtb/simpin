@@ -26,6 +26,9 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
+            <div class="card-header text-right">
+                <a href="{{ route('list-shu.exportExcel') }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-stripped">

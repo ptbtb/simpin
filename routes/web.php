@@ -427,6 +427,7 @@ Route::group(['prefix' => 'global'], function () {
 Route::get('list-shu', [SHUController::class, 'index'])->middleware('auth')->name('list-shu');
 Route::get('list-shu/import-excel', [SHUController::class, 'import'])->middleware('auth')->name('list-shu.import');
 Route::post('list-shu/import-excel', [SHUController::class, 'storeImport'])->middleware('auth')->name('list-shu.storeImport');
+Route::get('list-shu/export-excel', [SHUController::class, 'exportExcel'])->middleware('auth')->name('list-shu.exportExcel');
 Route::get('list-shu/{id}/download-card', [SHUController::class, 'downloadCard'])->middleware('auth')->name('list-shu.downloadCard');
 
 Route::get('transferred-shu', [TransferredSHUController::class, 'index'])->middleware('auth')->name('transferred-shu.index');

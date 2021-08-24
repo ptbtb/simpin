@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SHUCardExport;
+use App\Exports\SHUExport;
 use App\Imports\SHUImport;
 use App\Models\SHU;
+use Carbon\Carbon;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,5 +58,21 @@ class SHUController extends Controller
         return $pdf->download($filename);
 
         // return view('shu.shu-card', $data);
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try
+        {
+            $shu = SHU::all();
+            $data['shu'] = $shu;
+            $name = 'SHU-excel-'.Carbon::now()->toDateTimeString().'.xlsx';
+            return Excel::download(new SHUExport($data), $name);
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            return redirect()->back()->withErrors($message);
+        }
     }
 }
