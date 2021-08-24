@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Events\Penarikan\PenarikanCreated;
 use App\Events\Penarikan\PenarikanUpdated;
+use App\Exports\ListPenarikanExport;
 use App\Exports\PenarikanExport;
 use App\Imports\PenarikanImport;
 use App\Managers\JurnalManager;
@@ -598,6 +599,53 @@ class PenarikanController extends Controller
         {
             $error = $th->getMessage().' || file'.$th->getFile().' || line'. $th->getLine();
             return redirect()->back()->withError($error);
+        }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try
+        {
+            $user = Auth::user();
+
+            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet')
+                                        ->orderBy('tgl_ambil','desc');
+
+            if($request->status_penarikan != "")
+            {
+                $listPenarikan->where('status_pengambilan', $request->status_penarikan);
+            }
+
+            if($request->tgl_ambil != "")
+            {
+                $tgl_ambil = Carbon::createFromFormat('d-m-Y', $request->tgl_ambil)->toDateString();
+
+                $listPenarikan->where('tgl_ambil', $tgl_ambil);
+            }
+
+            if($request->anggota != "")
+            {
+                $listPenarikan->where('kode_anggota', $request->anggota);
+            }
+
+            if ($user->isAnggota())
+            {
+                $anggota = $user->anggota;
+
+                $listPenarikan->where('kode_anggota', $anggota->kode_anggota);
+            }
+            $listPenarikan = $listPenarikan->get();
+
+            $data['listPenarikan'] = $listPenarikan;
+            $name = 'List Penarikan'.Carbon::now()->toDateTimeString().'.xlsx';
+
+            return Excel::download(new ListPenarikanExport($data), $name);
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '.$th->getFile().' || '.$th->getLine();
+            Log::info($message);
+            return redirect()->back()->withErrors($message);
         }
     }
 }

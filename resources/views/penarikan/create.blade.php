@@ -106,6 +106,8 @@
 		});
 
         $("#anggotaName").select2({
+            processing: true,
+            serverSide: true,
             ajax: {
                 url: '{{ route('anggota-ajax-search') }}',
                 dataType: 'json',

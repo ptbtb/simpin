@@ -284,6 +284,7 @@ Route::group(['prefix' => 'penarikan'], function () {
     Route::group(['middleware' => ['auth', 'check']], function () {
         Route::get('list', [App\Http\Controllers\PenarikanController::class, 'index'])->name('penarikan-index');
         Route::get('list/data/', [App\Http\Controllers\PenarikanController::class, 'indexAjax'])->name('penarikan-index-ajax');
+        Route::get('list/export-excel', [App\Http\Controllers\PenarikanController::class, 'exportExcel'])->name('penarikan-list-export-excel');
 
         Route::get('create', [App\Http\Controllers\PenarikanController::class, 'create'])->name('penarikan-create');
         Route::post('create', [App\Http\Controllers\PenarikanController::class, 'store'])->name('penarikan-create');

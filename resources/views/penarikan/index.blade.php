@@ -75,6 +75,7 @@
         <div class="card-header text-right">
             @can('print jkk penarikan')
                 <a href="{{ route('penarikan-print-jkk') }}" class="btn btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
+                <a href="{{ route('penarikan-list-export-excel', $request->toArray()) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i> Export Excel</a>
             @endcan
         </div>
         <div class="card-body table-responsive">
@@ -159,8 +160,8 @@
             }).DataTable({
             bProcessing: true,
             bServerSide: true,
-            responsive: true, 
-            searching: false, 
+            responsive: true,
+            searching: false,
             ajax:
             {
                 url : baseURL+'/penarikan/list/data',
