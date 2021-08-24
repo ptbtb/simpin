@@ -59,23 +59,28 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-body table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>No Invoice</th>
-                        <th>Type</th>
-                        <th>Kode Anggota</th>
-                        <th>Nama Anggota</th>
-                        <th>Unit Kerja</th>
-                        <th>Besar Tagihan</th>
-                        <th>Keterangan</th>
-                        <th>Tanggal Invoice</th>
-                        <th>Jatuh Tempo</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-            </table>
+        <div class="card-header text-right">
+            <a href="{{ route('invoice-list-download-excel', $request->toArray()) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>No Invoice</th>
+                            <th>Type</th>
+                            <th>Kode Anggota</th>
+                            <th>Nama Anggota</th>
+                            <th>Unit Kerja</th>
+                            <th>Besar Tagihan</th>
+                            <th>Keterangan</th>
+                            <th>Tanggal Invoice</th>
+                            <th>Jatuh Tempo</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 @endsection
@@ -103,45 +108,45 @@
                     }
                 },
                 aoColumns: [
-                    { 
-                        mData: 'invoice_number', sType: "string", 
-                        className: "dt-body-center", "name": "invoice_number"				
+                    {
+                        mData: 'invoice_number', sType: "string",
+                        className: "dt-body-center", "name": "invoice_number"
                     },
-                    { 
-                        mData: 'invoice_type.name', sType: "string", 
-                        className: "dt-body-center", "name": "invoice_type.name"						
+                    {
+                        mData: 'invoice_type.name', sType: "string",
+                        className: "dt-body-center", "name": "invoice_type.name"
                     },
-                    { 
-                        mData: 'anggota.kode_anggota', sType: "string", 
-                        className: "dt-body-center", "name": "anggota.kode_anggota"				
+                    {
+                        mData: 'anggota.kode_anggota', sType: "string",
+                        className: "dt-body-center", "name": "anggota.kode_anggota"
                     },
-                    { 
-                        mData: 'anggota.nama_anggota', sType: "string", 
-                        className: "dt-body-center", "name": "anggota.nama_anggota"				
+                    {
+                        mData: 'anggota.nama_anggota', sType: "string",
+                        className: "dt-body-center", "name": "anggota.nama_anggota"
                     },
-                    { 
-                        mData: 'anggota.company.nama', sType: "string", 
-                        className: "dt-body-center", "name": "anggota.company.nama"				
+                    {
+                        mData: 'anggota.company.nama', sType: "string",
+                        className: "dt-body-center", "name": "anggota.company.nama"
                     },
-                    { 
-                        mData: 'final_amount', sType: "string", 
-                        className: "dt-body-center", "name": "final_amount",				
+                    {
+                        mData: 'final_amount', sType: "string",
+                        className: "dt-body-center", "name": "final_amount",
                     },
-                    { 
-                        mData: 'description', sType: "string", 
-                        className: "dt-body-center", "name": "description",				
+                    {
+                        mData: 'description', sType: "string",
+                        className: "dt-body-center", "name": "description",
                     },
-                    { 
-                        mData: 'view_date', sType: "string", 
-                        className: "dt-body-center", "name": "view_date",				
+                    {
+                        mData: 'view_date', sType: "string",
+                        className: "dt-body-center", "name": "view_date",
                     },
-                    { 
-                        mData: 'view_due_date', sType: "string", 
-                        className: "dt-body-center", "name": "view_due_date",				
+                    {
+                        mData: 'view_due_date', sType: "string",
+                        className: "dt-body-center", "name": "view_due_date",
                     },
-                    { 
-                        mData: 'invoice_status.name', sType: "string", 
-                        className: "dt-body-center", "name": "invoice_status.name",				
+                    {
+                        mData: 'invoice_status.name', sType: "string",
+                        className: "dt-body-center", "name": "invoice_status.name",
                     },
                 ]
             });

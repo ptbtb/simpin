@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ListInvoiceExport;
 use App\Models\Company;
 use App\Models\Invoice;
 use App\Models\InvoiceStatus;
 use App\Models\InvoiceType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class InvoiceController extends Controller
@@ -83,4 +86,47 @@ class InvoiceController extends Controller
         return view('invoice.detail', $data);
     }
 
+    public function downloadExcel(Request $request)
+    {
+        try
+        {
+            $user = Auth::user();
+            $invoices = Invoice::with('anggota.company', 'invoiceStatus', 'invoiceType');
+
+            if ($request->invoice_status_id)
+            {
+                $invoices = $invoices->where('invoice_status_id', $request->invoice_status_id);
+            }
+
+            if ($request->invoice_type_id)
+            {
+                $invoices = $invoices->where('invoice_type_id', $request->invoice_type_id);
+            }
+
+            if ($request->company_id)
+            {
+                $invoices = $invoices->whereHas('anggota', function ($query) use ($request)
+                {
+                    return $query->where('company_id', $request->company_id);
+                });
+            }
+
+            if($user->isAnggota())
+            {
+                $invoices = $invoices->where('kode_anggota', $user->anggota->kode_anggota);
+            }
+
+            $invoices = $invoices->orderBy('date', 'desc')
+                                ->get();
+            $data['invoices'] = $invoices;
+            $name = 'list-invoice-'.Carbon::now()->toDateTimeString().'.xlsx';
+            return Excel::download(new ListInvoiceExport($data), $name);
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            Log::error($message);
+            return redirect()->back()->withErrors($message);
+        }
+    }
 }

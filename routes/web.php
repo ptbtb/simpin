@@ -345,6 +345,7 @@ Route::group(['prefix' => 'invoice'], function() {
         Route::get('', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice-list');
         Route::post('', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice-list');
         Route::get('data', [App\Http\Controllers\InvoiceController::class, 'indexAjax'])->name('invoice-list-ajax');
+        Route::get('download-excel', [App\Http\Controllers\InvoiceController::class, 'downloadExcel'])->name('invoice-list-download-excel');
         Route::get('{id}', [App\Http\Controllers\InvoiceController::class, 'show'])->where('id', '[0-9]+')->name('invoice-detail');
     });
 });
