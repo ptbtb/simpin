@@ -433,6 +433,7 @@ Route::get('list-shu/{id}/download-card', [SHUController::class, 'downloadCard']
 Route::get('transferred-shu', [TransferredSHUController::class, 'index'])->middleware('auth')->name('transferred-shu.index');
 Route::get('transferred-shu/import-excel', [TransferredSHUController::class, 'import'])->middleware('auth')->name('transferred-shu.import');
 Route::post('transferred-shu/import-excel', [TransferredSHUController::class, 'storeImport'])->middleware('auth')->name('transferred-shu.storeImport');
+Route::get('transferred-shu/export-excel', [TransferredSHUController::class, 'exportExcel'])->middleware('auth')->name('transferred-shu.exportExcel');
 
 Route::Group(['prefix' => 'pendapatan', 'middleware' => 'auth'], function ()
 {

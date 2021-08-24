@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransferredSHUExport;
 use App\Imports\TransferredSHUImport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +40,24 @@ class TransferredSHUController extends Controller
         catch (\Throwable $e)
         {
             return redirect()->back()->withError('Gagal import data');
+        }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try
+        {
+            $query = "SELECT a.kode_anggota, b.nama_anggota, a.amount FROM shu_transferred a INNER JOIN t_anggota b ON a.kode_anggota = b.kode_anggota
+            ";
+            $items = DB::select($query);
+            $data['items'] = $items;
+            $name = 'List SHU Ditransfer '.Carbon::now()->toDateTimeString().'.xlsx';
+            return Excel::download(new TransferredSHUExport($data), $name);
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            return redirect()->back()->withErrors($message);
         }
     }
 }
