@@ -370,6 +370,9 @@ Route::group(['prefix' => 'jurnal-umum'], function() {
         Route::get('/edit/{id}', [App\Http\Controllers\JurnalUmumController::class, 'edit'])->where('id', '[0-9]+')->name('jurnal-umum-edit');
         Route::post('/edit/{id}', [App\Http\Controllers\JurnalUmumController::class, 'update'])->where('id', '[0-9]+')->name('jurnal-umum-edit');
         Route::get('/detail/{id}', [App\Http\Controllers\JurnalUmumController::class, 'show'])->name('jurnal-umum-detail');
+        Route::post('update-status', [App\Http\Controllers\JurnalUmumController::class, 'updateStatusJurnalumum'])->name('jurnal-umum-update-status');
+        Route::get('print-jkk', [App\Http\Controllers\JurnalUmumController::class, 'indexJkk'])->name('jurnal-umum-index-jkk');
+        Route::post('print-jkk', [App\Http\Controllers\JurnalUmumController::class, 'printJkk'])->name('jurnal-umum-print-jkk');
     });
 });
 

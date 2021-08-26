@@ -33,7 +33,7 @@ class JurnalUmumController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy', 'statusJurnalUmum');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
 
         $data['title'] = "List Jurnal Umum";
@@ -46,9 +46,9 @@ class JurnalUmumController extends Controller
     public function indexAjax(Request $request)
     {
         $this->authorize('view jurnal umum', Auth::user());
-        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy');
+        $listJurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans','createdBy','updatedBy', 'statusJurnalUmum');
         $listJurnalUmum = $listJurnalUmum->orderBy('created_at','desc');
-        return DataTables::eloquent($listJurnalUmum)->make(true);
+        return DataTables::eloquent($listJurnalUmum)->addIndexColumn()->make(true);
     }
 
     /**
@@ -112,6 +112,10 @@ class JurnalUmumController extends Controller
             $jurnalUmum->save();
             
             // loop every item
+            // total
+            $totalDebet = 0;
+            $totalCredit = 0;
+
             // debet
             for ($i=0; $i < count($request->code_debet_id) ; $i++) 
             { 
@@ -123,6 +127,8 @@ class JurnalUmumController extends Controller
                 $jurnalUmumItem->nominal = $nominal;
                 $jurnalUmumItem->normal_balance_id = NORMAL_BALANCE_DEBET;
                 $jurnalUmumItem->save();
+
+                $totalDebet += $nominal;
             }
             // credit
             for ($i=0; $i < count($request->code_credit_id) ; $i++) 
@@ -135,6 +141,8 @@ class JurnalUmumController extends Controller
                 $jurnalUmumItem->nominal = $nominal;
                 $jurnalUmumItem->normal_balance_id = NORMAL_BALANCE_KREDIT;
                 $jurnalUmumItem->save();
+
+                $totalCredit += $nominal;
             }
 
             // loop every lampiran
@@ -168,16 +176,30 @@ class JurnalUmumController extends Controller
                 $jurnalUmumLampiran->save();
             }
             
-            // call function for create Jurnal
-            if($jurnalUmum)
+            if( $totalDebet > 10000000 || $totalCredit > 10000000)
             {
-                JurnalManager::createJurnalUmum($jurnalUmum);
+                // add status
+                $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_MENUNGGU_KONFIRMASI;
+                $jurnalUmum->save();
+            }
+            else
+            {
+                // add status
+                $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_DITERIMA;
+                $jurnalUmum->save();
+
+                // call function for create Jurnal
+                if($jurnalUmum)
+                {
+                    JurnalManager::createJurnalUmum($jurnalUmum);
+                }
             }
 
             return redirect()->route('jurnal-umum-list')->withSuccess('Berhasil menambah transaksi');
         }
         catch (\Throwable $th)
         {
+            dd($th);
             \Log::error($th);
             return redirect()->back()->withError('Gagal menyimpan data');
         }
@@ -426,6 +448,62 @@ class JurnalUmumController extends Controller
         }
     }
 
+    public function updateStatusJurnalUmum(Request $request) {
+        try {
+            $user = Auth::user();
+            $check = Hash::check($request->password, $user->password);
+            if (!$check) {
+                Log::error('Wrong Password');
+                return response()->json(['message' => 'Wrong Password'], 412);
+            }
+
+            // get kode ambil's data when got from check boxes
+            if (isset($request->ids))
+            {
+                $ids = json_decode($request->ids);
+            }
+
+            foreach ($ids as $key => $id)
+            {
+                $jurnalUmum = JurnalUmum::where('id', $id)->first();
+
+                // check jurnalUmum's status must same as old_status
+                if($jurnalUmum && $jurnalUmum->status_jurnal_umum_id == $request->old_status)
+                {
+
+                    if ($request->status == STATUS_JURNAL_UMUM_DIBATALKAN) 
+                    {
+                        $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_DIBATALKAN;
+                        $jurnalUmum->save();
+                        return response()->json(['message' => 'success'], 200);
+                    }
+
+                    $this->authorize('approve pengajuan pinjaman', $user);
+                    if (is_null($jurnalUmum)) 
+                    {
+                        return response()->json(['message' => 'not found'], 404);
+                    }
+
+                    $jurnalUmum->status_jurnal_umum_id = $request->status;
+                    $jurnalUmum->tgl_acc = Carbon::now();
+                    $jurnalUmum->approved_by = $user->id;
+                    $jurnalUmum->save();
+
+                    if ($request->status == STATUS_JURNAL_UMUM_DITERIMA) 
+                    {
+                        JurnalManager::createJurnalUmum($jurnalUmum);
+                    }
+                }
+            }
+
+            return response()->json(['message' => 'success'], 200);
+        } catch (\Exception $e) {
+            \Log::error($e);
+            $message = $e->getMessage();
+            return response()->json(['message' => $message], 500);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -435,5 +513,92 @@ class JurnalUmumController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function indexJkk()
+    {
+        try
+        {
+            $listJurnalUmum = JurnalUmum::needPrintJkk()
+                                        ->get();
+
+            $data['title'] = "Print JKK";
+            $data['listJurnalUmum'] = $listJurnalUmum;
+            return view('jurnal_umum.indexPrintJKK',$data);
+        }
+        catch (\Throwable $e)
+        {
+            Log::error($e);
+            return redirect()->back()->withError('Terjadi Kesalahan');
+        }
+    }
+
+    public function printJkk(Request $request)
+    {
+        try
+        {
+            $jurnalUmum = JurnalUmum::where('id', $request->kode_jurnal_umum)
+                                        ->first();
+
+            $jurnalUmum->status_jkk = 1;
+            $jurnalUmum->save();
+            
+            
+            $data['jurnalUmum'] = $jurnalUmum;
+            $data['tgl_print']= Carbon::now()->format('d-m-Y');
+            $data['terbilang'] = self::terbilang($jurnalUmum->total_nominal_debet) . ' rupiah';
+
+            view()->share('data',$data);
+            PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
+            $pdf = PDF::loadView('jurnal_umum.printJKK', $data)->setPaper('a4', 'portrait');
+
+            // download PDF file with download method
+            $filename = $jurnalUmum->serial_number_view.'-'.$data['tgl_print'].'.pdf';
+            return $pdf->download($filename);
+
+            return view('jurnal_umum.printJKK', $data);
+        }
+        catch (\Throwable $e)
+        {
+            \Log::error($e);
+            return redirect()->back()->withError('Terjadi Kesalahan');
+        }
+    }
+
+    static function penyebut($nilai) {
+        $nilai = abs($nilai);
+        $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($nilai < 12) {
+            $temp = " " . $huruf[$nilai];
+        } else if ($nilai < 20) {
+            $temp = self::penyebut($nilai - 10) . " belas";
+        } else if ($nilai < 100) {
+            $temp = self::penyebut($nilai / 10) . " puluh" . self::penyebut($nilai % 10);
+        } else if ($nilai < 200) {
+            $temp = " seratus" . self::penyebut($nilai - 100);
+        } else if ($nilai < 1000) {
+            $temp = self::penyebut($nilai / 100) . " ratus" . self::penyebut($nilai % 100);
+        } else if ($nilai < 2000) {
+            $temp = " seribu" . self::penyebut($nilai - 1000);
+        } else if ($nilai < 1000000) {
+            $temp = self::penyebut($nilai / 1000) . " ribu" . self::penyebut($nilai % 1000);
+        } else if ($nilai < 1000000000) {
+            $temp = self::penyebut($nilai / 1000000) . " juta" . self::penyebut($nilai % 1000000);
+        } else if ($nilai < 1000000000000) {
+            $temp = self::penyebut($nilai / 1000000000) . " milyar" . self::penyebut(fmod($nilai, 1000000000));
+        } else if ($nilai < 1000000000000000) {
+            $temp = self::penyebut($nilai / 1000000000000) . " trilyun" . self::penyebut(fmod($nilai, 1000000000000));
+        }
+        return $temp;
+    }
+
+    static function terbilang($nilai) {
+        if ($nilai < 0) {
+            $hasil = "minus " . trim(self::penyebut($nilai));
+        } else {
+            $hasil = trim(self::penyebut($nilai));
+        }
+        return $hasil;
     }
 }

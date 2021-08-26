@@ -43,9 +43,31 @@ class JurnalUmum extends Model
         return $this->morphMany(Jurnal::class, 'jurnalable');
     }
 
+    public function statusJurnalUmum()
+    {
+        return $this->belongsto(StatusJurnalUmum::class);
+    }
+
+    public function diterima()
+    {
+        return $this->jurnal_umum_status_id == STATUS_JURNAL_UMUM_DITERIMA;
+    }
+
+    public function scopeNeedPrintJkk($query)
+    {
+        return $query->where('status_jkk', 0);
+    }
+
     public function getViewTglTransaksiAttribute()
     {
         return $this->tgl_transaksi->format('d F Y');
+    }
+
+    public function getTotalNominalDebetAttribute()
+    {
+        $totalDebet = $this->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET)->sum('nominal');
+        
+        return $totalDebet;
     }
 
     public function getTotalNominalDebetRupiahAttribute()
