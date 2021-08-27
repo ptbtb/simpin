@@ -112,6 +112,7 @@ class AnggotaController extends Controller {
             DB::transaction(function () use ($request)
             {
                 $companyId = Company::find($request->company);
+
                 $jenisAnggotaId = JenisAnggota::find($request->jenis_anggota);
                 $kelasCompanyId = KelasCompany::find($request->kelas_company);
                 $anggota = Anggota::create([
@@ -119,7 +120,7 @@ class AnggotaController extends Controller {
                     // 'kode_tabungan' =>  $request->kode_anggota,
                     'company_id' => $companyId->id,
                     'id_jenis_anggota' => $jenisAnggotaId->id_jenis_anggota,
-                    'kelas_company_id' => $kelasCompanyId->id,
+                    'kelas_company_id' => ($kelasCompanyId)?$kelasCompanyId->id:null,
                     'tgl_masuk' => $request->tgl_masuk,
                     'nama_anggota' => $request->nama_anggota,
                     'jenis_kelamin' => $request->jenis_kelamin,
