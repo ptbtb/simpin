@@ -136,8 +136,10 @@
 									<div class="col-md-6 form-group">
 										<label>{{ $jenisPenghasilan->name }}</label>
 										<input type="text" id="penghasilanTertentu{{ $jenisPenghasilan->id }}" name="penghasilan[{{ $jenisPenghasilan->id }}]" class="form-control toRupiah" placeholder="{{ $jenisPenghasilan->name }}"
+										@if($listPenghasilan)
 										@if (!empty($listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()))
 											value="{{ $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->value }}"
+										@endif
 										@endif
 										
 										onkeypress="return isNumberKey(event)">
@@ -146,8 +148,11 @@
 										<label>Dokumen {{ $jenisPenghasilan->name }}</label>
 										<div class="custom-file">
 										<input type="file" class="custom-file-input"  id="file_penghasilanTertentu{{ $jenisPenghasilan->id }}" name="file_penghasilan[{{ $jenisPenghasilan->id }}]"  accept="application/pdf" style="cursor: pointer">
+											@if($listPenghasilan)
 											@if (!empty($listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()))
 												<label class="custom-file-label" for="customFile">{{ $listPenghasilan->where('id_jenis_penghasilan', $jenisPenghasilan->id)->first()->file_path }}</label>
+											
+											@endif
 											@else
 												<label class="custom-file-label" for="customFile">Choose Document</label>
 											@endif
