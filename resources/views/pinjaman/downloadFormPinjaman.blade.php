@@ -54,9 +54,10 @@
                 <div class="col-md-6 form-group">
                     <label>Sumber Dana</label>
                     <select name="sumber_dana" class="form-control" required id="sumberDana">
-                        @foreach ($sumberDana as $sumber)
+                        <option value="">Pilih Satu</option>
+                        {{-- @foreach ($sumberDana as $sumber)
                             <option value="{!! $sumber->id !!}">{{ $sumber->name }}</option>
-                        @endforeach
+                        @endforeach --}}
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
@@ -103,15 +104,25 @@
     <script src="{{ asset('js/collect.min.js') }}"></script>
     <script>
         var jenisPinjaman = collect({!!$listJenisPinjaman!!});
+        var sumberDana = collect(@json($sumberDana));
+        var group_id = null;
+        var arrAnggota = collect([]);
 
         $(document).ready(function ()
         {
             @if (!\Auth::user()->isAnggota())
                 initiateSelect2();
+            @else
+                group_id = {{ \Auth::user()->anggota->company->company_group_id }};
+                var collection = sumberDana.filter(function (jenis)
+                {
+                    return jenis.company_group_id == group_id;
+                });
+                updateSumberDana(collection);
             @endif
             initialEvent();
         });
-        
+
        function initialEvent()
        {
             $('#jenisPinjaman').on('change', function ()
@@ -175,6 +186,18 @@
                     kode_anggota = $(this).find(":selected").val();
                 }
                 updateInfo(selectedId, kode_anggota);
+
+                // update sumber dana
+                var group_id = arrAnggota.where('id', kode_anggota).first().company_group_id;
+                var collection = sumberDana.filter(function (jenis)
+                {
+                    return jenis.company_group_id == group_id;
+                });
+                console.log(group_id);
+                console.log(collection);
+                console.log(sumberDana);
+
+                updateSumberDana(collection);
             });
        }
 
@@ -193,6 +216,7 @@
                         return query;
                     },
                     processResults: function (data) {
+                        arrAnggota = collect(data);
                         return {
                             results: data
                         };
@@ -252,6 +276,16 @@
                 }
             }
             return res;
+        }
+
+        function updateSumberDana(collection)
+        {
+            var option = '<option value="">Pilih Satu</option>';
+            collection.each(function (jenis)
+            {
+                option = option + '<option value="'+jenis.id+'">'+jenis.name+'</option>'
+            });
+            $('#sumberDana').html(option);
         }
     </script>
 @endsection

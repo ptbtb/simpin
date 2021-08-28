@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\JenisPenghasilan;
 use Closure;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -26,10 +27,14 @@ class PinjamanMiddleware
             $data = [];
             if ($listPenghasilan)
             {
+                $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
+                                                    ->where('rule_name', 'gaji_bulanan')
+                                                    ->first();
+
                 $data = [
                     'kelas_company_id' => $anggota->kelas_company_id,
-                    'gaji_bulanan' => ($listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first())? $listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->value:null,
-                    'slip_gaji' => ($listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first())? $listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->file_path:null,
+                    'gaji_bulanan' => ($listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first())? $listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first()->value:null,
+                    'slip_gaji' => ($listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first())? $listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first()->file_path:null,
                     'foto_ktp' => $anggota->foto_ktp
                 ];
             }

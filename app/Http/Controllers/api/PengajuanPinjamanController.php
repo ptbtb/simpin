@@ -6,6 +6,7 @@ use App\Events\Pinjaman\PengajuanCreated;
 use App\Http\Controllers\Controller;
 use App\Managers\PengajuanManager;
 use App\Models\Anggota;
+use App\Models\JenisPenghasilan;
 use App\Models\JenisPinjaman;
 use App\Models\Pengajuan;
 use App\Models\Penghasilan;
@@ -115,7 +116,7 @@ class PengajuanPinjamanController extends Controller
                                 ->where('kode_anggota', $anggota->kode_anggota)
                                 ->where('kode_pengajuan', $kode_pengajuan)
                                 ->first();
-            
+
             if(is_null($pengajuan))
             {
                 $response = [
@@ -202,7 +203,7 @@ class PengajuanPinjamanController extends Controller
 
             //  chek pengajuan yang belum accepted
             $jenisPinjaman = JenisPinjaman::find($request->id_jenis_pinjaman);
-            
+
             $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
             $besarPinjaman = filter_var($request->besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
             $maksimalBesarPinjaman = filter_var($request->max_pinjaman, FILTER_SANITIZE_NUMBER_INT);
@@ -284,6 +285,9 @@ class PengajuanPinjamanController extends Controller
 
             $pdfPath = public_path('pdftemp/'). $filename;
             $pdf->save($pdfPath);
+            $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
+                                                ->where('rule_name', 'gaji_bulanan')
+                                                ->first();
 
             $data = [
                 'anggota' => [
@@ -302,7 +306,7 @@ class PengajuanPinjamanController extends Controller
                         'id' => $anggota->jenisAnggota->id_jenis_anggota,
                         'nama' => $anggota->jenisAnggota->nama_jenis_anggota
                     ],
-                    'gaji' => $anggota->listPenghasilan->where('id_jenis_penghasilan',JENIS_PENGHASILAN_GAJI_BULANAN)->first()->value,
+                    'gaji' => $anggota->listPenghasilan->where('id_jenis_penghasilan',$jenisPenghasilan->id)->first()->value,
                 ],
                 'jenis_pinjaman' => [
                     'kode' => $jenisPinjaman->kode_jenis_pinjam,
@@ -410,7 +414,7 @@ class PengajuanPinjamanController extends Controller
                 return response()->json($response, 412);
             }
 
-            
+
             // check pinjaman yang belum lunas
             $checkPinjaman = Pinjaman::whereraw("SUBSTRING(kode_jenis_pinjam,1,6)=" . substr($jenisPinjaman->kode_jenis_pinjam, 0, 6) . " ")
                                     ->notPaid()
@@ -436,8 +440,12 @@ class PengajuanPinjamanController extends Controller
             }
 
             //check gaji
+            $anggota = Anggota::find($anggota->kode_anggota);
+            $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
+                                                ->where('rule_name', 'gaji_bulanan')
+                                                ->first();
             $gaji = Penghasilan::where('kode_anggota', $anggota->kode_anggota)
-                            ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
+                            ->where('id_jenis_penghasilan', $jenisPenghasilan->id)
                             ->first();
 
             if (is_null($gaji))
@@ -451,7 +459,7 @@ class PengajuanPinjamanController extends Controller
             $gaji = $gaji->value;
             $potonganGaji = 0.65 * $gaji;
             $angsuranPerbulan = $besarPinjaman / $request->lama_angsuran;
-            
+
             if ($angsuranPerbulan > $potonganGaji)
             {
                 $response = [

@@ -339,18 +339,18 @@ class PinjamanController extends Controller {
         $user = Auth::user();
         $this->authorize('add pengajuan pinjaman', $user);
         $listPinjaman = null;
+        $data['sumberDana'] = JenisPenghasilan::orderBy('sequence', 'asc')->get();
         if ($user->isAnggota())
         {
             $listPinjaman = Pinjaman::japan()
-            ->where('kode_anggota', $user->anggota->kode_anggota)
-            ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
-            ->get();
+                                    ->where('kode_anggota', $user->anggota->kode_anggota)
+                                    ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                                    ->get();
         }
 
         $data['title'] = 'Buat Pengajuan Pinjaman';
         $data['listJenisPinjaman'] = JenisPinjaman::all();
         $data['listPinjaman'] = $listPinjaman;
-        $data['sumberDana'] = JenisPenghasilan::orderBy('sequence', 'asc')->get();
         return view('pinjaman.createPengajuanPinjaman', $data);
     }
 
@@ -403,9 +403,13 @@ class PinjamanController extends Controller {
         }
 
         //check gaji
+        $anggota = Anggota::find($request->kode_anggota);
+        $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
+                                            ->where('rule_name', 'gaji_bulanan')
+                                            ->first();
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
-        ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
-        ->first();
+                            ->where('id_jenis_penghasilan', $jenisPenghasilan->id)
+                            ->first();
 
         if (is_null($gaji))
         {
@@ -598,6 +602,12 @@ class PinjamanController extends Controller {
             return 0;
         }
 
+        $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+        if (is_null($saldo))
+        {
+            return 0;
+        }
+
         if ($jenisPinjaman->isJangkaPanjang()) {
             if ($anggota->isPensiunan()) {
                 $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
@@ -659,9 +669,13 @@ class PinjamanController extends Controller {
         }
 
         //check gaji
+        $anggota = Anggota::find($request->kode_anggota);
+        $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
+                                            ->where('rule_name', 'gaji_bulanan')
+                                            ->first();
         $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
-        ->where('id_jenis_penghasilan', JENIS_PENGHASILAN_GAJI_BULANAN)
-        ->first();
+                            ->where('id_jenis_penghasilan', $jenisPenghasilan->id)
+                            ->first();
 
         if (is_null($gaji)) {
             return redirect()->back()->withError($anggota->nama_anggota . ' tidak memiliki gaji bulanan');
@@ -1262,7 +1276,7 @@ class PinjamanController extends Controller {
         // period
         // check if period date has been selected
         if(!$request->period)
-        {          
+        {
             $request->period = Carbon::today()->format('Y');
         }
 

@@ -244,10 +244,17 @@ class UserController extends Controller
     public function profile()
     {
 		$user = Auth::user();
+		$anggota = Anggota::with('company')->find($user->kode_anggota);
+        $company = $anggota->company;
+        $groupId = null;
+        if ($company->company_group_id)
+        {
+            $groupId = $company->company_group_id;
+        }
 		$listJenisPenghasilan = JenisPenghasilan::show()
+                                                ->where('company_group_id', $groupId)
 												->orderBy('sequence','asc')
 												->get();
-		$anggota = Anggota::with('company')->find($user->kode_anggota);
 
 		$data['listPenghasilan'] = null;
 

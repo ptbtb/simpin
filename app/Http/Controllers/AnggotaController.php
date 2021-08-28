@@ -70,8 +70,15 @@ class AnggotaController extends Controller {
         $this->authorize('edit anggota', Auth::user());
         $anggota = Anggota::find($id);
         $data['bank'] = Bank::pluck('nama','id');
+        $company = $anggota->company;
+        $groupId = null;
+        if ($company->company_group_id)
+        {
+            $groupId = $company->company_group_id;
+        }
 
         $listJenisPenghasilan = JenisPenghasilan::show()
+                                                ->where('company_group_id', $groupId)
 												->orderBy('sequence','asc')
                                                 ->get();
 
@@ -298,14 +305,14 @@ class AnggotaController extends Controller {
     {
         $search = $request->search;
         if($search == ''){
-            $anggotas = Anggota::orderby('nama_anggota','asc')
-                                ->select('kode_anggota','nama_anggota')
+            $anggotas = Anggota::with('company')
+                                ->orderby('nama_anggota','asc')
                                 ->limit(5)
                                 ->where('status','aktif')
                                 ->get();
         }else{
-            $anggotas = Anggota::orderby('nama_anggota','asc')
-                                ->select('kode_anggota','nama_anggota')
+            $anggotas = Anggota::with('company')
+                                ->orderby('nama_anggota','asc')
                                 ->where('status','aktif')
                                 ->where('kode_anggota', $search)
                                 ->orWhere('nama_anggota', 'like', '%'.$search.'%')
@@ -316,9 +323,16 @@ class AnggotaController extends Controller {
         }
         $response = $anggotas->map(function ($anggota)
         {
+            $company = $anggota->company;
+            $group_id = null;
+            if ($company)
+            {
+                $group_id = $company->company_group_id;
+            }
             return [
                 'id' => $anggota->kode_anggota,
-                'text' => $anggota->nama_anggota
+                'text' => $anggota->nama_anggota,
+                'company_group_id' => $group_id
             ];
         });
 

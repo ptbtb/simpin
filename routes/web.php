@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\Api\JenisPenghasilanController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
@@ -459,9 +460,18 @@ Route::Group(['prefix' => 'bank', 'middleware' => 'auth'], function (){
     Route::post('delete/{id}', [App\Http\Controllers\BankController::class,  'destroy'])->name('bank.delete');
 });
 
+// company route
 Route::group(['prefix' => 'company', 'middleware' => 'auth'], function ()
 {
     Route::get('', [CompanyController::class, 'index'])->name('company.index');
     Route::get('{id}/edit', [CompanyController::class, 'edit'])->name('company.edit');
     Route::put('{id}/edit', [CompanyController::class, 'update'])->name('company.update');
+});
+
+// jenis penghasilan route
+Route::group(['prefix' => 'jenis-penghasilan', 'middleware' => 'auth'], function ()
+{
+    Route::get('create', [App\Http\Controllers\JenisPenghasilanController::class, 'create'])->name('jenis.penghasilan.create');
+    Route::post('create', [App\Http\Controllers\JenisPenghasilanController::class, 'create'])->name('jenis.penghasilan.create');
+    Route::post('store', [App\Http\Controllers\JenisPenghasilanController::class, 'store'])->name('jenis.penghasilan.store');
 });
