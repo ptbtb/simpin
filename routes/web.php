@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\SHUController;
@@ -456,4 +457,11 @@ Route::Group(['prefix' => 'bank', 'middleware' => 'auth'], function (){
     Route::get('edit/{id}', [App\Http\Controllers\BankController::class,  'edit'])->name('bank.edit');
     Route::post('edit/{id}', [App\Http\Controllers\BankController::class,  'update'])->name('bank.edit');
     Route::post('delete/{id}', [App\Http\Controllers\BankController::class,  'destroy'])->name('bank.delete');
+});
+
+Route::group(['prefix' => 'company', 'middleware' => 'auth'], function ()
+{
+    Route::get('', [CompanyController::class, 'index'])->name('company.index');
+    Route::get('{id}/edit', [CompanyController::class, 'edit'])->name('company.edit');
+    Route::put('{id}/edit', [CompanyController::class, 'update'])->name('company.update');
 });

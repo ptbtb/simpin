@@ -254,6 +254,12 @@ return [
             'can'  => ['view kode transaksi', 'view jenis simpanan', 'view jenis anggota'],
             'submenu' => [
                 [
+                    'text' => 'Company',
+                    'url' => '/company',
+                    'icon' => 'fa fa-building nav-icon',
+                    'can'  => ['view company'],
+                ],
+                [
                     'text' => 'Kode Transaksi',
                     'url' => '/setting/codetrans',
                     'icon' => 'fa fa-superscript nav-icon',
