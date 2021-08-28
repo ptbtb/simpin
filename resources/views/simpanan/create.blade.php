@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-md-6 form-group" id="periodeDetail">
                     <label for="besarSimpanan">Periode</label>
-                    <input type="text" name="periode" id="periode" class="form-control" placeholder="Periode" autocomplete="off" required>
+                    <input type="text" name="periode" id="periode" class="form-control" placeholder="Periode" autocomplete="off">
                 </div>
                 <div class="col-md-12" id="angsuranSimpanan">
                     <label for="besarSimpanan">Detail Informasi</label>
