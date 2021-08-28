@@ -48,6 +48,7 @@ class TransaksiUserImport
 					$simpanan->periode = $periode;
 					$simpanan->tgl_mulai = null;
 					$simpanan->tgl_entri = Carbon::now()->format('Y-m-d');
+					$simpanan->tgl_transaksi = Carbon::now()->format('Y-m-d');
 					$simpanan->kode_jenis_simpan ='411.12.000';
 					$simpanan->keterangan = $nama_simpanan->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
 					$simpanan->mutasi = 0;
@@ -71,6 +72,7 @@ class TransaksiUserImport
 					$simpanan->periode = $periode;
 					$simpanan->tgl_mulai = null;
 					$simpanan->tgl_entri = Carbon::now()->format('Y-m-d');
+					$simpanan->tgl_transaksi = Carbon::now()->format('Y-m-d');
 					$simpanan->kode_jenis_simpan ='502.01.000';
 					$simpanan->keterangan = $nama_simpanan2->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
 					$simpanan->mutasi = 0;
