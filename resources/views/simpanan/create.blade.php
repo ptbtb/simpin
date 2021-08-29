@@ -48,6 +48,7 @@
                 <div class="col-md-6 form-group">
                     <label for="jenisSimpanan">Jenis Simpanan</label>
                     <select name="jenis_simpanan" id="jenisSimpanan" class="form-control" disabled=true required>
+                        <option value="">Pilih Satu</option>
                         @foreach ($listJenisSimpanan as $jenisSimpanan)
                             <option value="{{ $jenisSimpanan->kode_jenis_simpan }}">{{ strtoupper($jenisSimpanan->nama_simpanan) }}</option>
                         @endforeach
@@ -228,16 +229,25 @@
                 'anggotaId' : anggotaId
             },
             success: function (response) {
-                if (!response.hasOwnProperty('kelas')){
-                    if (response.id_jenis_anggota==3){
+                if (response.kelas == null)
+                {
+                    if (response.id_jenis_anggota=={{ JENIS_ANGGOTA_PENSIUNAN }})
+                    {
+                        console.log('a');
                          $('#jenisSimpanan').prop('disabled', false);
-                    }else{
+                        errMessage('warningTextAnggota', '');
+                    }
+                    else
+                    {
+                        console.log('c')
                         $('#jenisSimpanan').prop('disabled', true);
                         errMessage('warningTextAnggota', 'Mohon Diisi dahulu Unit dan Kelas Unit ');
                     }
 
                 }
-                else {
+                else
+                {
+                    console.log('b');
                     $('#jenisSimpanan').prop('disabled', false);
                     clearErrMessage('warningTextAnggota');
                 }

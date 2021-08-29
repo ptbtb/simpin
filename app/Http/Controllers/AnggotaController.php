@@ -347,17 +347,29 @@ class AnggotaController extends Controller {
     public function getDetail(Request $request){
         $anggotaId = $request->anggotaId;
 
-        $anggotacheck = DB::table('t_anggota')
-                //->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
-                //->join('t_kelas_company', 't_anggota.kelas_company_id', 't_kelas_company.id')
-                //->select('t_anggota.kode_anggota', 't_anggota.nama_anggota', 't_penghasilan.value as gaji_bulanan', 't_kelas_company.nama', 't_kelas_company.id')
-                ->where('t_anggota.kode_anggota', '=', $anggotaId)
-                //->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
-                ->first();
-        if ($anggotacheck->id_jenis_anggota==3){
+        $anggotacheck = Anggota::with('kelasCompany')
+                                ->find($anggotaId);
+        // reutrn 404 when anggota not found
+        if (is_null($anggotacheck))
+        {
+            return response()->json(['Anggota not found'], 404);
+        }
+
+        // return 200 if anggota is pensinan
+        if ($anggotacheck->isPensiunan())
+        {
             return response()->json($anggotacheck, 200);
         }
-        $anggota = DB::table('t_anggota')
+
+        // dd($anggotacheck);
+        $anggota = collect([
+            'kode_anggota' => $anggotacheck->kode_anggota,
+            'nama_anggota' => $anggotacheck->nama_anggota,
+            'kelas' => ($anggotacheck->kelasCompany)? $anggotacheck->kelasCompany->nama:null,
+            't_kelas_company_id.id' =>($anggotacheck->kelasCompany)? $anggotacheck->kelasCompany->nama:null
+        ]);
+
+        /*$anggota = DB::table('t_anggota')
             // ->join('t_penghasilan', 't_anggota.kode_anggota', 't_penghasilan.kode_anggota')
             ->join('t_kelas_company', 't_anggota.kelas_company_id', 't_kelas_company.id')
             ->select('t_anggota.kode_anggota', 't_anggota.nama_anggota',
@@ -365,7 +377,8 @@ class AnggotaController extends Controller {
                  't_kelas_company.nama as kelas', 't_kelas_company.id')
             ->where('t_anggota.kode_anggota', '=', $anggotaId)
             // ->where('t_penghasilan.id_jenis_penghasilan', '=', 4)
-            ->first();
+            ->first();*/
+
         return response()->json($anggota, 200);
     }
 
