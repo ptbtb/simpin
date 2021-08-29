@@ -29,7 +29,7 @@
             @csrf
             <div class="row">
                 @if ($request->kode_anggota)
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-12 form-group">
                         <label for="kodeAnggota">Kode Anggota</label>
                         <select name="kode_anggota" id="kodeAnggota" class="form-control" required>
                             <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
@@ -37,7 +37,7 @@
                         <div class="text-danger" id="warningTextAnggota"></div>
                     </div>
                 @else
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-12 form-group">
                         <label for="kodeAnggota">Anggota</label>
                         <select name="kode_anggota" id="kodeAnggota" class="form-control" required>
                             <option value="">Pilih salah satu</option>
@@ -45,49 +45,57 @@
                         <div class="text-danger" id="warningTextAnggota"></div>
                     </div>
                 @endif
-                <div class="col-md-6 form-group">
-                    <label for="jenisSimpanan">Jenis Simpanan</label>
-                    <select name="jenis_simpanan" id="jenisSimpanan" class="form-control" disabled=true required>
-                        <option value="">Pilih Satu</option>
-                        @foreach ($listJenisSimpanan as $jenisSimpanan)
-                            <option value="{{ $jenisSimpanan->kode_jenis_simpan }}">{{ strtoupper($jenisSimpanan->nama_simpanan) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-6 form-group" id="besaSimpananDetail">
-                    <label for="besarSimpanan">Besar Simpanan</label>
-                    <input type="text" name="besar_simpanan" id="besarSimpanan" onkeypress="return isNumberKey(event)"  class="form-control" placeholder="Besar Simpanan" autocomplete="off" required disabled >
-                    <div class="text-danger" id="warningText"></div>
-                </div>
-                <div class="col-md-6 form-group" id="periodeDetail">
-                    <label for="besarSimpanan">Periode</label>
-                    <input type="text" name="periode" id="periode" class="form-control" placeholder="Periode" autocomplete="off">
-                </div>
-                <div class="col-md-12" id="angsuranSimpanan">
-                    <label for="besarSimpanan">Detail Informasi</label>
-                    <div class="row col-md-6 mb-3" id="detailAngsuran">
+                <div class="col-12" id="multipleForm">
+                    <div class="row childForm" id="form1" data-id="1">
+                        <div class="col-md-6 form-group">
+                            <label>Jenis Simpanan</label>
+                            <select name="jenis_simpanan[]" data-form="1" class="form-control jenisSimpanan" disabled=true required>
+                                <option value="">Pilih Satu</option>
+                                @foreach ($listJenisSimpanan as $jenisSimpanan)
+                                    <option value="{{ $jenisSimpanan->kode_jenis_simpan }}">{{ strtoupper($jenisSimpanan->nama_simpanan) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group" id="besaSimpananDetail1">
+                            <label>Besar Simpanan</label>
+                            <input type="text" name="besar_simpanan[]" data-form="1" onkeypress="return isNumberKey(event)"  class="form-control besarSimpanan" placeholder="Besar Simpanan" autocomplete="off" required disabled>
+                            <div class="text-danger" id="warningText1"></div>
+                        </div>
+                        <div class="col-md-12 form-group" id="periodeDetail1">
+                            <label for="periode">Periode</label>
+                            <input type="text" name="periode[]" class="form-control periode" placeholder="Periode" autocomplete="off">
+                        </div>
+                        <div class="col-md-12" id="angsuranSimpanan1">
+                            <label>Detail Informasi</label>
+                            <div class="row col-md-6 mb-3" id="detailAngsuran1">
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Jenis Akun</label>
+                            <select name="jenis_akun[]" data-form="1" class="form-control select2 jenisAkun" required>
+                                <option value="1">KAS</option>
+                                <option value="2" selected>BANK</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Akun</label>
+                            <select name="id_akun_debet[]" class="form-control select2 code" required>
+                                <option value="" selected disabled>Pilih Akun</option>
+                            </select>
+                        </div>
+                        <div class="col-12 form-group">
+                            <label>Tgl Transaksi</label>
+                            <input type="text" name="tgl_transaksi[]" class="form-control datepicker" autocomplete="off" required>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="keterangan">Keterangan</label>
+                            <textarea name="keterangan[]" rows="5" class="form-control keterangan"></textarea>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6 form-group">
-                    <label>Jenis Akun</label>
-                    <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
-                        <option value="1">KAS</option>
-                        <option value="2" selected>BANK</option>
-                    </select>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>Akun</label>
-                    <select name="id_akun_debet" id="code" class="form-control select2" required>
-                        <option value="" selected disabled>Pilih Akun</option>
-                    </select>
-                </div>
-                <div class="col-12 form-group">
-                    <label>Tgl Transaksi</label>
-                    <input type="text" name="tgl_transaksi" class="form-control datepicker" autocomplete="off" required>
-                </div>
-                <div class="col-md-12 form-group">
-                    <label for="keterangan">Keterangan</label>
-                    <textarea name="keterangan" id="keterangan" rows="5" class="form-control"></textarea>
+                <div class="col-12 text-right">
+                    <a class="btn btn-sm btn-danger btn-delete text-white"><i class="fa fa-trash"></i> Delete</a>
+                    <a class="btn btn-sm btn-info btn-add text-white"><i class="fa fa-plus"></i> Add</a>
                 </div>
                 <div class="col-md-12 mt-md-3 form-group">
                     <label for="password">Password</label>
@@ -119,39 +127,42 @@
     $(document).ready(function ()
     {
         initiateSelect2();
-         $('#angsuranSimpanan').hide();
-         $('#warningText').hide();
-         $('#periodeDetail').hide();
+         $('#angsuranSimpanan1').hide();
+         $('#warningText1').hide();
+         $('#periodeDetail1').hide();
 
-        $('#jenisAkun').trigger( "change" );
+        $('.jenisAkun').trigger( "change" );
         today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
     });
 
-    $('#jenisSimpanan').on('change', function ()
-    {
-        var selectedValue = $(this).children("option:selected").val();
-        $('#besarSimpanan').val('');
-        $('#warningText').hide();
-        callSavingPaymentValue(anggotaId, selectedValue);
-    });
-
     $('#kodeAnggota').on('change', function (){
-        if ($(this).children("option:selected").val() != anggotaId){
-            $('#jenisSimpanan').val('');
-            $('#besarSimpanan').val('');
-            $('#warningText').hide();
+        if ($(this).children("option:selected").val() != anggotaId)
+        {
+            $('.jenisSimpanan').val('');
+            $('.besarSimpanan').val('');
+            $('#warningText1').hide();
 
             anggotaId = $(this).children("option:selected").val();
             callDetailAnggota(anggotaId);
-            $("#jenisSimpanan").prop('disabled', false);
+            $(".jenisSimpanan").prop('disabled', false);
         }
     })
 
-    $('#besarSimpanan').on('keyup', function ()
+    $(document).on('change', '.jenisSimpanan', function ()
+    {
+        var data_form = $(this).data('form');
+        var selectedValue = $(this).children("option:selected").val();
+        $('#form'+data_form+' .besarSimpanan').val('');
+        $('#warningText'+data_form).hide();
+        callSavingPaymentValue(anggotaId, selectedValue, data_form);
+    });
+
+    $(document).on('keyup', '.besarSimpanan', function ()
     {
         var besarSimpanan = $(this).val().toString();
+        var data_form = $(this).data('form');
         besarSimpanan = besarSimpanan.replace(/[^\d]/g, "",'');
-        $('#besarSimpanan').val(toRupiah(besarSimpanan));
+        $(this).val(toRupiah(besarSimpanan));
         /*if(tipeSimpanan === '502.01.000'){
             if(besarSimpanan > besarSimpananSukarela) {
                 errMessage('warningText', 'Jumlah besar simpanan melebihi 65% dari total gaji/bulan');
@@ -159,19 +170,83 @@
                 clearErrMessage('warningText');
             }
         }*/
-        if(tipeSimpanan === '411.01.000'){
-            if(besarSimpanan > besarSimpananPokok) {
-                errMessage('warningText', 'Jumlah besar simpanan melebihi sisa angsuran');
+        if(tipeSimpanan === '411.01.000')
+        {
+            if(parseInt(besarSimpanan) > parseInt(besarSimpananPokok))
+            {
+                errMessage('warningText'+data_form, 'Jumlah besar simpanan melebihi sisa angsuran');
 
-            } else {
-                clearErrMessage('warningText');
             }
+            else
+            {
+                clearErrMessage('warningText'+data_form,);
+            }
+        }
+    });
+
+    // trigger to get kas or bank select option
+    $(document).on('change', '.jenisAkun', function ()
+    {
+        var data_form = $(this).data('form');
+
+        // remove all option in code
+        $('#form'+data_form+' .code').empty();
+
+        // get jenis akun
+        var jenisAkun = $(this).val();
+
+        if(jenisAkun == 2)
+        {
+            // loop through code bank
+            $.each(bankAccountArray, function(key, bankAccount)
+            {
+                // set dafault to 102.18.000
+                if(bankAccount.id == 22)
+                {
+                    var selected = 'selected';
+                }
+                else
+                {
+                    var selected = '';
+                }
+
+                // insert new option
+                $('#form'+data_form+' .code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+            });
+        }
+        else if(jenisAkun == 1)
+        {
+            // insert new option
+            $('#form'+data_form+' .code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+        }
+
+        $('#form'+data_form+' .code').trigger( "change" );
+    });
+
+    // trigger button add form
+    $(document).on('click', '.btn-add', function ()
+    {
+        // get latest child of multiple form
+        var data_form = $('#multipleForm .childForm:last').data('id');
+        data_form = parseInt(data_form) + 1;
+        addElement(data_form);
+    });
+
+    // trigger button delete form
+    $(document).on('click', '.btn-delete', function ()
+    {
+        // get latest child of multiple form
+        var data_form = $('#multipleForm .childForm:last').data('id');
+        data_form = parseInt(data_form);
+        if (data_form > 1)
+        {
+            $('#form'+data_form).remove();
         }
     });
 
     function initiateSelect2()
     {
-        $("#jenisSimpanan").select2({
+        $(".jenisSimpanan").select2({
             placeholder: 'pilih salah satu',
             ajax: {
                 url: '{{ route('jenis-simpanan-searchByUser') }}',
@@ -233,43 +308,44 @@
                 {
                     if (response.id_jenis_anggota=={{ JENIS_ANGGOTA_PENSIUNAN }})
                     {
-                        console.log('a');
-                         $('#jenisSimpanan').prop('disabled', false);
+                         $('.jenisSimpanan').prop('disabled', false);
                         errMessage('warningTextAnggota', '');
                     }
                     else
                     {
-                        console.log('c')
-                        $('#jenisSimpanan').prop('disabled', true);
+                        $('.jenisSimpanan').prop('disabled', true);
                         errMessage('warningTextAnggota', 'Mohon Diisi dahulu Unit dan Kelas Unit ');
                     }
 
                 }
                 else
                 {
-                    console.log('b');
-                    $('#jenisSimpanan').prop('disabled', false);
+                    $('.jenisSimpanan').prop('disabled', false);
                     clearErrMessage('warningTextAnggota');
                 }
             }
         })
     }
 
-    function callSavingPaymentValue(anggotaId, type){
+    function callSavingPaymentValue(anggotaId, type, data_form){
         tipeSimpanan = type;
 
-        return $.ajax({
+        $.ajax({
             url: '{{ route('ajax-simpanan-payment-value') }}',
             dataType: 'json',
-            data: {
+            data:
+            {
                 'anggotaId' : anggotaId,
                 'type' : type
             },
-            success: function (response) {
-                if(response) {
-                    $("#besarSimpanan").prop('disabled', false);
+            success: function (response)
+            {
+                if(response)
+                {
+                    $('#form'+data_form+' .besarSimpanan').prop('disabled', false);
                     // simpanan wajib
-                    if(type === '{{ JENIS_SIMPANAN_WAJIB }}') {
+                    if(type === '{{ JENIS_SIMPANAN_WAJIB }}')
+                    {
                         const paymentValue = response.paymentValue;
                         // jika belum pernah ada transaksi simpanan wajib
                         if (response.attribute == null)
@@ -284,42 +360,43 @@
                             var monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
                             var dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
                         }
-                        $('#periode').val(dateMonthYear);
-                        $('#besarSimpanan').val(toRupiah(paymentValue));
-                        $('#besarSimpanan').attr('readonly',false);
-                        $('#angsuranSimpanan').hide();
-                        $('#periodeDetail').show();
-                        $('#besaSimpananDetail').removeClass('col-md-12').addClass('col-md-6');
+                        $('#form'+data_form+' .periode').val(dateMonthYear);
+                        $('#form'+data_form+' .besarSimpanan').val(toRupiah(paymentValue));
+                        $('#form'+data_form+' .besarSimpanan').attr('readonly',false);
+                        $('#angsuranSimpanan'+data_form).hide();
+                        $('#periodeDetail'+ data_form).show();
                     }
                     // simpanan pokok
-                    if(type === '{{ JENIS_SIMPANAN_POKOK }}') {
+                    if(type === '{{ JENIS_SIMPANAN_POKOK }}')
+                    {
                         const angsuranSimpanan = response.attribute;
                         const paymentValue = response.paymentValue;
                         besarSimpananPokok = paymentValue;
 
-                        $('#besarSimpanan').val(toRupiah(paymentValue));
-                        $('#detailAngsuran').empty();
+                        $('#form'+data_form+' .besarSimpanan').val(toRupiah(paymentValue));
+                        $('#detailAngsuran'+data_form).empty();
                         angsuranSimpanan.map(val => {
-                            $('#detailAngsuran').append('<div class="col-md-6">Angsuran Ke - ' + val.angsuran_ke + '</div>');
-                            $('#detailAngsuran').append('<div class="col-md-6"> ' + toRupiah(val.besar_angsuran) + '</div>');
+                            $('#detailAngsuran'+data_form).append('<div class="col-md-6">Angsuran Ke - ' + val.angsuran_ke + '</div>');
+                            $('#detailAngsuran'+data_form).append('<div class="col-md-6"> ' + toRupiah(val.besar_angsuran) + '</div>');
                         })
-                        $('#detailAngsuran').append('<div class="col-md-6"> Sisa Angsuran </div>');
-                        $('#detailAngsuran').append('<div class="col-md-6">' + toRupiah(paymentValue) + '</div>');
+                        $('#detailAngsuran'+data_form).append('<div class="col-md-6"> Sisa Angsuran </div>');
+                        $('#detailAngsuran'+data_form).append('<div class="col-md-6">' + toRupiah(paymentValue) + '</div>');
 
-                        $('#angsuranSimpanan').show();
-                        $('#periodeDetail').hide();
-                        $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');
+                        $('#angsuranSimpanan'+data_form).show();
+                        $('#periodeDetail'+data_form).hide();
 
-                        if(angsuranSimpanan.length === 3) {
-                            $('#besarSimpanan').attr('readonly',true);
-                        } else {
-                            $('#besarSimpanan').attr('readonly',false);
+                        if(angsuranSimpanan.length === 3)
+                        {
+                            $('#form'+data_form+' .besarSimpanan').attr('readonly',true);
                         }
-
-
+                        else
+                        {
+                            $('#form'+data_form+' .besarSimpanan').attr('readonly',false);
+                        }
                     }
                     // simpanan sukarela
-                    if(type ===  '{{ JENIS_SIMPANAN_SUKARELA }}') {
+                    if(type ===  '{{ JENIS_SIMPANAN_SUKARELA }}')
+                    {
                         const paymentValue = response.paymentValue;
                         besarSimpananSukarela = response.paymentValue;
                         if (response.attribute == null)
@@ -334,26 +411,22 @@
                             var monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
                             var dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
                         }
-                        $('#besarSimpanan').val(toRupiah(paymentValue));
-                        $('#periode').val(dateMonthYear);
-                        $('#angsuranSimpanan').hide();
-                        $('#periodeDetail').show();
-                          $('#besaSimpananDetail').removeClass('col-md-12').addClass('col-md-6');
-
-                        $('#besarSimpanan').attr('readonly',false);
+                        $('#form'+data_form+' .besarSimpanan').val(toRupiah(paymentValue));
+                        $('#form'+data_form+' .periode').val(dateMonthYear);
+                        $('#angsuranSimpanan'+data_form).hide();
+                        $('#periodeDetail'+data_form).show();
+                        $('#form'+data_form+' .besarSimpanan').attr('readonly',false);
 
                     }
-                    if(type ===  '409.01.000') {
+                    if(type ===  '409.01.000')
+                    {
                         var dateMonthYear = moment(latestPayment).format('YYYY-MM-DD');
-                        $('#periode').val(dateMonthYear);
-                        $('#angsuranSimpanan').hide();
-                        $('#periodeDetail').hide();
-                        $('#besaSimpananDetail').removeClass('col-md-6').addClass('col-md-12');
+                        $('#form'+data_form+' .periode').val(dateMonthYear);
+                        $('#angsuranSimpanan'+data_form).hide();
+                        $('#periodeDetail'+data_form).hide();
 
-                        $('#besarSimpanan').attr('readonly',false);
-
+                        $('#form'+data_form+' .besarSimpanan').attr('readonly',false);
                     }
-
                 }
             }
         })
@@ -410,43 +483,6 @@
         bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
     @endforeach
 
-    // trigger to get kas or bank select option
-    $(document).on('change', '#jenisAkun', function ()
-    {
-        // remove all option in code
-        $('#code').empty();
-
-        // get jenis akun
-        var jenisAkun = $('#jenisAkun').val();
-
-        if(jenisAkun == 2)
-        {
-            // loop through code bank
-            $.each(bankAccountArray, function(key, bankAccount)
-            {
-                // set dafault to 102.18.000
-                if(bankAccount.id == 22)
-                {
-                    var selected = 'selected';
-                }
-                else
-                {
-                    var selected = '';
-                }
-
-                // insert new option
-                $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
-            });
-        }
-        else if(jenisAkun == 1)
-        {
-            // insert new option
-            $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
-        }
-
-        $('#code').trigger( "change" );
-    });
-
     // initiate datepicker
     $('.datepicker').datepicker({
         maxDate: today,
@@ -454,5 +490,84 @@
         format: 'dd-mm-yyyy'
     });
 
+    function addElement(data_form)
+    {
+        var string = '<div class="row childForm" id="form'+data_form+'" data-id="'+data_form+'">' +
+                        '<div class="col-12"><hr class="my-2" style="border-width: 2px; border-color: #000;"></div>'+
+                        '<div class="col-md-6 form-group">' +
+                            '<label>Jenis Simpanan</label>' +
+                            '<select name="jenis_simpanan[]" data-form="'+data_form+'" class="form-control jenisSimpanan" required>' +
+                                '<option value="">Pilih Satu</option>' +
+                                @foreach ($listJenisSimpanan as $jenisSimpanan)
+                                    '<option value="{{ $jenisSimpanan->kode_jenis_simpan }}">{{ strtoupper($jenisSimpanan->nama_simpanan) }}</option>' +
+                                @endforeach
+                            '</select>' +
+                        '</div>' +
+                        '<div class="col-md-6 form-group" id="besaSimpananDetail'+data_form+'">' +
+                            '<label>Besar Simpanan</label>' +
+                            '<input type="text" name="besar_simpanan[]" data-form="'+data_form+'" onkeypress="return isNumberKey(event)"  class="form-control besarSimpanan" placeholder="Besar Simpanan" autocomplete="off" required disabled>' +
+                            '<div class="text-danger" id="warningText'+data_form+'"></div>' +
+                        '</div>' +
+                        '<div class="col-md-12 form-group" id="periodeDetail'+data_form+'">' +
+                            '<label for="periode">Periode</label>' +
+                            '<input type="text" name="periode[]" class="form-control periode" placeholder="Periode" autocomplete="off">' +
+                        '</div>' +
+                        '<div class="col-md-12" id="angsuranSimpanan'+data_form+'">' +
+                            '<label>Detail Informasi</label>' +
+                            '<div class="row col-md-6 mb-3" id="detailAngsuran'+data_form+'">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-6 form-group">' +
+                            '<label>Jenis Akun</label>' +
+                            '<select name="jenis_akun[]" data-form="'+data_form+'" class="form-control select2 jenisAkun" required>' +
+                                '<option value="1">KAS</option>' +
+                                '<option value="2" selected>BANK</option>' +
+                            '</select>' +
+                        '</div>' +
+                        '<div class="col-md-6 form-group">' +
+                            '<label>Akun</label>' +
+                            '<select name="id_akun_debet[]" class="form-control select2 code" required>' +
+                                '<option value="" selected disabled>Pilih Akun</option>' +
+                            '</select>' +
+                        '</div>' +
+                        '<div class="col-12 form-group">' +
+                            '<label>Tgl Transaksi</label>' +
+                            '<input type="text" name="tgl_transaksi[]" class="form-control datepicker" autocomplete="off" required>' +
+                        '</div>' +
+                        '<div class="col-md-12 form-group">' +
+                            '<label for="keterangan">Keterangan</label>' +
+                            '<textarea name="keterangan[]" rows="5" class="form-control keterangan"></textarea>' +
+                        '</div>' +
+                    '</div>';
+
+        $('#multipleForm').append(string);
+        $("#form"+data_form+" .datepicker").datepicker({
+            maxDate: today,
+            uiLibrary: 'bootstrap4',
+            format: 'dd-mm-yyyy'
+        });
+        $('.jenisAkun').trigger( "change" );
+        $("#form"+data_form+" .jenisSimpanan").select2({
+            placeholder: 'pilih salah satu',
+            ajax: {
+                url: '{{ route('jenis-simpanan-searchByUser') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        userId: anggotaId
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+    }
 </script>
 @stop
