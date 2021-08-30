@@ -10,4 +10,9 @@ class SimpananListener
     {
         SimpananManager::penarikanApproved($event->penarikan);
     }
+    public function onAnggotaCreated($event)
+   {
+       # code...
+       SimpananManager::createSaldoAwal($event->anggota);
+   }
 }

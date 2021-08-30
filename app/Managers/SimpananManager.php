@@ -93,7 +93,7 @@ class SimpananManager
     public static function generateMutasiSimpananAnggota()
     {
         $jenisSimpanan = JenisSimpanan::all();
-        $anggotas = Anggota::doesntHave('listSimpanan')
+        $anggotas = Anggota::doesntHave('simpanSaldoAwal')
                             ->get();
                             
         foreach ($anggotas as $anggota)
@@ -107,6 +107,7 @@ class SimpananManager
                 $simpanan->u_entry = 'SYSTEM';
                 $simpanan->periode = Carbon::now();
                 $simpanan->tgl_mulai = Carbon::now();
+                $simpanan->tgl_transaksi = Carbon::now();
                 $simpanan->tgl_entri = Carbon::now();
                 $simpanan->kode_jenis_simpan = $jenis->kode_jenis_simpan;
                 $simpanan->keterangan = "MUTASI ".$jenis->nama_simpanan." ". Carbon::now()->year;
@@ -114,6 +115,30 @@ class SimpananManager
                 $simpanan->save();
             });
         }
+    }
+    public static function createSaldoAwal(Anggota $anggota)
+    {
+        $jenisSimpanan = JenisSimpanan::all();
+        
+                            
+        
+            $jenisSimpanan->each(function ($jenis) use ($anggota)
+            {
+                $simpanan = new Simpanan();
+                $simpanan->jenis_simpan = $jenis->nama_simpanan;
+                $simpanan->besar_simpanan = 0;
+                $simpanan->kode_anggota = $anggota->kode_anggota;
+                $simpanan->u_entry = 'SYSTEM';
+                $simpanan->periode = Carbon::now();
+                $simpanan->tgl_mulai = Carbon::now();
+                $simpanan->tgl_transaksi = Carbon::now();
+                $simpanan->tgl_entri = Carbon::now();
+                $simpanan->kode_jenis_simpan = $jenis->kode_jenis_simpan;
+                $simpanan->keterangan = "Anggota Baru ".$jenis->nama_simpanan." ". Carbon::now()->year;
+                $simpanan->mutasi = 1;
+                $simpanan->save();
+            });
+        
     }
 }
 
