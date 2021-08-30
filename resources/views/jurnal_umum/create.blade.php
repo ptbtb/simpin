@@ -279,6 +279,9 @@
             totalCredit += nominal;
         }
 
+        totalCredit = totalCredit.toFixed(2);
+        totalDebet = totalDebet.toFixed(2);
+        
         // debet and credit must balance
         if(parseFloat(totalDebet) != parseFloat(totalCredit))
         {
