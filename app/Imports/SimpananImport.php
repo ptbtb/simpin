@@ -51,6 +51,7 @@ class SimpananImport implements OnEachRow
                 $simpanan->kode_anggota = $fields['kode_anggota'] ;
                 $simpanan->u_entry = Auth::user()->name;
                 $simpanan->tgl_entri = $fields['tgl_entri'];
+                $simpanan->tgl_transaki = $fields['tgl_entri'];
                 $simpanan->kode_jenis_simpan = $fields['kode_jenis_simpan'] ;
                 $simpanan->keterangan = ($fields['keterangan'] ) ? $fields['keterangan']  : null;
                 $simpanan->id_akun_debet = ($idakundebet->id) ? $idakundebet->id : null;
