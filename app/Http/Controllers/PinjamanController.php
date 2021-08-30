@@ -569,6 +569,11 @@ class PinjamanController extends Controller {
                         $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
                     }
 
+                    if ($request->keterangan)
+                    {
+                        $pengajuan->keterangan = $request->keterangan;
+                    }
+
                     $pengajuan->save();
                     if ($pengajuan->menungguPembayaran() && is_null($pengajuan->pinjaman))
                     {
