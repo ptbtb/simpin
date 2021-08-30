@@ -310,6 +310,7 @@
                     {
                          $('.jenisSimpanan').prop('disabled', false);
                         errMessage('warningTextAnggota', '');
+                        $('#btnSubmit').prop('disabled', false);
                     }
                     else
                     {
