@@ -119,7 +119,7 @@ class JurnalUmumController extends Controller
             // debet
             for ($i=0; $i < count($request->code_debet_id) ; $i++) 
             { 
-                $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
+                $nominal = filter_var($request->nominal[$i], FILTER_VALIDATE_FLOAT);
 
                 $jurnalUmumItem = new JurnalUmumItem();
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
@@ -133,7 +133,7 @@ class JurnalUmumController extends Controller
             // credit
             for ($i=0; $i < count($request->code_credit_id) ; $i++) 
             { 
-                $nominal = filter_var($request->nominal[$i + count($request->code_debet_id)], FILTER_SANITIZE_NUMBER_INT);
+                $nominal = filter_var($request->nominal[$i + count($request->code_debet_id)], FILTER_VALIDATE_FLOAT);
 
                 $jurnalUmumItem = new JurnalUmumItem();
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
@@ -314,7 +314,7 @@ class JurnalUmumController extends Controller
                     $jurnalUmumItem = new JurnalUmumItem();
                 }
                 
-                $nominal = filter_var($request->nominal_debet[$i], FILTER_SANITIZE_NUMBER_INT);
+                $nominal = filter_var($request->nominal_debet[$i], FILTER_VALIDATE_FLOAT);
 
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
                 $jurnalUmumItem->code_id = $request->code_debet_id[$i];
@@ -336,7 +336,7 @@ class JurnalUmumController extends Controller
                     $jurnalUmumItem = new JurnalUmumItem();
                 }
                 
-                $nominal = filter_var($request->nominal_credit[$i], FILTER_SANITIZE_NUMBER_INT);
+                $nominal = filter_var($request->nominal_credit[$i], FILTER_VALIDATE_FLOAT);
 
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
                 $jurnalUmumItem->code_id = $request->code_credit_id[$i];
