@@ -145,6 +145,7 @@
             delimiter: '.',
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
+            numeralDecimalScale: 4,
         });
     }
 
@@ -267,14 +268,14 @@
         // looping every debet item
         for (let index = 1; index <= totalDebetForm; index++) 
         {
-            var nominal = parseFloat($('#nominalDebet' + index).val().replace(/[^\d]/g, "",''));
+            var nominal = parseFloat($('#nominalDebet' + index).val().replace(/\./g,'').replace(/\,/g,'.'));
             totalDebet += nominal;
         }
 
         // looping every credit item
         for (let index = 1; index <= totalCreditForm; index++) 
         {
-            var nominal = parseFloat($('#nominalCredit' + index).val().replace(/[^\d]/g, "",''));
+            var nominal = parseFloat($('#nominalCredit' + index).val().replace(/\./g,'').replace(/\,/g,'.'));
             totalCredit += nominal;
         }
 

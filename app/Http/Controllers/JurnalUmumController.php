@@ -119,8 +119,8 @@ class JurnalUmumController extends Controller
             // debet
             for ($i=0; $i < count($request->code_debet_id) ; $i++) 
             { 
-                $nominal = filter_var($request->nominal[$i], FILTER_VALIDATE_FLOAT);
-
+                $filterNominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+                $nominal = str_replace(",", ".", $filterNominal);
                 $jurnalUmumItem = new JurnalUmumItem();
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
                 $jurnalUmumItem->code_id = $request->code_debet_id[$i];
@@ -133,7 +133,8 @@ class JurnalUmumController extends Controller
             // credit
             for ($i=0; $i < count($request->code_credit_id) ; $i++) 
             { 
-                $nominal = filter_var($request->nominal[$i + count($request->code_debet_id)], FILTER_VALIDATE_FLOAT);
+                $filterNominal = filter_var($request->nominal[$i + count($request->code_debet_id)], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+                $nominal = str_replace(",", ".", $filterNominal);
 
                 $jurnalUmumItem = new JurnalUmumItem();
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
@@ -144,7 +145,7 @@ class JurnalUmumController extends Controller
 
                 $totalCredit += $nominal;
             }
-
+            
             // loop every lampiran
             for ($i=0; $i < count($request->lampiran) ; $i++) 
             { 
