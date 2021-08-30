@@ -445,6 +445,7 @@
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
+                html: '<div class="form-group text-left"><label>Keterangan</label><textarea placeholder="Keterangan" name="keterangan" id="keterangan" class="form-control"></textarea></div>',
                 input: 'password',
                 inputAttributes: {
                     name: 'password',
@@ -468,6 +469,7 @@
                     formData.append('password', password);
                     formData.append('id_akun_debet', id_akun_debet);
                     formData.append('old_status', old_status);
+                    formData.append('keterangan', keterangan);
                     // getting selected checkboxes kode ambil(s)
                     var ids_array = table
                                     .rows({ selected: true })

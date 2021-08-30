@@ -454,6 +454,11 @@ class PenarikanController extends Controller
                         $penarikan->id_akun_debet = ($request->id_akun_debet) ? $request->id_akun_debet : null;
                     }
 
+                    if ($request->keterangan)
+                    {
+                        $penarikan->description = $request->keterangan;
+                    }
+
                     $penarikan->save();
                     if ($penarikan->menungguPembayaran()) {
                         event(new PenarikanApproved($penarikan));
