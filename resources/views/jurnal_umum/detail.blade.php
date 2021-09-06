@@ -87,13 +87,13 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->code->CODE }}</td>
                             <td>{{ $item->code->NAMA_TRANSAKSI }}</td>
-                            <td>{{ $item->nominal_rupiah }}</td>
+                            <td>{{ $item->nominal }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td colspan="2"></td>
                         <td><b>Total</b></td>
-                        <td>{{ $jurnalUmum->total_nominal_debet_rupiah }}</td>
+                        <td>{{ $jurnalUmum->total_nominal_debet }}</td>
                     </tr>
                 </table>
             </div>
@@ -113,13 +113,13 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->code->CODE }}</td>
                             <td>{{ $item->code->NAMA_TRANSAKSI }}</td>
-                            <td>{{ $item->nominal_rupiah }}</td>
+                            <td>{{ $item->nominal }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td colspan="2"></td>
                         <td><b>Total</b></td>
-                        <td>{{ $jurnalUmum->total_nominal_kredit_rupiah }}</td>
+                        <td>{{ $jurnalUmum->total_nominal_kredit }}</td>
                     </tr>
                 </table>
             </div>
