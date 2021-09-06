@@ -31,7 +31,7 @@
 							<div class="row">
 								<div class="col-md-6 form-group">
 									<label>Kode Anggota</label>
-									<input type="number" name="kode_anggota" class="form-control" size="54px" placeholder="Kode Anggota" title="Kode harus diisi" />
+									<input type="number" value="{{$nomer}}" name="kode_anggota" class="form-control" size="54px" placeholder="Kode Anggota" title="Kode harus diisi" readonly />
 								</div>
 								<div class="col-md-6 form-group">
 									<label>Unit</label>
