@@ -83,8 +83,11 @@ class SimpananImport implements OnEachRow
         }else {
 
             Log::info('BUKAN SIMPANAN POKOK');
+            $periodeTime = $fields['periode'];
             $cek = Simpanan::where('kode_anggota',$fields['kode_anggota'])
-            ->where('periode',$fields['periode'])->first();
+            ->where('periode',$periode)
+            ->where('kode_jenis_simpan',$fields['kode_jenis_simpan'])
+            ->first();
             if ($cek){
                  $cek->jenis_simpan = strtoupper($fields['jenis_simpan']);
             $cek->besar_simpanan = $fields['besar_simpanan'];
@@ -109,8 +112,8 @@ class SimpananImport implements OnEachRow
                         $journal->save();
                     }
                 }
-            }
-            $periodeTime = $fields['periode'];
+            }else{
+            
             $simpanan = new Simpanan();
             $simpanan->jenis_simpan = strtoupper($fields['jenis_simpan']);
             $simpanan->besar_simpanan = $fields['besar_simpanan'];
@@ -125,6 +128,8 @@ class SimpananImport implements OnEachRow
             $simpanan->serial_number = $nextSerialNumber;
             $simpanan->save();
             JurnalManager::createJurnalSimpanan($simpanan);
+            }
+           
             Log::info('akhir BUKAN SIMPANAN POKOK');
         }
 
