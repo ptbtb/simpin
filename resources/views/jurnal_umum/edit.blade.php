@@ -84,7 +84,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="nominalDebet{{ $loop->iteration }}">Besar Nominal</label>
-                            <input type="text" name="nominal_debet[]" id="nominalDebet{{ $loop->iteration }}" value="{{ $itemDebet->nominal }}" data-type="Debet" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                            <input type="text" name="nominal_debet[]" id="nominalDebet{{ $loop->iteration }}" value="{{ $itemDebet->nominal_rupiah}}" data-type="Debet" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                         </div>
                     </div>
                 @endforeach
@@ -110,7 +110,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="nominalCredit{{ $loop->iteration }}">Besar Nominal</label>
-                        <input type="text" name="nominal_credit[]" id="nominalCredit{{ $loop->iteration }}" value="{{ $itemCredit->nominal }}" data-type="Credit" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                        <input type="text" name="nominal_credit[]" id="nominalCredit{{ $loop->iteration }}" value="{{ $itemCredit->nominal_rupiah}}" data-type="Credit" data-form="{{ $loop->iteration }}" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                     </div>
                 </div>
                 @endforeach

@@ -52,6 +52,7 @@
                         <th>No</th>
                         <th>Tgl. Transaksi</th>
                         <th>Description</th>
+                        <th>Jumlah</th>
                         <th>Lampiran</th>
                         <th>Oleh</th>
                         <th>Status</th>
@@ -109,6 +110,10 @@
             { 
                 mData: 'deskripsi', sType: "string", 
                 className: "dt-body-center", "name": "deskripsi"		
+            },
+            { 
+                mData: 'total_nominal_debet_rupiah', sType: "number", 
+                className: "dt-body-center", "name": "total_nominal_debet_rupiah"        
             },
             { 
                 mData: 'jurnal_umum_lampirans', sType: "string", 

@@ -29,7 +29,7 @@ class JurnalUmumItem extends Model
     {
         if ($this->nominal)
         {
-            return number_format($this->nominal,0,",",".");
+            return number_format($this->nominal,2,",",".");
         }
         return $this->nominal;
     }

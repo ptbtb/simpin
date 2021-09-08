@@ -87,7 +87,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->code->CODE }}</td>
                             <td>{{ $item->code->NAMA_TRANSAKSI }}</td>
-                            <td>{{ $item->nominal }}</td>
+                            <td>{{ $item->nominal_rupiah}}</td>
                         </tr>
                     @endforeach
                     <tr>
@@ -113,7 +113,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->code->CODE }}</td>
                             <td>{{ $item->code->NAMA_TRANSAKSI }}</td>
-                            <td>{{ $item->nominal }}</td>
+                            <td>{{ $item->nominal_rupiah}}</td>
                         </tr>
                     @endforeach
                     <tr>

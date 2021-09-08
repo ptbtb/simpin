@@ -315,7 +315,8 @@ class JurnalUmumController extends Controller
                     $jurnalUmumItem = new JurnalUmumItem();
                 }
                 
-                $nominal = filter_var($request->nominal_debet[$i], FILTER_VALIDATE_FLOAT);
+                $filterNominal = filter_var($request->nominal_debet[$i],  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+                $nominal = str_replace(",", ".", $filterNominal);
 
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
                 $jurnalUmumItem->code_id = $request->code_debet_id[$i];
@@ -337,7 +338,8 @@ class JurnalUmumController extends Controller
                     $jurnalUmumItem = new JurnalUmumItem();
                 }
                 
-                $nominal = filter_var($request->nominal_credit[$i], FILTER_VALIDATE_FLOAT);
+                $filterNominal = filter_var($request->nominal_credit[$i], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+                $nominal = str_replace(",", ".", $filterNominal);
 
                 $jurnalUmumItem->jurnal_umum_id = $jurnalUmum->id;
                 $jurnalUmumItem->code_id = $request->code_credit_id[$i];

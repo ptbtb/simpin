@@ -74,14 +74,14 @@ class JurnalUmum extends Model
     {
         $totalDebet = $this->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET)->sum('nominal');
         
-        return number_format($totalDebet,0,",",".");
+        return number_format($totalDebet,2,",",".");
     }
 
     public function getTotalNominalKreditRupiahAttribute()
     {
         $totalKredit = $this->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_KREDIT)->sum('nominal');
         
-        return number_format($totalKredit,0,",",".");
+        return number_format($totalKredit,2,",",".");
     }
 
     public function getSerialNumberViewAttribute()
