@@ -83,6 +83,33 @@ class SimpananImport implements OnEachRow
         }else {
 
             Log::info('BUKAN SIMPANAN POKOK');
+            $cek = Simpanan::where('kode_anggota',$fields['kode_anggota'])
+            ->where('periode',$fields['periode'])->first();
+            if ($cek){
+                 $cek->jenis_simpan = strtoupper($fields['jenis_simpan']);
+            $cek->besar_simpanan = $fields['besar_simpanan'];
+            $cek->kode_anggota = $fields['kode_anggota'];
+            $cek->u_entry = Auth::user()->name;
+            $cek->tgl_entri = $fields['tgl_entri'];
+            $cek->tgl_transaksi = $fields['tgl_entri'];
+            $cek->periode = $periodeTime;
+            $cek->kode_jenis_simpan = $fields['kode_jenis_simpan'];
+            $cek->keterangan = ($fields['keterangan']) ? $fields['keterangan'] : null;
+            $cek->id_akun_debet = ($idakundebet->id) ? $idakundebet->id : null;
+            $cek->save();
+
+            $journals = $cek->jurnals;
+                foreach ($journals as $key => $journal)
+                {
+                    if($journal)
+                    {
+                        $journal->kredit = $cek->besar_simpanan;
+                        $journal->debet = $cek->besar_simpanan;
+                        $journal->updated_by = Auth::user()->id;
+                        $journal->save();
+                    }
+                }
+            }
             $periodeTime = $fields['periode'];
             $simpanan = new Simpanan();
             $simpanan->jenis_simpan = strtoupper($fields['jenis_simpan']);
