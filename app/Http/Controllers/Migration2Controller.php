@@ -415,6 +415,7 @@ public static function transaksipinjaman($pinjamans){
     $status =true;
     $jenis = JenisPinjaman::where('kode_jenis_pinjam',$pinjamans->code)->first();
     $lama_angsuran = $jenis->lama_angsuran;
+     $kodeAnggota = $pinjamans->kode_anggota;
     $kodePinjaman = str_replace('.', '', $pinjamans->code) . '-' . $kodeAnggota . '-' . $pinjamans->tgl_posting;
     $cekpinjaman=Pinjaman::where('kode_pinjam', $kodePinjaman)
     ->first();
@@ -423,7 +424,7 @@ public static function transaksipinjaman($pinjamans){
     }
     //dd($pinjamans->perlengkapan);die;
     $pinjaman = new Pinjaman();
-    $kodeAnggota = $pinjamans->kode_anggota;
+   
     $pinjaman->kode_pinjam = $kodePinjaman;
     $pinjaman->kode_pengajuan_pinjaman = $kodePinjaman;
     $pinjaman->kode_anggota = $kodeAnggota;
