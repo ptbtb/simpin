@@ -415,11 +415,8 @@ public static function transaksipinjaman($pinjamans){
     $status =true;
     $jenis = JenisPinjaman::where('kode_jenis_pinjam',$pinjamans->code)->first();
     $lama_angsuran = $jenis->lama_angsuran;
-
-    $cekpinjaman=Pinjaman::where('kode_anggota',$pinjamans->kode_anggota)
-    ->where('kode_jenis_pinjam',$pinjamans->code)
-    ->where('besar_pinjam',$pinjamans->jumlah)
-    ->where('id_status_pinjaman',1)
+    $kodePinjaman = str_replace('.', '', $pinjamans->code) . '-' . $kodeAnggota . '-' . $pinjamans->tgl_posting;
+    $cekpinjaman=Pinjaman::where('kode_pinjam', $kodePinjaman)
     ->first();
     if($cekpinjaman){
         return [true,'sudah ada'];
@@ -427,7 +424,6 @@ public static function transaksipinjaman($pinjamans){
     //dd($pinjamans->perlengkapan);die;
     $pinjaman = new Pinjaman();
     $kodeAnggota = $pinjamans->kode_anggota;
-    $kodePinjaman = str_replace('.', '', $pinjamans->code) . '-' . $kodeAnggota . '-' . $pinjamans->tgl_posting;
     $pinjaman->kode_pinjam = $kodePinjaman;
     $pinjaman->kode_pengajuan_pinjaman = $kodePinjaman;
     $pinjaman->kode_anggota = $kodeAnggota;
