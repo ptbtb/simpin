@@ -213,7 +213,7 @@ class PinjamanController extends Controller {
 
     public function history(Request $request) {
         $user = Auth::user();
-        $this->authorize('view history pinjaman', $user)->orderBy('created_at','desc');
+        $this->authorize('view history pinjaman', $user);
 
         if ($user->roles->first()->id == ROLE_ANGGOTA) {
             $anggota = $user->anggota;
