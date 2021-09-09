@@ -58,11 +58,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
-                    <select name="anggota" class="form-control select2" id="select_anggota">
-                        <option value="" selected>All</option>
-                        @foreach ($anggotas as $anggota)
-                            <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
-                        @endforeach
+                    <select name="anggota" id="select_anggota" class="form-control">
                     </select>
                 </div>
                 <div class="col-md-1 form-group" style="margin-top: 26px">
@@ -628,6 +624,27 @@
             }
 
             $('#code').trigger( "change" );
+        });
+
+
+        $("#select_anggota").select2({
+            ajax: {
+                url: '{{ route('anggota-ajax-search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
         });
     </script>
 @endsection

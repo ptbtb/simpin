@@ -113,7 +113,7 @@
 				@endif
 			});
 		@endif
-		
+
 		function readURL(input, previewContainer) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -125,7 +125,7 @@
                 reader.readAsDataURL(input.files[0]);
             }
 		}
-		
+
 		$('#photoButton').on('change', '.btn-file :file', function () {
             readURL(this, 'photoPreview');
         });
@@ -167,6 +167,6 @@
 				$('#pdfButton').attr('href', urlExport+"/pdf/"+selectedValue);
 				$('#excelButton').attr('href', urlExport+"/excel/"+selectedValue);
 			@endif
-		});		
+		});
 	</script>
 @endsection
