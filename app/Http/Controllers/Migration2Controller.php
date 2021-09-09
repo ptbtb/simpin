@@ -225,6 +225,16 @@ public static function transaksisimpanan($simpan){
     echo ('transaksisimpanan');
     $status =true;
     $jenisSimpanans = JenisSimpanan::where('kode_jenis_simpan', $simpan->code)->first();
+    $cek = Simpanan::where('kode_anggota',$simpan->kode_anggota)
+            ->where('periode',$simpan->tgl_posting)
+            ->where('kode_jenis_simpan',$simpan->code)
+            ->first();
+            if($cek){
+                $status =false;
+                $msg='sudah ada simpanan periode dimaksud';
+
+            }else{
+
     $simpanan = new Simpanan();
     $simpanan->jenis_simpan = strtoupper($jenisSimpanans->nama_simpanan);
     $simpanan->besar_simpanan = $simpan->jumlah;
@@ -235,8 +245,10 @@ public static function transaksisimpanan($simpan){
     $simpanan->kode_jenis_simpan = $simpan->code;
     $simpanan->keterangan = ($simpan->uraian_3!==null)?$simpan->uraian_3:'';
     $simpanan->save();
-
-    return [$status,''];
+    $status=true;
+    $msg='';
+    }
+    return [$status,$msg];
 
     
 }
