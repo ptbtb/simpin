@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\Api\JenisPenghasilanController;
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
@@ -474,4 +475,15 @@ Route::group(['prefix' => 'jenis-penghasilan', 'middleware' => 'auth'], function
     Route::get('create', [App\Http\Controllers\JenisPenghasilanController::class, 'create'])->name('jenis.penghasilan.create');
     Route::post('create', [App\Http\Controllers\JenisPenghasilanController::class, 'create'])->name('jenis.penghasilan.create');
     Route::post('store', [App\Http\Controllers\JenisPenghasilanController::class, 'store'])->name('jenis.penghasilan.store');
+});
+
+Route::prefix('budget')->middleware('auth')->group(function ()
+{
+    Route::get('list', [BudgetController::class, 'index'])->name('budget.list');
+    Route::get('list/data', [BudgetController::class, 'indexAjax'])->name('budget.data');
+    Route::get('create', [BudgetController::class, 'create'])->name('budget.create');
+    Route::post('store', [BudgetController::class, 'store'])->name('budget.store');
+    Route::get('{id}/edit', [BudgetController::class, 'edit'])->name('budget.edit');
+    Route::put('{id}/update', [BudgetController::class, 'update'])->name('budget.update');
+    Route::get('excel', [BudgetController::class, 'excel'])->name('budget.excel');
 });

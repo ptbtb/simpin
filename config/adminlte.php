@@ -536,6 +536,12 @@ return [
             ],
         ],
         [
+            'text' => 'Budget',
+            'url' => '/budget/list',
+            'icon' => 'fas fa-money-bill nav-icon',
+            'can'  => ['view budget'],
+        ],
+        [
             'text' => 'Import Tools',
             //'url' => '/saldo-awal',
             'icon' => 'fas fa-upload nav-icon',
