@@ -230,7 +230,7 @@ public static function transaksisimpanan($simpan){
             ->where('kode_jenis_simpan',$simpan->code)
             ->first();
             if($cek){
-                $status =false;
+                $status =true;
                 $msg='sudah ada simpanan periode dimaksud';
 
             }else{
@@ -422,7 +422,7 @@ public static function transaksipinjaman($pinjamans){
     ->where('id_status_pinjaman',1)
     ->first();
     if($cekpinjaman){
-        return [false,'sudah ada'];
+        return [true,'sudah ada'];
     }
     //dd($pinjamans->perlengkapan);die;
     $pinjaman = new Pinjaman();
