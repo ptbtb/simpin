@@ -103,8 +103,8 @@
 
             $('.datepicker').datepicker({
                 format: "dd-mm-yyyy",
-                viewMode: "months", 
-                minViewMode: "months"
+                viewMode: "day", 
+                minViewMode: "day"
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
