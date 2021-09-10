@@ -102,9 +102,7 @@
             });
 
             $('.datepicker').datepicker({
-                format: "dd-mm-yyyy",
-                viewMode: "day", 
-                minViewMode: "day"
+                format: "dd-mm-yyyy"
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
