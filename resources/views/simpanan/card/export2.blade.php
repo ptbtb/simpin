@@ -146,7 +146,7 @@
         </tr>
         <tr>
             <td colspan="8" style="text-align: right" class="border-top-0">
-                {{ number_format($value->final_balance,0) }}
+                {{ number_format($value->final_balance - $value->withdrawalAmount,0) }}
                 @php
                     $jumlahSimpanan = $jumlahSimpanan + $value->final_balance;
                 @endphp
