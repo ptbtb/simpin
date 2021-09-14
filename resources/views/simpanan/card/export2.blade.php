@@ -120,7 +120,7 @@
         @for ($i = 0; $i < $maxIteration; $i++)
             <tr>
                 @if (isset($list[$i]))
-                    <td colspan="4" class="border-right-0 bordery-0">{{ $list[$i]->tgl_entri->format('m-Y') }}</td>
+                    <td colspan="4" class="border-right-0 bordery-0">{{ $list[$i]->periode->format('m-Y') }}</td>
                     <td class="border-0">{{ number_format($list[$i]->besar_simpanan,0) }}</td>
                     <td colspan="3" class="border-left-0 bordery-0"></td>
                 @else
