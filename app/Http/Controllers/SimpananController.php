@@ -447,7 +447,7 @@ class SimpananController extends Controller
         }
 
         // $listSimpanan = $listSimpanan->get();
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri', 'desc')->get();
+        $listSimpanan = $listSimpanan->orderBy('periode', 'desc')->get();
 
         // share data to view
         view()->share('listSimpanan', $listSimpanan);
@@ -522,7 +522,7 @@ class SimpananController extends Controller
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
                 ->where('kode_anggota', $anggota->kode_anggota)
                 ->where("mutasi",0)
-                ->orderBy('tgl_entri', 'asc')
+                ->orderBy('periode', 'asc')
                 ->get();
 
             // data di grouping berdasarkan kode jenis simpan
@@ -604,7 +604,7 @@ class SimpananController extends Controller
             $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
                 ->where('kode_anggota', $anggota->kode_anggota)
                 ->where("mutasi",0)
-                ->orderBy('tgl_entri', 'asc')
+                ->orderBy('periode', 'asc')
                 ->get();
             // data di grouping berdasarkan kode jenis simpan
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
