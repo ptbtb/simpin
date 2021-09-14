@@ -68,7 +68,13 @@ class PinjamanController extends Controller {
         }
 
         if (!$request->from) {
+            if ($request->id){
+            $request->from = Carbon::today()->firstOfYear()->format('Y-m-d');
+
+            }else{
             $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
+
+            }
 
         }
         if (!$request->to) {
