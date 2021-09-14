@@ -98,7 +98,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-2">Unit</div>
-                <div class="col-xs-9">: {{ ($anggota->lokasi_kerja)? $anggota->lokasi_kerja:'-' }}</div>
+                <div class="col-11">: {{ ($anggota->company)? $anggota->company->nama:'-' }}</div>
             </div>
         </div>
         <div class="border border-top-0 p-1">

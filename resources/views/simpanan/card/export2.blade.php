@@ -77,7 +77,7 @@
     <tr>
         <td class="border-right-0 border-top-0">Unit</td>
         <td class="border-top-0 borderx-0">:</td>
-        <td colspan="10" class="border-left-0 border-top-0" style="text-align: left">{{ ($anggota->lokasi_kerja)? $anggota->lokasi_kerja:'-' }}</td>
+        <td colspan="10" class="border-left-0 border-top-0" style="text-align: left">{{ ($anggota->company)? $anggota->company->nama:'-' }}</td>
     </tr>
     <tr>
         <td colspan="8" class="border-right-0">Simpanan</td>
