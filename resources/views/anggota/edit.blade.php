@@ -345,6 +345,12 @@
 			getKelasCompany(companyId, jenisAnggotaId);
 		}
 	})
+
+	if (companyId!=""){
+	$('#kelasCompany').val('');
+			getKelasCompany(companyId, jenisAnggotaId);	
+	}
+
 	$('#jenisAnggota').on('change', function(){
 		if($(this).children("option:selected").val() != jenisAnggotaId){
 			jenisAnggotaId = $(this).children("option:selected").val();
