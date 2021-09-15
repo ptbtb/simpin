@@ -50,7 +50,7 @@ class PinjamanExport implements FromView
                                             return $query->where('company_id', $r->unit_kerja);
                                         });
         }
-       if ($request->tenor)
+       if ($this->$request->tenor)
         {
             $listPinjaman = $listPinjaman->where('lama_angsuran',$request->tenor);
         }
