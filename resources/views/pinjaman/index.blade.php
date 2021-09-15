@@ -101,6 +101,7 @@
             </thead>
             <tbody>
                 @foreach ($listPinjaman as $pinjaman)
+                if ($pinjaman->listAngsuran)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $pinjaman->kode_pinjam }}</td>
@@ -148,6 +149,7 @@
 
                   </td>
               </tr>
+              @endif
               @endforeach
           </tbody>
       </table>
