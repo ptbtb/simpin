@@ -54,13 +54,13 @@ class PinjamanController extends Controller {
                 return redirect()->back()->withError('Your account has no members');
             }
 
-            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_entri','asc')
+            $listPinjaman = Pinjaman::wherehas('angsuran')->where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_entri','asc')
             ->notPaid();
         } else {
             if ($request->id) {
                 $anggota = Anggota::find($request->id);
 
-                $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                $listPinjaman = Pinjaman::wherehas('angsuran')->where('kode_anggota', $anggota->kode_anggota)
                 ->notPaid();
             } else {
                 $listPinjaman = Pinjaman::notPaid();
@@ -82,10 +82,10 @@ class PinjamanController extends Controller {
         }
         if($request->jenistrans){
             if($request->jenistrans=='A'){
-                $listPinjaman = Pinjaman::where('saldo_mutasi','>',0);
+                $listPinjaman = Pinjaman::wherehas('angsuran')->where('saldo_mutasi','>',0);
             }
             if($request->jenistrans=='T'){
-                $listPinjaman = Pinjaman::where('saldo_mutasi',0);
+                $listPinjaman = Pinjaman::wherehas('angsuran')->where('saldo_mutasi',0);
             }
 
         }
