@@ -269,7 +269,7 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         {
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $simpanan->tgl_entri->format('Ymd').(Jurnal::count()+1);
+            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $simpanan->tgl_entri)->format('Ymd').(Jurnal::count()+1);
             $jurnal->akun_kredit = $simpanan->kode_jenis_simpan;
             $jurnal->kredit = $simpanan->besar_simpanan;
             $jurnal->akun_debet=0;
