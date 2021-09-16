@@ -104,10 +104,7 @@
 									<label>KTP</label>
 									<input type="text" name="ktp" size="54" class="form-control" value="{{ $anggota->ktp }}" placeholder="KTP"/>
 								</div>
-								<div class="col-md-6 form-group">
-									<label>Lokasi Kerja</label>
-									<input type="text" name="lokasi_kerja" size="54" value="{{ $anggota->lokasi_kerja }}" class="form-control" placeholder="Lokasi Kerja"/>
-								</div>
+								
 								<div class="col-md-6 form-group">
 									<label>Tanggal Masuk</label>
 									<input type="date" name="tgl_masuk" class="form-control" value={{ $anggota->tgl_masuk }} placeholder="Tanggal Masuk" >
@@ -230,19 +227,14 @@
 		}
         $('#anggota_form').validate({
 			rules: {
-			email: {
-				required: true,
-				email: true,
-			},
+			
 			ktp: {
 				required: true
 			},
 			nipp: {
 				required: true
 			},
-			lokasi_kerja: {
-				required: true
-			},
+			
 			no_rek: {
 				required: true
 			},
@@ -264,19 +256,14 @@
 
 			},
 			messages: {
-			email: {
-				required: "Wajib di isi",
-				email: "isi dengan email yg valid"
-			},
+			
 			ktp: {
 				required: "Wajib di isi"
 			},
 			nipp: {
 				required: "Wajib di isi"
 			},
-			lokasi_kerja: {
-				required: "Wajib di isi"
-			},
+			
 			no_rek: {
 				required: "Wajib di isi"
 			},

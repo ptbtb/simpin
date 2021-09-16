@@ -184,9 +184,7 @@
 			nipp: {
 				required: true
 			},
-			lokasi_kerja: {
-				required: true
-			},
+			
 			no_rek: {
 				required: true
 			},
@@ -218,9 +216,7 @@
 			nipp: {
 				required: "Wajib di isi"
 			},
-			lokasi_kerja: {
-				required: "Wajib di isi"
-			},
+			
 			no_rek: {
 				required: "Wajib di isi"
 			},
