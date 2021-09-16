@@ -30,8 +30,8 @@ class TransaksiUserImport
 			$periode=Carbon::createFromFormat('Y-m',$period_raw)->endOfMonth();
 			$idakun=Code::where('CODE',$transaksi['COA_PERANTARA'])->first();
 			$anggota=Anggota::where('kode_anggota',$transaksi['NO_ANG'])->first();
-
-
+			$tgl_transaksi = $transaksi['TGL_TRANSAKSI']->format('Y-m-d');
+			
 			if($transaksi['S_WAJIB']>0){
 				$check= Simpanan::where('kode_jenis_simpan','411.12.000')
 				->where('kode_anggota',$transaksi['NO_ANG'])
@@ -47,12 +47,12 @@ class TransaksiUserImport
 					$simpanan->u_entry = Auth::user()->name;;
 					$simpanan->periode = $periode;
 					$simpanan->tgl_mulai = null;
-					$simpanan->tgl_entri = Carbon::now()->format('Y-m-d');
-					$simpanan->tgl_transaksi = Carbon::now()->format('Y-m-d');
+					$simpanan->tgl_entri = $tgl_transaksi;
+					$simpanan->tgl_transaksi = $tgl_transaksi;
 					$simpanan->kode_jenis_simpan ='411.12.000';
 					$simpanan->keterangan = $nama_simpanan->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
 					$simpanan->mutasi = 0;
-					$simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+					$simpanan->serial_number = SimpananManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
 					$simpanan->id_akun_debet = ($idakun->id) ? $idakun->id : null;
                  $simpanan->save();
                  JurnalManager::createJurnalSimpanan($simpanan);
@@ -71,12 +71,12 @@ class TransaksiUserImport
 					$simpanan->u_entry = Auth::user()->name;;
 					$simpanan->periode = $periode;
 					$simpanan->tgl_mulai = null;
-					$simpanan->tgl_entri = Carbon::now()->format('Y-m-d');
-					$simpanan->tgl_transaksi = Carbon::now()->format('Y-m-d');
+					$simpanan->tgl_entri = $tgl_transaksi;
+					$simpanan->tgl_transaksi = $tgl_transaksi;
 					$simpanan->kode_jenis_simpan ='502.01.000';
 					$simpanan->keterangan = $nama_simpanan2->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
 					$simpanan->mutasi = 0;
-					$simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+					$simpanan->serial_number = SimpananManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
 					$simpanan->id_akun_debet = ($idakun->id) ? $idakun->id : null;
 					
 					$simpanan->save();
@@ -93,7 +93,7 @@ class TransaksiUserImport
 
 					if ($angsuran1)
 					{
-						$serialNumber=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+						$serialNumber=AngsuranManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran1->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran1->besar_pembayaran;
@@ -109,7 +109,8 @@ class TransaksiUserImport
 
 
 						$pembayaran = $pembayaran - $angsuran1->totalAngsuran;
-						$angsuran1->paid_at =  Carbon::now();
+						$angsuran1->paid_at =  $tgl_transaksi;
+						$angsuran1->tgl_transaksi =  $tgl_transaksi;
 						$angsuran1->updated_by = Auth::user()->id;
 						$angsuran1->id_akun_kredit = ($idakun->id) ? $idakun->id : null;
 						$angsuran1->serial_number=$serialNumber;
@@ -140,7 +141,7 @@ class TransaksiUserImport
 
 					if ($angsuran2)
 					{
-						$serialNumber2=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+						$serialNumber2=AngsuranManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran2->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran2->besar_pembayaran;
@@ -156,7 +157,8 @@ class TransaksiUserImport
 
 
 						$pembayaran = $pembayaran - $angsuran2->totalAngsuran;
-						$angsuran2->paid_at =  Carbon::now();
+						$angsuran2->paid_at =  $tgl_transaksi;
+						$angsuran2->tgl_transaksi =  $tgl_transaksi;
 						$angsuran2->updated_by = Auth::user()->id;
 						$angsuran2->id_akun_kredit = ($idakun->id) ? $idakun->id : null;
 						$angsuran2->serial_number=$serialNumber2;

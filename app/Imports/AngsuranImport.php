@@ -30,8 +30,9 @@ class AngsuranImport implements OnEachRow
         
         if ($angsuran)
         {
-            $serialNumber=AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
             $payDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3])->format('Y-m-d');
+            $serialNumber=AngsuranManager::getSerialNumber(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3])->format('d-m-Y'));
+            
             $pinjaman = $angsuran->pinjaman;
             $pembayaran = $row[2];
             if ($angsuran->besar_pembayaran) {
@@ -52,6 +53,7 @@ class AngsuranImport implements OnEachRow
             $angsuran->updated_by = Auth::user()->id;
             $angsuran->id_akun_kredit = ($idakunkredit->id) ? $idakunkredit->id : null;
             $angsuran->serial_number=$serialNumber;
+            $angsuran->tgl_transaksi=$paid_at;
             $angsuran->save();
 
             // create JKM angsuran
