@@ -259,7 +259,7 @@ class NeracaController extends Controller
                     }
                 }
                 
-                if ($key==965 || $key==974){
+                if ($key==965 || $key==974 || $key==975){
                     $parentCode = Code::where('CODE', 'like',''.$key . '%')->first();
                 }else{
                      $parentCode = Code::where('CODE', $key . '.00.000')->first();
