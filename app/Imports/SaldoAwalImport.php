@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 
+use Illuminate\Support\Facades\Log;
+
 class SaldoAwalImport implements OnEachRow
 {
     public function onRow(Row $row)
@@ -44,15 +46,17 @@ class SaldoAwalImport implements OnEachRow
                     $codeId = $code->id;
                 }
             }
-
+            \Log::error($codeId);
             if($codeId != null)
             {
+                 
                 $fields = [
                     'code_id' => $codeId,
                     'nominal' => ($row[1] == "\N" || $row[1] == '' || $row[1] == null)? 0:$row[1],
                 ];
         
                 $saldoAwal = SaldoAwal::create($fields);
+               JurnalManager::createSaldoAwal($saldoAwal);
             }
             
             return $saldoAwal;

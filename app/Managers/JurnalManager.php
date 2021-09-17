@@ -13,6 +13,8 @@ use App\Models\Simpanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Log;
+
 class JurnalManager
 {
     public static function createJurnalPenarikan(Penarikan $penarikan)
@@ -291,7 +293,7 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
     {
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JSA;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $saldoAwal->created_at)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d h:i:s', $saldoAwal->created_at)->format('Ymd').(Jurnal::count()+1);
 
         if ($saldoAwal->code->normal_balance_id == NORMAL_BALANCE_DEBET)
         {
@@ -359,6 +361,8 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
 
             // save as polymorphic
             $saldoAwal->jurnals()->save($jurnal);
+        }else{
+            self::createSaldoAwal($saldoAwal);
         }
     }
 
