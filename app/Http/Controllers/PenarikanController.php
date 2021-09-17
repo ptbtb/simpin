@@ -375,6 +375,7 @@ class PenarikanController extends Controller
     public function updateStatus(Request $request)
     {
         try {
+
             $user = Auth::user();
             $check = Hash::check($request->password, $user->password);
             if (!$check) {
@@ -387,14 +388,17 @@ class PenarikanController extends Controller
             {
                 $kodeAmbilIds = json_decode($request->kode_ambil_ids);
             }
-
+             \Log::info($request);
             foreach ($kodeAmbilIds as $key => $kodeAmbilId)
             {
                 $penarikan = Penarikan::find($kodeAmbilId);
+                \Log::info($penarikan->status_pengambilan);
+                \Log::info($request->old_status);
 
                 // check penarikan's status must same as old_status
                 if($penarikan->status_pengambilan == $request->old_status)
                 {
+
                     if ($request->status == STATUS_PENGAMBILAN_DIBATALKAN)
                     {
                         $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DIBATALKAN;
@@ -402,12 +406,13 @@ class PenarikanController extends Controller
                         return response()->json(['message' => 'success'], 200);
                     }
 
-                    $this->authorize('approve penarikan', $user);
+                    
                     if (is_null($penarikan)) {
                         return response()->json(['message' => 'not found'], 404);
                     }
 
                     if ($request->status == STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_BENDAHARA) {
+                        $this->authorize('approve penarikan', $user);
                         $statusPenarikanSekarang = $penarikan->statusPenarikan;
                         if ($penarikan->besar_pinjam <= $statusPenarikanSekarang->batas_pengajuan) {
                             $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN;
@@ -415,6 +420,7 @@ class PenarikanController extends Controller
                             $penarikan->status_pengambilan = $request->status;
                         }
                     } elseif ($request->status == STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_KETUA) {
+                        $this->authorize('approve penarikan', $user);
                         $statusPenarikanSekarang = $penarikan->statusPenarikan;
                         if ($penarikan->besar_pinjam <= $statusPenarikanSekarang->batas_pengajuan) {
                             $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN;
@@ -422,6 +428,7 @@ class PenarikanController extends Controller
                             $penarikan->status_pengambilan = $request->status;
                         }
                     } else {
+                        
                         $penarikan->status_pengambilan = $request->status;
                     }
 
@@ -429,7 +436,10 @@ class PenarikanController extends Controller
                     $penarikan->approved_by = $user->id;
 
                     if ($request->status == STATUS_PENGAMBILAN_DITERIMA) {
+                        $this->authorize('bayar pengajuan pinjaman', $user);
+                        Log::info($request->status);
                         $penarikan->paid_by_cashier = $user->id;
+                        $penarikan->tgl_transaksi = $request->tgl_transaksi;
                         $file = $request->bukti_pembayaran;
 
                         if ($file) {

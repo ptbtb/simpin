@@ -111,6 +111,10 @@
                     <form enctype="multipart/form-data" id="formKonfirmasi">
                         <div class="row">
                             <div class="col-md-6 form-group">
+                                <label>Tanggal Pembayaran</label>
+                                <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
+                            </div>
+                            <div class="col-md-6 form-group">
                                 <label>Jenis Akun</label>
                                 <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
                                     <option value="1">KAS</option>
@@ -133,9 +137,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    @if (isset($penarikan))
-                        <a data-id="{{ $penarikan->kode_ambil }}" data-status="{{ STATUS_PENGAMBILAN_DITERIMA }}" class="text-white btn btn-sm btn-success btn-approval">Bayar</a>
-                    @endif
+                        <a data-id="" data-status="{{ STATUS_PENGAMBILAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}"class="text-white btn btn-sm btn-success btn-approval">Bayar</a>
+                    
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -344,7 +347,7 @@
                                     @can('bayar pengajuan pinjaman')
                                         if (full.status_jkk == 1)
                                         {
-                                            markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITERIMA }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
+                                            markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
                                         }
                                         else
                                         {
@@ -365,6 +368,30 @@
                                     markup += '<a data-id="'+data+'" data-code="'+full.code_trans+'" data-nominal="'+full.besar_ambil+'"  class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>';
                                 }
                             @endcan
+
+                            @can('bayar pengajuan pinjaman')
+                            if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }})
+                                {
+                            
+                                        if (full.status_jkk == 1)
+                                        {
+                                            markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}"  class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
+                                        }
+                                        else
+                                        {
+                                            markup += 'JKK Belum di Print';
+
+                                        }
+                                        }
+                                else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_DITERIMA }})
+                                    markup += '<b style="color: green !important"><i class="fas fa-check"></i></b>';
+                                else
+                                {
+                                    markup += '<b style="color: red !important"><i class="fas fa-times"></i></b>';
+                                }
+                                
+                            @endcan
+
                         @endif
 
                         return markup;
@@ -433,6 +460,7 @@
             var id = $(this).data('id');
             var status = $(this).data('status');
             var old_status = $(this).data('old-status');
+            var tgl_transaksi = $('#tgl_transaksi').val();
             var url = '{{ route("penarikan-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
@@ -465,6 +493,7 @@
                     formData.append('password', password);
                     formData.append('id_akun_debet', id_akun_debet);
                     formData.append('old_status', old_status);
+                    formData.append('tgl_transaksi', tgl_transaksi);
                     formData.append('keterangan', keterangan);
                     // getting selected checkboxes kode ambil(s)
                     var ids_array = table
@@ -519,6 +548,8 @@
         $(document).on('click', '.btn-konfirmasi', function ()
         {
             var id = $(this).data('id');
+            var status = $(this).data('status');
+            var old_status = $(this).data('old-status');
             var action = $(this).data('action');
             var url = baseURL + '/penarikan/detail-transfer/'+id;
 

@@ -495,7 +495,7 @@ class PinjamanController extends Controller {
             {
                 $ids = json_decode($request->ids);
             }
-
+            \Log::info($request);
             foreach ($ids as $key => $id)
             {
                 $pengajuan = Pengajuan::where('id', $id)->first();
@@ -510,12 +510,13 @@ class PinjamanController extends Controller {
                         return response()->json(['message' => 'success'], 200);
                     }
 
-                    $this->authorize('approve pengajuan pinjaman', $user);
+                    
                     if (is_null($pengajuan)) {
                         return response()->json(['message' => 'not found'], 404);
                     }
 
                     if ($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA) {
+                        $this->authorize('approve pengajuan pinjaman', $user);
                         $statusPengajuanSekarang = $pengajuan->statusPengajuan;
                         if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan) {
                             $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
@@ -523,6 +524,7 @@ class PinjamanController extends Controller {
                             $pengajuan->id_status_pengajuan = $request->status;
                         }
                     } elseif ($request->status == STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA) {
+                        $this->authorize('approve pengajuan pinjaman', $user);
                         $statusPengajuanSekarang = $pengajuan->statusPengajuan;
                         if ($pengajuan->besar_pinjam <= $statusPengajuanSekarang->batas_pengajuan) {
                             $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
@@ -537,6 +539,7 @@ class PinjamanController extends Controller {
                     $pengajuan->approved_by = $user->id;
 
                     if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DITERIMA) {
+                        $this->authorize('bayar pengajuan pinjaman', $user);
                         $pengajuan->paid_by_cashier = $user->id;
                         $file = $request->bukti_pembayaran;
 
@@ -568,11 +571,13 @@ class PinjamanController extends Controller {
                             if($pinjaman)
                             {
                                 $pinjaman->id_akun_debet = $request->id_akun_debet;
+                                $pinjaman->tgl_transaksi = $request->tgl_transaksi;
                                 $pinjaman->save();
                             }
                         }
 
                         $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DITERIMA;
+                        $pengajuan->tgl_transaksi = $request->tgl_transaksi;
                     }
 
                     if ($request->keterangan)

@@ -28,7 +28,7 @@ class Pinjaman extends Model {
     }
 
     public function pengajuan() {
-        return $this->belongsTo(Pengajuan::class, 'kode_pengajuan_pinjaman');
+        return $this->belongsTo(Pengajuan::class, 'kode_pengajuan_pinjaman','kode_pengajuan');
     }
 
     public function statusPinjaman() {

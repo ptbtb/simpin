@@ -10,8 +10,8 @@ class Pengajuan extends Model
     use HasFactory;
 
     protected $table = "t_pengajuan";
-    protected $primaryKey = "kode_pengajuan";
-    protected $keyType = 'string';
+    //protected $primaryKey = "kode_pengajuan";
+    //protected $keyType = 'string';
     public $incrementing = false;
     protected $dates = ['tgl_pengajuan', 'tgl_acc'];
 
@@ -39,7 +39,7 @@ class Pengajuan extends Model
 
     public function pinjaman()
     {
-        return $this->hasOne(Pinjaman::class, 'kode_pengajuan_pinjaman');
+        return $this->hasOne(Pinjaman::class, 'kode_pengajuan_pinjaman','kode_pengajuan');
     }
 
     public function paidByCashier()

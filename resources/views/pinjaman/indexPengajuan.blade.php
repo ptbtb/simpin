@@ -117,6 +117,10 @@
                     <form enctype="multipart/form-data" id="formKonfirmasi">
                         <div class="row">
                             <div class="col-md-6 form-group">
+                                <label>Tanggal Pembayaran</label>
+                                <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
+                            </div>
+                            <div class="col-md-6 form-group">
                                 <label>Jenis Akun</label>
                                 <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
                                     <option value="1">KAS</option>
@@ -141,9 +145,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    @if (isset($pengajuan))
-                        <a data-id="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn mt-1 btn-sm btn-success btn-approval">Bayar</a>
-                    @endif
+                   
+                        <a data-id="" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}"class="text-white btn mt-1 btn-sm btn-success btn-approval">Bayar</a>
+                   
                     <button type="button" class="btn mt-1 btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -374,6 +378,19 @@
                                 markup += '<a class="btn mt-1 btn-dark btn-sm btn-lampiran text-white" data-id="'+full.kode_pengajuan+'"><i class="fa fa-file"></i> Lampiran</a>';
 
                             @endcan
+                            @can('bayar pengajuan pinjaman')
+                            if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}){
+                                        if (full.status_jkk == 1)
+                                        {
+                                            markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
+                                        }
+                                        else
+                                        {
+                                            markup += 'JKK Belum di Print';
+
+                                        }
+                                    @endcan
+                                }
                         @endif
 
                         return markup;
@@ -393,8 +410,7 @@
                 { "targets": 9,"searchable": false, "orderable": false },
                 { "targets": 10,"searchable": false, "orderable": false },
                 { "targets": 11,"searchable": false, "orderable": false },
-                { "targets": 12,"searchable": false, "orderable": false },
-                { "targets": 13,"searchable": false, "orderable": false },
+                { "targets": 12,"searchable": false, "orderable": true },
             ],
             dom: 'lBrtip',
             buttons: [
@@ -443,6 +459,7 @@
             var id = $(this).data('id');
             var status = $(this).data('status');
             var old_status = $(this).data('old-status');
+            var tgl_transaksi = $('#tgl_transaksi').val();
             var url = '{{ route("pengajuan-pinjaman-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
@@ -488,6 +505,7 @@
                         formData.append('password', password);
                         formData.append('id_akun_debet', id_akun_debet);
                         formData.append('old_status', old_status);
+                        formData.append('tgl_transaksi', tgl_transaksi);
                         formData.append('keterangan', keterangan);
                         // getting selected checkboxes kode ambil(s)
                         var ids_array = table
