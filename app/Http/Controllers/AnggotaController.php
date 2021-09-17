@@ -72,10 +72,13 @@ class AnggotaController extends Controller {
         $data['bank'] = Bank::pluck('nama','id');
         $company = $anggota->company;
         $groupId = null;
+        if($company){
         if ($company->company_group_id)
         {
             $groupId = $company->company_group_id;
+        }    
         }
+        
 
         $listJenisPenghasilan = JenisPenghasilan::show()
                                                 ->where('company_group_id', $groupId)
