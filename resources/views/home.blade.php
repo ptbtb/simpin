@@ -201,9 +201,9 @@
                                 <td>{{ ($searchResult->nipp)? $searchResult->nipp:'-' }}</td>
                             </tr>
                             <tr>
-                                <th>Lokasi Kerja</th>
+                                <th>Unit Kerja</th>
                                 <td>:</td>
-                                <td>{{ ($searchResult->lokasi_kerja)? $searchResult->lokasi_kerja:'-' }}</td>
+                                <td>{{ ($searchResult->company)? $searchResult->company->nama:'-' }}</td>
                                 <th>Tanggal Masuk</th>
                                 <th>:</td>
                                 <td>{{ ($searchResult->tgl_masuk)? $searchResult->tgl_masuk->format('d F Y'):'-' }}</td>
