@@ -20,6 +20,7 @@
 @endsection
 
 @section('plugins.Datatables', true)
+@section('plugins.Select2', true)
 @section('plugins.SweetAlert2', true)
 
 @section('css')
@@ -37,9 +38,13 @@
         <div class="card-body">
             <form action="{{ route('budget.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label>Budget Name</label>
                     <input type="text" name="name" class="form-control" placeholder="Budget Name" required>
+                </div> --}}
+                <div class="form-group">
+                    <label>Budget Name</label>
+                    <select name="name" class="form-control" required id="selectBudget"></select>
                 </div>
                 <div class="form-group">
                     <label>Date</label>
@@ -67,6 +72,27 @@
         $('.date').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'mm-yyyy'
+        });
+
+        $("#selectBudget").select2({
+            placeholder: 'Choose one',
+            ajax: {
+                url: '{{ route('code.search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
         });
     </script>
 @endsection

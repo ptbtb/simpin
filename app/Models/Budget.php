@@ -18,6 +18,11 @@ class Budget extends Model
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
+    public function code()
+    {
+        return $this->belongsTo(Code::class, 'code', 'CODE');
+    }
+
     public function getDateViewAttribute()
     {
         if ($this->date)

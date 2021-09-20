@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\Api\JenisPenghasilanController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\CodeController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
@@ -487,3 +488,6 @@ Route::prefix('budget')->middleware('auth')->group(function ()
     Route::put('{id}/update', [BudgetController::class, 'update'])->name('budget.update');
     Route::get('excel', [BudgetController::class, 'excel'])->name('budget.excel');
 });
+
+Route::get('code/search', [CodeController::class, 'search'])->name('code.search');
+Route::get('code/search/{id}', [CodeController::class, 'searchId'])->name('code.search.id');

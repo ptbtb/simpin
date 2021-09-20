@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\BudgetExport;
 use App\Models\Budget;
+use App\Models\Code;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,10 +39,18 @@ class BudgetController extends Controller
     {
         try
         {
-            DB::transaction(function () use ($request)
+            $code = Code::where('CODE', 'like', '%' . $request->name . '%')
+                        ->first();
+            if (is_null($code))
+            {
+                return redirect()->back()->withError('Code not found');
+            }
+
+            DB::transaction(function () use ($request, $code)
             {
                 $budget = new Budget();
-                $budget->name = $request->name;
+                $budget->code = $code->CODE;
+                $budget->name = $code->NAMA_TRANSAKSI;
                 $budget->date = Carbon::createFromFormat('m-Y', $request->date);
                 $budget->description = $request->description;
                 $budget->amount = $request->amount;
@@ -61,11 +70,12 @@ class BudgetController extends Controller
 
     public function edit($id)
     {
-        $budget = Budget::find($id);
+        $budget = Budget::with('code')
+                        ->find($id);
         if (is_null($budget))
         {
             return redirect()->back()->withErrors('Budget not found');
-        }
+        };
 
         $data['title'] = 'Edit Budget';
         $data['budget'] = $budget;
@@ -82,9 +92,17 @@ class BudgetController extends Controller
                 return redirect()->back()->withErrors('Budget not found');
             }
 
-            DB::transaction(function () use ($request, $budget)
+            $code = Code::where('CODE', 'like', '%' . $request->name . '%')
+                        ->first();
+            if (is_null($code))
             {
-                $budget->name = $request->name;
+                return redirect()->back()->withError('Code not found');
+            }
+
+            DB::transaction(function () use ($request, $budget, $code)
+            {
+                $budget->code = $code->CODE;
+                $budget->name = $code->NAMA_TRANSAKSI;
                 $budget->date = Carbon::createFromFormat('m-Y', $request->date);
                 $budget->description = $request->description;
                 $budget->amount = $request->amount;
