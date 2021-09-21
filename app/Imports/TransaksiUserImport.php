@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
 use App\Models\Code;
+use Illuminate\Support\Facades\Log;
 
 
 class TransaksiUserImport 
@@ -23,6 +24,7 @@ class TransaksiUserImport
 	{
 		try
 		{
+			\Log::info($transaksi['NIPP']);
 			if($transaksi['THN']){
 			$period_raw=$transaksi['THN'].'-'.sprintf('%02d', $transaksi['BLN']);
         	 //dd($period_raw);die;
@@ -31,7 +33,6 @@ class TransaksiUserImport
 			$idakun=Code::where('CODE',$transaksi['COA_PERANTARA'])->first();
 			$anggota=Anggota::where('kode_anggota',$transaksi['NO_ANG'])->first();
 			$tgl_transaksi = $transaksi['TGL_TRANSAKSI']->format('Y-m-d');
-			
 			if($transaksi['S_WAJIB']>0){
 				$check= Simpanan::where('kode_jenis_simpan','411.12.000')
 				->where('kode_anggota',$transaksi['NO_ANG'])
@@ -52,7 +53,7 @@ class TransaksiUserImport
 					$simpanan->kode_jenis_simpan ='411.12.000';
 					$simpanan->keterangan = $nama_simpanan->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
 					$simpanan->mutasi = 0;
-					$simpanan->serial_number = SimpananManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
+					$simpanan->serial_number = SimpananManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 					$simpanan->id_akun_debet = ($idakun->id) ? $idakun->id : null;
                  $simpanan->save();
                  JurnalManager::createJurnalSimpanan($simpanan);
@@ -76,7 +77,7 @@ class TransaksiUserImport
 					$simpanan->kode_jenis_simpan ='502.01.000';
 					$simpanan->keterangan = $nama_simpanan2->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
 					$simpanan->mutasi = 0;
-					$simpanan->serial_number = SimpananManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
+					$simpanan->serial_number = SimpananManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 					$simpanan->id_akun_debet = ($idakun->id) ? $idakun->id : null;
 					
 					$simpanan->save();
@@ -93,7 +94,7 @@ class TransaksiUserImport
 
 					if ($angsuran1)
 					{
-						$serialNumber=AngsuranManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
+						$serialNumber=AngsuranManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran1->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran1->besar_pembayaran;
@@ -141,7 +142,7 @@ class TransaksiUserImport
 
 					if ($angsuran2)
 					{
-						$serialNumber2=AngsuranManager::getSerialNumber($tgl_transaksi->format('d-m-Y'));
+						$serialNumber2=AngsuranManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
 						if ($angsuran2->besar_pembayaran) {
 							$pembayaran = $pembayaran + $angsuran2->besar_pembayaran;
