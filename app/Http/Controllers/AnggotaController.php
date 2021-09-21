@@ -190,6 +190,12 @@ class AnggotaController extends Controller {
             $Anggota->email = $request->email;
             $Anggota->emergency_kontak = $request->emergency_kontak;
             $Anggota->status = 'aktif';
+            if ($request->company==22){
+               $Anggota->id_jenis_anggota = 4; 
+            }
+            if ($request->jenis_anggota==4){
+               $Anggota->company_id = 22; 
+            }
 
             // save file KTP
             $file_ktp = $request->ktp_photo;
@@ -215,6 +221,7 @@ class AnggotaController extends Controller {
             $Anggota->save();
 
             // save penghasilan
+            if(!is_null($request->penghasilan)){
             $requestPenghasilan = $request->penghasilan;
 			foreach ($requestPenghasilan as $key => $value)
 			{
@@ -234,7 +241,7 @@ class AnggotaController extends Controller {
 				}
 				$penghasilan->save();
 			}
-
+        }
 
 			// for file upload
 			$fileRequestPenghasilan = $request->file_penghasilan;
