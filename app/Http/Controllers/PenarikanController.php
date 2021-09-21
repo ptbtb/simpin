@@ -312,10 +312,12 @@ class PenarikanController extends Controller
         try {
             $user = Auth::user();
 
-            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet')->orderBy('tgl_ambil','desc');
+            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet');
 
             if($request->status_penarikan != "")
             {
+                $listPenarikan->where('status_pengambilan', $request->status_penarikan);
+            }else{
                 $listPenarikan->where('status_pengambilan', $request->status_penarikan);
             }
 

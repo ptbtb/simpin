@@ -204,8 +204,8 @@
                     className: "dt-body-center", "name": "tgl_pengajuan"
                 },
                 {
-                    mData: 'nama_anggota', sType: "string",
-                    className: "dt-body-center", "name": "nama_anggota",
+                    mData: 'anggota.nama_anggota', sType: "string",
+                    className: "dt-body-center", "name": "anggota.nama_anggota",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
@@ -401,8 +401,8 @@
                 { "targets": 0,"searchable": false, "orderable": false, 'checkboxes' : { 'selectRow': true } },
                 { "targets": 1,"searchable": false, "orderable": false },
                 { "targets": 2,"searchable": false, "orderable": false },
-                { "targets": 3,"searchable": true, "orderable": false },
-                { "targets": 4,"searchable": false, "orderable": false },
+                { "targets": 3,"searchable": true, "orderable": true },
+                { "targets": 4,"searchable": false, "orderable": true },
                 { "targets": 5,"searchable": false, "orderable": false },
                 { "targets": 6,"searchable": false, "orderable": false },
                 { "targets": 7,"searchable": false, "orderable": false },

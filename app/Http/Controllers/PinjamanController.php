@@ -154,11 +154,13 @@ class PinjamanController extends Controller {
             $user = Auth::user();
             $this->authorize('view pengajuan pinjaman', $user);
 
-            $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan')->orderBy('tgl_pengajuan','asc');
+            $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan');
 
             if($request->status_pengajuan != "")
             {
                 $listPengajuanPinjaman->where('id_status_pengajuan', $request->status_pengajuan);
+            }else{
+                $listPengajuanPinjaman->whereNotIn('id_status_pengajuan', [8,9,10]);
             }
 
             if($request->tgl_pengajuan != "")

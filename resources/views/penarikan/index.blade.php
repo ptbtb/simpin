@@ -189,8 +189,8 @@
                     className: "dt-body-center", "name": "tgl_ambil"
                 },
                 {
-                    mData: 'nama_anggota', sType: "string",
-                    className: "dt-body-center", "name": "nama_anggota",
+                    mData: 'anggota.nama_anggota', sType: "string",
+                    className: "dt-body-center", "name": "anggota.nama_anggota",
                     mRender : function(data, type, full)
                     {
                         var markup = '';
@@ -383,12 +383,7 @@
 
                                         }
                                         }
-                                else if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_DITERIMA }})
-                                    markup += '<b style="color: green !important"><i class="fas fa-check"></i></b>';
-                                else
-                                {
-                                    markup += '<b style="color: red !important"><i class="fas fa-times"></i></b>';
-                                }
+                                
                                 
                             @endcan
 
@@ -402,8 +397,8 @@
                 { "targets": 0,"searchable": false, "orderable": false, 'checkboxes' : { 'selectRow': true } },
                 { "targets": 1,"searchable": false, "orderable": false },
                 { "targets": 2,"searchable": false, "orderable": false },
-                { "targets": 3,"searchable": false, "orderable": false },
-                { "targets": 4,"searchable": true, "orderable": false },
+                { "targets": 3,"searchable": false, "orderable": true },
+                { "targets": 4,"searchable": true, "orderable": true },
                 { "targets": 5,"searchable": false, "orderable": false },
                 { "targets": 6,"searchable": false, "orderable": false },
                 { "targets": 7,"searchable": false, "orderable": false },
