@@ -5,9 +5,12 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class LaporanExcelExport implements FromView, ShouldAutoSize
+class LaporanExcelExport implements WithMultipleSheets
 {
+     use Exportable;
     protected $data;
 
     public function __construct($data)
@@ -15,8 +18,14 @@ class LaporanExcelExport implements FromView, ShouldAutoSize
         $this->data = $data;
     }
 
-    public function view(): View
+    
+    public function sheets(): array
     {
-        return view('simpanan.laporan-excel', $this->data);
+       
+       return [
+            'Resume Tahun' => new LaporanExcelResumeAllExport($this->data),
+            'Saldo Anggota' => new SaldoAnggotaSheet(),
+        ];
     }
 }
+
