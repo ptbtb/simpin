@@ -489,5 +489,12 @@ Route::prefix('budget')->middleware('auth')->group(function ()
     Route::get('excel', [BudgetController::class, 'excel'])->name('budget.excel');
 });
 
+Route::Group(['prefix' => 'arus-kas', 'middleware' => 'auth'], function ()
+{
+    Route::get('laporan', [App\Http\Controllers\ArusKasController::class,  'laporan'])->name('laporan.arus-kas');
+    Route::post('laporan', [App\Http\Controllers\ArusKasController::class,  'laporan'])->name('filter.laporan.arus-kas');
+    Route::get('laporan/excel', [App\Http\Controllers\ArusKasController::class,  'downloadExcel'])->name('excel.laporan.arus-kas');
+});
+
 Route::get('code/search', [CodeController::class, 'search'])->name('code.search');
 Route::get('code/search/{id}', [CodeController::class, 'searchId'])->name('code.search.id');
