@@ -776,6 +776,25 @@
         .ajaxStop(function () {
             $loading.hide();
         });
+        $("#select_anggota").select2({
+            ajax: {
+                url: '{{ route('anggota-ajax-search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
 
     </script>
 @endsection
