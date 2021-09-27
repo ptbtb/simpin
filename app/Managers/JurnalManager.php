@@ -25,7 +25,7 @@ class JurnalManager
         $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $penarikan->tgl_transaksi);
         $jurnal->akun_debet = $penarikan->code_trans;
         $jurnal->debet = $penarikan->besar_ambil;
-        if($penarikan->akun_kredit)
+        if($penarikan->id_akun_debet)
         {
             $jurnal->akun_kredit = $penarikan->akunDebet->CODE;
         }
@@ -178,7 +178,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         // debet
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
         $jurnal->debet = $angsuran->besar_angsuran;
         $jurnal->akun_kredit = 0;
@@ -299,7 +299,7 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
     {
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JSA;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d h:i:s', $saldoAwal->created_at)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $saldoAwal->created_at)->format('Ymd').(Jurnal::count()+1);
 
         if ($saldoAwal->code->normal_balance_id == NORMAL_BALANCE_DEBET)
         {
@@ -451,7 +451,7 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
 
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
         $jurnal->debet = $angsuran->besar_angsuran;
         $jurnal->akun_kredit = 0;
@@ -467,7 +467,7 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         // kredit
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $angsuran->paid_at)>format('Ymd').(Jurnal::count()+1);
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)>format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_debet = 0;
         $jurnal->debet = 0;
         if($angsuran->akunKredit)
@@ -490,7 +490,7 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         // jurnal untuk JASA
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_kredit = 0;
         $jurnal->kredit = 0;
         // japen
