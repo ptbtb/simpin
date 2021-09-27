@@ -88,6 +88,7 @@
                         <th>#</th>
                         <th>No</th>
                         <th>Tanggal Pengajuan</th>
+                        <th>Nomer Anggota</th>
                         <th>Nama Anggota</th>
                         <th>Jenis Pinjaman</th>
                         <th>Besar Pinjaman</th>
@@ -202,6 +203,10 @@
                 {
                     mData: 'tgl_pengajuan', sType: "string",
                     className: "dt-body-center", "name": "tgl_pengajuan"
+                },
+                {
+                    mData: 'kode_anggota', sType: "string",
+                    className: "dt-body-center", "name": "kode_anggota"
                 },
                 {
                     mData: 'anggota.nama_anggota', sType: "string",
@@ -389,6 +394,7 @@
                                             markup += 'JKK Belum di Print';
 
                                         }
+                                    }
                                     @endcan
                                 
                         @endif
