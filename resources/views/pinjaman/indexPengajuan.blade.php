@@ -390,7 +390,7 @@
 
                                         }
                                     @endcan
-                                }
+                                
                         @endif
 
                         return markup;
