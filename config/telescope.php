@@ -77,7 +77,8 @@ return [
 
     'middleware' => [
         'web',
-        Authorize::class,
+        'auth'
+        // Authorize::class,
     ],
 
     /*
@@ -162,7 +163,7 @@ return [
             'ignore_packages' => true,
         ],
 
-        Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', false),
+        Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
 
         Watchers\ViewWatcher::class => env('TELESCOPE_VIEW_WATCHER', false),
     ],
