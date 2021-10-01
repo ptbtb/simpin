@@ -61,10 +61,10 @@
                     <label>Maksimal Pinjaman</label>
                     <input type="number" step="any" class="form-control" name="maks_pinjam" size="54" placeholder="Maksimal Pinjaman"/>
                 </div>
-                <div class="form-group col-md-6">
+                {{-- <div class="form-group col-md-6">
                     <label>Bunga</label>
                     <input type="number" step="any" step="any" class="form-control" name="bunga" size="54" placeholder="Bunga"/>
-                </div>
+                </div> --}}
                 <div class="form-group col-md-6">
                     <label>Asuransi</label>
                     <input type="number" step="any" step="any" class="form-control" name="asuransi" placeholder="Asuransi"/>
