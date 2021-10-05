@@ -473,6 +473,12 @@ return [
                     'icon' => 'fas fa-book nav-icon',
                     'can'  => ['view simpanan'],
                 ],
+                [
+                    'text' => 'Arus Kas',
+                    'url' => '/arus-kas/laporan',
+                    'icon' => 'fas fa-book nav-icon',
+                    'can'  => ['view jurnal'],
+                ],
             ],
         ],
         [
