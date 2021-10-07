@@ -26,14 +26,14 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $penarikan->anggota->kode_anggota }}</td>
-                        <td>{{ $penarikan->anggota->tabungan->kode_tabungan }}</td>
+                        <td>{{ $penarikan->anggota->tabungan->kode_tabungan ?? '-' }}</td>
                         <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
                         <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
                         <td>{{ $penarikan->keterangan }}</td>
                         <td>{{ $penarikan->code_trans }}</td>
                     </tr>
                 @endforeach
-            </tbody> 
+            </tbody>
         </table>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
