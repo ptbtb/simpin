@@ -26,7 +26,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $penarikan->anggota->kode_anggota }}</td>
-                        <td>{{ $penarikan->anggota->tabungan->kode_tabungan ?? '-' }}</td>
+                        <td>{{ $penarikan->anggota->tabungan->where('id', $penarikan->id_tabungan)->first()->kode_tabungan ?? '-' }}</td>
                         <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
                         <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
                         <td>{{ $penarikan->keterangan }}</td>
