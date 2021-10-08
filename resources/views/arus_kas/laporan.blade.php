@@ -69,7 +69,9 @@
         $(document).ready(function ()
         {
             $('.datepicker').datepicker({
-                format: "dd-mm-yyyy"
+                format: "dd-mm-yyyy",
+                orientation: "bottom",
+                autoclose: true,
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
