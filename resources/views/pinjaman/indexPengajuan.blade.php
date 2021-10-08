@@ -73,10 +73,13 @@
     </div>
     <div class="card">
         <div class="card-header text-right">
-            {{-- <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn mt-1 btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
-            <a href="{{ route('pinjaman-download-excel', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn mt-1 btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a> --}}
+            {{-- <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn mt-1 btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a> --}}
             @can('print jkk')
                 <a href="{{ route('pengajuan-pinjaman-print-jkk') }}" class="btn mt-1 btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
+                {{-- <a href="{{ route('download-pengajuan-pinjaman-excel', $request->toArray()) }}" class="btn mt-1 btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a> --}}
+            @endcan
+            @can('download pengajuan pinjaman')
+                <a href="#" class="btn mt-1 btn-sm btn-warning btn-download-excel"><i class="fa fa-download"></i> Download Excel</a>
             @endcan
             <a href="{{ route('pengajuan-pinjaman-add') }}" class="btn mt-1 btn-sm btn-success"><i class="fas fa-plus"></i> Buat Pengajuan Pinjaman</a>
         </div>
@@ -146,9 +149,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                   
+
                         <a data-id="" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}"class="text-white btn mt-1 btn-sm btn-success btn-approval">Bayar</a>
-                   
+
                     <button type="button" class="btn mt-1 btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -396,7 +399,7 @@
                                         }
                                     }
                                     @endcan
-                                
+
                         @endif
 
                         return markup;
@@ -795,6 +798,15 @@
                 }
             }
         });
+
+        $(document).on('click', '.btn-download-excel', function ()
+        {
+            var statusPengajuan = $('#select_status_pengajuan option:selected').val();
+            var tglPengajuan = $('#input_tgl_pengajuan').val();
+            var anggota = $('#select_anggota option:selected').val();
+            var url = '{{ route("download-pengajuan-pinjaman-excel") }}' + '?status_pengajuan='+statusPengajuan+'&tgl_pengajuan='+tglPengajuan+'&anggota='+anggota;
+            window.location.replace(url);
+        })
 
     </script>
 @endsection
