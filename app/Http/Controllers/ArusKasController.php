@@ -18,20 +18,24 @@ class ArusKasController extends Controller
         $data['title'] = 'Laporan Arus Kas';
         $data['request'] = $request;
         
-        // check if period date has been selected
-        if(!$request->period)
-        {
-            $request->period = Carbon::today()->format('m-Y');
+        // check if from and to date has been selected
+        if(!$request->from)
+        {          
+            $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+        }
+        if(!$request->to)
+        {          
+            $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
         }
 
-        if ($request->period)
+        if ($request->from && $request->to)
         {
             // find kas and bank account
-            $kasAndBankAccount = Code::where('code_category_id', 4)->pluck('CODE');
+            $kasAndBankAccount = Code::where('code_category_id', 4)->where('is_parent', 0)->pluck('CODE');
 
             // count saldo awal
             $startSaldoAwalPeriod = Carbon::createFromFormat('d-m-Y', '01-01-2020')->format('Y-m-d');
-            $endSaldoAwalPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfMonth()->subDays()->format('Y-m-d');
+            $endSaldoAwalPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->subDays()->format('Y-m-d');
 
             $saldoAwalKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('created_at', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('kredit');
             $saldoAwalDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('created_at', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('debet');
@@ -40,12 +44,12 @@ class ArusKasController extends Controller
             $data['saldoAwal'] = $totalSaldoAwal;
 
             // get start/end period (period's month)
-            $startPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfMonth()->format('Y-m-d');
-            $endPeriod = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
+            $startPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
+            $endPeriod = Carbon::createFromFormat('d-m-Y', $request->to)->format('Y-m-d');
 
             // store data to view
-            $data['startPeriod'] = Carbon::createFromFormat('m-Y', $request->period)->startOfMonth()->format('d-m-Y');
-            $data['endPeriod'] = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('d-m-Y');
+            $data['startPeriod'] = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
+            $data['endPeriod'] = Carbon::createFromFormat('d-m-Y', $request->to)->format('Y-m-d');
 
             // get all transaction in period
             $allTransactions = DB::table('t_jurnal')->whereBetween('created_at', [$startPeriod, $endPeriod])->get();

@@ -34,9 +34,13 @@
             <form action="{{ route('filter.laporan.arus-kas') }}" method="POST">
                 @csrf
                 <div class="row">
-                    <div class="col-md-6">
-                        <label>Periode</label>
-                        <input class="form-control datepicker" placeholder="mm-yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('m-Y', $request->period)->format('m-Y') }}" autocomplete="off" />
+                    <div class="col-md-3">
+                        <label>Dari</label>
+                        <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="from" name="from" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y') }}" autocomplete="off" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Sampai</label>
+                        <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}" autocomplete="off" />
                     </div>
                     <div class="col-12 text-center mt-1">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
@@ -65,9 +69,7 @@
         $(document).ready(function ()
         {
             $('.datepicker').datepicker({
-                format: "mm-yyyy",
-                viewMode: "months", 
-                minViewMode: "months"
+                format: "dd-mm-yyyy"
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
