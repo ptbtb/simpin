@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\JenisPenghasilanController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CodeController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\JkkPrintedController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\SHUController;
@@ -236,7 +237,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
             Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcelPengajuanPinjaman'])->name('download-pengajuan-pinjaman-excel');
             Route::get('data-jurnal/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'viewDataJurnalPinjaman'])->name('view-data-jurnal-pengajuan-pinjaman');
             Route::get('print-jkk', [App\Http\Controllers\PengajuanController::class, 'indexJkk'])->name('pengajuan-pinjaman-print-jkk');
-            Route::post('print-jkk', [App\Http\Controllers\PengajuanController::class, 'printJkk'])->name('pengajuan-pinjaman-print-jkk');
+            Route::post('print-jkk-store', [App\Http\Controllers\PengajuanController::class, 'printJkk'])->name('pengajuan-pinjaman-print-jkk');
             Route::get('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add')->middleware(['pinjaman']);
             Route::get('maxPinjaman', [App\Http\Controllers\PinjamanController::class, 'calculateMaxPinjaman'])->name('pengajuan-pinjaman-calculate-max-pinjaman');
             Route::post('create', [App\Http\Controllers\PinjamanController::class, 'storePengajuanPinjaman'])->name('pengajuan-pinjaman-add');
@@ -499,3 +500,11 @@ Route::Group(['prefix' => 'arus-kas', 'middleware' => 'auth'], function ()
 
 Route::get('code/search', [CodeController::class, 'search'])->name('code.search');
 Route::get('code/search/{id}', [CodeController::class, 'searchId'])->name('code.search.id');
+
+Route::group(['prefix' => 'jkk-printed', 'middleware' => 'auth'], function ()
+{
+    Route::get('list', [JkkPrintedController::class, 'index'])->name('jkk-printed-list');
+    Route::post('list', [JkkPrintedController::class, 'index'])->name('jkk-printed-list');
+    Route::get('list/data', [JkkPrintedController::class, 'indexAjax'])->name('jkk-printed-data');
+    Route::get('reprint/{id}', [JkkPrintedController::class, 'reprint'])->name('jkk-printed-reprint');
+});

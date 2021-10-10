@@ -18,6 +18,7 @@ use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Tabungan;
 use App\Models\Code;
+use App\Models\JkkPrinted;
 use App\Models\Pinjaman;
 use App\Models\SimpinRule;
 use App\Models\View\ViewSaldo;
@@ -408,7 +409,7 @@ class PenarikanController extends Controller
                         return response()->json(['message' => 'success'], 200);
                     }
 
-                    
+
                     if (is_null($penarikan)) {
                         return response()->json(['message' => 'not found'], 404);
                     }
@@ -430,7 +431,7 @@ class PenarikanController extends Controller
                             $penarikan->status_pengambilan = $request->status;
                         }
                     } else {
-                        
+
                         $penarikan->status_pengambilan = $request->status;
                     }
 
@@ -517,7 +518,20 @@ class PenarikanController extends Controller
                 $penarikan->status_jkk = 1;
                 $penarikan->save();
             }
-             $data['tgl_print']=Carbon::createFromFormat('Y-m-d', $request->tgl_print);
+
+            // create jkkprinted
+            $jkkPrinted = JkkPrinted::where('jkk_number',  $request->no_jkk)->first();
+            if (is_null($jkkPrinted))
+            {
+                $jkkPrinted = new JkkPrinted();
+                $jkkPrinted->jkk_number = $request->no_jkk;
+                $jkkPrinted->jkk_printed_type_id = JKK_PRINTED_TYPE_PENARIKAN_SIMPANAN;
+                $jkkPrinted->printed_at = Carbon::createFromFormat('Y-m-d', $request->tgl_print);
+                $jkkPrinted->printed_by = Auth::user()->id;
+                $jkkPrinted->save();
+            }
+
+            $data['tgl_print']=Carbon::createFromFormat('Y-m-d', $request->tgl_print);
 
             $data['listPenarikan'] = $listPenarikan;
             $data['jenisSimpanan'] = JenisSimpanan::all();

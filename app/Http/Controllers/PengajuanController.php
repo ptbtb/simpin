@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JkkPrinted;
 use App\Models\Pengajuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use PDF;
 
@@ -32,6 +34,7 @@ class PengajuanController extends Controller
     {
         try
         {
+            \Log::info('hit');
             $listPengajuan = Pengajuan::whereIn('kode_pengajuan', $request->kode_pengajuan)
                                         ->get();
 
@@ -41,7 +44,19 @@ class PengajuanController extends Controller
                 $pengajuan->status_jkk = 1;
                 $pengajuan->save();
             }
-            
+
+            // create jkkprinted
+            $jkkPrinted = JkkPrinted::where('jkk_number',  $request->no_jkk)->first();
+            if (is_null($jkkPrinted))
+            {
+                $jkkPrinted = new JkkPrinted();
+                $jkkPrinted->jkk_number = $request->no_jkk;
+                $jkkPrinted->jkk_printed_type_id = JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN;
+                $jkkPrinted->printed_at = Carbon::createFromFormat('Y-m-d', $request->tgl_print);
+                $jkkPrinted->printed_by = Auth::user()->id;
+                $jkkPrinted->save();
+            }
+
             $data['listPengajuan'] = $listPengajuan;
             $data['tgl_print']=Carbon::createFromFormat('Y-m-d', $request->tgl_print);
             view()->share('data',$data);

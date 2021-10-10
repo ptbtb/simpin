@@ -548,6 +548,13 @@ return [
             'can'  => ['view budget'],
         ],
         [
+            'text' => 'Re-print JKK',
+            'icon' => 'fas fa-print nav-icon',
+            'route' => 'jkk-printed-list',
+            'can'  => ['print jkk'],
+            'active'  => ['/jkk-printed', 'regex:@^invoice/[0-9]+$@'],
+        ],
+        [
             'text' => 'Import Tools',
             //'url' => '/saldo-awal',
             'icon' => 'fas fa-upload nav-icon',
