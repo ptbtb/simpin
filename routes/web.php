@@ -6,6 +6,7 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CodeController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JkkPrintedController;
+use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\SHUController;
@@ -36,6 +37,8 @@ Route::get('/clear-cache', function() {
     Artisan::call('config:cache');
     return 'DONE'; //Return anything
 });
+
+Route::get('generate-jkk', [MigrationController::class, 'generateJkkPrinted']);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
