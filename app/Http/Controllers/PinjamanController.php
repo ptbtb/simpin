@@ -154,19 +154,23 @@ class PinjamanController extends Controller
             $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan');
 
             if ($request->status_pengajuan != "") {
-                $listPengajuanPinjaman->where('id_status_pengajuan', $request->status_pengajuan);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('id_status_pengajuan', $request->status_pengajuan);
             } else {
-                $listPengajuanPinjaman->whereNotIn('id_status_pengajuan', [8, 9, 10]);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->whereNotIn('id_status_pengajuan', [8, 9, 10]);
             }
 
-            if ($request->tgl_pengajuan != "") {
-                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->tgl_pengajuan)->toDateString();
+            if ($request->start_tgl_pengajuan != "") {
+                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
+            }
 
-                $listPengajuanPinjaman->where('tgl_pengajuan', $tgl_pengajuan);
+            if ($request->end_tgl_pengajuan != "") {
+                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
             }
 
             if ($request->anggota != "") {
-                $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
             }
 
             if ($user->isAnggota()) {
@@ -175,7 +179,7 @@ class PinjamanController extends Controller
                     return redirect()->back()->withError('Your account has no members');
                 }
 
-                $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota);
             }
 
             return Datatables::eloquent($listPengajuanPinjaman)
@@ -1388,24 +1392,29 @@ class PinjamanController extends Controller
             $listPengajuanPinjaman = Pengajuan::with('anggota', 'createdBy', 'approvedBy', 'pinjaman', 'paidByCashier', 'jenisPinjaman', 'statusPengajuan', 'pengajuanTopup', 'akunDebet', 'jenisPenghasilan');
 
             if ($request->status_pengajuan != "") {
-                $listPengajuanPinjaman->where('id_status_pengajuan', $request->status_pengajuan);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('id_status_pengajuan', $request->status_pengajuan);
             } else {
-                $listPengajuanPinjaman->whereNotIn('id_status_pengajuan', [8, 9, 10]);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->whereNotIn('id_status_pengajuan', [8, 9, 10]);
             }
 
-            if ($request->tgl_pengajuan != "") {
-                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->tgl_pengajuan)->toDateString();
-
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', $tgl_pengajuan);
+            if ($request->start_tgl_pengajuan != "") {
+                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
             }
-            else
+
+            if ($request->end_tgl_pengajuan != "") {
+                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
+            }
+            
+            if($request->start_tgl_pengajuan == "" && $request->end_tgl_pengajuan == "")
             {
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', Carbon::now()->startOfMonth())
                                                                 ->where('tgl_pengajuan', '<=', Carbon::now()->endOfMonth());
             }
 
             if ($request->anggota != "") {
-                $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
             }
 
             if ($user->isAnggota()) {
@@ -1414,7 +1423,7 @@ class PinjamanController extends Controller
                     return redirect()->back()->withError('Your account has no members');
                 }
 
-                $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota);
             }
 
             $listPengajuanPinjaman = $listPengajuanPinjaman->get();

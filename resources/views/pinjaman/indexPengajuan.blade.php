@@ -54,7 +54,8 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>Tgl. Pengajuan</label>
-                    <input type="text" name="tgl_pengajuan" id="input_tgl_pengajuan" value="{{ old('tgl_pengajuan') }}" class="form-control" placeholder="dd-mm-yyyy" autocomplete="off">
+                    <input type="text" name="start_tgl_pengajuan" id="start_input_tgl_pengajuan" value="{{ old('start_tgl_pengajuan') }}" class="form-control" placeholder="Start date" autocomplete="off">
+                    <input type="text" name="end_tgl_pengajuan" id="end_input_tgl_pengajuan" value="{{ old('end_tgl_pengajuan') }}" class="form-control" placeholder="End Date" autocomplete="off">
                 </div>
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
@@ -186,7 +187,8 @@
                 dataSrc: 'data',
                 data: function(data){
                     data.status_pengajuan = $('#select_status_pengajuan').val();
-                    data.tgl_pengajuan = $('#input_tgl_pengajuan').val();
+                    data.start_tgl_pengajuan = $('#start_input_tgl_pengajuan').val();
+                    data.end_tgl_pengajuan = $('#end_input_tgl_pengajuan').val();
                     data.anggota = $('#select_anggota').val();
                 },
             },
@@ -458,7 +460,11 @@
 		});
 
         $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-        $('#input_tgl_pengajuan').datepicker({
+        $('#start_input_tgl_pengajuan').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'dd-mm-yyyy'
+        });
+        $('#end_input_tgl_pengajuan').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'dd-mm-yyyy'
         });
@@ -802,9 +808,10 @@
         $(document).on('click', '.btn-download-excel', function ()
         {
             var statusPengajuan = $('#select_status_pengajuan option:selected').val();
-            var tglPengajuan = $('#input_tgl_pengajuan').val();
+            var startTglPengajuan = $('#start_input_tgl_pengajuan').val();
+            var endTglPengajuan = $('#end_input_tgl_pengajuan').val();
             var anggota = $('#select_anggota option:selected').val();
-            var url = '{{ route("download-pengajuan-pinjaman-excel") }}' + '?status_pengajuan='+statusPengajuan+'&tgl_pengajuan='+tglPengajuan+'&anggota='+anggota;
+            var url = '{{ route("download-pengajuan-pinjaman-excel") }}' + '?status_pengajuan='+statusPengajuan+'&start_tgl_pengajuan='+startTglPengajuan+'&end_tgl_pengajuan='+endTglPengajuan+'&anggota='+anggota;
             window.location.replace(url);
         })
 
