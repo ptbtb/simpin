@@ -34,8 +34,8 @@
                     <td>{{ $pengajuanPinjaman->besar_pinjam }}</td>
                     <td>{{ $pengajuanPinjaman->statusPengajuan->name }}</td>
                     <td>{{ $pengajuanPinjaman->tgl_acc? $pengajuanPinjaman->tgl_acc->toDateString():'' }}</td>
-                    <td>{{ $pengajuanPinjaman->createdBy->name }}</td>
-                    <td>{{ $pengajuanPinjaman->approvedBy->name }}</td>
+                    <td>{{ $pengajuanPinjaman->createdBy->name ?? '' }}</td>
+                    <td>{{ $pengajuanPinjaman->approvedBy->name ?? '' }}</td>
                     <td>{{ $pengajuanPinjaman->paidByCashier->name ?? '' }}</td>
                 </tr>
             @endforeach

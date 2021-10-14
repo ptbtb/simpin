@@ -1400,7 +1400,7 @@ class PinjamanController extends Controller
             }
             else
             {
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', Carbon::now()->firstOfMonth())
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', Carbon::now()->startOfMonth())
                                                                 ->where('tgl_pengajuan', '<=', Carbon::now()->endOfMonth());
             }
 
