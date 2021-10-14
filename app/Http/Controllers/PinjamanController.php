@@ -1396,7 +1396,12 @@ class PinjamanController extends Controller
             if ($request->tgl_pengajuan != "") {
                 $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->tgl_pengajuan)->toDateString();
 
-                $listPengajuanPinjaman->where('tgl_pengajuan', $tgl_pengajuan);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', $tgl_pengajuan);
+            }
+            else
+            {
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', Carbon::now()->firstOfMonth())
+                                                                ->where('tgl_pengajuan', '<=', Carbon::now()->endOfMonth());
             }
 
             if ($request->anggota != "") {
