@@ -65,7 +65,7 @@ class SettingPinjamanController extends Controller {
             $jenisPinjaman->nama_pinjaman = $request->nama_pinjaman;
             $jenisPinjaman->lama_angsuran = $request->lama_angsuran;
             $jenisPinjaman->maks_pinjam = $request->maks_pinjam;
-            $jenisPinjaman->bunga = $request->bunga;
+            // $jenisPinjaman->bunga = $request->bunga;
             $jenisPinjaman->asuransi = $request->asuransi;
             $jenisPinjaman->biaya_admin = filter_var($request->biaya_admin, FILTER_SANITIZE_NUMBER_INT);
             $jenisPinjaman->provisi = $request->provisi;
@@ -162,7 +162,7 @@ class SettingPinjamanController extends Controller {
             $jenisPinjaman->nama_pinjaman = $request->nama_pinjaman;
             $jenisPinjaman->lama_angsuran = $request->lama_angsuran;
             $jenisPinjaman->maks_pinjam = $request->maks_pinjam;
-            $jenisPinjaman->bunga = $request->bunga;
+            // $jenisPinjaman->bunga = $request->bunga;
             $jenisPinjaman->asuransi = $request->asuransi;
             $jenisPinjaman->biaya_admin = filter_var($request->biaya_admin, FILTER_SANITIZE_NUMBER_INT);
             $jenisPinjaman->provisi = $request->provisi;
