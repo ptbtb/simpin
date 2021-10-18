@@ -7,6 +7,7 @@ use App\Managers\SimpananManager;
 use App\Managers\PenarikanManager;
 use App\Managers\PinjamanManager;
 use App\Managers\AngsuranManager;
+use App\Managers\MigrationManager;
 
 use App\Imports\JurnalImport;
 
@@ -54,6 +55,12 @@ class Migration2Controller extends Controller
             {
 
                 $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
+                if($transactions->count()>0){
+                
+                $nextSerialNumber = MigrationManager::getSerialNumber(Carbon::createFromFormat('Y-m-d',$transactions[0]->tgl_posting)->format('d-m-Y'));
+                dd($nextSerialNumber);
+                }
+                
 
                 // group by uraian3 because 1 kode_bukti has more than 1 transaction
                 $groupByUraian = $transactions->groupBy('unik_bukti');
