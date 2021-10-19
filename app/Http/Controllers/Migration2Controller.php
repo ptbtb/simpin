@@ -57,8 +57,8 @@ class Migration2Controller extends Controller
                 $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
                 if($transactions->count()>0){
                 
-                $nextSerialNumber = MigrationManager::getSerialNumber(Carbon::createFromFormat('Y-m-d',$transactions[0]->tgl_posting)->format('d-m-Y'));
-                dd($nextSerialNumber);
+                $nextSerialNumber = MigrationManager::getSerialNumber($transactions[0]->tgl_posting->format('d-m-Y'));
+                $nextnomor = $transactions[0]->tgl_posting->format('Ymd').(Jurnal::count()+1);
                 }
                 
 
@@ -118,7 +118,8 @@ class Migration2Controller extends Controller
             if ($status[0]){
                 $newJurnal = new Jurnal();
                 $newJurnal->id_tipe_jurnal = $idTipeJurnal;
-                $newJurnal->nomer =$kredit->no_bukti;
+                // $newJurnal->nomer =$kredit->no_bukti;
+                $newJurnal->nomer =$nextnomor;
 
                                         // new format for code
 
@@ -136,6 +137,7 @@ class Migration2Controller extends Controller
                 $newJurnal->created_at = $kredit->tgl_posting;
                 $kredit->jurnals()->save($newJurnal); 
                 $kredits->is_success=1;
+                $kredits->serial_number=$nextSerialNumber;
                 $kredits->save();
             }else{
                 $kredits->is_success=2;
@@ -189,7 +191,8 @@ class Migration2Controller extends Controller
         if ($status[0]){
             $newJurnal = new Jurnal();
             $newJurnal->id_tipe_jurnal = $idTipeJurnal;
-            $newJurnal->nomer = $debet->no_bukti;
+            // $newJurnal->nomer = $debet->no_bukti;
+            $newJurnal->nomer = $nextnomor;
                                         // debet
 
             $newJurnal->akun_debet = $newCoa;
@@ -204,6 +207,7 @@ class Migration2Controller extends Controller
             $debet->jurnals()->save($newJurnal);
 
             $debets->is_success=1;
+            $debets->serial_number=$nextSerialNumber;
             $debets->save();
         }else{
             $debets->is_success=2;
@@ -231,14 +235,33 @@ echo('DONE');
 public static function transaksisimpanan($simpan){
     echo ('transaksisimpanan');
     $status =true;
+    if ($simpan->periode){
+        $per = $simpan->periode;
+    }else{
+       $per = $simpan->tgl_posting;
+    }
     $jenisSimpanans = JenisSimpanan::where('kode_jenis_simpan', $simpan->code)->first();
     $cek = Simpanan::where('kode_anggota',$simpan->kode_anggota)
-            ->where('periode',$simpan->tgl_posting)
+            ->where('periode',$per)
             ->where('kode_jenis_simpan',$simpan->code)
-            ->first();
-            if($cek){
-                $status =true;
-                $msg='sudah ada simpanan periode dimaksud';
+            ->get();
+            if($cek->count()>0){
+                $oldPer =new Carbon($cek->max('periode')); 
+                $newPer = $oldPer->addMonth();
+                // dd($newPer);
+
+                $simpanan = new Simpanan();
+                $simpanan->jenis_simpan = strtoupper($jenisSimpanans->nama_simpanan);
+    $simpanan->besar_simpanan = $simpan->jumlah;
+    $simpanan->kode_anggota = $simpan->kode_anggota;
+    $simpanan->u_entry = 'Admin BTB';
+    $simpanan->tgl_entri = $simpan->tgl_posting;
+    $simpanan->periode = $newPer;
+    $simpanan->kode_jenis_simpan = $simpan->code;
+    $simpanan->keterangan = ($simpan->uraian_3!==null)?$simpan->uraian_3:'';
+    $simpanan->save();
+    $status=true;
+    $msg='';
 
             }else{
 
@@ -248,7 +271,7 @@ public static function transaksisimpanan($simpan){
     $simpanan->kode_anggota = $simpan->kode_anggota;
     $simpanan->u_entry = 'Admin BTB';
     $simpanan->tgl_entri = $simpan->tgl_posting;
-    $simpanan->periode = $simpan->tgl_posting;
+    $simpanan->periode = $per;
     $simpanan->kode_jenis_simpan = $simpan->code;
     $simpanan->keterangan = ($simpan->uraian_3!==null)?$simpan->uraian_3:'';
     $simpanan->save();
@@ -448,13 +471,13 @@ public static function transaksipinjaman($pinjamans){
     $pinjaman->biaya_administrasi = (array_key_exists(70102011,$pinjamans->perlengkapan))?$pinjamans->perlengkapan[70102011]:0;
     $pinjaman->u_entry = 1;
     $pinjaman->tgl_entri = $pinjamans->tgl_posting;
-    $pinjaman->tgl_tempo = Carbon::createFromFormat('Y-m-d', $pinjamans->tgl_posting)->addMonths($lama_angsuran - 1);
+    $pinjaman->tgl_tempo = $pinjamans->tgl_posting->addMonths($lama_angsuran - 1);
     $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
     $pinjaman->keterangan = 'Pinjaman Baru Mutasi Simkop';
     $pinjaman->save();
     for ($i = 0; $i <= $pinjaman->sisa_angsuran - 1; $i++)
     {
-        $jatuhTempo = Carbon::createFromFormat('Y-m-d', $pinjamans->tgl_posting)->addMonths($i)->endOfMonth();
+        $jatuhTempo = $pinjamans->tgl_posting->addMonths($i)->endOfMonth();
         $sisaPinjaman = $pinjaman->sisa_pinjaman;
         $angsuran = new Angsuran();
         $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
