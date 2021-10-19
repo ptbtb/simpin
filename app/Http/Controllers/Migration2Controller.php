@@ -56,8 +56,13 @@ class Migration2Controller extends Controller
 
                 $transactions = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 0)->get();
                 if($transactions->count()>0){
-                
-                $nextSerialNumber = MigrationManager::getSerialNumber($transactions[0]->tgl_posting->format('d-m-Y'));
+                $transcek = JurnalTemp::where('unik_bukti', $jurnal->unik_bukti)->whereMonth('tgl_posting', '=', $bulan)->where('is_success', 1)->first();
+                if($transcek){
+                $nextSerialNumber =$transcek->serial_number;
+                }else{
+                     $nextSerialNumber = MigrationManager::getSerialNumber($transactions[0]->tgl_posting->format('d-m-Y'));
+                }
+               
                 $nextnomor = $transactions[0]->tgl_posting->format('Ymd').(Jurnal::count()+1);
                 }
                 
