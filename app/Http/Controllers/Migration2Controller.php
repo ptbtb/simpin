@@ -131,7 +131,7 @@ class Migration2Controller extends Controller
                 $newJurnal->akun_kredit = $newCoa;
                 $newJurnal->kredit = $kredit->jumlah;
 
-                $newJurnal->keterangan = ($kredit->uraian_3!==null)?$kredit->uraian_3:$kredit->uraian_1.' '.$kredit->uraian_2;
+                $newJurnal->keterangan = $kredit->uraian_1.'|'.$kredit->uraian_2.'|'.$kredit->uraian_3;
                 $newJurnal->created_by = 1;
                 $newJurnal->updated_by = 1;
                 $newJurnal->created_at = $kredit->tgl_posting;
@@ -201,7 +201,7 @@ class Migration2Controller extends Controller
             $newJurnal->akun_kredit = 0;
             $newJurnal->kredit = 0;
 
-            $newJurnal->keterangan = ($debets->uraian_3!==null)?$debets->uraian_3:$debets->uraian_1.' '.$debets->uraian_2;
+            $newJurnal->keterangan = $debets->uraian_1.'|'.$debets->uraian_2.'|'.$debets->uraian_3;
             $newJurnal->created_by = 1;
             $newJurnal->updated_by = 1;
             $newJurnal->created_at = $debet->tgl_posting;
