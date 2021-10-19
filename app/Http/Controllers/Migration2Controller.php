@@ -135,6 +135,7 @@ class Migration2Controller extends Controller
                 $newJurnal->created_by = 1;
                 $newJurnal->updated_by = 1;
                 $newJurnal->created_at = $kredit->tgl_posting;
+                $newJurnal->tgl_transaksi = $kredit->tgl_posting;
                 $kredit->jurnals()->save($newJurnal); 
                 $kredits->is_success=1;
                 $kredits->serial_number=$nextSerialNumber;
@@ -204,6 +205,7 @@ class Migration2Controller extends Controller
             $newJurnal->created_by = 1;
             $newJurnal->updated_by = 1;
             $newJurnal->created_at = $debet->tgl_posting;
+            $newJurnal->tgl_transaksi = $debet->tgl_posting;
             $debet->jurnals()->save($newJurnal);
 
             $debets->is_success=1;
