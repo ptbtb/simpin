@@ -588,4 +588,16 @@ class MigrationController extends Controller
             }
         }
     }
+
+    public function migrationAnggotaPensiun()
+    {
+        $anggotas = Anggota::where('id_jenis_anggota', JENIS_ANGGOTA_PENSIUNAN)->get();
+
+        foreach ($anggotas as $key => $anggota) 
+        {
+            // change id_jenis_anggota to JENIS_ANGGOTA_PENSIUNAN_TIDAK_AKTIF
+            $anggota->id_jenis_anggota = JENIS_ANGGOTA_PENSIUNAN_TIDAK_AKTIF;
+            $anggota->save();
+        }
+    }
 }

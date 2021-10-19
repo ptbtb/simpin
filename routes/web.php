@@ -52,6 +52,8 @@ Route::get('testEvent', [App\Http\Controllers\MigrationController::class, 'index
 Route::get('migrationJurnalTransaction/{month}', [App\Http\Controllers\MigrationController::class, 'migrationJurnalTransaction'])->name('migration-jurnal-transaction');
 Route::get('migrationJurnalTransaction2/{month}', [App\Http\Controllers\Migration2Controller::class, 'migrationJurnalTransaction'])->name('migration-jurnal-transaction');
 
+Route::get('migrationAnggotaPensiunan', [App\Http\Controllers\MigrationController::class, 'migrationAnggotaPensiun'])->name('migration-anggota-pensiunan');
+
 // anggota
 Route::group(['prefix' => 'anggota'], function () {
     Route::group(['middleware' => ['auth', 'check']], function () {
