@@ -14,24 +14,32 @@ class UserManager
 {
     static function createUser(Anggota $anggota, $password) {
         try {
-            $user = new User();
-            $user->name = $anggota->nama_anggota;
-            $user->kode_anggota = $anggota->kode_anggota;
-            $user->email = $anggota->email;
-            $user->password = Hash::make($password);
-			$user->created_by = Auth::user()->id;
-            $user->save();
-            
-            $user->activation_code = uniqid().$user->id;
-            $user->save();
+            // jenis anggota PENSIUNAN TIDAK AKTIF tidak perlu create user
+            if($anggota->id_jenis_anggota != JENIS_ANGGOTA_PENSIUNAN_TIDAK_AKTIF)
+            {
+                $user = new User();
+                $user->name = $anggota->nama_anggota;
+                $user->kode_anggota = $anggota->kode_anggota;
+                $user->email = $anggota->email;
+                $user->password = Hash::make($password);
+                $user->created_by = Auth::user()->id;
+                $user->save();
+                
+                $user->activation_code = uniqid().$user->id;
+                $user->save();
 
-            // assign role anggota to user as default
-            $role = Role::where('id',ROLE_ANGGOTA)->first();
-            $user->assignRole($role->name);
-            $user->save();
-            
-            event(new UserCreated($user, $password));
-			return redirect()->route('user-list')->withSuccess('Create user Success');
+                // assign role anggota to user as default
+                $role = Role::where('id',ROLE_ANGGOTA)->first();
+                $user->assignRole($role->name);
+                $user->save();
+                
+                event(new UserCreated($user, $password));
+                return redirect()->route('user-list')->withSuccess('Create user Success');
+            }
+            else
+            {
+                return redirect()->route('user-list');
+            }
         }
         catch(\Exception $e) {
             $message = $e->getMessage();
