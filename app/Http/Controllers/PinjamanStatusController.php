@@ -16,6 +16,8 @@ class PinjamanStatusController extends Controller
     {
         $listPinjaman = Pinjaman::where('saldo_mutasi','>',0)->get();
         // dd($listPinjaman->count());
+        $a=0;
+        $all=$listPinjaman->count();
         foreach ($listPinjaman as $pinjaman)
         {
             
@@ -39,7 +41,30 @@ class PinjamanStatusController extends Controller
                     $ags->save();
                 }
 
-           
+           $a++;  
+        printf($a." of ".$all."\r\n");
         }
+    }
+
+    public static function runangs()
+    {
+        $angs = Angsuran::where('id_status_angsuran',1)
+        ->where('besar_pembayaran','>',0)
+        ->get();
+        $a=0;
+        $all=$angs->count();
+
+        foreach ($angs as $ags){
+            $pinjaman = Pinjaman::where('kode_pinjam',$ags->kode_pinjam)->first();
+            if ($ags->besar_pembayaran >= $ags->totalAngsuran){
+                $ags->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
+                $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
+                $pinjaman->save();
+            }
+            $ags->save();
+        $a++;  
+        printf($a." of ".$all."\r\n");          
+        } 
+        
     }
 }
