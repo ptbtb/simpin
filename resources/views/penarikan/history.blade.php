@@ -74,21 +74,39 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama Anggota</th>
+                        <th>Kode Ambil</th>
                         <th>Tanggal Penarikan</th>
+                        <th>Nama Anggota</th>
+                        <th>Jenis Simpanan</th>
                         <th>Besar Penarikan</th>
-                        <th>Status Penarikan</th>
+                        <th>Status</th>
+                        <th>Tanggal Acc</th>
+                        <th>Diajukan Oleh</th>
+                        <th>Dikonfirmasi Oleh</th>
+                        <th>Pembayaran Oleh</th>
+                        <th>Bukti Pembayaran</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($listPenarikan as $penarikan)
                         <tr>
+                            <td>{{ $penarikan->kode_ambil }}</td>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $penarikan->anggota->nama_anggota }}</td>
                             <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
-                            <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
                             <td>{{ $penarikan->anggota->nama_anggota }}</td>
+                            <td>{{ optional($penarikan->jenisSimpanan)->nama_simpanan }}</td>
+                            <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
+                            <td>{{ $penarikan->statusPenarikan->name }}</td>
+                            <td>{{ optional($penarikan->tgl_acc)->format('d M Y') }}</td>
+                            <td>{{ optional($penarikan->createdBy)->name }}</td>
+                            <td>{{ optional($penarikan->approvedBy)->name }}</td>
+                            <td>{{ optional($penarikan->paidByCashier)->name }}</td>
+                            <td>
+                                @if($penarikan->bukti_pembayaran)
+                                    <a class="btn btn-warning btn-sm" href="{{ url($penarikan->bukti_pembayaran) }}" target="_blank"><i class="fa fa-file"></i></a>
+                                @endif
+                            </td>
                             <td>
                                 <a data-id="{{ $penarikan->kode_ambil }}" class="text-white btn btn-sm btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>
                                 <a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 mt-md-0 btn-information" data-id="{{ $penarikan->kode_ambil }}"><i class="fa fa-info"></i> Info</a>
