@@ -119,7 +119,7 @@
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
-                return false;
+                return true;
             });
             initiateDatatables();
         });
