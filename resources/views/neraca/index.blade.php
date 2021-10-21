@@ -186,7 +186,13 @@
                             <tr>
                                 <td></td>
                                 <td>{{ substr($item['code']->CODE, 0, 3) }}</td>
-                               <td><a href="{{ route('jurnal-list',['code'=>substr($item['code']->CODE, 0, 3) ,'from'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('d-m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
+                               <td>
+                                @if (substr($item['code']->CODE, 0, 3)!=='607')
+                                <a href="{{ route('jurnal-list',['code'=>substr($item['code']->CODE, 0, 3) ,'from'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('d-m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a>
+                                @else
+                                {{ $item['code']->NAMA_TRANSAKSI }}
+                                @endif
+                                </td>
                                 <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
                                 <td class="text-right">{{ number_format($item['saldoLastMonth'], 0, ',', '.') }}</td>
                             </tr>
