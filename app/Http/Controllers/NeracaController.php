@@ -10,6 +10,7 @@ use App\Exports\NeracaExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Controllers\LabaRugiController;
 
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -25,6 +26,8 @@ class NeracaController extends Controller
         $this->authorize('view jurnal', Auth::user());
         try
         {
+            $shu = (new LabaRugiController)->getSHU($request);
+            
            $groupNeraca = CodeCategory::where('name','like','AKTIVA%')
                             ->orWhere('name','like','KEWAJIBAN%')
                             ->orWhere('name','like','KEKAYAAN%')
@@ -104,7 +107,7 @@ class NeracaController extends Controller
                     }
                 }
                 
-                if ($key==965 || $key==974 || $key==975){
+                if ($key==965 || $key==974 || $key==975 || $key==607){
                     $parentCode = Code::where('CODE', 'like',''.$key . '%')->first();
                 }else{
                      $parentCode = Code::where('CODE', $key . '.00.000')->first();
@@ -141,11 +144,21 @@ class NeracaController extends Controller
                     ]);
                 }else if($parentCode->codeCategory->name=='KEKAYAAN BERSIH')
                 {
-                    $kekayaanbersih->push([
+                    if ($key==607){
+                        $kekayaanbersih->push([
+                        'code' => $parentCode,
+                        'saldo' => $saldo + $shu[0],
+                        'saldoLastMonth' => $saldoLastMonth+$shu[1],
+                    ]);
+
+                    }else{
+                       $kekayaanbersih->push([
                         'code' => $parentCode,
                         'saldo' => $saldo,
                         'saldoLastMonth' => $saldoLastMonth,
-                    ]);
+                    ]); 
+                    }
+                    
                 }
                 
             }
