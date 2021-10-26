@@ -54,6 +54,9 @@ class ArusKasController extends Controller
             // get all transaction in period
             $allTransactions = DB::table('t_jurnal')->whereBetween('created_at', [$startPeriod, $endPeriod])->get();
 
+            // get all jurnal_temp transaction in period
+            $jurnalTempTransactions = DB::table('jurnal_temp')->whereBetween('periode', [$startPeriod, $endPeriod])->get();
+
             // cari akun kas atau bank di jurnal selama period, unique
             // bedakan antara debet dan kredit
             $groupKasAndBankKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('created_at', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
@@ -77,11 +80,25 @@ class ArusKasController extends Controller
             {
                 if($key != '')
                 {
-                    $temps = $allTransactions->where('jurnalable_id', $key)
-                                            ->where('jurnalable_type', $kreditTransaction)
-                                            ->where('akun_debet', '<>', 0)
-                                            ->pluck('debet','akun_debet')
-                                            ->all();
+                    if($kreditTransaction == 'App\Models\JurnalTemp')
+                    {
+                        $serialNumber = optional($jurnalTempTransactions->where('id', $key)->first())->serial_number;
+                        $jurnalTemps = $jurnalTempTransactions->where('serial_number', $serialNumber)->pluck('id');
+                        
+                        $temps = $allTransactions->whereIn('jurnalable_id', $jurnalTemps)
+                                                ->where('jurnalable_type', $kreditTransaction)
+                                                ->where('akun_debet', '<>', 0)
+                                                ->pluck('debet','akun_debet')
+                                                ->all();
+                    }
+                    else
+                    {
+                        $temps = $allTransactions->where('jurnalable_id', $key)
+                                                ->where('jurnalable_type', $kreditTransaction)
+                                                ->where('akun_debet', '<>', 0)
+                                                ->pluck('debet','akun_debet')
+                                                ->all();
+                    }
 
                     foreach ($temps as $key => $temp) 
                     {
@@ -103,11 +120,25 @@ class ArusKasController extends Controller
             {
                 if($key != '')
                 {
-                    $temps = $allTransactions->where('jurnalable_id', $key)
-                                            ->where('jurnalable_type', $debetTransaction)
-                                            ->where('akun_kredit', '<>', 0)
-                                            ->pluck('kredit','akun_kredit')
-                                            ->all();
+                    if($debetTransaction == 'App\Models\JurnalTemp')
+                    {
+                        $serialNumber = optional($jurnalTempTransactions->where('id', $key)->first())->serial_number;
+                        $jurnalTemps = $jurnalTempTransactions->where('serial_number', $serialNumber)->pluck('id');
+                        
+                        $temps = $allTransactions->whereIn('jurnalable_id', $jurnalTemps)
+                                                ->where('jurnalable_type', $debetTransaction)
+                                                ->where('akun_kredit', '<>', 0)
+                                                ->pluck('debet','akun_kredit')
+                                                ->all();
+                    }
+                    else
+                    {
+                        $temps = $allTransactions->where('jurnalable_id', $key)
+                                                ->where('jurnalable_type', $debetTransaction)
+                                                ->where('akun_kredit', '<>', 0)
+                                                ->pluck('kredit','akun_kredit')
+                                                ->all();
+                    }
 
                     foreach ($temps as $key => $temp) 
                     {
