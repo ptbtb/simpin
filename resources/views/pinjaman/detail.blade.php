@@ -259,6 +259,19 @@
                                 <label for="tgl_transaksi">Tgl Transaksi</label>
                                 <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
                             </div>
+                            <div class="form-group mt-2">
+                                <label for="jenisPembayaran">Jenis Pembayaran</label>
+                                <select name="jenis_pembayaran" id="jenisPembayaran" class="form-control">
+                                    <option value="0">Tunai</option>
+                                    @foreach ($tabungan as $value)
+                                        <option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan,0,",","." ) }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            {{-- <div id="viewSaldo" class="form-group" style="display: none">
+                                <label for="saldo">Sisa saldo</label>
+                                <input type="text" name="saldo" id="saldo" class="form-control" readonly>
+                            </div> --}}
                             <div class="form-group">
                                 <label>Besar Pembayaran</label>
                                 <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
@@ -329,7 +342,9 @@
 
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/collect.js/4.29.0/collect.min.js"></script> --}}
     <script>
+        var saldo = collect(@json($tabungan))
         $('.btn-bayarAngsuran').on('click', function ()
         {
             $('#my-modal').modal({
@@ -347,6 +362,17 @@
             $('#my-modal1').modal('show');
             $('.jenisAkun').trigger( "change" );
         });
+
+        // $(document).on('change', '#jenisPembayaran', function ()
+        // {
+        //     var selected = this.value;
+        //     if (selected)
+        //     {
+        //         console.log(saldo.where('kode_trans', selected).first().besar_tabungan);
+        //         // $('#viewSaldo').show();
+        //         // $('#saldo').val();
+        //     }
+        // })
 
         $(".select2").select2({
             width: '100%',

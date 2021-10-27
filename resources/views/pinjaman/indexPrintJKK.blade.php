@@ -30,7 +30,7 @@
                 <h6 class="card-title">Donwload JKK</h6>
             </div>
             <div class="card-body">
-                <form action="{{ route('pengajuan-pinjaman-print-jkk') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('store-pengajuan-pinjaman-print-jkk') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">

@@ -313,7 +313,8 @@ class PenarikanController extends Controller
         try {
             $user = Auth::user();
 
-            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet');
+            $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet')
+                                        ->where('is_pelunasan_dipercepat', 0);
 
             if($request->status_penarikan != "")
             {

@@ -33,4 +33,9 @@ class JenisSimpanan extends Model
     {
         return $query->where('is_required',1);
     }
+
+    public function listTabungan()
+    {
+        return $this->hasMany(Tabungan::class, 'kode_trans', 'kode_jenis_simpan');
+    }
 }

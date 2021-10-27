@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Penarikan\PenarikanApproved;
+use App\Events\Penarikan\PenarikanCreated;
 use App\Events\Pinjaman\PengajuanApproved;
 use App\Imports\PinjamanBaruImport;
 use Illuminate\Http\Request;
@@ -26,8 +28,11 @@ use App\Managers\JurnalManager;
 use App\Managers\PengajuanManager;
 use App\Managers\PinjamanManager;
 use App\Managers\AngsuranManager;
+use App\Managers\PenarikanManager;
 use App\Models\Angsuran;
 use App\Models\Company;
+use App\Models\Penarikan;
+use App\Models\Tabungan;
 use App\Models\SimpinRule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -249,6 +254,10 @@ class PinjamanController extends Controller
             ->where('kode_pinjam', $id)
             ->first();
 
+        $tabungan = Tabungan::where('kode_anggota', $pinjaman->kode_anggota)
+                            ->where('kode_trans', '!=', '411.01.000')
+                            ->get();
+        
         $listAngsuran = $pinjaman->listAngsuran->sortBy('angsuran_ke')->values();
         $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
@@ -259,6 +268,7 @@ class PinjamanController extends Controller
         $data['listAngsuran'] = $listAngsuran;
         $data['tagihan'] = $tagihan;
         $data['bankAccounts'] = $bankAccounts;
+        $data['tabungan'] = $tabungan;
         return view('pinjaman.detail', $data);
     }
 
@@ -954,6 +964,41 @@ class PinjamanController extends Controller
                 // create JKM angsuran
                 JurnalManager::createJurnalAngsuran($angsuran);
             }
+
+            if($request->jenis_pembayaran)
+            {
+                $penarikan = new Penarikan();
+                // get next serial number
+                $kode = $request->jenis_pembayaran;
+                $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                $tabungan = Tabungan::where('kode_trans', $kode)->first();
+                $besarPenarikan = $request->besar_pembayaran;
+                $anggota = $pinjaman->anggota;
+                $user = Auth::user();
+    
+                DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber, $pinjaman) {
+                    $penarikan->kode_anggota = $anggota->kode_anggota;
+                    $penarikan->kode_tabungan = $tabungan->kode_tabungan;
+                    $penarikan->id_tabungan = $tabungan->id;
+                    $penarikan->besar_ambil = $besarPenarikan;
+                    $penarikan->code_trans = $tabungan->kode_trans;
+                    $penarikan->tgl_ambil = Carbon::now();
+                    $penarikan->u_entry = $user->name;
+                    $penarikan->created_by = $user->id;
+                    $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
+                    $penarikan->serial_number = $nextSerialNumber;
+                    $penarikan->tgl_acc = Carbon::now();
+                    $penarikan->tgl_transaksi = Carbon::now()->format('Y-m-d');
+                    $penarikan->approved_by = $user->id;
+                    $penarikan->is_pelunasan_dipercepat = 1;
+                    $penarikan->paid_by_cashier = $user->id;
+                    $penarikan->description = 'Pengambilan pelunasan dipercepat untuk pinjaman '. $pinjaman->kode_pinjam;
+                    $penarikan->save();
+                });
+
+                JurnalManager::createJurnalPenarikan($penarikan);
+            }
+
             //dd($angsuran);die;
             //JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
