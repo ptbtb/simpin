@@ -103,9 +103,11 @@
         <div class="mt-3 p-2 box-custom">
             <div class="d-flex">
                 <h6 style="font-weight: 600">Angsuran</h6>
-                @if ($pinjaman->canPercepatPelunasan())
-                    <a class="btn btn-sm btn-info ml-auto mb-2 btn-pelunasanDipercepat text-white"><i class="fas fa-handshake"></i> Pelunasan Dipercepat</a>
-                @endif
+                @can('percepat pelunasan pinjaman)
+                    @if ($pinjaman->canPercepatPelunasan())
+                        <a class="btn btn-sm btn-info ml-auto mb-2 btn-pelunasanDipercepat text-white"><i class="fas fa-handshake"></i> Pelunasan Dipercepat</a>
+                    @endif
+                @endcan
                 @can('bayar angsuran pinjaman')
                     <a class="btn btn-sm btn-success ml-2 mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
                 @endcan
