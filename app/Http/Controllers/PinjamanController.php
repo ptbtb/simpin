@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Events\Pinjaman\PengajuanCreated;
 use App\Events\Pinjaman\PengajuanUpdated;
 use App\Exports\PinjamanExport;
-use App\Exports\PinjamanReportExport;
+use App\Exports\LaporanPinjamanExcelExport;
 use App\Models\Anggota;
 use App\Models\JenisPenghasilan;
 use App\Models\Pengajuan;
@@ -1422,7 +1422,7 @@ class PinjamanController extends Controller
         $this->authorize('view jurnal', Auth::user());
         try {
             $filename = 'export_pinjaman_report_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
-            return Excel::download(new PinjamanReportExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+            return Excel::download(new LaporanPinjamanExcelExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $e) {
             Log::error($e);
             return redirect()->back()->withError('Terjadi Kesalahan');
