@@ -92,7 +92,8 @@ class SaldoAwalController extends Controller
             // loop every account
             for ($i=0; $i < count($request->code_id) ; $i++) 
             { 
-                $nominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_INT);
+                $filterNominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+                $nominal = str_replace(",", ".", $filterNominal);
 
                 $saldoAwalExisting = SaldoAwal::where('code_id',$request->code_id[$i])->first();
 
@@ -177,7 +178,8 @@ class SaldoAwalController extends Controller
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
             
-            $nominal = filter_var($request->nominal, FILTER_SANITIZE_NUMBER_INT);
+            $filterNominal = filter_var($request->nominal, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+            $nominal = str_replace(",", ".", $filterNominal);
 
             $saldoAwal = SaldoAwal::find($id);
             $oldSaldoAwal = $saldoAwal;

@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="nominal1">Besar Nominal</label>
-                    <input type="text" name="nominal" id="nominal" value="{{ $saldoAwal->nominal }}" data-form="1" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                    <input type="text" name="nominal" id="nominal" value="{{ $saldoAwal->nominal_rupiah }}" data-form="1" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
                         <div class="text-danger" id="warningText"></div>
                     </div>
                 </div>
