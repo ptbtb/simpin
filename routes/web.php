@@ -512,5 +512,5 @@ Route::group(['prefix' => 'jkk-printed', 'middleware' => 'auth'], function ()
     Route::get('list', [JkkPrintedController::class, 'index'])->name('jkk-printed-list');
     Route::post('list', [JkkPrintedController::class, 'index'])->name('jkk-printed-list');
     Route::get('list/data', [JkkPrintedController::class, 'indexAjax'])->name('jkk-printed-data');
-    Route::get('reprint/{id}', [JkkPrintedController::class, 'reprint'])->name('jkk-printed-reprint');
+    Route::post('reprint/{id}', [JkkPrintedController::class, 'reprint'])->name('jkk-printed-reprint');
 });

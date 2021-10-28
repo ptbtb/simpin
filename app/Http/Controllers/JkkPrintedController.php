@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
+use Storage;
+
 class JkkPrintedController extends Controller
 {
     public function index(Request $request)
@@ -44,12 +46,27 @@ class JkkPrintedController extends Controller
                             ->make(true);
     }
 
-    public function reprint($id)
+    public function reprint(Request $request, $id)
     {
         $user = Auth::user();
         $this->authorize('print jkk', $user);
 
         $jkkPrinted = JkkPrinted::findOrFail($id);
+        $config['disk'] = 'upload';
+        $config['upload_path'] = '/reprintJKK/'.$id.'/paymentConfirmation';
+        $config['public_path'] = env('APP_URL') . '/reprintJKK/'.$id.'/paymentConfirmation';
+        if (!Storage::disk($config['disk'])->has($config['upload_path']))
+        {
+            Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+        }
+        if ($request->payment_confirmation->isValid())
+        {
+            $filename = uniqid() .'.'. $request->payment_confirmation->getClientOriginalExtension();
+
+            Storage::disk($config['disk'])->putFileAs($config['upload_path'], $request->payment_confirmation, $filename);
+            $jkkPrinted->payment_confirmation_path = $config['disk'].$config['upload_path'].'/'.$filename;
+        }
+        $jkkPrinted->save();
 
         if ($jkkPrinted->isPenarikanSimpanan())
         {
