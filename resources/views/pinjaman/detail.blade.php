@@ -276,14 +276,14 @@
                                 <label>Besar Pembayaran</label>
                                 <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" id="jenisAkun2Cover">
                                 <label>Jenis Akun</label>
                                 <select name="jenis_akun" id="jenisAkun2" class="form-control select2 jenisAkun" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" id="akun2Cover">
                                 <label>Akun</label>
                                 <select name="id_akun_kredit" id="code2" class="form-control select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>
@@ -363,16 +363,23 @@
             $('.jenisAkun').trigger( "change" );
         });
 
-        // $(document).on('change', '#jenisPembayaran', function ()
-        // {
-        //     var selected = this.value;
-        //     if (selected)
-        //     {
-        //         console.log(saldo.where('kode_trans', selected).first().besar_tabungan);
-        //         // $('#viewSaldo').show();
-        //         // $('#saldo').val();
-        //     }
-        // })
+        $(document).on('change', '#jenisPembayaran', function ()
+        {
+            var selected = this.value;
+            if (selected != 0)
+            {
+                $('#jenisAkun2Cover').addClass('d-none');
+                $('#akun2Cover').addClass('d-none');
+                // console.log(saldo.where('kode_trans', selected).first().besar_tabungan);
+                // // $('#viewSaldo').show();
+                // // $('#saldo').val();
+            }
+            else
+            {
+                $('#jenisAkun2Cover').removeClass('d-none');
+                $('#akun2Cover').removeClass('d-none');
+            }
+        })
 
         $(".select2").select2({
             width: '100%',

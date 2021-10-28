@@ -941,6 +941,21 @@ class PinjamanController extends Controller
                 return redirect()->back()->withError('Besar pembayaran harus sama dengan total bayar');
             }
             $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
+
+            if($request->jenis_pembayaran)
+            {
+                $kode = $request->jenis_pembayaran;
+                $tabungan = Tabungan::where('kode_trans', $kode)
+                                    ->where('kode_anggota', $pinjaman->kode_anggota)
+                                    ->first();
+                $anggota = $pinjaman->anggota;
+                
+                if ($tabungan->besar_tabungan < $pembayaran)
+                {
+                    return redirect()->back()->withError('Sisa tabungan tidak mencukupi untuk melakukan pembayaran');
+                }
+            }
+
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
             //$serialNumber=Anguran::getSerialNumber(Carbon::now()->format('d-m-Y'));
             foreach ($listAngsuran as $angsuran) {
@@ -949,7 +964,15 @@ class PinjamanController extends Controller
                 $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
                 $angsuran->paid_at = Carbon::now();
                 $angsuran->u_entry = Auth::user()->name;
-                $angsuran->id_akun_kredit = ($request->id_akun_kredit) ? $request->id_akun_kredit : null;
+                if($request->jenis_pembayaran)
+                {
+                    $codeCoa = Code::where('CODE', $tabungan->kode_trans)->first();
+                    $angsuran->id_akun_kredit = $codeCoa->id;
+                }
+                else
+                {
+                    $angsuran->id_akun_kredit = ($request->id_akun_kredit) ? $request->id_akun_kredit : null;
+                }
                 $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->serial_number = $serialNumber;
                 $angsuran->save();
@@ -969,8 +992,8 @@ class PinjamanController extends Controller
             {
                 $penarikan = new Penarikan();
                 // get next serial number
-                $kode = $request->jenis_pembayaran;
                 $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                $kode = $request->jenis_pembayaran;
                 $tabungan = Tabungan::where('kode_trans', $kode)->first();
                 $besarPenarikan = $request->besar_pembayaran;
                 $anggota = $pinjaman->anggota;
