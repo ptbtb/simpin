@@ -19,7 +19,8 @@ class SaldoAnggotaSheet implements FromQuery, WithTitle,WithHeadings
     public function query()
     {
         return Tabungan::join('t_anggota', 't_anggota.kode_anggota', '=', 't_tabungan.kode_anggota')
-            ->select('t_anggota.kode_anggota','t_anggota.nama_anggota','kode_trans','besar_tabungan')
+        ->join('t_jenis_simpan', 't_jenis_simpan.kode_jenis_simpan', '=', 't_tabungan.kode_trans')
+            ->select('t_anggota.kode_anggota','t_anggota.nama_anggota','kode_trans','t_jenis_simpan.nama_simpanan','besar_tabungan')
             ->wherenotin('t_tabungan.kode_anggota', [0])
             ->wherenotin('t_anggota.status', ['keluar'])
             ->orderBy('t_tabungan.kode_anggota','asc')
@@ -36,6 +37,6 @@ class SaldoAnggotaSheet implements FromQuery, WithTitle,WithHeadings
 
      public function headings(): array
     {
-        return ["kode anggota","Nama", "Kode Jenis Simpanan", "Jumlah"];
+        return ["kode anggota","Nama", "Kode Jenis Simpanan","Nama Simpanan", "Jumlah"];
     }
 }
