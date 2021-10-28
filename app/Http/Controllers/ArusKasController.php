@@ -37,8 +37,8 @@ class ArusKasController extends Controller
             $startSaldoAwalPeriod = Carbon::createFromFormat('d-m-Y', '01-01-2020')->format('Y-m-d');
             $endSaldoAwalPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->subDays()->format('Y-m-d');
 
-            $saldoAwalKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('created_at', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('kredit');
-            $saldoAwalDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('created_at', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('debet');
+            $saldoAwalKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('kredit');
+            $saldoAwalDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('debet');
 
             $totalSaldoAwal = $saldoAwalDebet - $saldoAwalKredit;
             $data['saldoAwal'] = $totalSaldoAwal;
@@ -52,16 +52,16 @@ class ArusKasController extends Controller
             $data['endPeriod'] = Carbon::createFromFormat('d-m-Y', $request->to)->format('Y-m-d');
 
             // get all transaction in period
-            $allTransactions = DB::table('t_jurnal')->whereBetween('created_at', [$startPeriod, $endPeriod])->get();
+            $allTransactions = DB::table('t_jurnal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get();
 
             // get all jurnal_temp transaction in period
             $jurnalTempTransactions = DB::table('jurnal_temp')->whereBetween('periode', [$startPeriod, $endPeriod])->get();
 
             // cari akun kas atau bank di jurnal selama period, unique
             // bedakan antara debet dan kredit
-            $groupKasAndBankKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('created_at', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
+            $groupKasAndBankKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
             
-            $groupKasAndBankDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('created_at', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
+            $groupKasAndBankDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
 
             // cari transaksi yang ada kas dan bank
             $kreditTransactions = $groupKasAndBankKredit->map(function ($item, $key) {
@@ -225,8 +225,8 @@ class ArusKasController extends Controller
             $startSaldoAwalPeriod = Carbon::createFromFormat('d-m-Y', '01-01-2020')->format('Y-m-d');
             $endSaldoAwalPeriod = Carbon::createFromFormat('m-Y', $request->period)->startOfMonth()->subDays()->format('Y-m-d');
 
-            $saldoAwalKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('created_at', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('kredit');
-            $saldoAwalDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('created_at', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('debet');
+            $saldoAwalKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('kredit');
+            $saldoAwalDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startSaldoAwalPeriod, $endSaldoAwalPeriod])->get()->sum('debet');
 
             $totalSaldoAwal = $saldoAwalDebet - $saldoAwalKredit;
             $data['saldoAwal'] = $totalSaldoAwal;
@@ -240,13 +240,16 @@ class ArusKasController extends Controller
             $data['endPeriod'] = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('d-m-Y');
 
             // get all transaction in period
-            $allTransactions = DB::table('t_jurnal')->whereBetween('created_at', [$startPeriod, $endPeriod])->get();
+            $allTransactions = DB::table('t_jurnal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get();
 
+            // get all jurnal_temp transaction in period
+            $jurnalTempTransactions = DB::table('jurnal_temp')->whereBetween('periode', [$startPeriod, $endPeriod])->get();
+            
             // cari akun kas atau bank di jurnal selama period, unique
             // bedakan antara debet dan kredit
-            $groupKasAndBankKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('created_at', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
+            $groupKasAndBankKredit = DB::table('t_jurnal')->whereIn('akun_kredit', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
             
-            $groupKasAndBankDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('created_at', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
+            $groupKasAndBankDebet = DB::table('t_jurnal')->whereIn('akun_debet', $kasAndBankAccount)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get()->groupBy('jurnalable_id', 'jurnalable_type');
 
             // cari transaksi yang ada kas dan bank
             $kreditTransactions = $groupKasAndBankKredit->map(function ($item, $key) {
@@ -265,11 +268,25 @@ class ArusKasController extends Controller
             {
                 if($key != '')
                 {
-                    $temps = $allTransactions->where('jurnalable_id', $key)
-                                            ->where('jurnalable_type', $kreditTransaction)
-                                            ->where('akun_debet', '<>', 0)
-                                            ->pluck('debet','akun_debet')
-                                            ->all();
+                    if($kreditTransaction == 'App\Models\JurnalTemp')
+                    {
+                        $serialNumber = optional($jurnalTempTransactions->where('id', $key)->first())->serial_number;
+                        $jurnalTemps = $jurnalTempTransactions->where('serial_number', $serialNumber)->pluck('id');
+                        
+                        $temps = $allTransactions->whereIn('jurnalable_id', $jurnalTemps)
+                                                ->where('jurnalable_type', $kreditTransaction)
+                                                ->where('akun_debet', '<>', 0)
+                                                ->pluck('debet','akun_debet')
+                                                ->all();
+                    }
+                    else
+                    {
+                        $temps = $allTransactions->where('jurnalable_id', $key)
+                                                ->where('jurnalable_type', $kreditTransaction)
+                                                ->where('akun_debet', '<>', 0)
+                                                ->pluck('debet','akun_debet')
+                                                ->all();
+                    }
 
                     foreach ($temps as $key => $temp) 
                     {
@@ -291,11 +308,25 @@ class ArusKasController extends Controller
             {
                 if($key != '')
                 {
-                    $temps = $allTransactions->where('jurnalable_id', $key)
-                                            ->where('jurnalable_type', $debetTransaction)
-                                            ->where('akun_kredit', '<>', 0)
-                                            ->pluck('kredit','akun_kredit')
-                                            ->all();
+                    if($debetTransaction == 'App\Models\JurnalTemp')
+                    {
+                        $serialNumber = optional($jurnalTempTransactions->where('id', $key)->first())->serial_number;
+                        $jurnalTemps = $jurnalTempTransactions->where('serial_number', $serialNumber)->pluck('id');
+                        
+                        $temps = $allTransactions->whereIn('jurnalable_id', $jurnalTemps)
+                                                ->where('jurnalable_type', $debetTransaction)
+                                                ->where('akun_kredit', '<>', 0)
+                                                ->pluck('debet','akun_kredit')
+                                                ->all();
+                    }
+                    else
+                    {
+                        $temps = $allTransactions->where('jurnalable_id', $key)
+                                                ->where('jurnalable_type', $debetTransaction)
+                                                ->where('akun_kredit', '<>', 0)
+                                                ->pluck('kredit','akun_kredit')
+                                                ->all();
+                    }
 
                     foreach ($temps as $key => $temp) 
                     {
