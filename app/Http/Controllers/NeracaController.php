@@ -94,13 +94,32 @@ class NeracaController extends Controller
                     else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                     {
                         $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+
+                        if($code->id = 123 || $code->id = 126)
+                        {
+                            $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\JurnalUmum')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKredit = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
+                        }
+                        else
+                        {
+                            $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                        }
 
                         $saldo -= $saldoDebet;
                         $saldo += $saldoKredit;
 
                         $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('debet');
-                        $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+                        if($code->id = 123 || $code->id = 126)
+                        {
+                            $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\JurnalUmum')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKreditLastMonth = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
+                        }
+                        else
+                        {
+                            $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                        }
 
                         $saldoLastMonth -= $saldoDebetLastMonth;
                         $saldoLastMonth += $saldoKreditLastMonth;
@@ -260,13 +279,34 @@ class NeracaController extends Controller
                     else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                     {
                         $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
-                        $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                        
+                        if($code->id = 123 || $code->id = 126)
+                        {
+                            $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\JurnalUmum')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKredit = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
+                        }
+                        else
+                        {
+                            $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                        }
 
                         $saldo -= $saldoDebet;
                         $saldo += $saldoKredit;
 
                         $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('debet');
                         $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+
+                        if($code->id = 123 || $code->id = 126)
+                        {
+                            $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\JurnalUmum')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                            $saldoKreditLastMonth = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
+                        }
+                        else
+                        {
+                            $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                        }
 
                         $saldoLastMonth -= $saldoDebetLastMonth;
                         $saldoLastMonth += $saldoKreditLastMonth;
