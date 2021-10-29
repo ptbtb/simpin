@@ -41,6 +41,10 @@
                         
                     </tr>
                     @php
+                    if(optional($item->tipeJurnal)->name == 'Jurnal Umum' && ($item->akun_kredit == '210.00.000' || $item->akun_kredit == '205.00.000'))
+                    {
+                        $item->kredit = -1 * $item->kredit;
+                    }
                     $totaldebet +=$item->debet;
                     $totalkredit += $item->kredit;
                     @endphp
