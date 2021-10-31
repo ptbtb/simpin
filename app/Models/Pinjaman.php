@@ -5,12 +5,14 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 class Pinjaman extends Model {
 
     use HasFactory;
     use Userstamps;
+    use SoftDeletes;
 
     protected $table = "t_pinjam";
     protected $primaryKey = "id";
@@ -149,5 +151,10 @@ class Pinjaman extends Model {
             return 'PIJ' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
         }
         return '-';
+    }
+
+    public function getTotalDiscountAttribute()
+    {
+        return $this->diskon/100*$this->biaya_jasa;
     }
 }

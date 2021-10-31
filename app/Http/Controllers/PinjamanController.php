@@ -1506,4 +1506,24 @@ class PinjamanController extends Controller
             $message = $th->getMessage() . ' || ' . $th->getFile() . ' || ' . $th->getLine();
         }
     }
+
+    public function setDiscount(Request $request, $id)
+    {
+        // set discount to pinjaman
+        $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
+        $totalDiskon = $request->discount/100*$pinjaman->biaya_jasa;
+        $pinjaman->diskon = $request->discount;
+        $pinjaman->total_diskon = $request->discount/100*$pinjaman->biaya_jasa;
+        $pinjaman->besar_angsuran = $pinjaman->besar_angsuran_pokok + $pinjaman->biaya_jasa - $totalDiskon;
+        $pinjaman->save();
+
+        // generate discount to angsuran
+        $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS);
+        foreach ($listAngsuran as $angsuran)
+        {
+            $angsuran->diskon = $pinjaman->total_diskon;
+            $angsuran->save();
+        }
+        return redirect()->back()->withSuccess('Diskon berhasil disimpan');
+    }
 }
