@@ -61,7 +61,7 @@ class Angsuran extends Model
 
     public function getTotalAngsuranAttribute()
     {
-        return $this->besar_angsuran + $this->jasa;
+        return $this->besar_angsuran + $this->jasa - $this->diskon;
     }
 
     public function getSisaPinjamanAttribute()

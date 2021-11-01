@@ -86,16 +86,20 @@
                     <td>:</td>
                     <td>Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
                 </tr>
-                <tr>
-                    <td>Status</td>
+                <tr><td>Discount</td>
                     <td>:</td>
-                    <td class="font-weight-bold">{{ ucwords($pinjaman->statusPinjaman->name) }}</td>
+                    <td>{{ number_format($pinjaman->total_discount,0,",",".") }}</td>
                     <td>Administrasi</td>
                     <td>:</td>
                     <td>Rp. {{ number_format($pinjaman->biaya_administrasi,0,",",".") }}</td>
                     <td>Provisi</td>
                     <td>:</td>
                     <td>Rp. {{ number_format($pinjaman->biaya_provisi,0,",",".") }}</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>:</td>
+                    <td class="font-weight-bold" colspan="7">{{ ucwords($pinjaman->statusPinjaman->name) }}</td>
                 </tr>
             </table>
         </div>
@@ -110,6 +114,9 @@
                 @endcan
                 @can('bayar angsuran pinjaman')
                     <a class="btn btn-sm btn-success ml-2 mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
+                @endcan
+                @can('set diskon angsuran')
+                    <a class="btn btn-sm btn-primary ml-2 mb-2 btn-diskon text-white" data-toggle="modal" data-target="#discountModal"><i class="fas fa-plus"></i> Discount</a>
                 @endcan
             </div>
             <div class="table-responsive">
@@ -133,7 +140,7 @@
                                 <td>{{ $angsuran->angsuran_ke }}</td>
                                 <td>Rp. {{ number_format($angsuran->besar_angsuran,0,",",".") }}</td>
                                 <td>Rp. {{ number_format($angsuran->jasa,0,",",".") }}</td>
-                                <td>Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}</td>
+                                <td>Rp. {{ number_format($angsuran->total_angsuran,0,",",".") }}</td>
                                 <td>{{ $angsuran->jatuh_tempo->format('m-Y') }}</td>
                                 <td>Rp. {{ number_format($angsuran->besar_pembayaran,0,",",".") }}</td>
                                 <td>{{($angsuran->paid_at)?  $angsuran->paid_at->format('d M Y'):'-' }}</td>
@@ -299,6 +306,53 @@
             </form>
         </div>
     @endif
+
+    @can('set diskon angsuran')        
+        <!-- Modal -->
+        <div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="{{ route('pinjaman-set-discount', [$pinjaman->kode_pinjam]) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title">Set Discount</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Angsuran Pokok</th>
+                                        <th>:</th>
+                                        <td>{{ number_format($pinjaman->besar_angsuran_pokok, 0, ',', '.') }}</td>
+                                        <th>Jasa</th>
+                                        <th>:</th>
+                                        <td>{{ number_format($pinjaman->biaya_jasa, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Discount (%)</th>
+                                        <th>:</th>
+                                        <td>
+                                            <input type="number" name="discount" id="discount" class="form-control" placeholder="Ex: 15 (15%)" min="0" max="100">
+                                        </td>
+                                        <th>Total Angsuran</th>
+                                        <th>:</th>
+                                        <td id="totalAngsuranDiscount">{{ number_format($pinjaman->besar_angsuran, 0, ',', '.') }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endcan
 @endif
 
 <div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -582,5 +636,32 @@
             })
             
         });
+
+        function toRupiah(number)
+        {
+            var stringNumber = number.toString();
+            var length = stringNumber.length;
+            var temp = length;
+            var res = "Rp ";
+            for (let i = 0; i < length; i++) {
+                res = res + stringNumber.charAt(i);
+                temp--;
+                if (temp%3 == 0 && temp > 0)
+                {
+                    res = res + ".";
+                }
+            }
+            return res;
+        }
+
+        $('#discount').on('keyup', function ()
+        {
+            var discount = $(this).val();
+            var jasa = {{ $pinjaman->biaya_jasa }};
+            var angsuranPokok = {{ $pinjaman->besar_angsuran_pokok }};
+            var totalDiscount = discount/100*jasa;
+            var totalAngsuran = angsuranPokok + jasa - totalDiscount;
+            $('#totalAngsuranDiscount').html(toRupiah(totalAngsuran));
+        })
     </script>
 @endsection
