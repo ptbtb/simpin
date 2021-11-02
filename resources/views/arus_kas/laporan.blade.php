@@ -49,7 +49,7 @@
             </form>
         </div>
     </div>
-    @if ($request->period)
+    @if ($dataPengeluaran || $dataPenerimaan)
         <div class="card">
             <div class="card-body table-responsive">
                 <div class="text-right mb-2">

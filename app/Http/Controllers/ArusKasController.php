@@ -31,7 +31,8 @@ class ArusKasController extends Controller
         if ($request->from && $request->to)
         {
             // find kas and bank account
-            $kasAndBankAccount = Code::where('code_category_id', 4)->where('is_parent', 0)->pluck('CODE');
+            $kasAndBankAccount = Code::where('CODE', 'like','102.%')->orWhere('CODE', 'like','101.%')->get();
+            $kasAndBankAccount = $kasAndBankAccount->where('is_parent', 0)->pluck('CODE');
 
             // count saldo awal
             $startSaldoAwalPeriod = Carbon::createFromFormat('d-m-Y', '01-01-2020')->format('Y-m-d');
@@ -219,7 +220,8 @@ class ArusKasController extends Controller
         if ($request->period)
         {
             // find kas and bank account
-            $kasAndBankAccount = Code::where('code_category_id', 4)->pluck('CODE');
+            $kasAndBankAccount = Code::where('CODE', 'like','102.%')->orWhere('CODE', 'like','101.%')->get();
+            $kasAndBankAccount = $kasAndBankAccount->where('is_parent', 0)->pluck('CODE');
 
             // count saldo awal
             $startSaldoAwalPeriod = Carbon::createFromFormat('d-m-Y', '01-01-2020')->format('Y-m-d');
