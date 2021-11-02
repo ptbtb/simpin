@@ -91,7 +91,7 @@ class PenarikanController extends Controller
                     return redirect()->back()->withError($anggota->nama_anggota . " belum memiliki tabungan");
                 } else if ($tabungan->totalBesarTabungan < $besarPenarikan) {
                     return redirect()->back()->withError("Saldo tabungan tidak mencukupi");
-                } else if ($besarPenarikan > $maxtarik) {
+                } else if ($besarPenarikan > $maxtarik + 1) {
                     return redirect()->back()->withError("Penarikan simpanan " . $jenissimpanan->nama_simpanan . " tidak boleh melebihi ".$jenissimpanan->max_withdraw." dari saldo tabungan");
                 }
             }
