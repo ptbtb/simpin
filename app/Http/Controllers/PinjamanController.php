@@ -662,6 +662,7 @@ class PinjamanController extends Controller
 
     public function simulasiPinjaman(Request $request)
     {
+        //dd($request);
         $anggota = Anggota::find($request->kode_anggota);
         $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
         $jenisPinjaman = JenisPinjaman::find($request->jenis_pinjaman);
@@ -721,7 +722,8 @@ class PinjamanController extends Controller
             'angsuranPerbulan' => $angsuranPerbulan,
             'angsuranPokok' => $angsuranPokok,
             'keperluan' => $keperluan,
-            'potonganGaji' => $potonganGaji
+            'potonganGaji' => $potonganGaji,
+            'sumberDana' => jenisPenghasilan::find($request->sumber_dana),
         ];
 
         $data = $collection;
