@@ -77,6 +77,34 @@
             </table>
         </div>
     </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="paymentConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="" method="POST" enctype="multipart/form-data" id="paymentConfirmationForm" target="_blank">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Re-print JKK</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Payment Confirmation</label>
+                            <br>
+                            <input type="file" name="payment_confirmation" id="payment_confirmation" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Print</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -127,7 +155,7 @@
                     sType: "string",
                     className: "text-center",
                     mRender: function(data, type, full) {
-                        var link = '<a href="{{ route("jkk-printed-reprint", [""]) }}/'+data+'" class="btn btn-sm btn-info" target="_blank">' +
+                        var link = '<button data-toggle="modal" data-target="#paymentConfirmationModal" class="btn btn-sm btn-info btn-reprint" data-url="{{ route("jkk-printed-reprint", [""]) }}/'+data+'"/>' +
                                         '<i class="fa fa-print"></i> Reprint' +
                                     '</a>';
 
@@ -136,5 +164,18 @@
                 },
             ]
         });
+
+        $(document).on('click', '.btn-reprint', function ()
+        {
+            var dataUrl = $(this).data('url');
+            $('#paymentConfirmationForm').attr('action', dataUrl);
+        });
+
+        $('#paymentConfirmationForm').on('submit', function ()
+        {
+            setTimeout(function(){
+                window.location.reload(1);
+            }, 3000);
+        })
     </script>
 @endsection
