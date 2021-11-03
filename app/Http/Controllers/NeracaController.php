@@ -36,7 +36,7 @@ class NeracaController extends Controller
             if($request->search)
             {
 
-                $data = Cache::tags('laporan')->remember('neraca_'.$request->period->toDateTimeString(), DB_QUERY_CACHE_PERIOD_MEDIUM, function () use($request)
+                $data = Cache::remember('laporan_neraca_'.$request->period->toDateTimeString(), DB_QUERY_CACHE_PERIOD_MEDIUM, function () use($request)
                 {
                     $shu = (new LabaRugiController)->getSHU($request);
                     
