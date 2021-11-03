@@ -43,13 +43,13 @@
                         <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}" autocomplete="off" />
                     </div>
                     <div class="col-12 text-center mt-1">
-                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
+                        <button type="submit" class="btn btn-sm btn-success" name="search" value="search"><i class="fa fa-filter"></i> Filter</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    @if ($dataPengeluaran || $dataPenerimaan)
+    @if (($dataPengeluaran || $dataPenerimaan) && $request->search)
         <div class="card">
             <div class="card-body table-responsive">
                 <div class="text-right mb-2">
