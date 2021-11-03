@@ -156,3 +156,9 @@ define('STATUS_JURNAL_UMUM_DIBATALKAN', 10);
 
 define('JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN', 1);
 define('JKK_PRINTED_TYPE_PENARIKAN_SIMPANAN', 2);
+
+//cache
+define('DB_QUERY_CACHE_PERIOD_FAST', 1);  //in minutes
+define('DB_QUERY_CACHE_PERIOD_MEDIUM', 15);  //in minutes
+define('DB_QUERY_CACHE_PERIOD_SLOW', 60);  //in minutes
+define('DB_QUERY_CACHE_PERIOD_VERY_SLOW', 720);  //in minutes
