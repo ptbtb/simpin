@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BudgetExport;
+use App\Imports\BudgetImport;
 use App\Models\Budget;
 use App\Models\Code;
 use Carbon\Carbon;
@@ -17,12 +18,14 @@ class BudgetController extends Controller
 {
     public function index()
     {
+		$this->authorize('view budget', Auth::user());
         $data['title'] = 'List Budget';
         return view('budget.index', $data);
     }
 
     public function indexAjax(Request $request)
     {
+		$this->authorize('view budget', Auth::user());
         $budgets = Budget::orderBy('date', 'desc');
 
         return DataTables::eloquent($budgets)
@@ -31,12 +34,14 @@ class BudgetController extends Controller
 
     public function create()
     {
+		$this->authorize('add budget', Auth::user());
         $data['title'] = 'Add Budget';
         return view('budget.create', $data);
     }
 
     public function store(Request $request)
     {
+		$this->authorize('add budget', Auth::user());
         try
         {
             $code = Code::where('CODE', 'like', '%' . $request->name . '%')
@@ -70,6 +75,7 @@ class BudgetController extends Controller
 
     public function edit($id)
     {
+		$this->authorize('edit budget', Auth::user());
         $budget = Budget::with('code')
                         ->find($id);
         if (is_null($budget))
@@ -84,6 +90,7 @@ class BudgetController extends Controller
 
     public function update($id, Request $request)
     {
+		$this->authorize('edit budget', Auth::user());
         try
         {
             $budget = Budget::find($id);
@@ -122,6 +129,7 @@ class BudgetController extends Controller
 
     public function excel()
     {
+		$this->authorize('export budget', Auth::user());
         $budgets = Budget::orderBy('date', 'desc')
                         ->get();
 
@@ -130,4 +138,37 @@ class BudgetController extends Controller
         $filename = 'export-budget.xlsx';
         return Excel::download(new BudgetExport($data), $filename);
     }
+
+    public function import()
+    {
+		$this->authorize('import budget', Auth::user());
+        try
+        {
+            $data['title'] = 'Import Budget';
+            return view('budget.import', $data);
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            Log::error($message);
+            return redirect()->back()->withErrors($message);
+        }
+    }
+
+    public function importStore(Request $request)
+    {
+		$this->authorize('import budget', Auth::user());
+        try
+        {
+            Excel::import(new BudgetImport, $request->file);
+            return redirect()->route('budget.list')->withSuccess('Berhasil import data');
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            Log::error($message);
+            return redirect()->back()->withErrors($message);
+        }
+    }
 }
+

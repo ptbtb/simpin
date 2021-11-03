@@ -496,6 +496,8 @@ Route::prefix('budget')->middleware('auth')->group(function ()
     Route::get('{id}/edit', [BudgetController::class, 'edit'])->name('budget.edit');
     Route::put('{id}/update', [BudgetController::class, 'update'])->name('budget.update');
     Route::get('excel', [BudgetController::class, 'excel'])->name('budget.excel');
+    Route::get('import', [BudgetController::class, 'import'])->name('budget.import');
+    Route::post('import/store', [BudgetController::class, 'importStore'])->name('budget.import.store');
 });
 
 Route::Group(['prefix' => 'arus-kas', 'middleware' => 'auth'], function ()

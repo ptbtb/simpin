@@ -39,6 +39,9 @@
             @can('add budget')
                 <a href="{{ route('budget.create') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Add Budget</a>
             @endcan
+            @can('import budget')
+                <a href="{{ route('budget.import') }}" class="btn btn-sm btn-primary"><i class="fa fa-upload"></i> Import Budget</a>
+            @endcan
         </div>
         <div class="card-body">
             <div class="table-responsive">
