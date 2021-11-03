@@ -17,6 +17,10 @@ class ArusKasController extends Controller
     {
         $data['title'] = 'Laporan Arus Kas';
         $data['request'] = $request;
+
+        $dataPengeluaran = collect();
+        $dataPenerimaan = collect();
+        
         // check if from and to date has been selected
         if(!$request->from)
         {          
@@ -158,9 +162,6 @@ class ArusKasController extends Controller
                         }
                     }
                 }
-
-                $dataPengeluaran = collect();
-                $dataPenerimaan = collect();
                 $totalPengeluaran = 0;
                 $totalPenerimaan = 0;
 
@@ -199,12 +200,12 @@ class ArusKasController extends Controller
                     $totalPenerimaan += $penerimaan;
                 }
                 
-                $data['dataPengeluaran'] = $dataPengeluaran;
-                $data['dataPenerimaan'] = $dataPenerimaan;
                 $data['totalPengeluaran'] = $totalPengeluaran;
                 $data['totalPenerimaan'] = $totalPenerimaan;
                 $data['saldoAkhir'] = $totalSaldoAwal + ($totalPenerimaan - $totalPengeluaran);
             }
+            $data['dataPengeluaran'] = $dataPengeluaran;
+            $data['dataPenerimaan'] = $dataPenerimaan;
         }
 
         return view('arus_kas.laporan', $data);
