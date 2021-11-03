@@ -20,7 +20,7 @@ class ArusKasController extends Controller
 
         $dataPengeluaran = collect();
         $dataPenerimaan = collect();
-        
+
         // check if from and to date has been selected
         if(!$request->from)
         {          
@@ -204,9 +204,11 @@ class ArusKasController extends Controller
                 $data['totalPenerimaan'] = $totalPenerimaan;
                 $data['saldoAkhir'] = $totalSaldoAwal + ($totalPenerimaan - $totalPengeluaran);
             }
-            $data['dataPengeluaran'] = $dataPengeluaran;
-            $data['dataPenerimaan'] = $dataPenerimaan;
         }
+
+        
+        $data['dataPengeluaran'] = $dataPengeluaran;
+        $data['dataPenerimaan'] = $dataPenerimaan;
 
         return view('arus_kas.laporan', $data);
     }
