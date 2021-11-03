@@ -17,18 +17,18 @@ class ArusKasController extends Controller
     {
         $data['title'] = 'Laporan Arus Kas';
         $data['request'] = $request;
+        // check if from and to date has been selected
+        if(!$request->from)
+        {          
+            $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+        }
+        if(!$request->to)
+        {          
+            $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+        }
 
         if ($request->search)
         {
-            // check if from and to date has been selected
-            if(!$request->from)
-            {          
-                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
-            }
-            if(!$request->to)
-            {          
-                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
-            }
 
             if ($request->from && $request->to)
             {
