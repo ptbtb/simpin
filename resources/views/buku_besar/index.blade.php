@@ -39,68 +39,70 @@
                         <input class="form-control datepicker" placeholder="yyyy-mm-dd" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d') }}" autocomplete="off" />
                     </div>
                     <div class="col-md-6 text-right" style="margin-top: 10px;">
-                        <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
+                        <button type="submit" class="btn btn-primary" name="search" value="search"><span class="fa fa-search"></span> Search</button>
                         <a href="{{ route('buku-besar-download-excel',['period' =>$request->period]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="card-body row">
-            <div class="col-md-6 table-responsive">
-                <h5 class="text-center">Aktiva</h5>
-                <table class="table table-striped table-aktiva">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 35%">Saldo</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="col-md-6 table-responsive">
-                <h5 class="text-center">Passiva</h5>
-                <table class="table table-striped table-passiva">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 40%">Saldo</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="col-md-6 table-responsive">
-                <h5 class="text-center">Pendapatan</h5>
-                <table class="table table-striped table-laba">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Code</th>
-                        <th>Nama</th>
-                        <th style="width: 40%">Saldo</th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="col-md-6 table-responsive">
-                <h5 class="text-center">Beban</h5>
-                <table class="table table-striped table-rugi">
-                    <thead>
+        @if ($request->search)    
+            <div class="card-body row">
+                <div class="col-md-6 table-responsive">
+                    <h5 class="text-center">Aktiva</h5>
+                    <table class="table table-striped table-aktiva">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Code</th>
+                                <th>Nama</th>
+                                <th style="width: 35%">Saldo</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-6 table-responsive">
+                    <h5 class="text-center">Passiva</h5>
+                    <table class="table table-striped table-passiva">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Code</th>
+                                <th>Nama</th>
+                                <th style="width: 40%">Saldo</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-6 table-responsive">
+                    <h5 class="text-center">Pendapatan</h5>
+                    <table class="table table-striped table-laba">
+                        <thead>
                         <tr>
                             <th>#</th>
                             <th>Code</th>
                             <th>Nama</th>
                             <th style="width: 40%">Saldo</th>
                         </tr>
-                    </thead>
-                </table>
-            </div>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-6 table-responsive">
+                    <h5 class="text-center">Beban</h5>
+                    <table class="table table-striped table-rugi">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Code</th>
+                                <th>Nama</th>
+                                <th style="width: 40%">Saldo</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
 
-        </div>
+            </div>
+        @endif
     </div>
 @endsection
 
@@ -140,6 +142,7 @@
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_ACTIVA }};
                          data.period = $('#period').val();
+                        data.search = '{{ $request->search }}';
                     }
                 },
                 aoColumns: [
@@ -181,6 +184,7 @@
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_PASSIVA }};
                          data.period = $('#period').val();
+                        data.search = '{{ $request->search }}';
                     }
                 },
                 aoColumns: [
@@ -222,6 +226,7 @@
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_RUGI }};
                          data.period = $('#period').val();
+                         data.search = '{{ $request->search }}';
                     }
                 },
                 aoColumns: [
@@ -263,6 +268,7 @@
                     data: function(data){
                         data.code_type_id = {{ CODE_TYPE_LABA }};
                         data.period = $('#period').val();
+                        data.search = '{{ $request->search }}';
                     }
                 },
                 aoColumns: [
