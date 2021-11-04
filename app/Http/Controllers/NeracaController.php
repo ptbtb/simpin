@@ -105,7 +105,7 @@ class NeracaController extends Controller
                                 {
                                     
                                 $saldo += $saldoDebet;
-                                $saldo -= -1*$saldoKredit;
+                                $saldo -= $saldoKredit;
                                 }
                                 else
                                 {
@@ -122,7 +122,7 @@ class NeracaController extends Controller
                                 if($code->id = 123 || $code->id = 126 || $code->id = 133)
                                 {
                                     $saldoLastMonth += $saldoDebetLastMonth;
-                                $saldoLastMonth -= -1*$saldoKreditLastMonth;
+                                $saldoLastMonth -= $saldoKreditLastMonth;
                                 }
                                 else
                                 {
@@ -157,6 +157,14 @@ class NeracaController extends Controller
                             ]);
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
                         {
+                            if ($key==402){
+                                $kewajibanlancar->push([
+                                'code' => $parentCode,
+                                'saldo' => -1*$saldo,
+                                'saldoLastMonth' => -1*$saldoLastMonth,
+                            ]);
+        
+                            }else{
                             $kewajibanlancar->push([
                                 'code' => $parentCode,
                                 'saldo' => $saldo,
