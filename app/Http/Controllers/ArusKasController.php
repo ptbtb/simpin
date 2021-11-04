@@ -135,7 +135,7 @@ class ArusKasController extends Controller
                             $temps = $allTransactions->whereIn('jurnalable_id', $jurnalTemps)
                                                     ->where('jurnalable_type', $debetTransaction)
                                                     ->where('akun_kredit', '<>', 0)
-                                                    ->pluck('debet','akun_kredit')
+                                                    ->pluck('kredit','akun_kredit')
                                                     ->all();
                         }
                         else
