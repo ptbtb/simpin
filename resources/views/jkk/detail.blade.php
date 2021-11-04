@@ -87,10 +87,22 @@
                                 <td>{{ $pengajuan->kode_pengajuan }}</td>
                                 <td>{{ strtoupper($pengajuan->anggota->nama_anggota) }}</td>
                                 <td>{{ strtoupper($settings[COMPANY_SETTING_BANK_NAME]) }}</td>
-                                <td>{{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}</td>
+                                <td>
+                                    @if ($pengajuan->pinjaman)
+                                        {{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>{{ strtoupper($pengajuan->jenisPinjaman->nama_pinjaman) }}</td>
                                 <td>{{ $settings[COMPANY_SETTING_BANK_ACCOUNT] }}</td>
-                                <td>{{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}</td>
+                                <td>
+                                    @if ($pengajuan->pinjaman)
+                                        {{ "Rp " . number_format($pengajuan->pinjaman->pinjamanDitransfer,2,',','.') }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 @if ($pengajuan->menungguPembayaran())
                                     <td>
                                         <a data-id="{{ $pengajuan->id }}" data-kode-pengajuan="{{ $pengajuan->kode_pengajuan }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm mt-1 btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>
