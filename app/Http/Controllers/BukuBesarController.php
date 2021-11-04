@@ -203,7 +203,12 @@ class BukuBesarController extends Controller
             }
 
 
-            return DataTables::collection($bukuBesars)->make(true);
+            return DataTables::collection($bukuBesars)
+            ->addColumn('period', function($item) use($request) {
+                
+            return $request->period;
+            })
+            ->make(true);
         }
         catch (\Throwable $e)
         {

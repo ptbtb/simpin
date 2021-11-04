@@ -152,7 +152,16 @@
                     },
                     {
                         mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code"
+                        className: "dt-body-center", "name": "code",
+                        mRender: function(data, type, row)
+                        {
+                            var thisdate = new Date(row.period);
+                            var lastyear = thisdate.getFullYear()-1;
+                            var start='31-12-'+lastyear;
+                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
+                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
+                            return a;
+                        }
                     },
                     {
                         mData: 'name', sType: "string",
@@ -194,7 +203,16 @@
                     },
                     {
                         mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code"
+                        className: "dt-body-center", "name": "code",
+                        mRender: function(data, type, row)
+                        {
+                            var thisdate = new Date(row.period);
+                            var lastyear = thisdate.getFullYear()-1;
+                            var start='31-12-'+lastyear;
+                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
+                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
+                            return a;
+                        }
                     },
                     {
                         mData: 'name', sType: "string",
@@ -236,7 +254,16 @@
                     },
                     {
                         mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code"
+                        className: "dt-body-center", "name": "code",
+                        mRender: function(data, type, row)
+                        {
+                            var thisdate = new Date(row.period);
+                            var lastyear = thisdate.getFullYear()-1;
+                            var start='31-12-'+lastyear;
+                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
+                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
+                            return a;
+                        }
                     },
                     {
                         mData: 'name', sType: "string",
@@ -278,7 +305,16 @@
                     },
                     {
                         mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code"
+                        className: "dt-body-center", "name": "code",
+                        mRender: function(data, type, row)
+                        {
+                            var thisdate = new Date(row.period);
+                            var lastyear = thisdate.getFullYear()-1;
+                            var start='31-12-'+lastyear;
+                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
+                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
+                            return a;
+                        }
                     },
                     {
                         mData: 'name', sType: "string",
