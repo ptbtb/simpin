@@ -105,7 +105,7 @@ class NeracaController extends Controller
                                 {
                                     
                                 $saldo += $saldoDebet;
-                                $saldo -= $saldoKredit;
+                                $saldo -= -1*$saldoKredit;
                                 }
                                 else
                                 {
@@ -122,7 +122,7 @@ class NeracaController extends Controller
                                 if($code->id = 123 || $code->id = 126 || $code->id = 133)
                                 {
                                     $saldoLastMonth += $saldoDebetLastMonth;
-                                $saldoLastMonth -= $saldoKreditLastMonth;
+                                $saldoLastMonth -= -1*$saldoKreditLastMonth;
                                 }
                                 else
                                 {
