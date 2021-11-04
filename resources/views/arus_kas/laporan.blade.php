@@ -73,10 +73,6 @@
                 orientation: "bottom",
                 autoclose: true,
             });
-
-            $('input.datepicker').bind('keyup keydown keypress', function (evt) {
-                return false;
-            });
         });
     </script>
 @stop
