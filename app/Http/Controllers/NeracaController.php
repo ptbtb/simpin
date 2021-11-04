@@ -166,7 +166,7 @@ class NeracaController extends Controller
                         }
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
                         {
-                            if ($key==402){
+                            if ($parentCode->codeType->name=='Passiva'){
                                 $kewajibanlancar->push([
                                 'code' => $parentCode,
                                 'saldo' => -1*$saldo,
