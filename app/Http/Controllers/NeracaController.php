@@ -100,7 +100,7 @@ class NeracaController extends Controller
                             {
                                 $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
         
-                                if($code->id = 123 || $code->id = 126)
+                                if($code->id = 123 || $code->id = 126 || $code->id = 133)
                                 {
                                     $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
                                     $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
@@ -115,7 +115,7 @@ class NeracaController extends Controller
                                 $saldo += $saldoKredit;
         
                                 $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('debet');
-                                if($code->id = 123 || $code->id = 126)
+                                if($code->id = 123 || $code->id = 126 || $code->id = 133)
                                 {
                                     $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
                                     $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
