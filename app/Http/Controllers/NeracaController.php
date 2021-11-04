@@ -170,6 +170,7 @@ class NeracaController extends Controller
                                 'saldo' => $saldo,
                                 'saldoLastMonth' => $saldoLastMonth,
                             ]);
+                        }
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN JANGKA PANJANG')
                         {
                             $kewajibanjangkapanjang->push([
