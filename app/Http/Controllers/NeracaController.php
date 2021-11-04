@@ -150,11 +150,20 @@ class NeracaController extends Controller
                         }
                         else if($parentCode->codeCategory->name=='AKTIVA TETAP')
                         {
+                            if ($key==205 ||$key==210){
+                                $aktivatetap->push([
+                                'code' => $parentCode,
+                                'saldo' => -1*$saldo,
+                                'saldoLastMonth' => -1*$saldoLastMonth,
+                            ]);
+        
+                            }else{
                             $aktivatetap->push([
                                 'code' => $parentCode,
                                 'saldo' => $saldo,
                                 'saldoLastMonth' => $saldoLastMonth,
                             ]);
+                        }
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
                         {
                             if ($key==402){
