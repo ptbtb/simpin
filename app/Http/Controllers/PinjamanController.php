@@ -856,7 +856,7 @@ class PinjamanController extends Controller
 
     public function detailPembayaran($id)
     {
-        $pengajuan = Pengajuan::find($id);
+        $pengajuan = Pengajuan::where('kode_pengajuan', $id)->first();
         if (is_null($pengajuan)) {
             return response()->json(['message' => 'Pengajuan Not Found'], 404);
         }

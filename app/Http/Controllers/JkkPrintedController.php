@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Code;
 use App\Models\JenisSimpanan;
 use App\Models\JkkPrinted;
 use App\Models\JkkPrintedType;
@@ -9,6 +10,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 use Storage;
@@ -107,5 +109,26 @@ class JkkPrintedController extends Controller
         // download PDF file with download method
         $filename = $jkkPrinted->jkk_number.'-'.$data['tgl_print'].'.pdf';
         return $pdf->download($filename);
+    }
+
+    public function show($id)
+    {
+        try
+        {
+            $jkkPrinted = JkkPrinted::findOrFail($id);
+            $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+            $data['title'] = $jkkPrinted->jkk_number;
+            $data['jkk'] = $jkkPrinted;
+            $data['listPengajuan'] = $jkkPrinted->jkkPengajuan;
+            $data['listPenarikan'] = $jkkPrinted->jkkPenarikan;
+            $data['bankAccounts'] = $bankAccounts;
+            return view('jkk.detail', $data);
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            Log::error($message);
+            return redirect()->back()->withErrors($message);
+        }
     }
 }

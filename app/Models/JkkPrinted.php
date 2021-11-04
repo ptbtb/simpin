@@ -11,7 +11,7 @@ class JkkPrinted extends Model
 
     protected $table = 'jkk_printed';
     protected $dates = ['printed_at'];
-    protected $appends = ['printed_at_view', 'printed_by_view'];
+    protected $appends = ['printed_at_view', 'printed_by_view', 'konfirmasi_pembayaran'];
 
     public function isPengajuanPinjaman()
     {
@@ -51,5 +51,27 @@ class JkkPrinted extends Model
     public function getPrintedByViewAttribute()
     {
         return $this->printedBy->name;
+    }
+
+    public function getKonfirmasiPembayaranAttribute()
+    {
+        if ($this->isPengajuanPinjaman())
+        {
+            $list = $this->jkkPengajuan->pluck('id_status_pengajuan')->toArray();            
+            if (in_array(STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN, $list))
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            $list = $this->jkkPenarikan->pluck('status_pengambilan')->toArray();
+            if (in_array(STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN, $list))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

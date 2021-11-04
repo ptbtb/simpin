@@ -157,8 +157,11 @@
                     mRender: function(data, type, full) {
                         var link = '<button data-toggle="modal" data-target="#paymentConfirmationModal" class="btn btn-sm btn-info btn-reprint" data-url="{{ route("jkk-printed-reprint", [""]) }}/'+data+'"/>' +
                                         '<i class="fa fa-print"></i> Reprint' +
-                                    '</a>';
-
+                                    '</button>';
+                        if (full.konfirmasi_pembayaran)
+                        {
+                            link = link + '<a href="{{ route("jkk-printed-show", [""]) }}/'+data+'" class="btn btn-sm btn-primary mt-1"><i class="fa fa-check"></i> Konfirmasi Pembayaran</a>';
+                        }
                         return link;
                     }
                 },
