@@ -113,7 +113,7 @@ class NeracaController extends Controller
                                     }
                                     $saldoKredit=0;
                                     foreach ($rawsalkre as $items){
-                                        $saldoKredit += $items->kredit;
+                                        $saldoKredit -= $items->kredit;
                                     }
                                
                                 }
@@ -142,7 +142,7 @@ class NeracaController extends Controller
                                     }
                                     $saldoKreditLastMonth=0;
                                     foreach ($rawsalkrecom as $items){
-                                        $saldoKreditLastMonth += $items->kredit;
+                                        $saldoKreditLastMonth -= $items->kredit;
                                     }
                                 }
                                 
