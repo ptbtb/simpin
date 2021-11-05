@@ -98,64 +98,38 @@ class NeracaController extends Controller
                             }
                             else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
                             {
-                                
-        
+                                $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
                                 $parcode = Code::find($code->id);
-
                                 if(($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva')|| ($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa'))
+                                
                                 {
-                                    $rawsaldeb = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get();
-                                    $rawsalkre = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->get();
-                                    $saldoDebet=0;
-                                    foreach ($rawsaldeb as $item){
-
-                                        $saldoDebet += $item->debet;
-                                    }
-                                    $saldoKredit=0;
-                                    foreach ($rawsalkre as $items){
-                                        $saldoKredit -= $items->kredit;
-                                    }
-                               
+                                    $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                                    $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                                    $saldoKredit = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
                                 }
-                                
-                                    else
+                                else
                                 {
-                                    $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
-                                $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
-                                    
-                                
+                                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
                                 }
-                                    $saldo -= $saldoDebet;
-                                $saldo += $saldoKredit;
-                                
         
-                                
-
+                                $saldo -= $saldoDebet;
+                                $saldo += $saldoKredit;
+        
+                                $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('debet');
                                 if(($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva')|| ($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa'))
-                                {
-                                    
-                                    $rawsaldebcom = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->get();
-                                    $rawsalkrecom = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->get();
-                                    $saldoDebetLastMonth =0;
-                                    foreach ($rawsaldebcom as $item){
-                                        $saldoDebetLastMonth += $item->debet;
-                                    }
-                                    $saldoKreditLastMonth=0;
-                                    foreach ($rawsalkrecom as $items){
-                                        $saldoKreditLastMonth -= $items->kredit;
-                                    }
-                                }
                                 
-                                    else
                                 {
-                                    $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('debet');
-                                $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
-                                    
+                                    $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+                                    $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+                                    $saldoKreditLastMonth = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
                                 }
+                                else
+                                {
+                                    $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+                                }
+        
                                 $saldoLastMonth -= $saldoDebetLastMonth;
                                 $saldoLastMonth += $saldoKreditLastMonth;
-        
-                                
                             }
                         }
                         
@@ -175,22 +149,18 @@ class NeracaController extends Controller
                         }
                         else if($parentCode->codeCategory->name=='AKTIVA TETAP')
                         {
-                            
                             $aktivatetap->push([
                                 'code' => $parentCode,
                                 'saldo' => $saldo,
                                 'saldoLastMonth' => $saldoLastMonth,
                             ]);
-                        
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
                         {
-                            
                             $kewajibanlancar->push([
                                 'code' => $parentCode,
                                 'saldo' => $saldo,
                                 'saldoLastMonth' => $saldoLastMonth,
                             ]);
-                        
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN JANGKA PANJANG')
                         {
                             $kewajibanjangkapanjang->push([
