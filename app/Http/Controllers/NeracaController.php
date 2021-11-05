@@ -168,18 +168,35 @@ class NeracaController extends Controller
                         }
                         else if($parentCode->codeCategory->name=='AKTIVA TETAP')
                         {
-                            $aktivatetap->push([
+                            if($parentCode->codeType->name=='Activa' && $parentCode->normal_balance_id==NORMAL_BALANCE_KREDIT){
+                                $aktivatetap->push([
+                                'code' => $parentCode,
+                                'saldo' => -1*$saldo,
+                                'saldoLastMonth' => -1*$saldoLastMonth,
+                            ]);
+                            }else{
+                               $aktivatetap->push([
                                 'code' => $parentCode,
                                 'saldo' => $saldo,
                                 'saldoLastMonth' => $saldoLastMonth,
-                            ]);
+                            ]); 
+                            }
+                            
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
                         {
+                            if($parentCode->codeType->name=='Passiva' && $parentCode->normal_balance_id==NORMAL_BALANCE_KREDIT){
+                                $kewajibanlancar->push([
+                                'code' => $parentCode,
+                                'saldo' => -1*$saldo,
+                                'saldoLastMonth' => -1*$saldoLastMonth,
+                            ]);
+                            }else{
                             $kewajibanlancar->push([
                                 'code' => $parentCode,
                                 'saldo' => $saldo,
                                 'saldoLastMonth' => $saldoLastMonth,
                             ]);
+                        }
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN JANGKA PANJANG')
                         {
                             $kewajibanjangkapanjang->push([
