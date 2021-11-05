@@ -101,7 +101,9 @@ class NeracaController extends Controller
                                 $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
                                 $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
         
-                                if($code->id = 123 || $code->id = 126 || $code->id = 133)
+                                $parcode = Code::find($code->id);
+
+                                if(($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva') ||($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa'))
                                 {
                                     
                                 $saldo += $saldoDebet;
@@ -119,7 +121,7 @@ class NeracaController extends Controller
                                 $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('debet');
                                 $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
 
-                                if($code->id = 123 || $code->id = 126 || $code->id = 133)
+                                if(($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva') ||($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa'))
                                 {
                                     $saldoLastMonth += $saldoDebetLastMonth;
                                 $saldoLastMonth -= $saldoKreditLastMonth;
@@ -150,7 +152,7 @@ class NeracaController extends Controller
                         }
                         else if($parentCode->codeCategory->name=='AKTIVA TETAP')
                         {
-                            if ($key==205 ||$key==210){
+                            if ($parentCode->codeType->name=='Activa' && $parentCode->normal_balance_id==NORMAL_BALANCE_KREDIT){
                                 $aktivatetap->push([
                                 'code' => $parentCode,
                                 'saldo' => -1*$saldo,
@@ -166,7 +168,7 @@ class NeracaController extends Controller
                         }
                         }else if($parentCode->codeCategory->name=='KEWAJIBAN LANCAR')
                         {
-                            if ($parentCode->codeType->name=='Passiva'){
+                            if ($parentCode->codeType->name=='Passiva' && $parentCode->normal_balance_id==NORMAL_BALANCE_KREDIT){
                                 $kewajibanlancar->push([
                                 'code' => $parentCode,
                                 'saldo' => -1*$saldo,
