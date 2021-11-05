@@ -163,26 +163,16 @@
                         className: "dt-body-center", "name": "akun_debet",
                     },
                     {
-                        mData: 'debet', sType: "string",
-                        className: "dt-body-center", "name": "debet",
-                        mRender: function(data, type, full)
-                        {
-                            var debet = toRupiah(data);
-                            return debet;
-                        }
+                        mData: 'nominal_rupiah_debet', sType: "string",
+                        className: "dt-body-center", "name": "debet"
                     },
                     {
                         mData: 'akun_kredit', sType: "string",
                         className: "dt-body-center", "name": "akun_kredit"
                     },
                     {
-                        mData: 'kredit', sType: "string",
-                        className: "dt-body-center", "name": "kredit",
-                        mRender: function(data, type, full)
-                        {
-                            var kredit = toRupiah(data);
-                            return kredit;
-                        }
+                        mData: 'nominal_rupiah_kredit', sType: "string",
+                        className: "dt-body-center", "name": "kredit"
                     },
                     {
                         mData: 'keterangan', sType: "string",

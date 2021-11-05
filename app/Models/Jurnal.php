@@ -28,7 +28,7 @@ class Jurnal extends Model
      *
      * @var array
      */
-    protected $appends = ['view_created_at', 'jurnalable_view'];
+    protected $appends = ['view_created_at', 'jurnalable_view','nominal_rupiah_debet','nominal_rupiah_kredit'];
 
 
     /**
@@ -74,5 +74,21 @@ class Jurnal extends Model
         {
             return '';
         }
+    }
+    public function getNominalRupiahDebetAttribute()
+    {
+        if ($this->debet)
+        {
+            return number_format($this->debet,2,",",".");
+        }
+        return $this->debet;
+    }
+    public function getNominalRupiahKreditAttribute()
+    {
+        if ($this->kredit)
+        {
+            return number_format($this->kredit,2,",",".");
+        }
+        return $this->kredit;
     }
 }
