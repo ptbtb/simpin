@@ -100,7 +100,12 @@ class NeracaController extends Controller
                             {
                                 $saldoDebet = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('debet');
                                 $parcode = Code::find($code->id);
-                                if(($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva')|| ($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa'))
+                                if($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva'){
+                                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
+                                    $saldo += $saldoDebet;
+                                $saldo -= $saldoKredit;
+                                }
+                                else if($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa')
                                 
                                 {
                                     $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->whereBetween('tgl_transaksi', [$startPeriod, $endPeriod])->sum('kredit');
@@ -120,7 +125,13 @@ class NeracaController extends Controller
                                 
         
                                 $saldoDebetLastMonth = DB::table('t_jurnal')->where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('debet');
-                                if(($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva')|| ($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa'))
+                                if($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva'){
+                                    $saldoKreditLastMonth = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
+                                    $saldoLastMonth += $saldoDebetLastMonth;
+                                $saldoLastMonth -= $saldoKreditLastMonth;
+                                }
+
+                                else if($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa')
                                 
                                 {
                                     $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->whereBetween('tgl_transaksi', [$startComparePeriod, $endComparePeriod])->sum('kredit');
