@@ -82,7 +82,7 @@ class BukuBesarController extends Controller
                                         
                 
                                         $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
-                                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->where('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
+                                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->wherebetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
 
                                     $saldo -= $saldoDebet;
                                     $saldo += $saldoKredit;
