@@ -82,22 +82,60 @@ class BukuBesarController extends Controller
                                         
                 
                                         $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
-                                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
-                                    }
-                                    else
-                                    {
-                                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
-                                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
-                                    }
-                
+                                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->where('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
+
                                     $saldo -= $saldoDebet;
                                     $saldo += $saldoKredit;
-                
                                     $bukuBesars->push([
                                         'code' => $code->CODE,
                                         'name' => $code->NAMA_TRANSAKSI,
                                         'saldo' => $saldo,
                                     ]);
+                                    }
+                                    else
+                                    {
+                                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                                    if($code->codeCategory->name=='KEWAJIBAN LANCAR' &&  $code->codeType->name=='Passiva'){
+                                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('tgl_transaksi', '<=',$today)->sum('kredit');
+                                    $saldo += $saldoDebet;
+                                    $saldo -= $saldoKredit;
+                                    $bukuBesars->push([
+                                        'code' => $code->CODE,
+                                        'name' => $code->NAMA_TRANSAKSI,
+                                        'saldo' => -1*$saldo,
+                                    ]);
+                                }
+                                else if($code->codeCategory->name=='AKTIVA TETAP' &&  $code->codeType->name=='Activa')
+                                
+                                {
+                                    $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->where('tgl_transaksi', '<=',$today)->sum('kredit');
+                                    $saldoKreditSaldoAwal = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('jurnalable_type', 'App\Models\SaldoAwal')->where('tgl_transaksi', '<=',$today)->sum('kredit');
+                                    $saldoKredit = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
+
+                                    $saldo += $saldoDebet;
+                                $saldo -= $saldoKredit;
+                                $bukuBesars->push([
+                                        'code' => $code->CODE,
+                                        'name' => $code->NAMA_TRANSAKSI,
+                                        'saldo' => -1*$saldo,
+                                    ]);
+                                }
+                                else
+                                {
+                                    $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('tgl_transaksi', '<=',$today)->sum('kredit');
+                                    $saldo -= $saldoDebet;
+                                $saldo += $saldoKredit;
+                                $bukuBesars->push([
+                                        'code' => $code->CODE,
+                                        'name' => $code->NAMA_TRANSAKSI,
+                                        'saldo' => $saldo,
+                                    ]);
+                                }
+                                    }
+                
+                                    
+                                    
+                                    
                                 }
                                 //dd($bukuBesars);
                             }
