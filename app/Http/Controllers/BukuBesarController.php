@@ -94,8 +94,9 @@ class BukuBesarController extends Controller
                                     }
                                     else
                                     {
+                                        $parcode = Code::find($code->id);
                                         $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
-                                    if($code->codeCategory->name=='KEWAJIBAN LANCAR' &&  $code->codeType->name=='Passiva'){
+                                    if($parcode->codeCategory->name=='KEWAJIBAN LANCAR' &&  $parcode->codeType->name=='Passiva'){
                                     $saldoKredit = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->where('tgl_transaksi', '<=',$today)->sum('kredit');
                                     $saldo += $saldoDebet;
                                     $saldo -= $saldoKredit;
@@ -105,7 +106,7 @@ class BukuBesarController extends Controller
                                         'saldo' => -1*$saldo,
                                     ]);
                                 }
-                                else if($code->codeCategory->name=='AKTIVA TETAP' &&  $code->codeType->name=='Activa')
+                                else if($parcode->codeCategory->name=='AKTIVA TETAP' &&  $parcode->codeType->name=='Activa')
                                 
                                 {
                                     $saldoKreditJurnalUmum = DB::table('t_jurnal')->where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->where('tgl_transaksi', '<=',$today)->sum('kredit');
