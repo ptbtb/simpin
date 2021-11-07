@@ -64,9 +64,10 @@ class SHUController extends Controller
     {
         try
         {
-            $shu = SHU::all();
-            $data['shu'] = $shu;
+            $listSHU = SHU::take(10)->get();
+            $data['listSHU'] = $listSHU;
             $name = 'SHU-excel-'.Carbon::now()->toDateTimeString().'.xlsx';
+            // return view('shu.excel', $data);
             return Excel::download(new SHUExport($data), $name);
         }
         catch (\Throwable $th)
