@@ -198,6 +198,32 @@ class BukuBesarController extends Controller
                 {
                     // if first char of COA is 7 or 8 get jurnal from first date of year until today
                     if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
+                    {
+                        
+
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
+                    }
+                    else
+                    {
+                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
+                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
+                    }
+
+                    $saldo += $saldoDebet;
+                    $saldo -= $saldoKredit;
+
+                    $bukuBesars->push([
+                        'code' => $code->CODE,
+                        'name' => $code->NAMA_TRANSAKSI,
+                        'type' => $code->codeType->name,
+                        'saldo' => $saldo,
+                    ]);
+                }
+                else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
+                {
+                    // if first char of COA is 7 or 8 get jurnal from first date of year until today
+                    if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
                                     {
                                         
                 
@@ -260,32 +286,8 @@ class BukuBesarController extends Controller
                                     ]);
                                 }
                                     }
-                }
-                else if($code->normal_balance_id == NORMAL_BALANCE_KREDIT)
-                {
-                    // if first char of COA is 7 or 8 get jurnal from first date of year until today
-                    if(substr($code->CODE, 0, 1) === '7' || substr($code->CODE, 0, 1) === '8')
-                    {
-                        
 
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereBetween('tgl_transaksi', [$startOfYear,$today])->sum('kredit');
-                    }
-                    else
-                    {
-                        $saldoDebet = Jurnal::where('akun_debet', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('debet');
-                        $saldoKredit = Jurnal::where('akun_kredit', $code->CODE)->whereDate('tgl_transaksi', '<=',$today)->sum('kredit');
-                    }
-
-                    $saldo -= $saldoDebet;
-                    $saldo += $saldoKredit;
-
-                    $bukuBesars->push([
-                    'code' => $code->CODE,
-                    'name' => $code->NAMA_TRANSAKSI,
-                    'type' => $code->codeType->name,
-                    'saldo' => $saldo,
-                ]);
+                    
                 }
             }
 
