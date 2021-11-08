@@ -155,13 +155,14 @@
                     sType: "string",
                     className: "text-center",
                     mRender: function(data, type, full) {
-                        var link = '<button data-toggle="modal" data-target="#paymentConfirmationModal" class="btn btn-sm btn-info btn-reprint" data-url="{{ route("jkk-printed-reprint", [""]) }}/'+data+'"/>' +
-                                        '<i class="fa fa-print"></i> Reprint' +
-                                    '</button>';
+                        var link = '';
                         if (full.konfirmasi_pembayaran)
                         {
-                            link = link + '<a href="{{ route("jkk-printed-show", [""]) }}/'+data+'" class="btn btn-sm btn-primary mt-1"><i class="fa fa-check"></i> Konfirmasi Pembayaran</a>';
+                            link = link + '<a href="{{ route("jkk-printed-show", [""]) }}/'+data+'" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Konfirmasi Pembayaran</a>';
                         }
+                            link = link + '<button data-toggle="modal" data-target="#paymentConfirmationModal" class="btn btn-sm btn-info btn-reprint mt-1" data-url="{{ route("jkk-printed-reprint", [""]) }}/'+data+'"/>' +
+                                            '<i class="fa fa-print"></i> Reprint' +
+                                        '</button>';
                         return link;
                     }
                 },

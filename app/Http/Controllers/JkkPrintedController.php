@@ -34,7 +34,8 @@ class JkkPrintedController extends Controller
         $user = Auth::user();
         $this->authorize('print jkk', $user);
 
-        $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan');
+        $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan')
+                                ->orderBy('printed_at', 'desc');
         if (isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN)
         {
             $jkkPrinted = $jkkPrinted->has('jkkPengajuan');
@@ -42,6 +43,11 @@ class JkkPrintedController extends Controller
         elseif(isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENARIKAN_SIMPANAN)
         {
             $jkkPrinted = $jkkPrinted->has('jkkPenarikan');
+        }
+        else
+        {
+            $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan')
+                                    ->orHas('jkkPengajuan');
         }
 
         return DataTables::eloquent($jkkPrinted)
@@ -84,7 +90,7 @@ class JkkPrintedController extends Controller
     {
         $listPenarikan = $jkkPrinted->jkkPenarikan;
 
-        $data['tgl_print']= Carbon::now();
+        $data['tgl_print']= $jkkPrinted->printed_at;
         $data['listPenarikan'] = $listPenarikan;
         $data['jenisSimpanan'] = JenisSimpanan::all();
         view()->share('data', $data);
@@ -101,7 +107,7 @@ class JkkPrintedController extends Controller
         $listPengajuan = $jkkPrinted->jkkPengajuan;
 
         $data['listPengajuan'] = $listPengajuan;
-        $data['tgl_print'] = Carbon::now();
+        $data['tgl_print'] = $jkkPrinted->printed_at;
         view()->share('data',$data);
         PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
         $pdf = PDF::loadView('pinjaman.printJKK', $data)->setPaper('a4', 'landscape');
