@@ -31,11 +31,12 @@ class PenarikanImport implements OnEachRow
         $fields = [
             'kode_anggota' => $row[0],
             'besar_ambil' => $row[1],
-            'tgl_ambil' => Carbon::createFromFormat('Y-m-d', $tglAmbil),
+            'tgl_ambil' => $tglAmbil,
             'keterangan' => $row[3],
             'code_trans' => $row[4],
             'id_bank' => $row[5],
         ];
+        // dd($fields);
         $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
         $id_akun_debet = Code::where('CODE',$fields['id_bank'])->first();
         $penarikan = null;
