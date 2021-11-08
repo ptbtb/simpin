@@ -82,7 +82,7 @@
     <div class="modal fade" id="paymentConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form action="" method="POST" enctype="multipart/form-data" id="paymentConfirmationForm" target="_blank">
+                <form action="" method="POST" enctype="multipart/form-data" id="paymentConfirmationForm">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Re-print JKK</h5>

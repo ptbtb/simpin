@@ -93,6 +93,7 @@ class JkkPrintedController extends Controller
         $data['tgl_print']= $jkkPrinted->printed_at;
         $data['listPenarikan'] = $listPenarikan;
         $data['jenisSimpanan'] = JenisSimpanan::all();
+        $data['reprint'] = 'reprint';
         view()->share('data', $data);
         PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
         $pdf = PDF::loadView('penarikan.pdfJKK', $data)->setPaper('a4', 'landscape');
@@ -108,6 +109,7 @@ class JkkPrintedController extends Controller
 
         $data['listPengajuan'] = $listPengajuan;
         $data['tgl_print'] = $jkkPrinted->printed_at;
+        $data['reprint'] = 'reprint';
         view()->share('data',$data);
         PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
         $pdf = PDF::loadView('pinjaman.printJKK', $data)->setPaper('a4', 'landscape');

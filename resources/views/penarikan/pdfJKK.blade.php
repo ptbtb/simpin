@@ -98,4 +98,7 @@
             </td>
         </tr>
     </table>
+    @if (isset($reprint))
+        <label style="font-size: 8px; font-weight: 700; position: absolute; bottom: 0; right: 0">Reprint JKK</label>
+    @endif
 </body>
