@@ -59,6 +59,17 @@
                                 <th style="width: 35%">Saldo</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            
+                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_ACTIVA) as $item)
+                            <tr>
+                                <td></td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
+                                <td>{{$item['name']}}</td>
+                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
                 <div class="col-md-6 table-responsive">
@@ -72,6 +83,17 @@
                                 <th style="width: 40%">Saldo</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            
+                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_PASSIVA) as $item)
+                            <tr>
+                                <td></td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
+                                <td>{{$item['name']}}</td>
+                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
                 <div class="col-md-6 table-responsive">
@@ -85,6 +107,17 @@
                             <th style="width: 40%">Saldo</th>
                         </tr>
                         </thead>
+                        <tbody>
+                            
+                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_LABA) as $item)
+                            <tr>
+                                <td></td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
+                                <td>{{$item['name']}}</td>
+                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
                 <div class="col-md-6 table-responsive">
@@ -98,6 +131,17 @@
                                 <th style="width: 40%">Saldo</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            
+                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_RUGI) as $item)
+                            <tr>
+                                <td></td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
+                                <td>{{$item['name']}}</td>
+                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
 
@@ -123,214 +167,16 @@
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
                 return true;
             });
-            initiateDatatables();
+            // initiateDatatables();
         });
         function initiateDatatables()
         {
             $.fn.dataTable.ext.errMode = 'none';
-            var tableAktiva = $('.table-aktiva').DataTable({
-                bProcessing: true,
-                bServerSide: true,
-                bSortClasses: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                paging: false,
-                ajax: {
-                    url: '{{ route('buku-besar-list-ajax') }}',
-                    dataSrc: 'data',
-                    data: function(data){
-                        data.code_type_id = {{ CODE_TYPE_ACTIVA }};
-                         data.period = $('#period').val();
-                        data.search = '{{ $request->search }}';
-                    }
-                },
-                aoColumns: [
-                    {
-                        mData: 'null', sType: "string",
-                        className: "dt-body-center", "name": "index"
-                    },
-                    {
-                        mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code",
-                        mRender: function(data, type, row)
-                        {
-                            var thisdate = new Date(row.period);
-                            var lastyear = thisdate.getFullYear()-1;
-                            var start='31-12-'+lastyear;
-                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
-                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
-                            return a;
-                        }
-                    },
-                    {
-                        mData: 'name', sType: "string",
-                        className: "dt-body-center", "name": "name"
-                    },
-                    {
-                        mData: 'saldo', sType: "string",
-                        className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full)
-                        {
-                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
-                            return saldo;
-                        }
-                    },
-                ]
-            });
+            
 
-            var tablePassiva = $('.table-passiva').DataTable({
-                bProcessing: true,
-                bServerSide: true,
-                bSortClasses: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                paging: false,
-                ajax: {
-                    url: '{{ route('buku-besar-list-ajax') }}',
-                    dataSrc: 'data',
-                    data: function(data){
-                        data.code_type_id = {{ CODE_TYPE_PASSIVA }};
-                         data.period = $('#period').val();
-                        data.search = '{{ $request->search }}';
-                    }
-                },
-                aoColumns: [
-                    {
-                        mData: 'null', sType: "string",
-                        className: "dt-body-center", "name": "index"
-                    },
-                    {
-                        mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code",
-                        mRender: function(data, type, row)
-                        {
-                            var thisdate = new Date(row.period);
-                            var lastyear = thisdate.getFullYear()-1;
-                            var start='31-12-'+lastyear;
-                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
-                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
-                            return a;
-                        }
-                    },
-                    {
-                        mData: 'name', sType: "string",
-                        className: "dt-body-center", "name": "name"
-                    },
-                    {
-                        mData: 'saldo', sType: "string",
-                        className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full)
-                        {
-                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
-                            return saldo;
-                        }
-                    },
-                ]
-            });
+            
 
-            var tableRugi = $('.table-rugi').DataTable({
-                bProcessing: true,
-                bServerSide: true,
-                bSortClasses: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                paging: false,
-                ajax: {
-                    url: '{{ route('buku-besar-list-ajax') }}',
-                    dataSrc: 'data',
-                    data: function(data){
-                        data.code_type_id = {{ CODE_TYPE_RUGI }};
-                         data.period = $('#period').val();
-                         data.search = '{{ $request->search }}';
-                    }
-                },
-                aoColumns: [
-                    {
-                        mData: 'null', sType: "string",
-                        className: "dt-body-center", "name": "index"
-                    },
-                    {
-                        mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code",
-                        mRender: function(data, type, row)
-                        {
-                            var thisdate = new Date(row.period);
-                            var lastyear = thisdate.getFullYear()-1;
-                            var start='31-12-'+lastyear;
-                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
-                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
-                            return a;
-                        }
-                    },
-                    {
-                        mData: 'name', sType: "string",
-                        className: "dt-body-center", "name": "name"
-                    },
-                    {
-                        mData: 'saldo', sType: "string",
-                        className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full)
-                        {
-                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
-                            return saldo;
-                        }
-                    },
-                ]
-            });
-
-            var tableLaba = $('.table-laba').DataTable({
-                bProcessing: true,
-                bServerSide: true,
-                bSortClasses: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                paging: false,
-                ajax: {
-                    url: '{{ route('buku-besar-list-ajax') }}',
-                    dataSrc: 'data',
-                    data: function(data){
-                        data.code_type_id = {{ CODE_TYPE_LABA }};
-                        data.period = $('#period').val();
-                        data.search = '{{ $request->search }}';
-                    }
-                },
-                aoColumns: [
-                    {
-                        mData: 'null', sType: "string",
-                        className: "dt-body-center", "name": "index"
-                    },
-                    {
-                        mData: 'code', sType: "string",
-                        className: "dt-body-center", "name": "code",
-                        mRender: function(data, type, row)
-                        {
-                            var thisdate = new Date(row.period);
-                            var lastyear = thisdate.getFullYear()-1;
-                            var start='31-12-'+lastyear;
-                            var end = ("0" + thisdate.getDate()).slice(-2)+'-'+  ("0" + (thisdate.getMonth() + 1)).slice(-2)+'-'+thisdate.getFullYear();                     
-                            var a = '<a href="../jurnal?code='+data+'&from='+start+'&to='+end+'" target="_blank">'+data+'</a>';
-                            return a;
-                        }
-                    },
-                    {
-                        mData: 'name', sType: "string",
-                        className: "dt-body-center", "name": "name"
-                    },
-                    {
-                        mData: 'saldo', sType: "string",
-                        className: "dt-body-center text-right", "name": "saldo",
-                        mRender: function(data, type, full)
-                        {
-                            var saldo = 'Rp ' + new Intl.NumberFormat(['ban', 'id']).format(data);
-                            return saldo;
-                        }
-                    },
-                ]
-            });
+            
 
             // add index column
             tableAktiva.on( 'xhr.dt', function () {
