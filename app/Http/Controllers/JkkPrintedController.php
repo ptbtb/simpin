@@ -106,7 +106,22 @@ class JkkPrintedController extends Controller
     public function reprintPengajuanPinjaman(JkkPrinted $jkkPrinted)
     {
         $listPengajuan = $jkkPrinted->jkkPengajuan;
+        if ($listPengajuan->count())
+        {
+            foreach ($listPengajuan as $key => $pengajuan)
+            {
+                if (is_null($pengajuan->pinjaman))
+                {
+                    $listPengajuan->forget($key);
+                }
+            }
+        }
 
+        if (!$listPengajuan->count())
+        {
+            return redirect()->back()->withErrors('Pinjaman untuk jkk ini belum di generate. silahkan periksa kembali');
+        }
+        
         $data['listPengajuan'] = $listPengajuan;
         $data['tgl_print'] = $jkkPrinted->printed_at;
         $data['reprint'] = 'reprint';
