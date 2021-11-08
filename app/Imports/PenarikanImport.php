@@ -46,6 +46,7 @@ class PenarikanImport implements OnEachRow
             $penarikan->besar_ambil = $fields['besar_ambil'];
             $penarikan->code_trans = $fields['code_trans'];
             $penarikan->tgl_ambil = $fields['tgl_ambil'];
+            $penarikan->tgl_transaksi = $fields['tgl_ambil'];
             $penarikan->keterangan = $fields['keterangan'];
             $penarikan->id_akun_debet = $id_akun_debet->id;
             $penarikan->paid_by_cashier = Auth::user()->id;
