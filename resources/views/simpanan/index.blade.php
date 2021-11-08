@@ -337,8 +337,8 @@
 
                 var htmlText = '<div class="container-fluid" style="font-size : 14px">' +
                                     '<div class="row">' +
-                                        '<div class="col-md-6 mx-0 my-2">Tanggal Mulai <br> <b>' + startDate + '</b></div>' +
-                                        '<div class="col-md-6 mx-0 my-2">Tangggal Entri <br> <b>' + entryDate + '</b></div>' +
+                                        
+                                        '<div class="col-md-6 mx-0 my-2">Tangggal Transaksi <br> <b>' + entryDate + '</b></div>' +
                                         '<div class="col-md-6 mx-0 my-2"></div>' +
                                         '<div class="col-md-6 mx-0 my-2">User Entri <br> <b>' + uEntry + '</b></div>' +
                                     '</div>' +
