@@ -75,8 +75,8 @@
                         @endif
                         <th>Jenis Simpanan</th>
                         <th>Besar Simpanan</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Tanggal Entry</th>
+                        <!-- <th>Tanggal Mulai</th> -->
+                        <th>Tanggal Transaksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -161,16 +161,16 @@
                         return data;
                     }			
                 },
-                { 
-                    mData: 'tanggal_mulai', sType: "string", 
-                    className: "dt-body-center", "name": "tanggal_mulai"	,
-                    mRender: function (data, type, full) {
-                        if (data == null || data == '') {
-                            return '-';
-                        }
-                        return data;
-                    }			
-                },
+                // { 
+                //     mData: 'tanggal_mulai', sType: "string", 
+                //     className: "dt-body-center", "name": "tanggal_mulai"	,
+                //     mRender: function (data, type, full) {
+                //         if (data == null || data == '') {
+                //             return '-';
+                //         }
+                //         return data;
+                //     }			
+                // },
                 { 
                     mData: 'tanggal_entri', sType: "string", 
                     className: "dt-body-center", "name": "tanggal_entri"	,
