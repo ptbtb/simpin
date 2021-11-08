@@ -36,6 +36,8 @@ class ArusKasController extends Controller
 
             if ($request->from && $request->to)
             {
+                ini_set('max_execution_time', 1200);
+
                 // find kas and bank account
                 $kasAndBankAccount = Code::where('CODE', 'like','102.%')->orWhere('CODE', 'like','101.%')->get();
                 $kasAndBankAccount = $kasAndBankAccount->where('is_parent', 0)->pluck('CODE');
@@ -225,6 +227,8 @@ class ArusKasController extends Controller
 
         if ($request->period)
         {
+            ini_set('max_execution_time', 1200);
+
             // find kas and bank account
             $kasAndBankAccount = Code::where('CODE', 'like','102.%')->orWhere('CODE', 'like','101.%')->get();
             $kasAndBankAccount = $kasAndBankAccount->where('is_parent', 0)->pluck('CODE');
