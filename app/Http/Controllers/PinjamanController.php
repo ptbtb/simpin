@@ -1267,7 +1267,7 @@ class PinjamanController extends Controller
 
     public function viewDataJurnalPinjaman($id)
     {
-        $pengajuan = Pengajuan::find($id);
+        $pengajuan = Pengajuan::where('kode_pengajuan',$id)->first();
         $data['pengajuan'] = $pengajuan;
         return view('pinjaman.viewjurnal', $data);
         // return response()->json(['message' => 'error'], 500);
