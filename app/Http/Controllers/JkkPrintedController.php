@@ -38,7 +38,10 @@ class JkkPrintedController extends Controller
                                 ->orderBy('printed_at', 'desc');
         if (isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN)
         {
-            $jkkPrinted = $jkkPrinted->has('jkkPengajuan');
+            $jkkPrinted = $jkkPrinted->whereHas('jkkPengajuan', function ($query)
+            {
+                return $query->has('pinjaman');
+            });
         }
         elseif(isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENARIKAN_SIMPANAN)
         {
