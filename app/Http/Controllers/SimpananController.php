@@ -706,6 +706,10 @@ class SimpananController extends Controller
                     $simpanan->tgl_transaksi=$simpanan->tgl_entri;
                     $simpanan->save();
                     }
+                    if (is_null($simpanan->serial_number)){
+                    $simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                    $simpanan->save();
+                    }
                     
                     JurnalManager::createJurnalSimpanan($simpanan);
                 }
