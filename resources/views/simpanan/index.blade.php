@@ -102,7 +102,8 @@
                     <th>Besar Simpanan</th>
                     <th>User Entry</th>
                     <th>Status</th>
-                    <th style="width: 1%">Action</th>
+                    <th>Tanggal</th>
+                    <th style="width: 15%">Action</th>
 
                 </tr>
             </thead>
@@ -245,11 +246,20 @@
                     }
                 },
                 {
+                    mData: 'tanggal_entri', sType: "string",
+                    className: "dt-body-center", "name": "tanggal_entri" ,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }
+                },
+                {
                     mData: 'kode_simpan', sType: "string",
                     className: "dt-body-center", "name": "action"	,
                     mRender: function (data, type, full) {
-                        var mark = '<a style="cursor: pointer" class="btn btn-sm btn-primary mt-1" data-action="info" data-start-date="' + full['tanggal_mulai'] + '" data-entry-date="' + full['tanggal_entri'] + '" data-u-entry="' + full['u_entry'] + '"><i class="fa fa-info"></i> Info</a>';
-                        mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
+                        var mark = '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
                         if(full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }})
                         {
                             mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 text-white" data-action="edit" data-id="' + data + '" data-simpanan="' + full.besar_simpanan + '"><i class="fa fa-edit"></i> Edit</a>';

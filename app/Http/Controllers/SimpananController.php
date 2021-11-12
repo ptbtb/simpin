@@ -700,6 +700,7 @@ class SimpananController extends Controller
 
             $data['simpanan'] = $simpanan;
             $data['jurnals'] = $simpanan->jurnals;
+            dd($simpanan->jurnals);
             return view('simpanan.jurnal', $data);
         }
         catch (\Throwable $e)
