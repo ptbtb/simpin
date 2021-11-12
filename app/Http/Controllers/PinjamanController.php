@@ -943,6 +943,10 @@ class PinjamanController extends Controller
                 return redirect()->back()->withError('Besar pembayaran harus sama dengan total bayar');
             }
             $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
+            $totalDiskon = $request->discount/100*$pinjaman->jasaPelunasanDipercepat;
+            $pinjaman->diskon = $request->discount;
+            $pinjaman->total_diskon = $totalDiskon;
+            $pinjaman->save();
 
             if($request->jenis_pembayaran)
             {

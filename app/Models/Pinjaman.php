@@ -100,8 +100,8 @@ class Pinjaman extends Model {
     }
 
     public function getJasaPelunasanDipercepatAttribute() {
-        \Log::info($this->kode_jenis_pinjam);
-        return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
+        // return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
+        return $this->sisa_pinjaman * $this->jenisPinjaman->jasa_pelunasan_dipercepat - $this->total_diskon;
     }
 
     public function getTotalbayarPelunasanDipercepatAttribute()
