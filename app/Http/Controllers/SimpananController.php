@@ -8,6 +8,7 @@ use App\Exports\SimpananExport;
 use App\Imports\SimpananImport;
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
+use App\Models\Jurnal;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Tabungan;
@@ -698,15 +699,21 @@ class SimpananController extends Controller
                 return response()->json(['message' => 'Not Found'], 404);
             }
 
-            // if($simpanan->u_entry!=='Admin BTB'){
-            //     if (!($simpanan->jurnals->count()==0)){
-            //         $simpanan->tgl_transaksi=$simpanan->tgl_entri;
-            //         $simpanan->save();
-            //         JurnalManager::createJurnalSimpanan($simpanan);
-            //     }
-            // }
-            $data['simpanan'] = $simpanan;
-            $data['jurnals'] = $simpanan->jurnals;
+            if($simpanan->u_entry!=='Admin BTB'){
+
+                if ($simpanan->jurnals->count()==0 && $simpanan->id_status_simpanan==1){
+                    if (is_null($simpanan->tgl_transaksi)){
+                    $simpanan->tgl_transaksi=$simpanan->tgl_entri;
+                    $simpanan->save();
+                    }
+                    
+                    JurnalManager::createJurnalSimpanan($simpanan);
+                }
+            }
+            
+            $simpanan2 = Simpanan::find($id);
+            $data['simpanan'] = $simpanan2;
+            $data['jurnals'] = $simpanan2->jurnals;
             return view('simpanan.jurnal', $data);
         }
         catch (\Throwable $e)
