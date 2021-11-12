@@ -50,7 +50,10 @@ class JkkPrintedController extends Controller
         else
         {
             $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan')
-                                    ->orHas('jkkPengajuan');
+                                    ->orWhereHas('jkkPengajuan', function ($query)
+                                    {
+                                        return $query->has('pinjaman');
+                                    });
         }
 
         return DataTables::eloquent($jkkPrinted)
