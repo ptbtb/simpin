@@ -698,13 +698,13 @@ class SimpananController extends Controller
                 return response()->json(['message' => 'Not Found'], 404);
             }
 
-            if($simpanan->u_entry!=='Admin BTB'){
-                if (!($simpanan->jurnals->count()==0)){
-                    $simpanan->tgl_transaksi=$simpanan->tgl_entri;
-                    $simpanan->save();
-                    JurnalManager::createJurnalSimpanan($simpanan);
-                }
-            }
+            // if($simpanan->u_entry!=='Admin BTB'){
+            //     if (!($simpanan->jurnals->count()==0)){
+            //         $simpanan->tgl_transaksi=$simpanan->tgl_entri;
+            //         $simpanan->save();
+            //         JurnalManager::createJurnalSimpanan($simpanan);
+            //     }
+            // }
             $data['simpanan'] = $simpanan;
             $data['jurnals'] = $simpanan->jurnals;
             return view('simpanan.jurnal', $data);
