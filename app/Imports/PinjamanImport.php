@@ -77,7 +77,7 @@ class PinjamanImport implements OnEachRow
                 $angsuran->serial_number = $nextSerialNumber;
                 $angsuran->save();
             }
-            // JurnalManager::createJurnalSaldoPinjaman($pinjaman);
+            JurnalManager::createJurnalSaldoPinjaman($pinjaman);
         }
     }
 }
