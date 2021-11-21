@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Exports\AnggotaExport;
 use App\Imports\AnggotaImport;
+use App\Managers\AnggotaManager;
 use App\Models\Anggota;
 use App\Models\Company;
 use App\Models\Bank;
@@ -22,6 +23,7 @@ use Auth;
 use Excel;
 use PDF;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Storage;
 
 class AnggotaController extends Controller {
@@ -474,4 +476,25 @@ class AnggotaController extends Controller {
             return redirect()->back()->withError('Gagal import data');
         }
 	}
+
+    public function keluarAnggota($id)
+    {
+        try
+        {
+            $anggota = Anggota::where('kode_anggota', $id)->first();
+            if(is_null($anggota))
+            {
+                return redirect()->back()->withError('Anggota not found');
+            }
+
+            AnggotaManager::keluarAnggota($anggota);
+            return redirect()->back()->withSuccess('Updated');
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            Log::error($message);
+            return redirect()->back()->withErrors($message);
+        }
+    }
 }

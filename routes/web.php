@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AnggotaController;
-use App\Http\Controllers\Api\JenisPenghasilanController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CodeController;
 use App\Http\Controllers\CompanyController;
@@ -78,6 +77,7 @@ Route::group(['prefix' => 'anggota'], function () {
         Route::post('import/excel', [App\Http\Controllers\AnggotaController::class, 'storeImportExcel'])->name('anggota-import-excel');
 
         Route::get('search-pinjaman/{id}', [PinjamanController::class, 'searchPinjamanAnggota'])->name('searchPinjamanAnggota');
+        Route::get('keluar-anggota/{id}', [AnggotaController::class, 'keluarAnggota'])->name('keluar-anggota');
     });
 });
 
