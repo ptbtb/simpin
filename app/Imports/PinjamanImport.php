@@ -31,7 +31,7 @@ class PinjamanImport implements OnEachRow
 
             $pinjaman = new Pinjaman();
             $kodeAnggota = $row[1];
-            $kodePinjaman = str_replace('.', '', $row[0]) . '-' . $kodeAnggota . '-' . Carbon::createFromFormat('Y-m-d', $row[6]);
+            $kodePinjaman = str_replace('.', '', $row[0]) . '-' . $kodeAnggota . '-' . Carbon::now()->endOfYear()->format('Y-m-d');
             $pinjaman->kode_pinjam = $kodePinjaman;
             $pinjaman->kode_pengajuan_pinjaman = $kodePinjaman;
             $pinjaman->kode_anggota = $kodeAnggota;
