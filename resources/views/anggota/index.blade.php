@@ -178,7 +178,10 @@
                         markup += '<form action="' + baseURL + '/anggota/delete/' + data + '" method="post" style="display: inline"><button  class="btn btn-sm btn-danger" type="submit" value="Delete"><i class="fa fa-trash"></i> Hapus</button>@method("delete")@csrf</form>';
                     @endcan
                     @if(auth()->user()->can('edit anggota') || auth()->user()->can('delete anggota'))
-                        markup += '<a href="' + baseURL + '/anggota/keluar-anggota/' + data + '" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Keluar Anggota</a> '
+                        if(full['status'] != 'keluar')
+                        {
+                            markup += '<a href="' + baseURL + '/anggota/keluar-anggota/' + data + '" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Keluar Anggota</a> '
+                        }
                     @endif
                     return markup;
                 }
