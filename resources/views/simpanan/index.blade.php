@@ -246,8 +246,8 @@
                     }
                 },
                 {
-                    mData: 'tanggal_entri', sType: "string",
-                    className: "dt-body-center", "name": "tanggal_entri" ,
+                    mData: 'tanggal_transaksi', sType: "string",
+                    className: "dt-body-center", "name": "tanggal_transaksi" ,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';
