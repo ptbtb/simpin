@@ -12,7 +12,7 @@ class Simpanan extends Model
     protected $table = "t_simpan";
     protected $primaryKey = "kode_simpan";
     protected $dates = ['tgl_mulai', 'tgl_entri', 'periode'];
-    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view', 'status_simpanan_view','tanggal_transaksi'];
+    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view', 'status_simpanan_view'];
     protected $fillable = ['jenis_simpan', 'besar_simpanan','kode_anggota','u_entry','tgl_mulai','tgl_entri','kode_jenis_simpan','keterangan'];
 
     public function anggota()
@@ -50,14 +50,6 @@ class Simpanan extends Model
             return $this->tgl_entri->format('d M Y');
         }
         return $this->tgl_entri;
-    }
-    public function getTanggalTransaksiAttribute()
-    {
-        if ($this->tgl_transaksi)
-        {
-            return $this->tgl_transaksi->format('d M Y');
-        }
-        return $this->tgl_transaksi;
     }
 
     public function getTanggalMulaiAttribute()
