@@ -102,7 +102,8 @@
                     <th>Besar Simpanan</th>
                     <th>User Entry</th>
                     <th>Status</th>
-                    <th>Tanggal</th>
+                    <th>Posting</th>
+                    <th>Input</th>
                     <th style="width: 15%">Action</th>
 
                 </tr>
@@ -248,6 +249,16 @@
                 {
                     mData: 'tgl_transaksi', sType: "string",
                     className: "dt-body-center", "name": "tgl_transaksi" ,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    mData: 'tanggal_entri', sType: "string",
+                    className: "dt-body-center", "name": "tanggal_entri" ,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';

@@ -47,7 +47,7 @@ class SimpananController extends Controller
     public function indexAjax(Request $request)
     {
         $this->authorize('view simpanan', Auth::user());
-        $simpanan = Simpanan::with('anggota')->orderBy('tgl_entri','desc');
+        $simpanan = Simpanan::with('anggota')->orderBy('tgl_transaksi','desc');
         if ($request->unit_kerja)
         {
             $simpanan = $simpanan->whereHas('anggota', function ($query) use ($request)
@@ -58,16 +58,16 @@ class SimpananController extends Controller
 
         if ($request->from || $request->to) {
             if ($request->from) {
-                $simpanan = $simpanan->where('tgl_entri', '>=', $request->from);
+                $simpanan = $simpanan->where('tgl_transaksi', '>=', $request->from);
             }
             if ($request->to) {
-                $simpanan = $simpanan->where('tgl_entri', '<=', $request->to);
+                $simpanan = $simpanan->where('tgl_transaksi', '<=', $request->to);
             }
         } else {
             $from = Carbon::now()->addDays(-30)->format('Y-m-d');
             $to = Carbon::now()->format('Y-m-d');
-            $simpanan = $simpanan->where('tgl_entri', '>=', $from)
-                ->where('tgl_entri', '<=', $to);
+            $simpanan = $simpanan->where('tgl_transaksi', '>=', $from)
+                ->where('tgl_transaksi', '<=', $to);
         }
 
         if ($request->jenis_simpanan) {
@@ -85,7 +85,7 @@ class SimpananController extends Controller
         }else{
              $simpanan = $simpanan;
         }
-        $simpanan = $simpanan->orderBy('tgl_entri', 'desc');
+        $simpanan = $simpanan->orderBy('tgl_transaksi', 'desc');
         return DataTables::eloquent($simpanan)->make(true);
     }
 
@@ -318,18 +318,18 @@ class SimpananController extends Controller
 
         if ($request->from || $request->to) {
             if ($request->from) {
-                $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $request->from);
+                $listSimpanan = $listSimpanan->where('tgl_transaksi', '>=', $request->from);
             }
             if ($request->to) {
-                $listSimpanan = $listSimpanan->where('tgl_entri', '<=', $request->to);
+                $listSimpanan = $listSimpanan->where('tgl_transaksi', '<=', $request->to);
             }
         } else {
             $from = Carbon::now()->addDays(-30)->format('Y-m-d');
             $to = Carbon::now()->format('Y-m-d');
-            $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $from)
-                ->where('tgl_entri', '<=', $to);
+            $listSimpanan = $listSimpanan->where('tgl_transaksi', '>=', $from)
+                ->where('tgl_transaksi', '<=', $to);
         }
-        $listSimpanan = $listSimpanan->orderBy('tgl_entri', 'desc');
+        $listSimpanan = $listSimpanan->orderBy('tgl_transaksi', 'desc');
         return DataTables::eloquent($listSimpanan)->make(true);
     }
 
@@ -420,16 +420,16 @@ class SimpananController extends Controller
 
         if ($request->from || $request->to) {
             if ($request->from) {
-                $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $request->from);
+                $listSimpanan = $listSimpanan->where('tgl_transaksi', '>=', $request->from);
             }
             if ($request->to) {
-                $listSimpanan = $listSimpanan->where('tgl_entri', '<=', $request->to);
+                $listSimpanan = $listSimpanan->where('tgl_transaksi', '<=', $request->to);
             }
         } else {
             $from = Carbon::now()->addDays(-30)->format('Y-m-d');
             $to = Carbon::now()->format('Y-m-d');
-            $listSimpanan = $listSimpanan->where('tgl_entri', '>=', $from)
-                ->where('tgl_entri', '<=', $to);
+            $listSimpanan = $listSimpanan->where('tgl_transaksi', '>=', $from)
+                ->where('tgl_transaksi', '<=', $to);
         }
         if ($request->jenis_simpanan) {
             $listSimpanan = $listSimpanan->where('kode_jenis_simpan', $request->jenis_simpanan);
@@ -520,7 +520,7 @@ class SimpananController extends Controller
             // $thisYear = 2020;
 
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
-            $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
+            $listSimpanan = Simpanan::whereYear('tgl_transaksi', $thisYear)
                 ->where('kode_anggota', $anggota->kode_anggota)
                 ->where("mutasi",0)
                 ->orderBy('periode', 'asc')
@@ -602,7 +602,7 @@ class SimpananController extends Controller
             $listTabungan = \App\Models\View\ViewSimpanSaldoAwal::where('kode_anggota', $anggota->kode_anggota)
                 ->get();
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
-            $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
+            $listSimpanan = Simpanan::whereYear('tgl_transaksi', $thisYear)
                 ->where('kode_anggota', $anggota->kode_anggota)
                 ->where("mutasi",0)
                 ->orderBy('periode', 'asc')
@@ -791,7 +791,7 @@ class SimpananController extends Controller
 
             if($year)
             {
-                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_entri) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_entri) = '.$year));
+                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = '.$year));
                 $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year));
                 $simpananPerbulan = $simpanan->groupBy('month')
                                             ->map(function ($s)
@@ -853,7 +853,7 @@ class SimpananController extends Controller
                                                     ->get();
         if($year)
         {
-            $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_entri) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_entri) = '.$year));
+            $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = '.$year));
             $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year));
             $simpananPerbulan = $simpanan->groupBy('month')
                                         ->map(function ($s)

@@ -101,6 +101,7 @@
                         <th>Tanggal Acc</th>
                         <th>Diajukan Oleh</th>
                         <th>Dikonfirmasi Oleh</th>
+                        <th>Keterangan</th>
                         <th>Pembayaran Oleh</th>
                         <th style="width: 20%">Action</th>
                     </tr>
@@ -296,6 +297,10 @@
 
                         return markup;
                     },
+                },
+                {
+                    mData: 'keterangan', sType: "string",
+                    className: "dt-body-center", "name": "keterangan"
                 },
                 {
                     mData: 'paid_by_cashier', sType: "string",
