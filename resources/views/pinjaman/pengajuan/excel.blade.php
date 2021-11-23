@@ -20,6 +20,7 @@
                 <th>Tanggal Acc</th>
                 <th>Diajukan Oleh</th>
                 <th>Dikonfirmasi Oleh</th>
+                <th>Keterangan</th>
                 <th>Pembayaran Oleh</th>
             </tr>
         </thead>
@@ -36,6 +37,7 @@
                     <td>{{ $pengajuanPinjaman->tgl_acc? $pengajuanPinjaman->tgl_acc->toDateString():'' }}</td>
                     <td>{{ $pengajuanPinjaman->createdBy->name ?? '' }}</td>
                     <td>{{ $pengajuanPinjaman->approvedBy->name ?? '' }}</td>
+                    <td>{{ $pengajuanPinjaman->keterangan}}</td>
                     <td>{{ $pengajuanPinjaman->paidByCashier->name ?? '' }}</td>
                 </tr>
             @endforeach

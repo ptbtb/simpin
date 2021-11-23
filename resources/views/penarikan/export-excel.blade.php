@@ -10,6 +10,7 @@
             <th>Tanggal Acc</th>
             <th>Diajukan Oleh</th>
             <th>Dikonfirmasi Oleh</th>
+            <th>Keterangan</th>
             <th>Pembayaran Oleh</th>
         </tr>
     </thead>
@@ -24,6 +25,7 @@
                 <td>{{ $penarikan->tgl_acc }}</td>
                 <td>{{ $penarikan->createdBy->name ?? '' }}</td>
                 <td>{{ $penarikan->approvedBy->name ?? '' }}</td>
+                <td> {{ $penarikan->description }}</td>
                 <td> {{ $penarikan->paidByCashier->name ?? '' }}</td>
             </tr>
         @endforeach
