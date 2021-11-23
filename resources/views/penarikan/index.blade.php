@@ -486,6 +486,7 @@
                     var password = result.value;
                     var formData = new FormData();
                     var token = "{{ csrf_token() }}";
+                    var keterangan = $('#keterangan').val();
                     formData.append('_token', token);
                     formData.append('id', id);
                     formData.append('status', status);
