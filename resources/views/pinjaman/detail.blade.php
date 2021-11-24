@@ -193,13 +193,22 @@
                                 <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
                             </div>
                             <div class="form-group col-md-6">
+                                <label for="jenisPembayaran">Jenis Pembayaran</label>
+                                <select name="jenis_pembayaran" id="jenisPembayaran1" class="form-control">
+                                    <option value="0">Tunai</option>
+                                    @foreach ($tabungan as $value)
+                                        <option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan,0,",","." ) }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12" id="jenisAkun1Cover">
                                 <label>Jenis Akun</label>
                                 <select name="jenis_akun" id="jenisAkun1" class="form-control select2 jenisAkun" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-12" id="akun1Cover">
                                 <label>Akun</label>
                                 <select name="id_akun_kredit" id="code1" class="form-control select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>
@@ -442,6 +451,23 @@
             {
                 $('#jenisAkun2Cover').removeClass('d-none');
                 $('#akun2Cover').removeClass('d-none');
+            }
+        })
+        $(document).on('change', '#jenisPembayaran1', function ()
+        {
+            var selected = this.value;
+            if (selected != 0)
+            {
+                $('#jenisAkun1Cover').addClass('d-none');
+                $('#akun1Cover').addClass('d-none');
+                // console.log(saldo.where('kode_trans', selected).first().besar_tabungan);
+                // // $('#viewSaldo').show();
+                // // $('#saldo').val();
+            }
+            else
+            {
+                $('#jenisAkun1Cover').removeClass('d-none');
+                $('#akun1Cover').removeClass('d-none');
             }
         })
 
