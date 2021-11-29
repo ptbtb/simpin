@@ -165,7 +165,7 @@ public function createExcel(Request $request)
             }
          $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
            $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
-        $jurnal = Jurnal::with('tipeJurnal','createdBy');
+        $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);;
         if ($request->id_tipe_jurnal)
         {
             $jurnal = $jurnal->where('id_tipe_jurnal', $request->id_tipe_jurnal);
@@ -238,9 +238,7 @@ public function createExcel(Request $request)
            ->where('akun_debet', 'like', '%' . $request->code . '%')
            ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
        }
-       if($request->period){
-           $jurnal = $jurnal->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
-       }
+       
 
        if($request->keterangan)
        {
