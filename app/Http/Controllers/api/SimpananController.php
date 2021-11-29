@@ -8,6 +8,8 @@ use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
 use Carbon\Carbon;
+use PDF;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
