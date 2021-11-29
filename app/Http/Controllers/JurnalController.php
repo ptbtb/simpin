@@ -50,6 +50,14 @@ class JurnalController extends Controller
 
     public function indexAjax(Request $request)
     {
+        if(!$reqeust->from)
+            {          
+                $reqeust->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+            }
+            if(!$reqeust->to)
+            {          
+                $reqeust->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+            }
         try
         {
            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
