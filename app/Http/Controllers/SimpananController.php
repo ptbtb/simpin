@@ -543,10 +543,10 @@ class SimpananController extends Controller
 
             $simpananKeys = $groupedListSimpanan->keys();
             $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                ->whereYear('tgl_ambil', $thisYear)
+                ->whereYear('tgl_transaksi', $thisYear)
                 ->whereIn('code_trans', $simpananKeys)
                 ->whereraw('paid_by_cashier is not null')
-                ->orderBy('tgl_ambil', 'asc')
+                ->orderBy('tgl_transaksi', 'asc')
                 ->get();
             /*
                 tiap jenis simpanan di bagi jadi 3 komponen
@@ -624,10 +624,10 @@ class SimpananController extends Controller
 
             $simpananKeys = $groupedListSimpanan->keys();
             $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                ->whereYear('tgl_ambil', $thisYear)
+                ->whereYear('tgl_transaksi', $thisYear)
                 ->whereIn('code_trans', $simpananKeys)
                 ->whereraw('paid_by_cashier is not null')
-                ->orderBy('tgl_ambil', 'asc')
+                ->orderBy('tgl_transaksi', 'asc')
                 ->get();
             /*
                 tiap jenis simpanan di bagi jadi 3 komponen

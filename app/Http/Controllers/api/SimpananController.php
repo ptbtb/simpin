@@ -67,38 +67,35 @@ class SimpananController extends Controller
 
             // get this year
             $thisYear = Carbon::now()->year;
-            // $thisYear = 2020;
-
+            $listTabungan = \App\Models\View\ViewSimpanSaldoAwal::where('kode_anggota', $anggota->kode_anggota)
+                ->get();
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
-            $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
+            $listSimpanan = Simpanan::whereYear('tgl_transaksi', $thisYear)
                 ->where('kode_anggota', $anggota->kode_anggota)
                 ->where("mutasi",0)
-                ->orderBy('tgl_entri', 'asc')
+                ->orderBy('periode', 'asc')
                 ->get();
-
             // data di grouping berdasarkan kode jenis simpan
             $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
 
             // kode_jenis_simpan yang wajib ada
             $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc');
             $requiredKey = $jenisSimpanan->pluck('kode_jenis_simpan');
-            $requiredKeyIndex = $jenisSimpanan->pluck('sequence','kode_jenis_simpan');
+            $requiredKeyIndex = $jenisSimpanan->pluck('sequence', 'kode_jenis_simpan');
 
             // set default value untuk key yang tidak ada
-            foreach ($requiredKey as $value)
-            {
-                if (!isset($groupedListSimpanan[$value]))
-                {
+            foreach ($requiredKey as $value) {
+                if (!isset($groupedListSimpanan[$value])) {
                     $groupedListSimpanan[$value] = collect([]);
                 }
             }
 
             $simpananKeys = $groupedListSimpanan->keys();
             $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                ->whereYear('tgl_ambil', $thisYear)
+                ->whereYear('tgl_transaksi', $thisYear)
                 ->whereIn('code_trans', $simpananKeys)
                 ->whereraw('paid_by_cashier is not null')
-                ->orderBy('tgl_ambil', 'asc')
+                ->orderBy('tgl_transaksi', 'asc')
                 ->get();
             /*
                 tiap jenis simpanan di bagi jadi 3 komponen
@@ -111,40 +108,38 @@ class SimpananController extends Controller
 
             $listSimpanan = [];
             $index = count($requiredKey);
-            foreach ($groupedListSimpanan as $key => $list)
-            {
+            foreach ($groupedListSimpanan as $key => $list) {
                 $jenisSimpanan = JenisSimpanan::find($key);
-                if ($jenisSimpanan)
-                {
-                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans',$key)->first();
+                if ($jenisSimpanan) {
+                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = ($tabungan)? $tabungan->besar_tabungan:0;
+                    $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan : 0;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('besar_simpanan');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
                     $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
                     $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
-                    if (isset($requiredKeyIndex[$key]))
-                    {
+                    if (isset($requiredKeyIndex[$key])) {
                         $seq = $requiredKeyIndex[$key];
-                        $res['seq'] = $seq;
-                        array_push($listSimpanan,$res);
-                    }
-                    else
-                    {
-                        $res['seq'] = $index;
-                        array_push($listSimpanan,$res);
+                        $listSimpanan[$seq] = (object)$res;
+                    } else {
+                        $listSimpanan[$index] = (object)$res;
                         $index++;
                     }
                 }
             }
 
-            unset($anggota['simpanSaldoAwal']);
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
-            $response['message'] = null;
-            $response['data'] = $data;
-            return response()->json($response, 200);
+            // dd($data);
+            // share data to view
+            view()->share('data', $data);
+            PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
+            $pdf = PDF::loadView('simpanan.card.export2', $data)->setPaper('a4', 'portrait');
+
+            // download PDF file with download method
+            $filename = 'export_kartu_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
+            return $pdf->download($filename);
         }
         catch (\Throwable $e)
         {
