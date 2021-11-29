@@ -13,7 +13,7 @@ class Angsuran extends Model
 
     protected $table = "t_angsur";
     protected $primaryKey = "kode_angsur";
-    protected $dates = ['tgl_entri','paid_at','jatuh_tempo'];
+    protected $dates = ['tgl_entri','paid_at','jatuh_tempo','tgl_transaksi'];
     protected $appends = ['serial_number_view', 'created_at_view', 'created_by_view', 'updated_at_view', 'updated_by_view'];
 
     public function statusAngsuran()
