@@ -50,14 +50,7 @@ class JurnalController extends Controller
 
     public function indexAjax(Request $request)
     {
-        if(!$request->from)
-            {          
-                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
-            }
-            if(!$request->to)
-            {          
-                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
-            }
+
         try
         {
            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
@@ -162,6 +155,14 @@ class JurnalController extends Controller
 public function createExcel(Request $request)
 {
     try{
+        if(!$request->from)
+            {          
+                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+            }
+            if(!$request->to)
+            {          
+                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+            }
          $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
            $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
         $jurnal = Jurnal::with('tipeJurnal','createdBy');
