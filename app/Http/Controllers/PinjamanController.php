@@ -963,7 +963,7 @@ class PinjamanController extends Controller
                     $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
                     $penarikan->serial_number = $nextSerialNumber;
                     $penarikan->tgl_acc = Carbon::now();
-                    $penarikan->tgl_transaksi = Carbon::now()->format('Y-m-d');
+                    $penarikan->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                     $penarikan->approved_by = $user->id;
                     $penarikan->is_pelunasan_dipercepat = 1;
                     $penarikan->paid_by_cashier = $user->id;

@@ -145,7 +145,7 @@
                                 <td>Rp. {{ number_format($angsuran->total_angsuran,0,",",".") }}</td>
                                 <td>{{ $angsuran->jatuh_tempo->format('m-Y') }}</td>
                                 <td>Rp. {{ number_format($angsuran->besar_pembayaran,0,",",".") }}</td>
-                                <td>{{($angsuran->paid_at)?  $angsuran->paid_at->format('d M Y'):'-' }}</td>
+                                <td>{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->format('d M Y'):'-' }}</td>
                                 <td>{{ $angsuran->statusAngsuran->name }}</td>
                                 <td>
                                     @if ($angsuran->isLunas())
