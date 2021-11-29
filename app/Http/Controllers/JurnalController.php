@@ -21,23 +21,23 @@ use DB;
 
 class JurnalController extends Controller
 {
-    public function index(Request $reqeust)
+    public function index(Request $request)
     {
         $this->authorize('view jurnal', Auth::user());
         try
         {
-            if(!$reqeust->from)
+            if(!$request->from)
             {          
-                $reqeust->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
             }
-            if(!$reqeust->to)
+            if(!$request->to)
             {          
-                $reqeust->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
             }
 
             $data['title'] = 'List Jurnal';
             $data['tipeJurnal'] = TipeJurnal::get()->pluck('name','id');
-            $data['request'] = $reqeust;
+            $data['request'] = $request;
             return view('jurnal.index', $data);
         }
         catch (\Throwable $e)
@@ -50,13 +50,13 @@ class JurnalController extends Controller
 
     public function indexAjax(Request $request)
     {
-        if(!$reqeust->from)
+        if(!$request->from)
             {          
-                $reqeust->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
             }
-            if(!$reqeust->to)
+            if(!$request->to)
             {          
-                $reqeust->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
             }
         try
         {
