@@ -71,14 +71,29 @@
     <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
     <script>
+        jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+"date-uk-pre": function ( a ) {
+    var ukDatea = a.split('/');
+    return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+},
+
+"date-uk-asc": function ( a, b ) {
+    return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+},
+
+"date-uk-desc": function ( a, b ) {
+    return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+}
+} );
         $.fn.dataTable.ext.errMode = 'none';
         var baseURL = {!! json_encode(url('/')) !!};
 
         var t = $('.table').DataTable({
         bProcessing: true,
-        bServerSide: true,
+        bServerSide: false,
+        bFilter:true,
         responsive: true,
-        searching: false,
+        searching: true,
         ajax: {
             url: '{{ route('jurnal-umum-list-ajax') }}',
             dataSrc: 'data',
@@ -98,7 +113,7 @@
                 className: "dt-body-center", 'name': 'DT_RowIndex',
             },
             { 
-                mData: 'view_tgl_transaksi', sType: "string", 
+                mData: 'view_tgl_transaksi', sType: "date-uk-pre", 
                 className: "dt-body-center", "name": "view_tgl_transaksi",
                 mRender: function (data, type, full) {
                     if (data == null || data == '') {
@@ -223,14 +238,14 @@
             { "targets": 0,"searchable": false, "orderable": false, 'checkboxes' : { 'selectRow': true } },
             { "targets": 1,"searchable": false, "orderable": false },
             { "targets": 2,"searchable": false, "orderable": false },
-            { "targets": 3,"searchable": false, "orderable": true },
-            { "targets": 4,"searchable": false, "orderable": true },
+            { "targets": 3,"searchable": true, "orderable": true },
+            { "targets": 4,"searchable": true, "orderable": true },
             { "targets": 5,"searchable": false, "orderable": false },
             { "targets": 6,"searchable": false, "orderable": false },
-            { "targets": 7,"searchable": false, "orderable": false },
+            { "targets": 7,"searchable": true, "orderable": true },
             { "targets": 8,"searchable": false, "orderable": false },
         ],
-        dom: 'lBrtip',
+        dom: 'lfBrtip',
         buttons: [
             'selectAll',
             'selectNone',
@@ -247,14 +262,14 @@
                 $.fn.dataTableExt.iApiIndex = i;
                 var $this = this;
                 var anControl = $('input', _that.fnSettings().aanFeatures.f);
-                anControl
-                    .unbind('keyup search input')
-                    .bind('keypress', function (e) {
-                        if (e.which == 13) {
-                            $.fn.dataTableExt.iApiIndex = i;
-                            _that.fnFilter(anControl.val());
-                        }
-                    });
+                // anControl
+                //     .unbind('keyup search input')
+                //     .bind('keypress', function (e) {
+                //         if (e.which == 13) {
+                //             $.fn.dataTableExt.iApiIndex = i;
+                //             _that.fnFilter(anControl.val());
+                //         }
+                //     });
                 return this;
             });
 

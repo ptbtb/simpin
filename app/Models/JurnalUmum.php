@@ -60,7 +60,7 @@ class JurnalUmum extends Model
 
     public function getViewTglTransaksiAttribute()
     {
-        return $this->tgl_transaksi->format('d F Y');
+        return $this->tgl_transaksi->format('d/m/Y');
     }
 
     public function getTotalNominalDebetAttribute()
