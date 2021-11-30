@@ -446,6 +446,7 @@ class PinjamanController extends Controller
             $pengajuan->keperluan = $request->keperluan;
             $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
             $pengajuan->sumber_dana = $request->sumber_dana;
+            $pengajuan->tenor = $request->lama_angsuran;
             $pengajuan->created_by = $user->id;
 
             $file = $request->form_persetujuan;

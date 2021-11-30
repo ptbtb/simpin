@@ -18,10 +18,15 @@ class PinjamanManager
         try
         {
             $jenisPinjaman = $pengajuan->jenisPinjaman;
-            $angsuranPerbulan = round($pengajuan->besar_pinjam/$jenisPinjaman->lama_angsuran,2);
+            $lamaAngsuran = $pengajuan->tenor;
+            if(is_null($lamaAngsuran))
+            {
+                $lamaAngsuran = $jenisPinjaman->lama_angsuran;
+            }
+            $angsuranPerbulan = round($pengajuan->besar_pinjam/$lamaAngsuran,2);
             // $bungaPerbulan = $angsuranPerbulan*$jenisPinjaman->bunga/100;
             $jasaPerbulan = $pengajuan->besar_pinjam*$jenisPinjaman->jasa;
-            if ($pengajuan->besar_pinjam > 100000000 && $jenisPinjaman->lama_angsuran > 3 && $jenisPinjaman->isJangkaPendek())
+            if ($pengajuan->besar_pinjam > 100000000 && $lamaAngsuran > 3 && $jenisPinjaman->isJangkaPendek())
             {
                 $jasaPerbulan = $pengajuan->besar_pinjam*0.03;
             }
@@ -56,8 +61,8 @@ class PinjamanManager
             $pinjaman->besar_pinjam = $pengajuan->besar_pinjam;
             $pinjaman->besar_angsuran = $totalAngsuranBulan;
             $pinjaman->besar_angsuran_pokok = $angsuranPerbulan;
-            $pinjaman->lama_angsuran = $jenisPinjaman->lama_angsuran;
-            $pinjaman->sisa_angsuran = $jenisPinjaman->lama_angsuran;
+            $pinjaman->lama_angsuran = $lamaAngsuran;
+            $pinjaman->sisa_angsuran = $lamaAngsuran;
             $pinjaman->sisa_pinjaman = $pengajuan->besar_pinjam;
             $pinjaman->biaya_jasa = $jasaPerbulan;
             $pinjaman->biaya_asuransi = $asuransi;
@@ -65,7 +70,7 @@ class PinjamanManager
             $pinjaman->biaya_administrasi = $biayaAdministrasi;
             $pinjaman->u_entry = Auth::user()->name;
             $pinjaman->tgl_entri = Carbon::now();
-            $pinjaman->tgl_tempo = Carbon::now()->addMonths($jenisPinjaman->lama_angsuran);
+            $pinjaman->tgl_tempo = Carbon::now()->addMonths($lamaAngsuran);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
             $pinjaman->serial_number = $nextSerialNumber;
             // dd($pinjaman);

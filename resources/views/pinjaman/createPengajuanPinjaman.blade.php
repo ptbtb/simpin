@@ -199,6 +199,20 @@
                     $('#besarPinjaman').attr('readonly','readonly');
                 }
                 // updateAngsuran(idJenisPinjaman, besarPinjaman);
+                var kodeJenisPinjam = $(this).val();
+                var selectedJenisPinjamanTMP = jenisPinjaman.where('kode_jenis_pinjam', kodeJenisPinjam).first();
+                if(selectedJenisPinjamanTMP)
+                {
+                    if(selectedJenisPinjamanTMP.can_change_tenor == 1)
+                    {
+                        $('#lamaAngsuran').attr('readonly', false);
+                    }
+                    else
+                    {
+                        $('#lamaAngsuran').attr('readonly', true);
+                    }
+                }
+                
             });
 
             $('#besarPinjaman').on('keyup', function ()
@@ -271,9 +285,6 @@
                 {
                     return jenis.company_group_id == group_id;
                 });
-                console.log(group_id);
-                console.log(collection);
-                console.log(sumberDana);
 
                 updateSumberDana(collection);
 
