@@ -998,10 +998,33 @@ class PinjamanController extends Controller
             if ($pembayaran < $request->total_bayar || $pembayaran > $request->total_bayar) {
                 return redirect()->back()->withError('Besar pembayaran harus sama dengan total bayar');
             }
+
+            if($request->discount && !$request->confirmation_document)
+            {
+                return redirect()->back()->withError('Dokumen konfirmasi harus disertakan');
+            }
+
             $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
             $totalDiskon = $request->discount/100*$pinjaman->jasaPelunasanDipercepat;
             $pinjaman->diskon = $request->discount;
             $pinjaman->total_diskon = $totalDiskon;
+
+            $pinjamanId = $pinjaman->id;
+            $config['disk'] = 'upload';
+            $config['upload_path'] = '/pinjaman/'.$pinjamanId.'/confirmationDocument';
+            $config['public_path'] = env('APP_URL') . '/pinjaman/'.$id.'/confirmationDocument';
+            if (!Storage::disk($config['disk'])->has($config['upload_path']))
+            {
+                Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
+            }
+
+            if ($request->confirmation_document->isValid())
+            {
+                $filename = uniqid() .'.'. $request->confirmation_document->getClientOriginalExtension();
+
+                Storage::disk($config['disk'])->putFileAs($config['upload_path'], $request->confirmation_document, $filename);
+                $pinjaman->confirmation_document = $config['disk'].$config['upload_path'].'/'.$filename;
+            }
             $pinjaman->save();
 
             if($request->jenis_pembayaran)

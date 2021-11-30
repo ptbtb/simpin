@@ -231,7 +231,7 @@
 
     @if ($pinjaman->canPercepatPelunasan())
         <div id="my-modal1" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <form action="{{ route('pinjaman-bayar-angsuran-dipercepat', ['id'=>$pinjaman->kode_pinjam]) }}" method="POST">
+            <form action="{{ route('pinjaman-bayar-angsuran-dipercepat', ['id'=>$pinjaman->kode_pinjam]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-dialog" role="document" style="max-width: 750px">
                     <div class="modal-content">
@@ -268,7 +268,8 @@
                                         <td colspan="6"></td>
                                         <th>Total Bayar</th>
                                         <th>:</th>
-                                        <td id="totalBayarDiscount1"><b>Rp. {{ number_format($pinjaman->totalbayarPelunasanDipercepat,0,",",".") }}</b><input type="hidden" name="total_bayar" value="{{ $pinjaman->totalbayarPelunasanDipercepat }}"></td>
+                                        <td id="totalBayarDiscount1"><b>Rp. {{ number_format($pinjaman->totalbayarPelunasanDipercepat,0,",",".") }}</b></td>
+                                        <input type="hidden" name="total_bayar" id="totalBayarHidden1" value="{{ $pinjaman->totalbayarPelunasanDipercepat }}">
                                     </tr>
                                 </table>
                             </div>
@@ -294,6 +295,11 @@
                                 <div class="form-group">
                                     <label>Discount (%)</label>
                                     <input type="number" name="discount" id="discount" class="form-control" placeholder="Ex: 15 (15%)" min="0" max="100">
+                                </div>
+                                <div class="form-group">
+                                    <label>Dokumen Konfirmasi</label>
+                                    <br>
+                                    <input type="file" name="confirmation_document" id="confirmationDocument">
                                 </div>
                             @endcan
                             <div class="form-group">
@@ -712,6 +718,7 @@
             $('#totalAngsuranDiscount1').html(toRupiah(Math.round(total)));
             $('#jasaDiscount').html(toRupiah(Math.round(jasaPelunasanDipercepat - totalDiscount)));
             $('#totalBayarDiscount1').html("<b>" + toRupiah(Math.round(total)) + "<b>");
+            $('#totalBayarHidden1').val(Math.round(total));
         })
     </script>
 @endsection
