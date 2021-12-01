@@ -13,6 +13,6 @@ class PengajuanTopup extends Model
 
     public function pinjaman()
     {
-        return $this->belongsTo(Pinjaman::class, 'kode_pinjaman');
+        return $this->belongsTo(Pinjaman::class, 'kode_pinjaman', 'kode_pinjam');
     }
 }
