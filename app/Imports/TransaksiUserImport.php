@@ -12,6 +12,7 @@ use App\Models\Pinjaman;
 use App\Models\JenisSimpanan;
 use App\Models\JenisPinjaman;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
 use App\Models\Code;
@@ -87,7 +88,8 @@ class TransaksiUserImport
 			
 			if($transaksi['PINJ1']>0){
 				$pinjaman1= Pinjaman::where('kode_jenis_pinjam',$transaksi['REK_PINJ_1'])
-				->where('kode_anggota',$transaksi['NO_ANG'])->first();
+				->where('kode_anggota',$transaksi['NO_ANG'])
+				->where('id_status_pinjaman',1)->first();
 				if ($pinjaman1){
 					$angsuran1= Angsuran::where('kode_pinjam',$pinjaman1['kode_pinjam'])
 					->whereraw("DATE_FORMAT(jatuh_tempo, '%Y-%m')='".$period_raw."'")->first();
@@ -119,6 +121,19 @@ class TransaksiUserImport
 
             // create JKM angsuran
 						JurnalManager::createJurnalAngsuran($angsuran1);
+						$yesterday=Carbon::now()->subDays(1);
+						DB::statement("SET SQL_SAFE_UPDATES = 0");
+						DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE 
+							t1.id < t2.id AND 
+    t1.keterangan = t2.keterangan AND
+    t1.akun_debet = t2.akun_debet AND
+    t1.akun_kredit = t2.akun_kredit and 
+    t1.debet = t2.debet  and
+    t1.kredit = t2.kredit  
+    and t1.jurnalable_type ='App\\\Models\\\Angsuran' and t1.created_at>'$yesterday'");
+						DB::statement("SET SQL_SAFE_UPDATES = 1");
+						
+
 
 						if ($pembayaran <= 0) {
 							$pinjaman1->sisa_pinjaman = $angsuran1->sisaPinjaman;
@@ -167,6 +182,18 @@ class TransaksiUserImport
 
             // create JKM angsuran
 						JurnalManager::createJurnalAngsuran($angsuran2);
+						$yesterday=Carbon::now()->subDays(1);
+						DB::statement("SET SQL_SAFE_UPDATES = 0");
+						DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE 
+							t1.id < t2.id AND 
+    t1.keterangan = t2.keterangan AND
+    t1.akun_debet = t2.akun_debet AND
+    t1.akun_kredit = t2.akun_kredit and 
+    t1.debet = t2.debet  and
+    t1.kredit = t2.kredit  
+    and t1.jurnalable_type ='App\\\Models\\\Angsuran' and t1.created_at>'$yesterday'");
+						DB::statement("SET SQL_SAFE_UPDATES = 1");
+						
 
 						if ($pembayaran <= 0) {
 							$pinjaman2->sisa_pinjaman = $angsuran2->sisaPinjaman;
