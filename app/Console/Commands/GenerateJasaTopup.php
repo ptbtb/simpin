@@ -48,9 +48,18 @@ class GenerateJasaTopup extends Command
             {
                 $pinjaman = $pengajuanTopup->pinjaman;
                 $jenisPinjaman = $pinjaman->jenisPinjaman;
-                echo $pinjaman->kode_pinjam."\n";
-                echo $jenisPinjaman->kode_jenis_pinjam."\n";
-                echo $jenisPinjaman->jasa_pelunasan_dipercepat."\n";
+                // echo $pinjaman->kode_pinjam."\n";
+                // echo $jenisPinjaman->kode_jenis_pinjam."\n";
+                // echo $jenisPinjaman->jasa_pelunasan_dipercepat."\n";
+                if($jenisPinjaman->jasa_pelunasan_dipercepat == 0)
+                {
+                    $pengajuanTopup->jasa_pelunasan_dipercepat = 0;
+                    $pengajuanTopup->save();
+                }
+                else
+                {
+                    echo "jasa pelunasan dipercepat untuk id ". $pengajuanTopup->id."\n";
+                }
             });
         }
         catch (\Throwable $th)
