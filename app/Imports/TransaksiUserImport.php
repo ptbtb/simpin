@@ -111,6 +111,7 @@ class TransaksiUserImport
 						} else {
 							
 							$angsuran1->besar_pembayaran = $pembayaran;
+							$angsuran1->id_status_angsuran = STATUS_ANGSURAN_BELUM_LUNAS;
 						}
 
 
@@ -174,6 +175,7 @@ class TransaksiUserImport
 							$pinjaman2->save();
 						} else {
 							$angsuran2->besar_pembayaran = $pembayaran;
+							$angsuran2->id_status_angsuran = STATUS_ANGSURAN_BELUM_LUNAS;
 						}
 
 
