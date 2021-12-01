@@ -58,7 +58,11 @@ class GenerateJasaTopup extends Command
                 }
                 else
                 {
-                    echo "jasa pelunasan dipercepat untuk id ". $pengajuanTopup->id."\n";
+                    if($pinjaman->id_status_pinjaman == 1)
+                    {
+                        $pengajuanTopup->jasa_pelunasan_dipercepat = $pinjaman->jasa_pelunasan_dipercepat;
+                        $pengajuanTopup->save();
+                    }
                 }
             });
         }
