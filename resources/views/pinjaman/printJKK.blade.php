@@ -68,17 +68,23 @@
             @endphp
         @endforeach
         <tr>
-            <td rowspan="5"></td>
-            <td colspan="3" rowspan="5">DETAIL</td>
+            <td rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}"></td>
+            <td colspan="3" rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}">DETAIL</td>
             <td>Besar Pinjaman</td>
             <td>{{ $pengajuan->viewBesarPinjaman }}</td>
-            <td colspan="2" rowspan="5"></td>
-            <td rowspan="5"></td>
+            <td colspan="2" rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}"></td>
+            <td rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}"></td>
         </tr>
-        <tr>
-            <td>Jasa</td>
-            <td>{{ $pengajuan->viewJasa }}</td>
-        </tr>
+        @if ($pengajuan->pengajuanTopup->count())
+            <tr>
+                <td>Jasa Topup</td>
+                <td>{{ $pengajuan->viewJasaPelunasanDipercepat }}</td>
+            </tr>
+            <tr>
+                <td>Sisa Pinjaman</td>
+                <td>{{ $pengajuan->viewSisaPinjaman }}</td>
+            </tr>
+        @endif
         <tr>
             <td>Asuransi</td>
             <td>{{ $pengajuan->viewAsuransi }}</td>

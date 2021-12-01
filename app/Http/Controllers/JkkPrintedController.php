@@ -138,6 +138,8 @@ class JkkPrintedController extends Controller
         // download PDF file with download method
         $filename = $jkkPrinted->jkk_number.'-'.$data['tgl_print'].'.pdf';
         return $pdf->download($filename);
+
+        // return view('pinjaman.printJKK', $data);
     }
 
     public function show($id)

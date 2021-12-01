@@ -472,8 +472,10 @@ class PinjamanController extends Controller
             $pengajuan->save();
         });
 
-        if ($pengajuan) {
-            if ($request->jenis_pengajuan == JENIS_PENGAJUAN_TOPUP) {
+        if ($pengajuan)
+        {
+            if ($request->jenis_pengajuan == JENIS_PENGAJUAN_TOPUP)
+            {
                 PengajuanManager::createPengajuanTopup($pengajuan, $listTopupPinjaman);
             }
             event(new PengajuanCreated($pengajuan));

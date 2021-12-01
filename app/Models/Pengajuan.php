@@ -59,7 +59,7 @@ class Pengajuan extends Model
 
     public function pengajuanTopup()
     {
-        return $this->hasMany(PengajuanTopup::class, 'kode_pengajuan');
+        return $this->hasMany(PengajuanTopup::class, 'kode_pengajuan', 'kode_pengajuan');
     }
 
     public function akunDebet()
@@ -158,6 +158,17 @@ class Pengajuan extends Model
     public function getViewBiayaAdminAttribute()
     {
         return 'Rp '.number_format($this->jenisPinjaman->biaya_admin, '2', ',', '.');
+    }
+
+    public function getViewJasaPelunasanDipercepatAttribute()
+    {
+        return 'Rp '.number_format($this->pengajuanTopup->sum('jasa_pelunasan_dipercepat'), '2', ',', '.');
+    }
+
+    public function getViewSisaPinjamanAttribute()
+    {
+        $hasil = $this->pengajuanTopup->sum('total_bayar_pelunasan_dipercepat')-$this->pengajuanTopup->sum('jasa_pelunasan_dipercepat');
+        return 'Rp '.number_format($hasil, '2', ',', '.');
     }
 
     public function getViewCreditBankAttribute()
