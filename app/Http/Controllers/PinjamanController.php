@@ -908,7 +908,7 @@ class PinjamanController extends Controller
 
 
                 $pembayaran = $pembayaran - $angsuran->totalAngsuran;
-                $angsuran->paid_at = Carbon::now();
+                $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->u_entry = Auth::user()->name;
                 if($request->jenis_pembayaran)
                 {

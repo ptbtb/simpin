@@ -98,20 +98,25 @@ class TransaksiUserImport
 					{
 						$serialNumber=AngsuranManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
-						if ($angsuran1->besar_pembayaran) {
-							$pembayaran = $pembayaran + $angsuran1->besar_pembayaran;
-						}
-						if ($pembayaran >= $angsuran1->totalAngsuran1-5) {
+
+						// if ($angsuran1->besar_pembayaran) {
+						// 	$pembayaran = $pembayaran + $angsuran1->besar_pembayaran;
+						// }
+						if ($pembayaran >= $angsuran1->totalAngsuran-5) {
+							
 							$angsuran1->besar_pembayaran = $angsuran1->totalAngsuran;
 							$angsuran1->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
 							$pinjaman1->sisa_angsuran = $pinjaman1->sisa_angsuran - 1;
 							$pinjaman1->save();
 						} else {
+							
 							$angsuran1->besar_pembayaran = $pembayaran;
 						}
 
 
+
 						$pembayaran = $pembayaran - $angsuran1->totalAngsuran;
+						
 						$angsuran1->paid_at =  $tgl_transaksi;
 						$angsuran1->tgl_transaksi =  $tgl_transaksi;
 						$angsuran1->updated_by = Auth::user()->id;
@@ -159,9 +164,9 @@ class TransaksiUserImport
 					{
 						$serialNumber2=AngsuranManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
-						if ($angsuran2->besar_pembayaran) {
-							$pembayaran = $pembayaran + $angsuran2->besar_pembayaran;
-						}
+						// if ($angsuran2->besar_pembayaran) {
+						// 	$pembayaran = $pembayaran + $angsuran2->besar_pembayaran;
+						// }
 						if ($pembayaran >= $angsuran2->totalAngsuran-5) {
 							$angsuran2->besar_pembayaran = $angsuran2->totalAngsuran;
 							$angsuran2->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
@@ -189,8 +194,6 @@ class TransaksiUserImport
     t1.keterangan = t2.keterangan AND
     t1.akun_debet = t2.akun_debet AND
     t1.akun_kredit = t2.akun_kredit and 
-    t1.debet = t2.debet  and
-    t1.kredit = t2.kredit  
     and t1.jurnalable_type ='App\\\Models\\\Angsuran' and t1.created_at>'$yesterday'");
 						DB::statement("SET SQL_SAFE_UPDATES = 1");
 						
