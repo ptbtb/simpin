@@ -520,7 +520,7 @@ class PenarikanController extends Controller
             return response()->json(['message' => 'success'], 200);
         } catch (\Exception $e) {
             $message = class_basename($e) . ' in ' . basename($e->getFile()) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
-            Log::error($message);
+            Log::error($e);
             return response()->json(['message' => $message], 500);
         }
     }

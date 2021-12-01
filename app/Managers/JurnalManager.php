@@ -21,8 +21,8 @@ class JurnalManager
     {
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $penarikan->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
-        $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $penarikan->tgl_transaksi);
+        $jurnal->nomer = $penarikan->tgl_transaksi->format('Ymd').(Jurnal::count()+1);
+        $jurnal->tgl_transaksi = $penarikan->tgl_transaksi;
         $jurnal->akun_debet = $penarikan->code_trans;
         $jurnal->debet = $penarikan->besar_ambil;
         if($penarikan->id_akun_debet)
