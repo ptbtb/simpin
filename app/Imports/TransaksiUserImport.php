@@ -87,7 +87,8 @@ class TransaksiUserImport
 			
 			if($transaksi['PINJ1']>0){
 				$pinjaman1= Pinjaman::where('kode_jenis_pinjam',$transaksi['REK_PINJ_1'])
-				->where('kode_anggota',$transaksi['NO_ANG'])->first();
+				->where('kode_anggota',$transaksi['NO_ANG'])
+				->where('id_status_pinjaman',1)->first();
 				if ($pinjaman1){
 					$angsuran1= Angsuran::where('kode_pinjam',$pinjaman1['kode_pinjam'])
 					->whereraw("DATE_FORMAT(jatuh_tempo, '%Y-%m')='".$period_raw."'")->first();
