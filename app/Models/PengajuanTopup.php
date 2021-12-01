@@ -15,4 +15,9 @@ class PengajuanTopup extends Model
     {
         return $this->belongsTo(Pinjaman::class, 'kode_pinjaman', 'kode_pinjam');
     }
+
+    public function pengajuan()
+    {
+        return $this->belongsTo(Pengajuan::class, 'kode_pengajuan', 'kode_pengajuan');
+    }
 }

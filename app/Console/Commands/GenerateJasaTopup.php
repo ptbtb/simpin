@@ -41,19 +41,16 @@ class GenerateJasaTopup extends Command
     {
         try
         {
-            $listTopup = PengajuanTopup::all();
+            $listTopup = PengajuanTopup::has('pengajuan')
+                                        ->has('pinjaman')
+                                        ->get();
             $listTopup->each(function ($pengajuanTopup)
             {
-                echo $pengajuanTopup->id."\n";
                 $pinjaman = $pengajuanTopup->pinjaman;
                 $jenisPinjaman = $pinjaman->jenisPinjaman;
-                $jasaPelunasanDipercepat = $jenisPinjaman->jasa_pelunasan_dipercepat;
                 echo $pinjaman->kode_pinjam."\n";
                 echo $jenisPinjaman->kode_jenis_pinjam."\n";
-                if ($jasaPelunasanDipercepat == 0)
-                {
-                    echo $jenisPinjaman->jasaPelunasanDipercepat."\n";
-                }
+                echo $jenisPinjaman->jasa_pelunasan_dipercepat."\n";
             });
         }
         catch (\Throwable $th)
