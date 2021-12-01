@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\PengajuanTopup;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class GenerateJasaTopup extends Command
 {
@@ -38,19 +39,26 @@ class GenerateJasaTopup extends Command
      */
     public function handle()
     {
-        $listTopup = PengajuanTopup::all();
-        $listTopup->each(function ($pengajuanTopup)
+        try
         {
-            echo $pengajuanTopup->id."\n";
-            $pinjaman = $pengajuanTopup->pinjaman;
-            $jenisPinjaman = $pinjaman->jenisPinjaman;
-            $jasaPelunasanDipercepat = $jenisPinjaman->jasa_pelunasan_dipercepat;
-            echo $pinjaman->kode_pinjam."\n";
-            echo $jenisPinjaman->kode_jenis_pinjam."\n";
-            if ($jasaPelunasanDipercepat == 0)
+            $listTopup = PengajuanTopup::all();
+            $listTopup->each(function ($pengajuanTopup)
             {
-                echo $jenisPinjaman->jasaPelunasanDipercepat."\n";
-            }
-        });
+                echo $pengajuanTopup->id."\n";
+                $pinjaman = $pengajuanTopup->pinjaman;
+                $jenisPinjaman = $pinjaman->jenisPinjaman;
+                $jasaPelunasanDipercepat = $jenisPinjaman->jasa_pelunasan_dipercepat;
+                echo $pinjaman->kode_pinjam."\n";
+                echo $jenisPinjaman->kode_jenis_pinjam."\n";
+                if ($jasaPelunasanDipercepat == 0)
+                {
+                    echo $jenisPinjaman->jasaPelunasanDipercepat."\n";
+                }
+            });
+        }
+        catch (\Throwable $th)
+        {
+            Log::error($th);
+        }
     }
 }
