@@ -133,9 +133,7 @@ class TransaksiUserImport
 							t1.id < t2.id AND 
     t1.keterangan = t2.keterangan AND
     t1.akun_debet = t2.akun_debet AND
-    t1.akun_kredit = t2.akun_kredit and 
-    t1.debet = t2.debet  and
-    t1.kredit = t2.kredit  
+    t1.akun_kredit = t2.akun_kredit 
     and t1.jurnalable_type ='App\\\Models\\\Angsuran' and t1.created_at>'$yesterday'");
 						DB::statement("SET SQL_SAFE_UPDATES = 1");
 						
