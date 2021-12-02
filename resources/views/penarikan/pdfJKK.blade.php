@@ -39,13 +39,13 @@
     <table class="border-collapse">
         <tr>
             <th>No</th>
-            <th>Trx Reference</th>
-            <th>Credited Account Name</th>
-            <th>Bank Name Country</th>
-            <th>Credited Transfer</th>
-            <th>Remark</th>
-            <th>Debited Account</th>
-            <th>Debited Amount</th>
+            <th>No. Referensi</th>
+            <th>Nama Anggota</th>
+            <th>Nama Bank</th>
+            <th>Jumlah yang ditransfer ke Anggota</th>
+            <th>Keterangan</th>
+            <th>No. Rek. Kopegmar</th>
+            <th>Jumlah</th>
         </tr>
         @php
             $totalcredited = 0;
@@ -78,7 +78,9 @@
     <br><br><br>
     <table>
         <tr>
-            <td colspan="3" style="text-align: right">Jakarta, {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
+            <td></td>
+            <td style="width: 40%"></td>
+            <td style="text-align: left">Jakarta, {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
         </tr>
         <tr>
             <td colspan="3" style="text-align: left">Mengetahui</td>
