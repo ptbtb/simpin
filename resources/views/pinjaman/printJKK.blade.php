@@ -39,13 +39,13 @@
     <table class="border-collapse">
         <tr>
             <th>No</th>
-            <th>Trx Reference</th>
-            <th>Credited Account Name</th>
-            <th>Bank Name Country</th>
-            <th colspan="2">Credited Transfer</th>
-            <th>Remark</th>
-            <th>Debited Account</th>
-            <th>Debited Amount</th>
+            <th>No. Referensi</th>
+            <th>Nama Anggota</th>
+            <th>Nama Bank</th>
+            <th colspan="2">Jumlah yang ditransfer ke Anggota</th>
+            <th>Keterangan</th>
+            <th>No. Rek. Kopegmar</th>
+            <th>Jumlah</th>
         </tr>
         @php
             $totalcredited = 0;
@@ -78,24 +78,24 @@
         @if ($pengajuan->pengajuanTopup->count())
             <tr>
                 <td>Jasa Topup</td>
-                <td>{{ $pengajuan->viewJasaPelunasanDipercepat }}</td>
+                <td>({{ $pengajuan->viewJasaPelunasanDipercepat }})</td>
             </tr>
             <tr>
                 <td>Sisa Pinjaman</td>
-                <td>{{ $pengajuan->viewSisaPinjaman }}</td>
+                <td>({{ $pengajuan->viewSisaPinjaman }})</td>
             </tr>
         @endif
         <tr>
             <td>Asuransi</td>
-            <td>{{ $pengajuan->viewAsuransi }}</td>
+            <td>({{ $pengajuan->viewAsuransi }})</td>
         </tr>
         <tr>
             <td>Provisi</td>
-            <td>{{ $pengajuan->viewProvisi }}</td>
+            <td>({{ $pengajuan->viewProvisi }})</td>
         </tr>
         <tr>
             <td>Biaya Admin</td>
-            <td>{{ $pengajuan->viewBiayaAdmin }}</td>
+            <td>({{ $pengajuan->viewBiayaAdmin }})</td>
         </tr>
         <tr>
             <td></td>
@@ -108,7 +108,9 @@
     <br><br><br>
     <table>
         <tr>
-            <td colspan="3" style="text-align: right">Jakarta, {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
+            <td></td>
+            <td style="width: 40%"></td>
+            <td style="text-align: left">Jakarta, {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
         </tr>
         <tr>
             <td colspan="3" style="text-align: left">Mengetahui</td>
