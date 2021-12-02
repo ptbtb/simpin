@@ -14,29 +14,26 @@ use App\Models\AngsuranSimpanan;
 use Illuminate\Support\Facades\Log;
 use DB;
 
-class SimpananImport implements OnEachRow
+class SimpananImport 
 {
-    public function onRow(Row $row)
+    static function generatetransaksi($transaksi)
     {
-        $rowIndex = $row->getIndex();
-        $row = $row->toArray();
-        if ($rowIndex == 1) {
-            return null;
-        }
-        Log::info($rowIndex);
-        $tglEntri = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3])->format('Y-m-d');
+        
+       \Log::info($transaksi['kode_anggota']);
+       \Log::info($transaksi['tgl_entri']->format('Y-m-d'));
+        $tglEntri = $transaksi['tgl_entri']->format('Y-m-d');
 
-        $periode = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4])->format('Y-m-d');
+        $periode = $transaksi['periode']->format('Y-m-d');
         $fields = [
-            'jenis_simpan' => ($row[0] == "\N" || $row[0] == '' || $row[0] == null) ? '' : $row[0],
-            'besar_simpanan' => ($row[1] == "\N" || $row[1] == '' || $row[1] == null) ? 0 : $row[1],
-            'kode_anggota' => ($row[2] == "\N" || $row[2] == '' || $row[2] == null) ? '' : $row[2],
+            'jenis_simpan' => ($transaksi['jenis_simpan'] == "\N" || $transaksi['jenis_simpan'] == '' || $transaksi['jenis_simpan'] == null) ? '' : $transaksi['jenis_simpan'],
+            'besar_simpanan' => ($transaksi['besar_simpanan'] == "\N" || $transaksi['besar_simpanan'] == '' || $transaksi['besar_simpanan'] == null) ? 0 : $transaksi['besar_simpanan'],
+            'kode_anggota' => ($transaksi['kode_anggota'] == "\N" || $transaksi['kode_anggota'] == '' || $transaksi['kode_anggota'] == null) ? '' : $transaksi['kode_anggota'],
             'u_entry' => Auth::user()->name,
-            'tgl_entri' => ($row[3] == "\N" || $row[3] == '' || $row[3] == null) ? null : Carbon::createFromFormat('Y-m-d', $tglEntri),
-            'periode' => ($row[4] == "\N" || $row[4] == '' || $row[4] == null) ? null : Carbon::createFromFormat('Y-m-d', $periode),
-            'kode_jenis_simpan' => ($row[5] == "\N" || $row[5] == '' || $row[5] == null) ? null : $row[5],
-            'keterangan' => ($row[6] == "\N" || $row[6] == '' || $row[6] == null) ? null : $row[6],
-            'id_akun_debet' => ($row[7] == "\N" || $row[7] == '' || $row[7] == null) ? null : $row[7],
+            'tgl_entri' => ($transaksi['tgl_entri'] == "\N" || $transaksi['tgl_entri'] == '' || $transaksi['tgl_entri'] == null) ? null : Carbon::createFromFormat('Y-m-d', $tglEntri),
+            'periode' => ($transaksi['periode'] == "\N" || $transaksi['periode'] == '' || $transaksi['periode'] == null) ? null : Carbon::createFromFormat('Y-m-d', $periode),
+            'kode_jenis_simpan' => ($transaksi['kode_jenis_simpan'] == "\N" || $transaksi['kode_jenis_simpan'] == '' || $transaksi['kode_jenis_simpan'] == null) ? null : $transaksi['kode_jenis_simpan'],
+            'keterangan' => ($transaksi['keterangan'] == "\N" || $transaksi['keterangan'] == '' || $transaksi['keterangan'] == null) ? null : $transaksi['keterangan'],
+            'id_akun_debet' => ($transaksi['coa bank/cash'] == "\N" || $transaksi['coa bank/cash'] == '' || $transaksi['coa bank/cash'] == null) ? null : $transaksi['coa bank/cash'],
         ];
         $nextSerialNumber = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
         $idakundebet=Code::where('CODE',$fields['id_akun_debet'])->first();
@@ -137,13 +134,13 @@ class SimpananImport implements OnEachRow
         return true;;
     }
     /**
-     * @param array $row
+     * @param array $transaksi
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    /*public function model(array $row)
+    /*public function model(array $transaksi)
     {
-        $col = explode(';',$row[0]);
+        $col = explode(';',$transaksi['jenis_simpan']);
         $fields = [
             'jenis_simpan' => ($col[0] == "\N" || $col[0] == '')? '':$col[0],
             'besar_simpanan' => ($col[1] == "\N" || $col[1] == '')? '':$col[1],

@@ -23,10 +23,11 @@ use Auth;
 use DB;
 use Hash;
 use Carbon\Carbon;
-use Excel;
 use Illuminate\Support\Facades\Log;
 use PDF;
 use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class SimpananController extends Controller
 {
@@ -483,8 +484,19 @@ class SimpananController extends Controller
     {
         $this->authorize('import simpanan', Auth::user());
         try {
-            DB::transaction(function () use ($request) {
-                Excel::import(new SimpananImport, $request->file);
+
+            // DB::transaction(function () use ($request) {
+            //     Excel::import(new SimpananImport, $request->file);
+            // });
+
+            DB::transaction(function () use ($request)
+            {
+                // Excel::import(new TransaksiUserImport, $request->file); 
+                $collection = (new FastExcel)->import($request->file);
+                foreach ($collection as $transaksi) {
+                    // dd($transaksi);
+                    SimpananImport::generatetransaksi($transaksi);
+                }
             });
             return redirect()->back()->withSuccess('Import data berhasil');
         } catch (\Throwable $e) {
