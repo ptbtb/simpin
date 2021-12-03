@@ -21,8 +21,7 @@ class SimpananController extends Controller
         {
             $user = $request->user('api');
             $anggota = $user->anggota;
-            $data['saldo'] = \App\Models\Simpanan::where('kode_anggota', $anggota->kode_anggota)->sum('besar_simpanan');
-
+            $data['saldo'] = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
             $response['message'] = null;
             $response['data'] = $data;
             return response()->json($response, 200);
