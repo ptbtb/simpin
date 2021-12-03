@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use PDF;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
+use App\Models\View\ViewSaldo;
 
 use Illuminate\Support\Facades\Log;
 class SimpananController extends Controller
