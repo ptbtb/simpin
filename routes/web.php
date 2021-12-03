@@ -518,3 +518,9 @@ Route::group(['prefix' => 'jkk-printed', 'middleware' => 'auth'], function ()
     Route::post('reprint/{id}', [JkkPrintedController::class, 'reprint'])->name('jkk-printed-reprint');
     Route::get('detail/{id}', [JkkPrintedController::class, 'show'])->name('jkk-printed-show');
 });
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
+{
+    Route::get('cekperiode', [App\Http\Controllers\AdminController::class, 'index'])->name('admin-cek-periode-simpanan');
+    
+});
