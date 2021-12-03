@@ -30,7 +30,7 @@ class SimpananImport
             'kode_anggota' => ($transaksi['kode_anggota'] == "\N" || $transaksi['kode_anggota'] == '' || $transaksi['kode_anggota'] == null) ? '' : $transaksi['kode_anggota'],
             'u_entry' => Auth::user()->name,
             'tgl_entri' => ($transaksi['tgl_entri'] == "\N" || $transaksi['tgl_entri'] == '' || $transaksi['tgl_entri'] == null) ? null : Carbon::createFromFormat('Y-m-d', $tglEntri),
-            'periode' => ($transaksi['periode'] == "\N" || $transaksi['periode'] == '' || $transaksi['periode'] == null) ? null : $transaksi['periode']->format('Y-m-d')),
+            'periode' => ($transaksi['periode'] == "\N" || $transaksi['periode'] == '' || $transaksi['periode'] == null) ? null : $transaksi['periode']->format('Y-m-d'),
             'kode_jenis_simpan' => ($transaksi['kode_jenis_simpan'] == "\N" || $transaksi['kode_jenis_simpan'] == '' || $transaksi['kode_jenis_simpan'] == null) ? null : $transaksi['kode_jenis_simpan'],
             'keterangan' => ($transaksi['keterangan'] == "\N" || $transaksi['keterangan'] == '' || $transaksi['keterangan'] == null) ? null : $transaksi['keterangan'],
             'id_akun_debet' => ($transaksi['coa bank/cash'] == "\N" || $transaksi['coa bank/cash'] == '' || $transaksi['coa bank/cash'] == null) ? null : $transaksi['coa bank/cash'],
