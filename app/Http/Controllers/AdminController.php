@@ -31,9 +31,10 @@ class AdminController extends Controller
 		$listAnggota = Anggota::with('listSimpanan')
                             ->whereDoesntHave('listSimpanan', function ($query)
                             {
-                                return $query->where('periode', '2021-01-01');
+                                return $query->where('periode', '2021-01-01')
+                                ->where('kode_jenis_simpan','411.12.000');
                             })
                             ->get();
-        dd($listAnggota[0]->listSimpanan);
+        dd($listAnggota);
 	}
 }
