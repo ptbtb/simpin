@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use PDF;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
+use App\Models\View\ViewSaldo;
 
 use Illuminate\Support\Facades\Log;
 class SimpananController extends Controller
@@ -21,8 +22,7 @@ class SimpananController extends Controller
         {
             $user = $request->user('api');
             $anggota = $user->anggota;
-            $data['saldo'] = \App\Models\Simpanan::where('kode_anggota', $anggota->kode_anggota)->sum('besar_simpanan');
-
+            $data['saldo'] = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->sum('jumlah');
             $response['message'] = null;
             $response['data'] = $data;
             return response()->json($response, 200);
