@@ -521,6 +521,7 @@ Route::group(['prefix' => 'jkk-printed', 'middleware' => 'auth'], function ()
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
 {
-    Route::get('cekperiode', [App\Http\Controllers\AdminController::class, 'index'])->name('admin-cek-periode-simpanan');
+    Route::get('cleandoublesimpanan', [App\Http\Controllers\AdminController::class, 'cleanDoubleSimpanan'])->name('admin-clean-double-simpanan');
+    Route::get('cleandoublepenarikan', [App\Http\Controllers\AdminController::class, 'cleanDoublePenarikan'])->name('admin-clean-double-penarikan');
     
 });

@@ -27,7 +27,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
-	public function index(){
+	public function cleanDoubleSimpanan(){
 		// $listAnggota = Anggota::with('listSimpanan')
   //                           ->whereDoesntHave('listSimpanan', function ($query)
   //                           {
@@ -60,4 +60,28 @@ class AdminController extends Controller
 
         }
 	}
+
+    public function cleanDoublePenarikan(){
+       
+        $duplicateIds = Penarikan::
+                    selectRaw("kode_anggota,code_trans,besar_ambil,min(kode_ambil) as kode_ambil,tgl_ambil ")
+                    ->whereraw("created_at >'2021-12-03'")
+                    ->where('status_pengambilan',8)
+                    ->groupBy("kode_anggota","code_trans","besar_ambil",'tgl_ambil')
+                    ->havingRaw('count(tgl_ambil) > ?', [1])
+                     // ->toSql();
+                     ->pluck("kode_ambil");
+                   
+       // dd($duplicateIds);
+       
+        foreach ($duplicateIds as $id){
+            $trans = Penarikan::find($id);
+            if ($trans->jurnals->count()>0){
+                $trans->jurnals[0]->delete();
+            }
+            $trans->delete();
+             // dd($id);
+
+        }
+    }
 }
