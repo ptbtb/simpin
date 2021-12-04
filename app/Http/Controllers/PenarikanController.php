@@ -25,7 +25,8 @@ use App\Models\View\ViewSaldo;
 use App\Models\StatusPenarikan;
 use Carbon\Carbon;
 use DB;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
+use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -293,7 +294,16 @@ class PenarikanController extends Controller
     {
         $this->authorize('import penarikan', Auth::user());
         try {
-            Excel::import(new PenarikanImport, $request->file);
+            // Excel::import(new PenarikanImport, $request->file);
+            DB::transaction(function () use ($request)
+            {
+                // Excel::import(new TransaksiUserImport, $request->file); 
+                $collection = (new FastExcel)->import($request->file);
+                foreach ($collection as $transaksi) {
+                    // dd($transaksi);
+                    PenarikanImport::generatetransaksi($transaksi);
+                }
+            });
             return redirect()->back()->withSuccess('Import data berhasil');
         } catch (\Throwable $e) {
             \Log::error($e);

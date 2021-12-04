@@ -13,34 +13,55 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 
-class PenarikanImport implements OnEachRow
+class PenarikanImport 
 {
     /**
     * @param Collection $collection
     */
-    public function onRow(Row $row)
+    static function generatetransaksi($transaksi)
     {
-        $rowIndex = $row->getIndex();
-        $row      = $row->toArray();
-        if ($rowIndex == 1)
-        {
-            return null;
-        }
-
-        $tglAmbil = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[2])->format('Y-m-d');
+       
+         \Log::info($transaksi['tgl_ambil']->format('Y-m-d'));
+        $tglAmbil = $transaksi['tgl_ambil']->format('Y-m-d');
         $fields = [
-            'kode_anggota' => $row[0],
-            'besar_ambil' => $row[1],
+            'kode_anggota' => $transaksi['kode_anggota'],
+            'besar_ambil' => $transaksi['besar_ambil'],
             'tgl_ambil' => $tglAmbil,
-            'keterangan' => $row[3],
-            'code_trans' => $row[4],
-            'id_bank' => $row[5],
+            'keterangan' => $transaksi['keterangan'],
+            'code_trans' => $transaksi['code_trans'],
+            'id_bank' => $transaksi['coa bank/cash'],
         ];
         // dd($fields);
         $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
         $id_akun_debet = Code::where('CODE',$fields['id_bank'])->first();
         $penarikan = null;
-        $penarikan = new Penarikan();
+        $cek = Penarikan::where('kode_anggota',$fields['kode_anggota'])
+                            ->where ('tgl_ambil',$fields['besar_ambil'])
+                            ->where ('besar_ambil',$fields['besar_ambil'])
+                            ->where('code_trans',$fields['code_trans'])
+                            ->where('id_akun_debet',$id_akun_debet->id)->first();
+
+        if ($cek){
+            $cek->kode_anggota = $fields['kode_anggota'];
+            $cek->kode_tabungan = $fields['kode_anggota'];
+            $cek->id_tabungan = $fields['kode_anggota'].$fields['code_trans'];
+            $cek->besar_ambil = $fields['besar_ambil'];
+            $cek->code_trans = $fields['code_trans'];
+            $cek->tgl_ambil = $fields['tgl_ambil'];
+            $cek->tgl_transaksi = $fields['tgl_ambil'];
+            $cek->keterangan = $fields['keterangan'];
+            $cek->id_akun_debet = $id_akun_debet->id;
+            $cek->paid_by_cashier = Auth::user()->id;
+            $cek->u_entry = Auth::user()->name;
+            $cek->created_by = Auth::user()->id;
+            $cek->status_pengambilan = 8;
+            $cek->serial_number = $nextSerialNumber;
+            $cek->save();
+            if ($cek->jurnals->count()==0){
+                JurnalManager::createJurnalPenarikan($cek);
+            }
+        }else{
+            $penarikan = new Penarikan();
             $penarikan->kode_anggota = $fields['kode_anggota'];
             $penarikan->kode_tabungan = $fields['kode_anggota'];
             $penarikan->id_tabungan = $fields['kode_anggota'].$fields['code_trans'];
@@ -59,5 +80,7 @@ class PenarikanImport implements OnEachRow
         JurnalManager::createJurnalPenarikan($penarikan);
 
         return $penarikan;
+        }
+        
     }
 }
