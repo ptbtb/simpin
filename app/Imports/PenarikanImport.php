@@ -79,8 +79,9 @@ class PenarikanImport
             $penarikan->save();
         JurnalManager::createJurnalPenarikan($penarikan);
 
-        return $penarikan;
+       
         }
+         return $penarikan;
         
     }
 }
