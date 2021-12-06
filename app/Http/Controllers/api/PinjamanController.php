@@ -14,10 +14,11 @@ class PinjamanController extends Controller
         {
             $user = $request->user('api');
             $anggota = $user->anggota;
-            $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
+            // $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
+            $data['saldo'] = 'Coming Soon';
 
             $response['message'] = null;
-            $response['data'] = 'Coming Soon';
+            $response['data'] = $data;
             return response()->json($response, 200);
         }
         catch (\Throwable $e)
