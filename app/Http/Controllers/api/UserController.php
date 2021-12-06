@@ -45,4 +45,15 @@ class UserController extends Controller
         
         return response()->json(['message' => $trans->value], 200);
     }
+
+    public function menu(Request $request)
+    {
+        $trans = DB::table('menu_mobile')
+                    ->where('display',1) 
+                    ->get();
+        $result['message']=null;
+        $result['data']=$trans;
+
+        return response()->json($result, 200);
+    }
 }
