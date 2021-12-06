@@ -15,7 +15,7 @@ class PinjamanController extends Controller
             $user = $request->user('api');
             $anggota = $user->anggota;
             // $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
-            $data['saldo'] = 'Coming Soon';
+            $data['saldo'] = 0;
 
             $response['message'] = null;
             $response['data'] = $data;
