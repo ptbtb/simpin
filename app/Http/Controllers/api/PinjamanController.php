@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
+
 use Illuminate\Support\Facades\Log;
 class PinjamanController extends Controller
 {
@@ -12,21 +12,29 @@ class PinjamanController extends Controller
     {
         try
         {
-             $trans = DB::table('company_setting')
-                    ->where('name','saldo_pinjaman') 
-                    ->first();
-                    if ($trans && $trans->value==1){
-                        $user = $request->user('api');
-            $anggota = $user->anggota;
-            $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
+            // $trans = DB::table('company_setting')
+            //         ->where('name','saldo_pinjaman') 
+            //         ->first();
+            //         if ($trans && $trans->value==1){
+            //             $user = $request->user('api');
+            // $anggota = $user->anggota;
+            // $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
             
+            // $response['message'] = null;
+            // $response['data'] = $data;
+            // return response()->json($response, 200);
+            //         }
+            //  $response['message'] = 'Akan Segera Hadir';
+            // return response()->json($response, 200);
+            
+            $user = $request->user('api');
+            $anggota = $user->anggota;
+            // $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
+            $data['saldo'] = 0;
+
             $response['message'] = null;
             $response['data'] = $data;
             return response()->json($response, 200);
-                    }
-             $response['message'] = 'Akan Segera Hadir';
-            return response()->json($response, 200);
-            
         }
         catch (\Throwable $e)
         {
