@@ -43,6 +43,6 @@ class UserController extends Controller
                     ->where('name','company_splash') 
                     ->first();
         
-        return response()->json(['message' => $trans['value']], 200);
+        return response()->json(['message' => $trans->value], 200);
     }
 }
