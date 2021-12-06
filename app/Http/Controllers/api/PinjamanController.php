@@ -17,7 +17,7 @@ class PinjamanController extends Controller
             $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
 
             $response['message'] = null;
-            $response['data'] = $data;
+            $response['data'] = 'Coming Soon';
             return response()->json($response, 200);
         }
         catch (\Throwable $e)
