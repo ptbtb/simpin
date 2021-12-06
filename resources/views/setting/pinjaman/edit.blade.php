@@ -91,6 +91,10 @@
                     <label>Jasa Pelunasan Dipercepat</label>
                     <input type="number" step="any" class="form-control" name="jasa_pelunasan_dipercepat" placeholder="Jasa Pelunasan Dipercepat" value={{ $pinjaman->jasa_pelunasan_dipercepat }} />
                 </div>
+                 <div class="form-group col-md-6">
+                    <label>Jasa Topup</label>
+                    <input type="number" step="any" class="form-control" name="jasa_topup" placeholder="Jasa Topup" />
+                </div>
                 <div class="form-group col-md-6">
                     <label>Minimal Angsur Pelunasan</label>
                     <input type="number" step="any" class="form-control" name="minimal_angsur_pelunasan" placeholder="Minimal Angsur Pelunasan" value={{ $pinjaman->minimal_angsur_pelunasan }} />

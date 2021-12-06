@@ -103,10 +103,18 @@ class Pinjaman extends Model {
         // return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
         return $this->sisa_pinjaman * $this->jenisPinjaman->jasa_pelunasan_dipercepat - $this->total_diskon;
     }
+    public function getJasaTopup() {
+        // return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
+        return $this->sisa_pinjaman * $this->jenisPinjaman->jasa_topup - $this->total_diskon;
+    }
 
     public function getTotalbayarPelunasanDipercepatAttribute()
     {
         return $this->totalAngsuran + $this->totalDenda + $this->jasaPelunasanDipercepat + $this->tunggakan;
+    }
+    public function getTotalbayarTopup()
+    {
+        return $this->totalAngsuran + $this->totalDenda + $this->JasaTopup + $this->tunggakan;
     }
 
     public function getTunggakanAttribute() {

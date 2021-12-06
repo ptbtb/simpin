@@ -391,7 +391,7 @@ class PinjamanController extends Controller
         if ($request->jenis_pengajuan == JENIS_PENGAJUAN_TOPUP) {
             // kalkulasi semua sisa pinjamannya
             $listTopupPinjaman = Pinjaman::whereIn('kode_pinjam', $request->topup_pinjaman)->get();
-            $totalPinjaman = $listTopupPinjaman->sum('totalBayarPelunasanDipercepat');
+            $totalPinjaman = $listTopupPinjaman->sum('totalBayarTopup');
             if ($besarPinjaman < $totalPinjaman) {
                 return redirect()->back()->withError('Besar pinjaman lebih kecil dari total sisa pinjaman yang di topup');
             }

@@ -12,8 +12,8 @@ class PengajuanManager
             $topup = new PengajuanTopup();
             $topup->kode_pengajuan = $pengajuan->kode_pengajuan;
             $topup->kode_pinjaman = $pinjaman->kode_pinjam;
-            $topup->jasa_pelunasan_dipercepat = $pinjaman->jasaPelunasanDipercepat;
-            $topup->total_bayar_pelunasan_dipercepat = $pinjaman->totalBayarPelunasanDipercepat;
+            $topup->jasa_pelunasan_dipercepat = $pinjaman->jasaTopup;
+            $topup->total_bayar_pelunasan_dipercepat = $pinjaman->totalBayarTopup;
             $topup->save();
         }
     }

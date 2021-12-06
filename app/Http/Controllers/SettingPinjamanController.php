@@ -71,6 +71,7 @@ class SettingPinjamanController extends Controller {
             $jenisPinjaman->provisi = $request->provisi;
             $jenisPinjaman->jasa = $request->jasa;
             $jenisPinjaman->jasa_pelunasan_dipercepat = $request->jasa_pelunasan_dipercepat;
+            $jenisPinjaman->jasa_topup = $request->jasa_topup;
             $jenisPinjaman->minimal_angsur_pelunasan = $request->minimal_angsur_pelunasan;
             $jenisPinjaman->u_entry = $request->u_entry;
             $jenisPinjaman->tgl_entri = Carbon::now();
@@ -168,6 +169,7 @@ class SettingPinjamanController extends Controller {
             $jenisPinjaman->provisi = $request->provisi;
             $jenisPinjaman->jasa = $request->jasa;
             $jenisPinjaman->jasa_pelunasan_dipercepat = $request->jasa_pelunasan_dipercepat;
+             $jenisPinjaman->jasa_topup = $request->jasa_topup;
             $jenisPinjaman->minimal_angsur_pelunasan = $request->minimal_angsur_pelunasan;
             $jenisPinjaman->u_entry = $request->u_entry;
             $jenisPinjaman->tgl_entri = Carbon::now();
