@@ -21,6 +21,7 @@ Route::group(['prefix' => 'user'], function ()
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('', 'App\Http\Controllers\api\UserController@getUser')->name('api-get-user');
         Route::get('logout', 'App\Http\Controllers\api\UserController@logout')->name('api-get-user');
+        Route::get('disclaimer', 'App\Http\Controllers\api\UserController@disclaimer')->name('api-get-disclaimer');
     });
 });
 Route::group(['prefix' => 'pinjaman'], function ()

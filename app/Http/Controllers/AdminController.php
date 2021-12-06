@@ -8,6 +8,7 @@ use App\Imports\SimpananImport;
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
 use App\Models\Jurnal;
+use App\Models\JurnalTemp;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Code;
@@ -83,5 +84,61 @@ class AdminController extends Controller
              // dd($id);
 
         }
+    }
+
+    public function cleanDoublePeriod(){
+       
+        // $listAnggota = Anggota::with('listSimpanan')
+        //                     ->whereHave('listSimpanan', function ($query)
+        //                     {
+        //                         return $query->where('periode', '2021-01-01')
+        //                         ->havingRaw('count(periode) > ?', [1]);
+        //                     })
+        //                     ->get();
+
+        $listsimpanan=Simpanan::
+                    selectRaw("kode_anggota,kode_jenis_simpan,periode,min(kode_simpan) as kode_simpan ")
+                    ->wherein('kode_jenis_simpan',['411.12.000','502.01.000'])
+                    ->where('mutasi',0)
+                    ->groupBy("kode_anggota","kode_jenis_simpan","periode")
+                    ->havingRaw('count(periode) > ?', [1])
+                     ->toSql();
+                     // ->pluck("kode_simpan");                            
+
+        dd($listsimpanan);
+
+        $simpanan = Simpanan::where('u_entry','<>','Admin BTB')
+        ->where('mutasi',0)
+        ->whereDoesntHave('jurnals')->get();
+    }
+    public function cekjreupload(){
+       
+        
+
+        $trans=JurnalTemp::
+                    where('is_success',0) 
+                    ->whereDoesntHave('jurnals')
+                     // ->toSql();
+                      ->get();
+
+       
+    }
+
+    public function ceksimpanannojurnal(){
+       
+        
+
+        $trans=Simpanan::
+                    where('mutasi',0) 
+                    ->wherenotin('u_entry',['Admin BTB']) 
+                    ->whereDoesntHave('jurnals')
+                     // ->toSql();
+                      ->get();                               
+
+        dd($trans[0]);
+
+        $simpanan = Simpanan::where('u_entry','<>','Admin BTB')
+        ->where('mutasi',0)
+        ->whereDoesntHave('jurnals')->get();
     }
 }
