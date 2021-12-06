@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use DB;
 use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
@@ -35,5 +35,14 @@ class UserController extends Controller
         $userToken = $request->user()->token();
         $userToken->revoke();
         return response()->json(['message' => 'Logged out'], 200);
+    }
+
+    public function disclaimer(Request $request)
+    {
+        $trans = DB::table('company_setting')
+                    ->where('name','company_splash') 
+                    ->first();
+        
+        return response()->json(['message' => $trans['value']], 200);
     }
 }
