@@ -22,15 +22,19 @@ class LoginController extends Controller
 
         if (!$user)
         {
-            throw ValidationException::withMessages([
-                'Email Salah'
-            ]);
+            $response = [
+            "message"=>"The given data was invalid.",
+            "errors"=>'Email Salah'
+        ];
+        return response()->json($response, 422);
         }
         elseif(!Hash::check($request->password, $user->password))
         {
-            throw ValidationException::withMessages([
-                'Password Salah'
-            ]);
+            $response = [
+            "message"=>"The given data was invalid.",
+            "errors"=>'Password Salah'
+        ];
+        return response()->json($response, 422);
         }
 
         $trans = DB::table('company_setting')
@@ -41,9 +45,11 @@ class LoginController extends Controller
 
         if($request->version){
             if($request->version!==$version){
-                throw ValidationException::withMessages([
-                 'Versi terbaru sudah tersedia, Mohon Update Aplikasi Anda Terlebih Dahulu'
-            ]);
+                $response = [
+            "message"=>"The given data was invalid.",
+            "errors"=>'Versi terbaru sudah tersedia, Mohon Update Aplikasi Anda Terlebih Dahulu'
+        ];
+        return response()->json($response, 422);
             }
         }    
         $token = $user->createToken('Auth Token')->accessToken;
