@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 Use App\Http\Controllers\Migration2Controller;
+Use App\Http\Controllers\Migration3Controller;
 use Illuminate\Console\Command;
 
 class MigrateJurnalTransaction2 extends Command
@@ -38,6 +39,6 @@ class MigrateJurnalTransaction2 extends Command
      */
     public function handle()
     {
-        Migration2Controller::migrationJurnalTransaction($this->argument('month'));
+        Migration3Controller::migrationJurnalTransaction($this->argument('month'));
     }
 }
