@@ -180,12 +180,19 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
-        $jurnal->debet = $angsuran->besar_angsuran;
+
+        // make balance
+        $jasa = ($angsuran->besar_pembayaran>$angsuran->jasa)?$angsuran->jasa:$angsuran->besar_pembayaran;
+        $angsur = ($angsuran->besar_pembayaran-$angsuran->jasa+2>$angsuran->besar_angsuran)?$angsuran->besar_angsuran:($angsuran->besar_pembayaran-$angsuran->jasa);
+
+        //end balancing
+
+        $jurnal->debet = ($angsur>0)?$angsur:0;
         $jurnal->akun_kredit = 0;
         $jurnal->kredit = 0;
         $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
-        $jurnal->created_by = Auth::user()->id;
-        $jurnal->updated_by = Auth::user()->id;
+        $jurnal->created_by = $angsuran->updated_by;
+        $jurnal->updated_by = $angsuran->updated_by;
         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
 
         // save as polymorphic
@@ -207,8 +214,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         }
         $jurnal->kredit = $angsuran->besar_pembayaran;
         $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
-        $jurnal->created_by = Auth::user()->id;
-        $jurnal->updated_by = Auth::user()->id;
+        $jurnal->created_by = $angsuran->updated_by;
+        $jurnal->updated_by = $angsuran->updated_by;
          $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
 
         // save as polymorphic
@@ -230,10 +237,10 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         {
             $jurnal->akun_debet = '701.02.001';
         }
-        $jurnal->debet = $angsuran->jasa;
+        $jurnal->debet = $jasa;
         $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
-        $jurnal->created_by = Auth::user()->id;
-        $jurnal->updated_by = Auth::user()->id;
+        $jurnal->created_by = $angsuran->updated_by;
+        $jurnal->updated_by = $angsuran->updated_by;
          $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
 
         // save as polymorphic

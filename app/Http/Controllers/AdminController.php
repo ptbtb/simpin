@@ -6,6 +6,7 @@ use App\Exports\LaporanExcelExport;
 use App\Exports\SimpananExport;
 use App\Imports\SimpananImport;
 use App\Models\Anggota;
+use App\Models\Angsuran;
 use App\Models\JenisSimpanan;
 use App\Models\Jurnal;
 use App\Models\JurnalTemp;
@@ -156,10 +157,40 @@ class AdminController extends Controller
                      // ->toSql();
                       ->pluck("id");                               
 
-      
+
        foreach ($trans as $id){
             $trans = Jurnal::find($id);
             $trans->delete();
+             // dd($id);
+
+        }
+    }
+
+    public function cekangsuran(){
+       
+        
+
+        $trans=Angsuran::
+                    where('serial_number','>',0)
+                    ->where('updated_by','>',1)
+                    ->where('tgl_transaksi','>','20210-09-30')
+                    ->whereHas('jurnals')
+                    // ->whereDoesntHave('jurnals')
+                      // ->toSql();
+                      // ->get();
+                       ->pluck("kode_angsur");                               
+
+      // dd($trans);
+       foreach ($trans as $id){
+            $angsurannya = Angsuran::find($id);
+            if ($angsurannya->jurnals->count()>0){
+                foreach($angsurannya->jurnals as $jrnl ){
+                    $jrnl->delete();
+                }
+                
+            }
+            // dd($angsurannya);
+            JurnalManager::createJurnalAngsuran($angsurannya);
              // dd($id);
 
         }
