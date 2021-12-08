@@ -39,10 +39,13 @@ Route::group(['prefix' => 'simpanan'], function ()
         Route::get('saldo', 'App\Http\Controllers\api\SimpananController@Saldo')->name('api-get-simpanan-saldo');
         Route::get('rincian', 'App\Http\Controllers\api\SimpananController@Detail')->name('api-get-simpanan-detail');
         Route::get('card', 'App\Http\Controllers\api\SimpananController@ShowCard')->name('api-get-simpanan-card');
+        Route::get('listambil', 'App\Http\Controllers\api\PenarikanController@list')->name('api-list-penarikan');
+        Route::post('ajuambil', 'App\Http\Controllers\api\PenarikanController@ajuAmbil')->name('api-aju-penarikan');
     });
 });
 
 Route::get('jenis-pinjaman', 'App\Http\Controllers\api\JenisPinjamanController@index')->name('api-list-jenis-pinjaman');
+Route::get('jenis-simpanan', 'App\Http\Controllers\api\JenisSimpananController@index')->name('api-list-jenis-simpanan');
 Route::get('jenis-penghasilan', 'App\Http\Controllers\api\JenisPenghasilanController@index')->name('api-list-jenis-penghasilan');
 
 Route::group(['prefix' => 'pengajuan-pinjaman', 'middleware' => 'auth:api'], function ()
