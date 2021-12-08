@@ -93,7 +93,7 @@
                 </div>
                  <div class="form-group col-md-6">
                     <label>Jasa Topup</label>
-                    <input type="number" step="any" class="form-control" name="jasa_topup" placeholder="Jasa Topup" />
+                    <input type="number" step="any" class="form-control" name="jasa_topup" placeholder="Jasa Topup" value="{{ $pinjaman->jasa_topup }}"/>
                 </div>
                 <div class="form-group col-md-6">
                     <label>Minimal Angsur Pelunasan</label>
