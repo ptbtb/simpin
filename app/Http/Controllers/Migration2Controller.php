@@ -146,6 +146,28 @@ class Migration2Controller extends Controller
                 $kredits->serial_number=$nextSerialNumber;
                 $kredits->save();
             }else{
+                $newJurnal = new Jurnal();
+                $newJurnal->id_tipe_jurnal = $idTipeJurnal;
+                // $newJurnal->nomer =$kredit->no_bukti;
+                $newJurnal->nomer =$nextnomor;
+
+                                        // new format for code
+
+
+                                        // debet
+
+                $newJurnal->akun_debet = 0;
+                $newJurnal->debet = 0;
+                $newJurnal->akun_kredit = $newCoa;
+                $newJurnal->kredit = $kredit->jumlah;
+
+                $newJurnal->keterangan = $kredit->uraian_1.'|'.$kredit->uraian_2.'|'.$kredit->uraian_3;
+                $newJurnal->created_by = 1;
+                $newJurnal->updated_by = 1;
+                $newJurnal->created_at = $kredit->tgl_posting;
+                $newJurnal->tgl_transaksi = $kredit->tgl_posting;
+                $kredit->jurnals()->save($newJurnal); 
+                $kredits->serial_number=$nextSerialNumber;
                 $kredits->is_success=2;
                 $kredits->keterangan_gagal=$status[1];
                 $kredits->save();
@@ -217,6 +239,23 @@ class Migration2Controller extends Controller
             $debets->serial_number=$nextSerialNumber;
             $debets->save();
         }else{
+             $newJurnal = new Jurnal();
+            $newJurnal->id_tipe_jurnal = $idTipeJurnal;
+            // $newJurnal->nomer = $debet->no_bukti;
+            $newJurnal->nomer = $nextnomor;
+                                        // debet
+
+            $newJurnal->akun_debet = $newCoa;
+            $newJurnal->debet = $debet->jumlah;
+            $newJurnal->akun_kredit = 0;
+            $newJurnal->kredit = 0;
+
+            $newJurnal->keterangan = $debets->uraian_1.'|'.$debets->uraian_2.'|'.$debets->uraian_3;
+            $newJurnal->created_by = 1;
+            $newJurnal->updated_by = 1;
+            $newJurnal->created_at = $debet->tgl_posting;
+            $newJurnal->tgl_transaksi = $debet->tgl_posting;
+            $debet->jurnals()->save($newJurnal);
             $debets->is_success=2;
             $debets->keterangan_gagal=$status[1];
             $debets->save();
