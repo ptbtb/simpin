@@ -526,6 +526,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
     Route::get('cleandoubleperiod', [App\Http\Controllers\AdminController::class, 'cleanDoublePeriod'])->name('admin-clean-double-period');
      Route::get('cekreupload', [App\Http\Controllers\AdminController::class, 'cekjreupload'])->name('admin-cek-reupload');
      Route::get('ceksimpanannojurnal', [App\Http\Controllers\AdminController::class, 'ceksimpanannojurnal'])->name('admin-cek-simpanan-nojurnal');
+     Route::get('cekjurnalnotrans', [App\Http\Controllers\AdminController::class, 'cekjurnalnotrans'])->name('admin-cek-jurnal-notrans');
     
     
 });

@@ -146,4 +146,22 @@ class AdminController extends Controller
         ->where('mutasi',0)
         ->whereDoesntHave('jurnals')->get();
     }
+    public function cekjurnalnotrans(){
+       
+        
+
+        $trans=Jurnal::
+                    whereDoesntHave('jurnalable')
+                   -> wherein('jurnalable_type',['App\Models\Penarikan','App\Models\Simpanan','App\Models\Angsuran','App\Models\JurnalTemp'])
+                     // ->toSql();
+                      ->pluck("id");                               
+
+      
+       foreach ($trans as $id){
+            $trans = Jurnal::find($id);
+            $trans->delete();
+             // dd($id);
+
+        }
+    }
 }
