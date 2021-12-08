@@ -40,16 +40,21 @@ class AdminController extends Controller
         // $simpanan = Simpanan::where('u_entry','<>','Admin BTB')
         // ->where('mutasi',0)
         // ->whereDoesntHave('jurnals')->get();
-        $duplicateIds = Simpanan::
-                    selectRaw("kode_anggota,kode_jenis_simpan,periode,min(kode_simpan) as kode_simpan ")
-                    ->wherein('kode_jenis_simpan',['411.12.000','502.01.000'])
-                    ->whereraw("periode>'2021-10-01'")
-                    ->groupBy("kode_anggota","kode_jenis_simpan","periode")
-                    ->havingRaw('count(periode) > ?', [1])
-                    // ->toSql();
-                     ->pluck("kode_simpan");
+        // $duplicateIds = Simpanan::
+        //             selectRaw("kode_anggota,kode_jenis_simpan,periode,min(kode_simpan) as kode_simpan ")
+        //             ->wherein('kode_jenis_simpan',['411.12.000','502.01.000'])
+        //             ->whereraw("periode>'2021-10-01'")
+        //             ->groupBy("kode_anggota","kode_jenis_simpan","periode")
+        //             ->havingRaw('count(periode) > ?', [1])
+        //             // ->toSql();
+        //              ->pluck("kode_simpan");
+                     $duplicateIds = Simpanan::
+                    whereraw("date(created_at) ='2021-12-03'")
+                    ->where('u_entry','Selly Amalia')
+                    ->where('tgl_transaksi','2020-11-30')
+                      // ->toSql();
+                      ->pluck("kode_simpan");
                    
-       // dd($duplicateIds);
        
         foreach ($duplicateIds as $id){
             $simpanannya = Simpanan::find($id);
