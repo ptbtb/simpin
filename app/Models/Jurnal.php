@@ -28,7 +28,7 @@ class Jurnal extends Model
      *
      * @var array
      */
-    protected $appends = ['view_created_at', 'jurnalable_view','nominal_rupiah_debet','nominal_rupiah_kredit'];
+    protected $appends = ['view_created_at', 'jurnalable_view','nominal_rupiah_debet','nominal_rupiah_kredit','ser_num_view'];
 
 
     /**
@@ -69,6 +69,17 @@ class Jurnal extends Model
         if($this->jurnalable)
         {
             return $this->jurnalable;
+        }
+        else
+        {
+            return '';
+        }
+    }
+    public function getSerNumViewAttribute()
+    {
+        if($this->jurnalable)
+        {
+            return $this->jurnalable->serial_number_view;
         }
         else
         {
