@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
-use Excel;
+// use Excel;
+use Rap2hpoutre\FastExcel\FastExcel;
 use DB;
 
 class JurnalController extends Controller
@@ -247,8 +248,20 @@ public function createExcel(Request $request)
 
     $jurnal = $jurnal->orderBy('tgl_transaksi', 'desc')->get();
     $data['jurnal']= $jurnal;
-    $filename = 'export_jurnal_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
-    return Excel::download(new JurnalExport($data), $filename);
+    return (new FastExcel($jurnal))->download('export_jurnal_excel_' . Carbon::now()->format('d M Y') . '.xlsx',function($item){
+         return [
+        'Nomor' => $item->ser_num_view,
+        'Tipe Jurnal' => ($item->tipeJurnal)?$item->tipeJurnal->name:'',
+        'Akun Debet' => $item->akun_debet,
+        'Debet' => $item->debet,
+        'Akun Kredit' => $item->akun_kredit,
+        'Kredit' => $item->kredit,
+        'Keterangan' => $item->keterangan,
+        'Tanggal' => $item->tgl_transaksi,
+    ];
+    });
+    // $filename = 'export_jurnal_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+    // return Excel::download(new JurnalExport($data), $filename);
 }
 catch (\Throwable $e)
 {
