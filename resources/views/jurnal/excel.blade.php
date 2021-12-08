@@ -30,7 +30,7 @@
                     @foreach($jurnal as $item)
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$item->nomer}}</td>
+                        <td>{{($item->jurnalable_view)?$item->jurnalable_view->serial_number_view:$item->nomer}}</td>
                         <td>{{($item->tipeJurnal)?$item->tipeJurnal->name:''}}</td>
                         <td>{{$item->akun_debet}}</td>
                         <td>{{$item->debet}}</td>
