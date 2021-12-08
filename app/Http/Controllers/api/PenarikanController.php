@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Events\Penarikan\PenarikanCreated;
+use App\Events\Penarikan\PenarikanUpdated;
+use App\Managers\JurnalManager;
+use App\Managers\PenarikanManager;
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
@@ -102,7 +106,7 @@ class PenarikanController extends Controller
                                     ->values();
             $tenor2 = $listPinjaman->whereIn('lama_angsuran', [10, 20, 30])
                                     ->values();
-
+           Log::info($request->besar_penarikan);
             foreach ($request->jenis_simpanan as $kode)
             {
                 $jenissimpanan = JenisSimpanan::where('kode_jenis_simpan', $kode)->first();
