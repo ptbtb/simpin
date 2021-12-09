@@ -45,8 +45,9 @@ class NeracaController extends Controller
                                     ->orWhere('name','like','KEKAYAAN%')
                                     ->get();
         
-                    $codes = Code::where('is_parent', 0)
-                                    ->where(function ($query) use($groupNeraca) {
+                    $codes = Code::
+                                        // where('is_parent', 0)
+                                    where(function ($query) use($groupNeraca) {
                                         for ($i = 0; $i < count($groupNeraca); $i++){
                                     $query->orWhere('code_category_id',  $groupNeraca[$i]->id );
                                         }      
