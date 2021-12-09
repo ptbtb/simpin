@@ -251,11 +251,12 @@ public function createExcel(Request $request)
     return (new FastExcel($jurnal))->download('export_jurnal_excel_' . Carbon::now()->format('d M Y') . '.xlsx',function($item){
          return [
         'Nomor' => $item->ser_num_view,
+        'No Anggota' => $item->kode_anggota_view,
         'Tipe Jurnal' => ($item->tipeJurnal)?$item->tipeJurnal->name:'',
         'Akun Debet' => $item->akun_debet,
-        'Debet' => $item->debet,
+        'Debet' => (float)$item->debet,
         'Akun Kredit' => $item->akun_kredit,
-        'Kredit' => $item->kredit,
+        'Kredit' => (float)$item->kredit,
         'Keterangan' => $item->keterangan,
         'Tanggal' => $item->tgl_transaksi,
     ];

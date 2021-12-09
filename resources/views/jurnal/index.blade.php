@@ -75,6 +75,7 @@
                     <tr>
                         <th>#</th>
                         <th>Nomor</th>
+                        <th>No Anggota</th>
                         <th>Tipe Jurnal</th>
                         <th>Akun Debet</th>
                         <th style="width: 10%">Debet</th>
@@ -153,6 +154,11 @@
                                 return data.serial_number_view;
                             }
                         }
+                    },
+                    {
+                        mData: 'kode_anggota_view', sType: "string",
+                        className: "dt-body-center", "name": "kode_anggota_view",
+                       
                     },
                     {
                         mData: 'tipe_jurnal.name', sType: "string",
