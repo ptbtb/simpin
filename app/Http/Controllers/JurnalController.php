@@ -194,7 +194,7 @@ public function createExcel(Request $request)
 
                 $jurnal = $jurnal->whereHasMorph('jurnalable', [JurnalTemp::class], function($query) use($year, $month, $serialNumber)
                 {
-                    $query->whereYear('tgl_posting', '=', $year)->whereMonth('tgl_posting', '=', $month)->where('no_bukti', $serialNumber);
+                    $query->whereYear('tgl_posting', '=', $year)->whereMonth('tgl_posting', '=', $month)->where('serial_number', $serialNumber);
                 });
             }
             else if($tipeJurnal == 'TRU')
