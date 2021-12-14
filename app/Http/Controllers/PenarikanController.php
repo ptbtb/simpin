@@ -655,7 +655,7 @@ class PenarikanController extends Controller
                     $penarikan->kode_anggota = $request->kode_anggota;
                     $penarikan->kode_tabungan = $tabungan->kode_tabungan;
                     $penarikan->id_tabungan = $tabungan->id;
-                    $penarikan->besar_ambil = $item->besar_simpanan;
+                    $penarikan->besar_ambil = $tabungan->besar_tabungan;
                     $penarikan->code_trans = $tabungan->kode_trans;
                     $penarikan->tgl_ambil = Carbon::now();
                     $penarikan->u_entry = $user->name;
