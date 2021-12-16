@@ -36,7 +36,7 @@ class PenarikanImport
         $id_akun_debet = Code::where('CODE',$fields['id_bank'])->first();
         $penarikan = null;
         $cek = Penarikan::where('kode_anggota',$fields['kode_anggota'])
-                            ->where ('tgl_ambil',$fields['besar_ambil'])
+                            ->where ('tgl_ambil',$fields['tgl_ambil'])
                             ->where ('besar_ambil',$fields['besar_ambil'])
                             ->where('code_trans',$fields['code_trans'])
                             ->where('id_akun_debet',$id_akun_debet->id)->first();
