@@ -12,10 +12,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements Auditable
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens;
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.

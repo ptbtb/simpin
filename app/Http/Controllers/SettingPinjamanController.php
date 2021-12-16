@@ -25,8 +25,7 @@ class SettingPinjamanController extends Controller {
      */
     public function index() {
         $this->authorize('view jenis pinjaman', Auth::user());
-        $pinjaman = DB::table('t_jenis_pinjam')
-                ->get();
+        $pinjaman = JenisPinjaman::get();
         $data['pinjaman'] = $pinjaman;
         return view('/setting/pinjaman/index', ['data' => $data]);
     }

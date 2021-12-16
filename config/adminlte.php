@@ -638,6 +638,13 @@ return [
 
             ],
         ],
+         ['header' => 'SYS','can'  => ['view audit']],
+        [
+            'text' => 'Audit Log',
+            'url' => 'audit',
+            'icon' => 'fas fa-fw fa-list-alt',
+             'can'  => ['view audit'],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

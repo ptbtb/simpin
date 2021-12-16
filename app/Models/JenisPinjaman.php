@@ -6,11 +6,15 @@ use App\Models\View\ViewSaldo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class JenisPinjaman extends Model
+class JenisPinjaman extends Model implements Auditable
 {
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
+
+    
     protected $table = "t_jenis_pinjam";
     protected $primaryKey = "kode_jenis_pinjam";
     protected $keyType = 'string';

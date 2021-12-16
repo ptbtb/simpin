@@ -38,6 +38,7 @@ Route::get('/clear-cache', function() {
 });
 
 Route::get('generate-jkk', [MigrationController::class, 'generateJkkPrinted']);
+Route::get('audit', [App\Http\Controllers\AuditController::class, 'index']);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
