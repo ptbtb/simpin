@@ -48,7 +48,7 @@ class SimpananImport
                 $simpanan->kode_anggota = $fields['kode_anggota'] ;
                 $simpanan->u_entry = Auth::user()->name;
                 $simpanan->tgl_entri = $fields['tgl_entri'];
-                $simpanan->tgl_transaki = $fields['tgl_entri'];
+                $simpanan->tgl_transaksi = $fields['tgl_entri'];
                 $simpanan->kode_jenis_simpan = $fields['kode_jenis_simpan'] ;
                 $simpanan->keterangan = ($fields['keterangan'] ) ? $fields['keterangan']  : null;
                 $simpanan->id_akun_debet = ($idakundebet->id) ? $idakundebet->id : null;
@@ -67,7 +67,7 @@ class SimpananImport
                     $angsurSimpanan->kode_anggota = $fields['kode_anggota'] ;
                     $angsurSimpanan->u_entry = Auth::user()->name;
                     $angsurSimpanan->tgl_entri = $fields['tgl_entri'];
-                    $angsurSimpanan->tgl_transaki = $fields['tgl_entri'];
+                    $angsurSimpanan->tgl_transaksi = $fields['tgl_entri'];
                     $angsurSimpanan->created_at = Carbon::now();
                     $angsurSimpanan->updated_at = Carbon::now();
                     $angsurSimpanan->save();
