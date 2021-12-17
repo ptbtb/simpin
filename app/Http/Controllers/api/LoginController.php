@@ -51,7 +51,14 @@ class LoginController extends Controller
         ];
         return response()->json($response, 422);
             }
-        }    
+        }  
+        if(!$request->version){
+            $response = [
+            "message"=>"The given data was invalid.",
+            "errors"=>'Versi terbaru sudah tersedia, Mohon Update Aplikasi Anda Terlebih Dahulu'
+        ];
+        return response()->json($response, 422);
+        }   
         $token = $user->createToken('Auth Token')->accessToken;
         $response = [
             "message"=>"",
