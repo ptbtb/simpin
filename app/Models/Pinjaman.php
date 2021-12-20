@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Pinjaman extends Model {
+class Pinjaman extends Model implements Auditable
+{
 
     use HasFactory;
     use Userstamps;
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
 
     protected $table = "t_pinjam";
     protected $primaryKey = "id";
