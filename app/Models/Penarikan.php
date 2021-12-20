@@ -5,15 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Wildside\Userstamps\Userstamps;
 
 class Penarikan extends Model implements Auditable
 {
     use HasFactory;
     use \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
+     use Userstamps;
 
     protected $table = "t_pengambilan";
     protected $primaryKey = "kode_ambil";
-    protected $dates = ['tgl_ambil', 'tgl_acc','tgl_transaksi'];
+    protected $dates = ['tgl_ambil', 'tgl_acc','tgl_transaksi','deleted_at'];
     protected $fillable = ['kode_anggota', 'kode_tabungan','besar_ambil','tgl_ambil','keterangan','code_trans','u_entry'];
     protected $appends = ['serial_number_view', 'created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view'];
 

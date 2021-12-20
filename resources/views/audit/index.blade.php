@@ -36,6 +36,7 @@
                 <tr>
                     <th style="width: 5%">#</th>
                     <th style="width: 15%">Modul</th>
+                    <th >Action</th>
                     <th>id</th>
                     <th>Nilai lama</th>
                     <th>Nilai Baru</th>
@@ -48,6 +49,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->auditable_type }}</td>
+                    <td>{{ $item->event }}</td>
                     <td>{{ $item->auditable_id }}</td>
                     
                     <td>@foreach ($item->old_values as $key=>$old)

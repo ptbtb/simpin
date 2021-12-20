@@ -301,6 +301,9 @@
                     mRender : function(data, type, full)
                     {
                         var markup = '';
+                        @can ('delete penarikan')
+                        markup += '<a data-id="'+data+'"  class="text-white btn btn-sm btn-danger btn-hapus"<i class="fas fa-remove"></i>Hapus</a>';
+                        @endcan
 
                         @if (Auth::user()->isAnggota())
                             if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI }})
@@ -563,6 +566,87 @@
                 $('#my-modal').modal('show');
             });
             $('#jenisAkun').trigger( "change" );
+        });
+
+        $(document).on('click','.btn-hapus', function ()
+        {
+            var id = $(this).data('id');
+            var url = baseURL + '/penarikan/delete';
+
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                html: '<div class="form-group text-left"><label>Keterangan</label><textarea placeholder="Keterangan" name="keterangan" id="keterangan" class="form-control"></textarea></div>',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                },
+                validationMessage:'Password required',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    var keterangan = $('#keterangan').val();
+                    formData.append('_token', token);
+                    formData.append('id', id);
+                    formData.append('keterangan', keterangan);
+                    // getting selected checkboxes kode ambil(s)
+                    var ids_array = table
+                                    .rows({ selected: true })
+                                    .data()
+                                    .pluck('kode_ambil')
+                                    .toArray();
+                    if (ids_array.length != 0)
+                    {
+                        // append ids array into form
+                        formData.append('kode_ambil_ids', JSON.stringify(ids_array));
+                    }
+                    else
+                    {
+                        formData.append('kode_ambil_ids', '['+id+']');
+                    }
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your has been changed',
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.responseJSON.message,
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                });
+                }
+            });
         });
 
         $(document).on('click', '.btn-jurnal', function ()

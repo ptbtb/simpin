@@ -326,7 +326,8 @@ Route::group(['prefix' => 'penarikan'], function () {
 
         Route::get('keluar-anggota', [App\Http\Controllers\PenarikanController::class, 'showFormKeluarAnggota'])->name('show-form-keluar-anggota');
         Route::post('keluar-anggota', [App\Http\Controllers\PenarikanController::class, 'storeFormKeluarAnggota'])->name('store-form-keluar-anggota');
-        Route::get('delete', [App\Http\Controllers\PenarikanController::class, 'delete'])->name('penarikan-delete');
+        Route::get('delete/{id}', [App\Http\Controllers\PenarikanController::class, 'delete'])->name('penarikan-delete');
+        Route::post('delete', [App\Http\Controllers\PenarikanController::class, 'delete'])->name('penarikan-delete');
     });
 });
 

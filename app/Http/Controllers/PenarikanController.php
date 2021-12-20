@@ -724,4 +724,36 @@ class PenarikanController extends Controller
             return redirect()->back()->withErrors($message);
         }
     }
+
+    public function delete(Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('delete penarikan', $user);
+       try{
+        if (isset($request->kode_ambil_ids))
+            {
+                $kodeAmbilIds = json_decode($request->kode_ambil_ids);
+            }
+        
+            foreach ($kodeAmbilIds as $key => $kodeAmbilId)
+            {
+                $penarikan = Penarikan::find($kodeAmbilId);
+                if ($penarikan->jurnals->count()>0){
+                foreach ($penarikan->jurnals as $jurn){
+                    $jurn->delete();
+                }
+            }
+                $penarikan->delete();
+            }
+           
+        
+        
+
+       }catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '.$th->getFile().' || '.$th->getLine();
+            Log::info($message);
+            return redirect()->back()->withErrors($message);
+        }
+    }
 }
