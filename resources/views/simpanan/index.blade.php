@@ -99,9 +99,11 @@
                     <th style="width: 10%">Kode Simpan</th>
                     <th>Nama Anggota</th>
                     <th>Jenis Simpanan</th>
+                    <th>Periode</th>
                     <th>Besar Simpanan</th>
                     <th>User Entry</th>
                     <th>Status</th>
+                    
                     <th>Posting</th>
                     <th>Input</th>
                     <th style="width: 15%">Action</th>
@@ -130,6 +132,7 @@
                         <label>Besar Simpanan</label>
                         <input type="text" name="besar_simpanan" id="besar_simpanan" onkeypress="return isNumberKey(event)" class="form-control" placeholder="Besar Simpanan">
                     </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Submit</button>
@@ -217,6 +220,16 @@
                     }
                 },
                 {
+                    mData: 'periode_view', sType: "string",
+                    className: "dt-body-center", "name": "periode_view" ,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }
+                },
+                {
                     mData: 'besar_simpanan_rupiah', sType: "string",
                     className: "dt-body-center", "name": "besar_simpanan_rupiah"	,
                     mRender: function (data, type, full) {
@@ -246,6 +259,7 @@
                         return data;
                     }
                 },
+                
                 {
                     mData: 'tgl_transaksi', sType: "string",
                     className: "dt-body-center", "name": "tgl_transaksi" ,
@@ -273,7 +287,7 @@
                         var mark = '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
                         if(full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }})
                         {
-                            mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 text-white" data-action="edit" data-id="' + data + '" data-simpanan="' + full.besar_simpanan + '"><i class="fa fa-edit"></i> Edit</a>';
+                            mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 text-white" data-action="edit" data-id="' + data + '" data-simpanan="' + full.besar_simpanan + '" data-periode="' + full.periode_view + '"><i class="fa fa-edit"></i> Edit</a>';
                         }
                         mark = mark + '@can("edit simpanan")';
                             if(full.id_status_simpanan == {{ STATUS_SIMPANAN_MENUNGGU_APPROVAL }})
@@ -281,6 +295,9 @@
                                 mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITERIMA }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
                                 mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                             }
+                        mark = mark + '@endcan';
+                        mark = mark + '@can("delete simpanan")';
+                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '"  class="text-white btn mt-1 ml-1 btn-sm btn-danger btn-hapus"><i class="fas fa-remove"></i> Hapus</a>';
                         mark = mark + '@endcan';
                         return mark;
                     }
@@ -468,6 +485,70 @@
                     formData.append('_token', token);
                     formData.append('id', id);
                     formData.append('status', status);
+                    formData.append('password', password);
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your has been changed',
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.responseJSON.message,
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                    })
+                }
+            })
+
+        });
+
+        $(document).on('click', '.btn-hapus', function ()
+        {
+            var id = $(this).data('id');
+            var url = '{{ route("simpanan-delete") }}';
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                    validationMessage:'Password required',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    formData.append('_token', token);
+                    formData.append('id', id);
                     formData.append('password', password);
                     $.ajax({
                         type: 'post',

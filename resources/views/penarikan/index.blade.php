@@ -599,6 +599,7 @@
                     formData.append('_token', token);
                     formData.append('id', id);
                     formData.append('keterangan', keterangan);
+                    formData.append('password', password);
                     // getting selected checkboxes kode ambil(s)
                     var ids_array = table
                                     .rows({ selected: true })

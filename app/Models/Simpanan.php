@@ -5,16 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Wildside\Userstamps\Userstamps;
 
 class Simpanan extends Model implements Auditable
 {
     use HasFactory;
      use \OwenIt\Auditing\Auditable;
+      use SoftDeletes;
+     use Userstamps;
 
     protected $table = "t_simpan";
     protected $primaryKey = "kode_simpan";
-    protected $dates = ['tgl_mulai', 'tgl_entri', 'periode'];
-    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view', 'status_simpanan_view'];
+    protected $dates = ['tgl_mulai', 'tgl_entri', 'periode','deleted_at'];
+    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view', 'status_simpanan_view','periode_view'];
     protected $fillable = ['jenis_simpan', 'besar_simpanan','kode_anggota','u_entry','tgl_mulai','tgl_entri','kode_jenis_simpan','keterangan'];
 
     public function anggota()
@@ -52,6 +56,14 @@ class Simpanan extends Model implements Auditable
             return $this->tgl_entri->format('d M Y');
         }
         return $this->tgl_entri;
+    }
+    public function getPeriodeViewAttribute()
+    {
+        if ($this->periode)
+        {
+            return $this->periode->format('Y-m');
+        }
+        return $this->periode;
     }
 
     public function getTanggalMulaiAttribute()

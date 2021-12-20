@@ -289,6 +289,7 @@ Route::group(['prefix' => 'simpanan'], function () {
         Route::get('laporan', [App\Http\Controllers\SimpananController::class, 'laporan'])->name('laporan-simpanan');
         Route::post('laporan', [App\Http\Controllers\SimpananController::class, 'laporan'])->name('filter-laporan-simpanan');
         Route::get('laporan/excel', [App\Http\Controllers\SimpananController::class, 'laporanExcel'])->name('laporan-simpanan-excel');
+        Route::post('delete', [App\Http\Controllers\SimpananController::class, 'delete'])->name('simpanan-delete');
     });
 });
 

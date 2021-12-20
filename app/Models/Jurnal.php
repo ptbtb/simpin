@@ -5,11 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Wildside\Userstamps\Userstamps;
 
 class Jurnal extends Model implements Auditable
 {
     use HasFactory;
     use \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
+     use Userstamps;
     // use \Wildside\Userstamps;
     protected $table = 't_jurnal';
     protected $primaryKey = 'id';
@@ -24,6 +28,7 @@ class Jurnal extends Model implements Auditable
         'tgl_transaksi',
         
         ];
+        protected $dates = ['deleted_at'];
 
     /**
      * The accessors to append to the model's array form.

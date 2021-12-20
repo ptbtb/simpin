@@ -728,6 +728,11 @@ class PenarikanController extends Controller
     public function delete(Request $request)
     {
         $user = Auth::user();
+            $check = Hash::check($request->password, $user->password);
+            if (!$check) {
+                Log::error('Wrong Password');
+                return response()->json(['message' => 'Wrong Password'], 412);
+            }
         $this->authorize('delete penarikan', $user);
        try{
         if (isset($request->kode_ambil_ids))
@@ -746,7 +751,7 @@ class PenarikanController extends Controller
                 $penarikan->delete();
             }
            
-        
+         return response()->json(['message' => 'success'], 200);
         
 
        }catch (\Throwable $th)
