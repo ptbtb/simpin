@@ -70,7 +70,28 @@
 
 @section('js')
     <script>
-        $('#companyTable').DataTable();
+        $('#companyTable').DataTable({
+            dom: 'Bfrtip',
+        buttons: [
+        { extend: 'excelHtml5', footer: true, 
+        className: 'btn btn-info btn-sm', 
+        text: '<i class="fa fa-download"></i> Excel',
+        title: 'List Company',
+        exportOptions: {
+                    columns: [ 0,1, 2]
+                }
+    },
+    { extend: 'pdfHtml5', footer: true,
+    orientation: 'landscape',
+    className: 'btn btn-sm btn-default', 
+    text: '<i class="fa fa-download"></i>PDF',
+    title: 'List Company',
+    exportOptions: {
+                    columns: [ 0,1, 2]
+                }
+}
+]
+        });
         $('#companyTable').on('click', 'a.btn-edit', function ()
         {
             var data_id = $(this).data('id');
