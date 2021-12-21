@@ -58,7 +58,7 @@
                     <td>@foreach ($item->new_values as  $keys=>$new)
                         <b>{{ $keys }}</b>: {{ $new }}<br />
                     @endforeach</td>
-                    <td>{{ $item->user->name }}</td>
+                    <td>{{ ($item->user_id!==null)?$item->user->name:'' }}</td>
                     <td>{{ $item->created_at }}</td>
 
                 </tr>
