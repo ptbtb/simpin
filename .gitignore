@@ -26,3 +26,8 @@ nbproject/project.properties
 .idea/vcs.xml
 .rnd
 .rnd
+resources/views/vendor/adminlte/page.blade.php
+resources/views/vendor/adminlte/partials/common/brand-logo-xl.blade.php
+resources/views/vendor/adminlte/partials/common/brand-logo-xs.blade.php
+resources/views/vendor/adminlte/partials/navbar/menu-item.blade.php
+resources/views/vendor/adminlte/partials/sidebar/menu-item.blade.php
