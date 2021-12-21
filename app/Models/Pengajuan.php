@@ -12,8 +12,8 @@ class Pengajuan extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $table = "t_pengajuan";
-    //protected $primaryKey = "kode_pengajuan";
-    //protected $keyType = 'string';
+    protected $primaryKey = "kode_pengajuan";
+    protected $keyType = 'string';
     public $incrementing = false;
     protected $dates = ['tgl_pengajuan', 'tgl_acc'];
 
