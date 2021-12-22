@@ -110,11 +110,11 @@
                         @foreach ($listAngsuran as $angsuran)
                             <tr>
                                 <td><input type="number" name="angsuran_ke[]" value="{{ $angsuran->angsuran_ke }}"></td>
-                                <td><input type="number" name="besar_angsuran[]" value="{{ $angsuran->besar_angsuran }}"></td>
-                                <td><input type="number" name="jasa[]" value="{{ $angsuran->jasa }}"></td>
-                                <td><input type="number" name="total_angsuran" value="{{ $angsuran->total_angsuran }}"></td>
+                                <td><input type="text" class="toRupiah" name="besar_angsuran[]" value="{{ $angsuran->besar_angsuran }}"></td>
+                                <td><input type="text" class="toRupiah" name="jasa[]" value="{{ $angsuran->jasa }}"></td>
+                                <td><input type="text" class="toRupiah" name="total_angsuran" value="{{ $angsuran->total_angsuran }}"></td>
                                 <td><input type="date" name="jatuh_tempo[]" value="{{ $angsuran->jatuh_tempo->toDateString() }}"></td>
-                                <td><input type="number" name="besar_pembayaran[]" value="{{ $angsuran->besar_pembayaran }}"></td>
+                                <td><input type="text"  class="toRupiah"name="besar_pembayaran[]" value="{{ $angsuran->besar_pembayaran }}"></td>
                                 <td>
                                     <input type="date" name="tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->toDateString():'' }}">
                                 </td>
@@ -138,23 +138,18 @@
 <script src="{{ asset('js/collect.min.js') }}"></script>
 <script src="{{ asset('js/cleave.min.js') }}"></script>
 <script src="{{ asset('js/moment.js') }}"></script>
+<script src="{{ asset('js/cleave.min.js') }}"></script>
 <script>
     var rowAngsuran = {{ $listAngsuran->count() }};
-    function toRupiah(number)
+    function toRupiah(field)
     {
-        var stringNumber = number.toString();
-        var length = stringNumber.length;
-        var temp = length;
-        var res = "Rp ";
-        for (let i = 0; i < length; i++) {
-            res = res + stringNumber.charAt(i);
-            temp--;
-            if (temp % 3 == 0 && temp > 0)
-            {
-                res = res + ".";
-            }
-        }
-        return res;
+        new Cleave(field, {
+            numeralDecimalMark: ',',
+            delimiter: '.',
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            numeralDecimalScale: 4,
+        });
     }
     function isNumberKey(evt)
     {
@@ -169,11 +164,11 @@
     {
         var pattern = '<tr>' +
                             '<td><input type="number" name="angsuran_ke[]"></td>' +
-                            '<td><input type="number" name="besar_angsuran[]"></td>' +
-                            '<td><input type="number" name="jasa[]"></td>' +
-                            '<td><input type="number" name="total_angsuran"></td>' +
+                            '<td><input type="text" class="toRupiah"" name="besar_angsuran[]"></td>' +
+                            '<td><input type="text" class="toRupiah" name="jasa[]"></td>' +
+                            '<td><input type="text" class="toRupiah" name="total_angsuran"></td>' +
                             '<td><input type="date" name="jatuh_tempo[]"></td>' +
-                            '<td><input type="number" name="besar_pembayaran[]"></td>' +
+                            '<td><input type="text" class="toRupiah" name="besar_pembayaran[]"></td>' +
                             '<td>' +
                                 '<input type="date" name="tanggal_pembayaran[]">' +
                             '</td>' +
@@ -183,11 +178,19 @@
                         '</tr>';
 
         $('.table-body').append(pattern);
+
+        $('.toRupiah').toArray().forEach(function(field){
+            toRupiah(field);
+        });
     });
 
     $(document).on('click', '.btn-delete-row', function ()
     {
         $(this).parent().parent().remove();
+    });
+
+    $('.toRupiah').toArray().forEach(function(field){
+        toRupiah(field);
     });
 
 </script>
