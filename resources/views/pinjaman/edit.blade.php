@@ -35,9 +35,6 @@
                     </select>
                     <div class="text-danger" id="warningTextAnggota"></div>
                 </div>
-                
-
-            
                 <div class="col-md-6 form-group">
                     <label for="kode_jenis_pinjam">Jenis Simpanan</label>
                     {!! Form::select('kode_jenis_pinjam', $listJenisPinjaman,$pinjaman->kode_jenis_pinjam, ['id' => 'kode_jenis_pinjam', 'class' => 'form-control']) !!}
@@ -90,16 +87,50 @@
                 </div>
             </div>
 
-
-        </div>
-
-        <div class="col-md-12 form-group">
-            <button class="btn btn-sm btn-success" id="btnSubmit"><i class="fas fa-save"></i> Simpan</button>
-        </div>
-
-    </form>
-
-</div>
+            <hr>
+            <div class="d-flex">
+                <h5>List Angsuran</h5>
+                <a href="#" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Angsuran Ke</th>
+                            <th>Angsuran Pokok</th>
+                            <th>Jasa</th>
+                            <th>Total Angsuran</th>
+                            <th>Periode Pembayaran</th>
+                            <th>Besar Pembayaran</th>
+                            <th>Dibayar Pada Tanggal</th>
+                            <th>Status</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($listAngsuran as $angsuran)
+                            <tr id="{{ $loop->iteration }}">
+                                <td>{{ $angsuran->angsuran_ke }}</td>
+                                <td>Rp. {{ number_format($angsuran->besar_angsuran,0,",",".") }}</td>
+                                <td>Rp. {{ number_format($angsuran->jasa,0,",",".") }}</td>
+                                <td>Rp. {{ number_format($angsuran->total_angsuran,0,",",".") }}</td>
+                                <td>{{ $angsuran->jatuh_tempo->format('m-Y') }}</td>
+                                <td>Rp. {{ number_format($angsuran->besar_pembayaran,0,",",".") }}</td>
+                                <td>{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->format('d M Y'):'-' }}</td>
+                                <td>{{ $angsuran->statusAngsuran->name }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-sm btn-success" id="btnSubmit"><i class="fas fa-save"></i> Simpan</button>
+            </div>
+        </form>
+    </div>
 </div>
 @stop
 
@@ -108,7 +139,7 @@
 <script src="{{ asset('js/cleave.min.js') }}"></script>
 <script src="{{ asset('js/moment.js') }}"></script>
 <script>
-
+    var rowAngsuran = {{ $listAngsuran->count() }};
     function toRupiah(number)
     {
         var stringNumber = number.toString();

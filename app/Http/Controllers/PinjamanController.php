@@ -1624,6 +1624,7 @@ class PinjamanController extends Controller
         $data['listJenisPinjaman'] = $listJenisPinjaman;
         $data['title'] = 'Edit Pinjaman';
         $data['pinjaman'] = $pinjaman;
+        $data['listAngsuran'] = $pinjaman->listAngsuran;
         return view('pinjaman.edit', $data);
     }
 }
