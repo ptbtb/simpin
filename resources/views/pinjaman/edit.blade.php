@@ -88,9 +88,9 @@
             </div>
 
             <hr>
-            <div class="d-flex">
-                <h5>List Angsuran</h5>
-                <a href="#" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add</a>
+            <h5>List Angsuran</h5>
+            <div class="text-right mb-2">
+                <a class="btn btn-xs btn-success text-white btn-add-row"><i class="fa fa-plus"></i> Add row</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -103,23 +103,23 @@
                             <th>Periode Pembayaran</th>
                             <th>Besar Pembayaran</th>
                             <th>Dibayar Pada Tanggal</th>
-                            <th>Status</th>
-                            <th style="width: 10%">Action</th>
+                            <th style="min-width: 120px;">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-body">
                         @foreach ($listAngsuran as $angsuran)
-                            <tr id="{{ $loop->iteration }}">
-                                <td>{{ $angsuran->angsuran_ke }}</td>
-                                <td>Rp. {{ number_format($angsuran->besar_angsuran,0,",",".") }}</td>
-                                <td>Rp. {{ number_format($angsuran->jasa,0,",",".") }}</td>
-                                <td>Rp. {{ number_format($angsuran->total_angsuran,0,",",".") }}</td>
-                                <td>{{ $angsuran->jatuh_tempo->format('m-Y') }}</td>
-                                <td>Rp. {{ number_format($angsuran->besar_pembayaran,0,",",".") }}</td>
-                                <td>{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->format('d M Y'):'-' }}</td>
-                                <td>{{ $angsuran->statusAngsuran->name }}</td>
+                            <tr>
+                                <td><input type="number" name="angsuran_ke[]" value="{{ $angsuran->angsuran_ke }}"></td>
+                                <td><input type="number" name="besar_angsuran[]" value="{{ $angsuran->besar_angsuran }}"></td>
+                                <td><input type="number" name="jasa[]" value="{{ $angsuran->jasa }}"></td>
+                                <td><input type="number" name="total_angsuran" value="{{ $angsuran->total_angsuran }}"></td>
+                                <td><input type="date" name="jatuh_tempo[]" value="{{ $angsuran->jatuh_tempo->toDateString() }}"></td>
+                                <td><input type="number" name="besar_pembayaran[]" value="{{ $angsuran->besar_pembayaran }}"></td>
                                 <td>
-                                    <a href="#" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                    <input type="date" name="tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->toDateString():'' }}">
+                                </td>
+                                <td>
+                                    <a class="btn btn-xs btn-danger text-white btn-delete-row"><i class="fa fa-trash"></i> Delete Row</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -165,6 +165,30 @@
         return true;
     }
 
+    $(document).on('click', '.btn-add-row', function ()
+    {
+        var pattern = '<tr>' +
+                            '<td><input type="number" name="angsuran_ke[]"></td>' +
+                            '<td><input type="number" name="besar_angsuran[]"></td>' +
+                            '<td><input type="number" name="jasa[]"></td>' +
+                            '<td><input type="number" name="total_angsuran"></td>' +
+                            '<td><input type="date" name="jatuh_tempo[]"></td>' +
+                            '<td><input type="number" name="besar_pembayaran[]"></td>' +
+                            '<td>' +
+                                '<input type="date" name="tanggal_pembayaran[]">' +
+                            '</td>' +
+                            '<td>' +
+                                '<a class="btn btn-xs btn-danger text-white btn-delete-row"><i class="fa fa-trash"></i> Delete Row</a>' +
+                            '</td>' +
+                        '</tr>';
+
+        $('.table-body').append(pattern);
+    });
+
+    $(document).on('click', '.btn-delete-row', function ()
+    {
+        $(this).parent().parent().remove();
+    });
 
 </script>
 @stop
