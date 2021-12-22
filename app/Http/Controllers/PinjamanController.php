@@ -1614,4 +1614,16 @@ class PinjamanController extends Controller
         }
         return redirect()->back()->withSuccess('Diskon berhasil disimpan');
     }
+
+    public function edit(Request $request){
+        $this->authorize('edit pinjaman', Auth::user());
+        $pinjaman = Pinjaman::where('kode_pinjam',$request->id)->first();
+        $listJenisPinjaman = JenisPinjaman::pluck('nama_pinjaman','kode_jenis_pinjam');
+        $data['anggota'] = Anggota::find($pinjaman->kode_anggota);
+        $data['title'] = "Add Saldo Awal";
+        $data['listJenisPinjaman'] = $listJenisPinjaman;
+        $data['title'] = 'Edit Pinjaman';
+        $data['pinjaman'] = $pinjaman;
+        return view('pinjaman.edit', $data);
+    }
 }
