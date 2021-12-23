@@ -74,8 +74,8 @@
                     <div class="col-md-6 form-group">
                         <label>Jenis Pengajuan</label>
                         <select name="jenis_pengajuan" class="form-control" id="jenisPengajuan">
-                            <option value="1">Top  Up</option>
                             <option value="0">Pengajuan Pinjaman</option>
+                            <option value="1">Top  Up</option>
                         </select>
                     </div>
                     <div class="col-md-6 form-group" style="display: none" id="panelTopup">
@@ -90,8 +90,8 @@
                     <div class="col-md-6 form-group" id="jenisPengajuanCover" style="display: none">
                         <label>Jenis Pengajuan</label>
                         <select name="jenis_pengajuan" class="form-control" id="jenisPengajuan">
-                            <option value="1">Top Up</option>
                             <option value="0">Pengajuan Pinjaman</option>
+                            <option value="1">Top Up</option>
                         </select>
                     </div>
                     <div class="col-md-6 form-group" style="display: none" id="panelTopup">
