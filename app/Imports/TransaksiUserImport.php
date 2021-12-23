@@ -26,6 +26,7 @@ class TransaksiUserImport
 		try
 		{
 			\Log::info($transaksi['NIPP']);
+			
 			if($transaksi['THN']){
 			$period_raw=$transaksi['THN'].'-'.sprintf('%02d', $transaksi['BLN']);
         	 //dd($period_raw);die;
@@ -33,7 +34,8 @@ class TransaksiUserImport
 			$periode=Carbon::createFromFormat('Y-m',$period_raw)->endOfMonth();
 			$idakun=Code::where('CODE',$transaksi['COA_PERANTARA'])->first();
 			$anggota=Anggota::where('kode_anggota',$transaksi['NO_ANG'])->first();
-			$tgl_transaksi = $transaksi['TGL_TRANSAKSI']->format('Y-m-d');
+			$tgl_transaksi = Carbon::parse($transaksi['TGL_TRANSAKSI'])->format('Y-m-d');
+			\Log::info($tgl_transaksi);
 			if($transaksi['S_WAJIB']>0){
 				$check= Simpanan::where('kode_jenis_simpan','411.12.000')
 				->where('kode_anggota',$transaksi['NO_ANG'])

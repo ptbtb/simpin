@@ -38,7 +38,8 @@ Route::get('/clear-cache', function() {
 });
 
 Route::get('generate-jkk', [MigrationController::class, 'generateJkkPrinted']);
-Route::get('audit', [App\Http\Controllers\AuditController::class, 'index']);
+Route::get('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
+Route::post('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -280,6 +281,9 @@ Route::group(['prefix' => 'simpanan'], function () {
         Route::get('ajax/payment-value', [App\Http\Controllers\SimpananController::class, 'paymentValue'])->name('ajax-simpanan-payment-value');
         Route::post('edit-simpanan', [App\Http\Controllers\SimpananController::class, 'update'])->name('simpanan-edit');
         Route::post('update-status', [App\Http\Controllers\SimpananController::class, 'updateStatusSimpanan'])->name('simpanan-update-status');
+         Route::get('pendingJurnal', [App\Http\Controllers\SimpananController::class, 'pendingJurnal'])->name('simpanan-pending-jurnal');
+         Route::post('pendingJurnal', [App\Http\Controllers\SimpananController::class, 'pendingJurnal'])->name('simpanan-pending-jurnal');
+         Route::post('postJurnal', [App\Http\Controllers\SimpananController::class, 'postPendingJurnal'])->name('simpanan-post-jurnal');
 
         Route::group(['prefix' => 'card'], function () {
             Route::get('', [App\Http\Controllers\SimpananController::class, 'indexCard'])->name('simpanan-index-card');
@@ -532,6 +536,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
     Route::get('cleandoubleperiod', [App\Http\Controllers\AdminController::class, 'cleanDoublePeriod'])->name('admin-clean-double-period');
      Route::get('cekreupload', [App\Http\Controllers\AdminController::class, 'cekjreupload'])->name('admin-cek-reupload');
      Route::get('ceksimpanannojurnal', [App\Http\Controllers\AdminController::class, 'ceksimpanannojurnal'])->name('admin-cek-simpanan-nojurnal');
+     Route::get('postsimpanannojurnal', [App\Http\Controllers\AdminController::class, 'postsimpanannojurnal'])->name('admin-post-simpanan-nojurnal');
      Route::get('cekjurnalnotrans', [App\Http\Controllers\AdminController::class, 'cekjurnalnotrans'])->name('admin-cek-jurnal-notrans');
      Route::get('cekangsuran', [App\Http\Controllers\AdminController::class, 'cekangsuran'])->name('admin-cek-cekangsuran');
     

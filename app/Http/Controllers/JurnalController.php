@@ -236,15 +236,20 @@ public function createExcel(Request $request)
         }
         if($request->code){
            $jurnal = $jurnal
-           ->where('akun_debet', 'like', '%' . $request->code . '%')
-           ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+           ->where(function ($query) use($request) {
+
+             $query->where('akun_debet', 'like', '%' . $request->code . '%')
+             ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+             
+     });
+
        }
        
 
        if($request->keterangan)
-       {
-        $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
-    }
+        {
+            $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
+        }
 
     $jurnal = $jurnal->orderBy('tgl_transaksi', 'desc')->get();
     $data['jurnal']= $jurnal;

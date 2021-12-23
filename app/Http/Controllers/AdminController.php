@@ -136,17 +136,37 @@ class AdminController extends Controller
 
         $trans=Simpanan::
                     where('mutasi',0) 
-                    ->wherenotin('u_entry',['Admin BTB']) 
+                    ->wherenotin('u_entry',['Admin BTB','System']) 
                     ->whereDoesntHave('jurnals')
                      // ->toSql();
                       ->get();                               
 
-        dd($trans[0]);
+        dd($trans);
 
-        $simpanan = Simpanan::where('u_entry','<>','Admin BTB')
-        ->where('mutasi',0)
-        ->whereDoesntHave('jurnals')->get();
+        
     }
+    public function postsimpanannojurnal(){
+       
+        
+
+        $trans=Simpanan::
+                    where('mutasi',0) 
+                     ->wherenotin('u_entry',['Admin BTB','System']) 
+                    ->whereDoesntHave('jurnals')->limit(500)
+                     // ->toSql();
+                      ->get();                               
+
+        foreach ($trans as $simpanan){
+            if (is_null($simpanan->serial_number)){
+                            $simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                            $simpanan->save();
+                        }
+            JurnalManager::createJurnalSimpanan($simpanan);
+        }
+
+        
+    }
+
     public function cekjurnalnotrans(){
        
         

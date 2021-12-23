@@ -253,7 +253,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         {
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-            $jurnal->nomer = $simpanan->tgl_transaksi->format('Ymd').(Jurnal::count()+1);
+            $jurnal->nomer = Carbon::parse($simpanan->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
             $jurnal->akun_kredit = $simpanan->kode_jenis_simpan;
             $jurnal->kredit = $simpanan->besar_simpanan;
             if($simpanan->akunDebet)
@@ -266,8 +266,11 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             }
             $jurnal->debet = $simpanan->besar_simpanan;
             $jurnal->keterangan = 'Simpanan '.strtolower($simpanan->jenis_simpan) . ' anggota '. ucwords(strtolower($simpanan->anggota->nama_anggota));
-            $jurnal->created_by = Auth::user()->id;
-            $jurnal->updated_by = Auth::user()->id;
+            $jurnal->created_by = $simpanan->created_by;
+            if($jurnal->updated_by){
+                $jurnal->updated_by = $simpanan->updated_by;
+            }
+            
              $jurnal->tgl_transaksi = $simpanan->tgl_transaksi;
 
             // save as polymorphic

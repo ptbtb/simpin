@@ -941,4 +941,61 @@ public function showCard($kodeAnggota)
         return redirect()->back()->withErrors($message);
     }
 }
+
+public function pendingJurnal(Request $request){
+
+   $this->authorize('posting jurnal', Auth::user());
+   if(!$request->from)
+   {          
+    $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+}
+if(!$request->to)
+{          
+    $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+}
+$startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
+$endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
+$trans=Simpanan::
+where('mutasi',0) 
+->wherenotin('u_entry',['Admin BTB','System']) 
+->whereBetween('tgl_transaksi',[ $startUntilPeriod,$endUntilPeriod]) 
+->whereDoesntHave('jurnals')->limit(500)
+                     // ->toSql();
+->get();       
+
+$data['title'] = 'List Pending Jurnal Simpanan';
+$data['list'] = $trans;
+$data['request'] = $request;
+
+return view('simpanan.jurnalpending', $data);
+}
+
+public function postPendingJurnal(Request $request){
+
+   $this->authorize('posting jurnal', Auth::user());
+   $kodeSimpan = $request->kode_simpan;
+   try{
+    foreach ($kodeSimpan as $id){
+        $simpanan = Simpanan::find($id);
+        $anggota = Anggota::where('kode_anggota',$simpanan->kode_anggota)->first();
+        if(!$anggota){
+             return redirect()->back()->withErrors('Gagal Poting Anggota '.$simpanan->kode_anggota.' tidak ditemukan di Master Anggota');
+        }
+        if (is_null($simpanan->serial_number)){
+            $simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+            $simpanan->save();
+        }
+
+        JurnalManager::createJurnalSimpanan($simpanan);
+    }
+    return redirect()->back()->withSuccess('Posting Berhasil');
+}catch (\Throwable $th)
+{
+    $message = $th->getMessage().' || '.$th->getFile().' || '.$th->getLine();
+    Log::info($message);
+    return redirect()->back()->withErrors($message);
+}
+
+}
+
 }
