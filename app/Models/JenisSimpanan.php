@@ -38,4 +38,15 @@ class JenisSimpanan extends Model
     {
         return $this->hasMany(Tabungan::class, 'kode_trans', 'kode_jenis_simpan');
     }
+
+    /**
+     * Scope a query to only include simpanan khsusu pagu
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeKhususPagu($query)
+    {
+        return $query->where('kode_jenis_simpan', JENIS_SIMPANAN_KHUSUS_PAGU);
+    }
 }

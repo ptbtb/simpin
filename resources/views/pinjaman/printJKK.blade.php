@@ -68,12 +68,21 @@
             @endphp
         @endforeach
         <tr>
-            <td rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}"></td>
-            <td colspan="3" rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}">DETAIL</td>
+            @php
+                $rowspan = ($pengajuan->pengajuanTopup->count())? 6:4;
+                if($pengajuan->transfer_simpanan_pagu)
+                {
+                    $rowspan = $rowspan + 1;
+                    $totalcredited = $totalcredited - $pengajuan->transfer_simpanan_pagu;
+                    $totaldebited = $totaldebited - $pengajuan->transfer_simpanan_pagu;
+                }
+            @endphp
+            <td rowspan="{{ $rowspan }}"></td>
+            <td colspan="3" rowspan="{{ $rowspan }}">DETAIL</td>
             <td>Besar Pinjaman</td>
             <td>{{ $pengajuan->viewBesarPinjaman }}</td>
-            <td colspan="2" rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}"></td>
-            <td rowspan="{{ ($pengajuan->pengajuanTopup->count())? 6:4 }}"></td>
+            <td colspan="2" rowspan="{{ $rowspan }}"></td>
+            <td rowspan="{{ $rowspan }}"></td>
         </tr>
         @if ($pengajuan->pengajuanTopup->count())
             <tr>
@@ -93,6 +102,12 @@
             <td>Provisi</td>
             <td>({{ $pengajuan->viewProvisi }})</td>
         </tr>
+        @if ($pengajuan->transfer_simpanan_pagu)
+            <tr>
+                <td>Simpanan Pagu</td>
+                <td>(Rp {{ number_format($pengajuan->transfer_simpanan_pagu, '2', ',', '.') }})</td>
+            </tr>
+        @endif
         <tr>
             <td>Biaya Admin</td>
             <td>({{ $pengajuan->viewBiayaAdmin }})</td>

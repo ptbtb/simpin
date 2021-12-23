@@ -224,7 +224,6 @@ class SimpananController extends Controller
             }
             return redirect()->route('simpanan-list')->withSuccess('Berhasil menambah transaksi');
         } catch (\Throwable $th) {
-            dd($th);
             Log::error($th->getMessage().'||'.$th->getFile().'||'.$th->getLine());
             return redirect()->back()->withError('Gagal menyimpan data');
         }

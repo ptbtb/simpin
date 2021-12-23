@@ -4,8 +4,10 @@ namespace App\Managers;
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
+use App\Models\Pengajuan;
 use App\Models\Simpanan;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class SimpananManager 
@@ -139,6 +141,28 @@ class SimpananManager
                 $simpanan->save();
             });
         
+    }
+
+    public static function createSimpananPagu(Pengajuan $pengajuan)
+    {
+        $jenisSimpanan = JenisSimpanan::khususPagu()->first();
+        $nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
+        $simpanan = new Simpanan();
+        $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
+        $simpanan->besar_simpanan = $pengajuan->transfer_simpanan_pagu;
+        $simpanan->kode_anggota = $pengajuan->kode_anggota;
+        $simpanan->u_entry = Auth::user()->name;
+        $simpanan->tgl_entri = Carbon::now();
+        $simpanan->tgl_transaksi = Carbon::now();
+        $simpanan->periode = Carbon::now();
+        $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
+        $simpanan->keterangan = "Simpanan pagu dari pengajuan pinjaman ". $pengajuan->kode_pengajuan;
+        $simpanan->id_akun_debet = null;
+        $simpanan->serial_number = $nextSerialNumber;
+        $simpanan->save();
+
+        JurnalManager::createJurnalSimpanan($simpanan);
     }
 }
 

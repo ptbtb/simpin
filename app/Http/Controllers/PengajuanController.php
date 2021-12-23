@@ -34,7 +34,6 @@ class PengajuanController extends Controller
     {
         try
         {
-            \Log::info('hit');
             $listPengajuan = Pengajuan::whereIn('kode_pengajuan', $request->kode_pengajuan)
                                         ->get();
 
