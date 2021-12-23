@@ -977,6 +977,10 @@ public function postPendingJurnal(Request $request){
    try{
     foreach ($kodeSimpan as $id){
         $simpanan = Simpanan::find($id);
+        $anggota = Anggota::where('kode_anggota',$simpanan->kode_anggota)->first();
+        if(!$anggota){
+             return redirect()->back()->withErrors('Gagal Poting Anggota '.$simpanan->kode_anggota.' tidak ditemukan di Master Anggota');
+        }
         if (is_null($simpanan->serial_number)){
             $simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
             $simpanan->save();
