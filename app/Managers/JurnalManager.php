@@ -253,7 +253,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         {
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-            $jurnal->nomer = $simpanan->tgl_transaksi->format('Ymd').(Jurnal::count()+1);
+            $jurnal->nomer = Carbon::parse($simpanan->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
             $jurnal->akun_kredit = $simpanan->kode_jenis_simpan;
             $jurnal->kredit = $simpanan->besar_simpanan;
             if($simpanan->akunDebet)
