@@ -74,7 +74,7 @@
                     <div class="col-md-6 form-group">
                         <label>Jenis Pengajuan</label>
                         <select name="jenis_pengajuan" class="form-control" id="jenisPengajuan">
-                            <option value="1">Top   p</option>
+                            <option value="1">Top  Up</option>
                             <option value="0">Pengajuan Pinjaman</option>
                         </select>
                     </div>
