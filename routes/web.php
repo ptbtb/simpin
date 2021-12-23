@@ -281,6 +281,9 @@ Route::group(['prefix' => 'simpanan'], function () {
         Route::get('ajax/payment-value', [App\Http\Controllers\SimpananController::class, 'paymentValue'])->name('ajax-simpanan-payment-value');
         Route::post('edit-simpanan', [App\Http\Controllers\SimpananController::class, 'update'])->name('simpanan-edit');
         Route::post('update-status', [App\Http\Controllers\SimpananController::class, 'updateStatusSimpanan'])->name('simpanan-update-status');
+         Route::get('pendingJurnal', [App\Http\Controllers\SimpananController::class, 'pendingJurnal'])->name('simpanan-pending-jurnal');
+         Route::post('pendingJurnal', [App\Http\Controllers\SimpananController::class, 'pendingJurnal'])->name('simpanan-pending-jurnal');
+         Route::post('postJurnal', [App\Http\Controllers\SimpananController::class, 'postPendingJurnal'])->name('simpanan-post-jurnal');
 
         Route::group(['prefix' => 'card'], function () {
             Route::get('', [App\Http\Controllers\SimpananController::class, 'indexCard'])->name('simpanan-index-card');
