@@ -82,13 +82,13 @@ class SimpananController extends Controller
             $simpanan = $simpanan->where('mutasi', 1);
         }else
         if ($request->jenistrans=='T') {
-         $simpanan = $simpanan->where('mutasi', 0);
-     }else{
-         $simpanan = $simpanan;
-     }
-     $simpanan = $simpanan->orderBy('tgl_transaksi', 'desc');
-     return DataTables::eloquent($simpanan)->make(true);
- }
+           $simpanan = $simpanan->where('mutasi', 0);
+       }else{
+           $simpanan = $simpanan;
+       }
+       $simpanan = $simpanan->orderBy('tgl_transaksi', 'desc');
+       return DataTables::eloquent($simpanan)->make(true);
+   }
 
     /**
      * Show the form for creating a new resource.
@@ -443,25 +443,25 @@ class SimpananController extends Controller
             $listSimpanan = $listSimpanan->where('mutasi', 1);
         }else
         if ($request->jenistrans=='T') {
-         $listSimpanan = $listSimpanan->where('mutasi', 0);
-     }else{
-         $listSimpanan = $listSimpanan;
-     }
+           $listSimpanan = $listSimpanan->where('mutasi', 0);
+       }else{
+           $listSimpanan = $listSimpanan;
+       }
 
         // $listSimpanan = $listSimpanan->get();
-     $listSimpanan = $listSimpanan->orderBy('periode', 'desc')->get();
+       $listSimpanan = $listSimpanan->orderBy('periode', 'desc')->get();
 
         // share data to view
-     view()->share('listSimpanan', $listSimpanan);
-     $pdf = PDF::loadView('simpanan.excel', $listSimpanan)->setPaper('a4', 'landscape');
+       view()->share('listSimpanan', $listSimpanan);
+       $pdf = PDF::loadView('simpanan.excel', $listSimpanan)->setPaper('a4', 'landscape');
 
         // download PDF file with download method
-     $filename = 'export_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
-     return $pdf->download($filename);
- }
+       $filename = 'export_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
+       return $pdf->download($filename);
+   }
 
- public function createExcel(Request $request)
- {
+   public function createExcel(Request $request)
+   {
     $user = Auth::user();
     $this->authorize('view history simpanan', $user);
     if ($user->roles->first()->id == ROLE_ANGGOTA) {
@@ -916,17 +916,17 @@ public function showCard($kodeAnggota)
         }
 
         public function delete(Request $request){
-         $user = Auth::user();
-         $check = Hash::check($request->password, $user->password);
-         if (!$check) {
+           $user = Auth::user();
+           $check = Hash::check($request->password, $user->password);
+           if (!$check) {
             Log::error('Wrong Password');
             return response()->json(['message' => 'Wrong Password'], 412);
         }
         $this->authorize('delete simpanan', $user);
         try{
 
-           $simpanan = Simpanan::find($request->id);
-           if ($simpanan->jurnals->count()>0){
+         $simpanan = Simpanan::find($request->id);
+         if ($simpanan->jurnals->count()>0){
             foreach ($simpanan->jurnals as $jurn){
                 $jurn->delete();
             }
@@ -944,8 +944,9 @@ public function showCard($kodeAnggota)
 
 public function pendingJurnal(Request $request){
 
- if(!$request->from)
- {          
+   $this->authorize('posting jurnal', Auth::user());
+   if(!$request->from)
+   {          
     $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
 }
 if(!$request->to)
@@ -970,25 +971,27 @@ return view('simpanan.jurnalpending', $data);
 }
 
 public function postPendingJurnal(Request $request){
- $kodeSimpan = $request->kode_simpan;
- try{
-    foreach ($kodeSimpan as $id){
-    $simpanan = Simpanan::find($id);
-    if (is_null($simpanan->serial_number)){
-        $simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
-        $simpanan->save();
-    }
 
-    JurnalManager::createJurnalSimpanan($simpanan);
-}
- return redirect()->back()->withSuccess('Posting Berhasil');
- }catch (\Throwable $th)
-    {
-        $message = $th->getMessage().' || '.$th->getFile().' || '.$th->getLine();
-        Log::info($message);
-        return redirect()->back()->withErrors($message);
+   $this->authorize('posting jurnal', Auth::user());
+   $kodeSimpan = $request->kode_simpan;
+   try{
+    foreach ($kodeSimpan as $id){
+        $simpanan = Simpanan::find($id);
+        if (is_null($simpanan->serial_number)){
+            $simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+            $simpanan->save();
+        }
+
+        JurnalManager::createJurnalSimpanan($simpanan);
     }
- 
+    return redirect()->back()->withSuccess('Posting Berhasil');
+}catch (\Throwable $th)
+{
+    $message = $th->getMessage().' || '.$th->getFile().' || '.$th->getLine();
+    Log::info($message);
+    return redirect()->back()->withErrors($message);
+}
+
 }
 
 }
