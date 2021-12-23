@@ -29,6 +29,27 @@
 
 @section('content')
 <div class="card">
+    <div class="card-header">
+         <form action="{{ route('audit') }}" method="post">
+                @csrf
+        <div class="row">
+            <div class="col-md-3">
+                <label>Dari</label>
+                <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="from" name="from" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y') }}" autocomplete="off" />
+            </div>
+            <div class="col-md-3">
+                <label>Sampai</label>
+                <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}" autocomplete="off" />
+            </div>
+        </div>
+        <div class="row">
+        <div class="col-md-12 mt-1 form-group text-center">
+                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
+                    </div>
+                </div>
+    </form>
+        
+    </div>
 
     <div class="card-body table-responsive">
         <table class="table table-striped">
@@ -70,7 +91,15 @@
 @endsection
 
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script>
     $('.table').DataTable();
+    $('.datepicker').datepicker({
+        format: "dd-mm-yyyy"
+    });
+
+    $('input.datepicker').bind('keyup keydown keypress', function (evt) {
+        return true;
+    });
 </script>
 @endsection

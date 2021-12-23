@@ -266,8 +266,11 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             }
             $jurnal->debet = $simpanan->besar_simpanan;
             $jurnal->keterangan = 'Simpanan '.strtolower($simpanan->jenis_simpan) . ' anggota '. ucwords(strtolower($simpanan->anggota->nama_anggota));
-            $jurnal->created_by = Auth::user()->id;
-            $jurnal->updated_by = Auth::user()->id;
+            $jurnal->created_by = $simpanan->created_by;
+            if($jurnal->updated_by){
+                $jurnal->updated_by = $simpanan->updated_by;
+            }
+            
              $jurnal->tgl_transaksi = $simpanan->tgl_transaksi;
 
             // save as polymorphic

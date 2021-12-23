@@ -17,12 +17,23 @@ class AuditController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('view audit', Auth::user());
-        $audit= Audit::orderby('created_at','desc')->get();
+        if(!$request->from)
+            {          
+                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+            }
+            if(!$request->to)
+            {          
+                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+            }
+            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
+           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
+        $audit= Audit::wherebetween('created_at',[$startUntilPeriod,$endUntilPeriod])->orderby('created_at','desc')->get();
         $data['title'] = 'Audit Log';
         $data['list'] = $audit;
+        $data['request'] = $request;
         return view('audit.index', $data);
     }
 

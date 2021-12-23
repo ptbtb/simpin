@@ -38,7 +38,8 @@ Route::get('/clear-cache', function() {
 });
 
 Route::get('generate-jkk', [MigrationController::class, 'generateJkkPrinted']);
-Route::get('audit', [App\Http\Controllers\AuditController::class, 'index']);
+Route::get('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
+Route::post('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -532,6 +533,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
     Route::get('cleandoubleperiod', [App\Http\Controllers\AdminController::class, 'cleanDoublePeriod'])->name('admin-clean-double-period');
      Route::get('cekreupload', [App\Http\Controllers\AdminController::class, 'cekjreupload'])->name('admin-cek-reupload');
      Route::get('ceksimpanannojurnal', [App\Http\Controllers\AdminController::class, 'ceksimpanannojurnal'])->name('admin-cek-simpanan-nojurnal');
+     Route::get('postsimpanannojurnal', [App\Http\Controllers\AdminController::class, 'postsimpanannojurnal'])->name('admin-post-simpanan-nojurnal');
      Route::get('cekjurnalnotrans', [App\Http\Controllers\AdminController::class, 'cekjurnalnotrans'])->name('admin-cek-jurnal-notrans');
      Route::get('cekangsuran', [App\Http\Controllers\AdminController::class, 'cekangsuran'])->name('admin-cek-cekangsuran');
     
