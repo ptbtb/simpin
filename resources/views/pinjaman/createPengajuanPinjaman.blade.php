@@ -61,12 +61,21 @@
                         </select>
                     </div>
                 @endif
+                <div class="col-md-6 form-group">
+                    <label>Jenis Pinjaman</label>
+                    <select name="jenis_pinjaman" class="form-control" required id="jenisPinjaman">
+                        <option value="">Pilih Salah Satu</option>
+                        @foreach ($listJenisPinjaman as $jenisPinjaman)
+                            <option value="{!! $jenisPinjaman->kode_jenis_pinjam !!}">{{ $jenisPinjaman->nama_pinjaman }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 @if ($listPinjaman && $listPinjaman->count() > 0)
                     <div class="col-md-6 form-group">
                         <label>Jenis Pengajuan</label>
                         <select name="jenis_pengajuan" class="form-control" id="jenisPengajuan">
+                            <option value="1">Top   p</option>
                             <option value="0">Pengajuan Pinjaman</option>
-                            <option value="1">Top Up</option>
                         </select>
                     </div>
                     <div class="col-md-6 form-group" style="display: none" id="panelTopup">
@@ -81,8 +90,8 @@
                     <div class="col-md-6 form-group" id="jenisPengajuanCover" style="display: none">
                         <label>Jenis Pengajuan</label>
                         <select name="jenis_pengajuan" class="form-control" id="jenisPengajuan">
-                            <option value="0">Pengajuan Pinjaman</option>
                             <option value="1">Top Up</option>
+                            <option value="0">Pengajuan Pinjaman</option>
                         </select>
                     </div>
                     <div class="col-md-6 form-group" style="display: none" id="panelTopup">
@@ -91,15 +100,6 @@
                         </select>
                     </div>
                 @endif
-                <div class="col-md-6 form-group">
-                    <label>Jenis Pinjaman</label>
-                    <select name="jenis_pinjaman" class="form-control" required id="jenisPinjaman">
-                        <option value="">Pilih Salah Satu</option>
-                        @foreach ($listJenisPinjaman as $jenisPinjaman)
-                            <option value="{!! $jenisPinjaman->kode_jenis_pinjam !!}">{{ $jenisPinjaman->nama_pinjaman }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 <div class="col-md-6 form-group">
                     <label>Sumber Dana</label>
                     <select name="sumber_dana" class="form-control" required id="sumberDana">
@@ -165,6 +165,8 @@
         var sumberDana = collect(@json($sumberDana));
         var group_id = null;
         var arrAnggota = collect([]);
+        var selectedAnggotaId = 0;
+        var selectedJenisPinjaman = 0;
 
         $(document).ready(function ()
         {
@@ -188,6 +190,7 @@
                 var kode_anggota = $('#anggotaName').val();
                 var selectedId = $(this).find(":selected").val();
                 var besarPinjaman = $('#besarAngsuran').val();
+                selectedJenisPinjaman = jenisPinjaman.where('kode_jenis_pinjam', selectedId).first().kategori_jenis_pinjaman_id;
                 updateInfo(selectedId, kode_anggota);
                 if (selectedId != '' && selectedId != null)
                 {
@@ -212,7 +215,85 @@
                         $('#lamaAngsuran').attr('readonly', true);
                     }
                 }
+
+                if(selectedAnggotaId && selectedJenisPinjaman)
+                {
+                    // search pinjaman
+                    $.ajax({
+                        url: "{{ route('searchPinjamanAnggota', ['']) }}/" + kode_anggota+"?jenisPinjaman="+selectedJenisPinjaman,
+                        dataType: 'json',
+                        success: function (data) {
+                            if(data.length > 0)
+                            {
+                                $('#jenisPengajuanCover').show('slow');
+                                $('#panelTopup').show('slow');
+                                $('#topupPinjaman').select2({
+                                    placeholder: "Select one",
+                                });
+                                var res = collect(data);
+                                var pattern = '';
+                                res.each(function (pinjaman)
+                                {
+                                    pattern = pattern + '<option value="'+pinjaman.kode_pinjam+'">'+pinjaman.nama_pinjaman+'</option>';
+                                });
+                                $('#topupPinjaman').html(pattern);
+                            }
+                            else
+                            {
+                                $('#jenisPengajuanCover').hide('slow');
+                                $('#topupPinjaman').html('');
+                                $('#panelTopup').hide('slow');
+                            }
+                        }
+                    });
+                }
                 
+            });
+
+            $('#anggotaName').on('change', function ()
+            {
+                var selectedId = $('#jenisPinjaman').find(":selected").val();
+                var kode_anggota = $(this).val();
+                if (kode_anggota == null)
+                {
+                    kode_anggota = $(this).find(":selected").val();
+                }
+
+                selectedAnggotaId = kode_anggota;
+
+                updateInfo(selectedId, kode_anggota);
+
+                if(selectedAnggotaId && selectedJenisPinjaman)
+                {
+                    // search pinjaman
+                    $.ajax({
+                        url: "{{ route('searchPinjamanAnggota', ['']) }}/" + kode_anggota+"?jenisPinjaman="+selectedJenisPinjaman,
+                        dataType: 'json',
+                        success: function (data) {
+                            if(data.length > 0)
+                            {
+                                $('#jenisPengajuanCover').show('slow');
+                                var res = collect(data);
+                                var pattern = '';
+                                res.each(function (pinjaman)
+                                {
+                                    pattern = pattern + '<option value="'+pinjaman.kode_pinjam+'">'+pinjaman.nama_pinjaman+'</option>';
+                                });
+                                $('#topupPinjaman').html(pattern);
+                            }
+                        }
+                    });
+                }
+
+                // update sumber dana
+                var group_id = arrAnggota.where('id', kode_anggota).first().company_group_id;
+                var collection = sumberDana.filter(function (jenis)
+                {
+                    return jenis.company_group_id == group_id;
+                });
+
+                updateSumberDana(collection);
+
             });
 
             $('#besarPinjaman').on('keyup', function ()
@@ -248,46 +329,6 @@
             $(".custom-file-input").on("change", function() {
                 var fileName = $(this).val().split("\\").pop();
                 $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-            });
-
-            $('#anggotaName').on('change', function ()
-            {
-                var selectedId = $('#jenisPinjaman').find(":selected").val();
-                var kode_anggota = $(this).val();
-                if (kode_anggota == null)
-                {
-                    kode_anggota = $(this).find(":selected").val();
-                }
-
-                updateInfo(selectedId, kode_anggota);
-                // search pinjaman
-                $.ajax({
-                    url: "{{ route('searchPinjamanAnggota', ['']) }}/" + kode_anggota,
-                    dataType: 'json',
-                    success: function (data) {
-                        if(data.length > 0)
-                        {
-                            $('#jenisPengajuanCover').show('slow');
-                            var res = collect(data);
-                            var pattern = '';
-                            res.each(function (pinjaman)
-                            {
-                                pattern = pattern + '<option value="'+pinjaman.kode_pinjam+'">'+pinjaman.nama_pinjaman+'</option>';
-                            });
-                            $('#topupPinjaman').html(pattern);
-                        }
-                    }
-                });
-
-                // update sumber dana
-                var group_id = arrAnggota.where('id', kode_anggota).first().company_group_id;
-                var collection = sumberDana.filter(function (jenis)
-                {
-                    return jenis.company_group_id == group_id;
-                });
-
-                updateSumberDana(collection);
-
             });
 
             $('#jenisPengajuan').on('change', function ()

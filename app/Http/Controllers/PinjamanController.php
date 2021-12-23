@@ -1368,14 +1368,23 @@ class PinjamanController extends Controller
         return Excel::download(new SaldoAwalPinjamanExport, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
-    public function searchPinjamanAnggota($kode_anggota)
+    public function searchPinjamanAnggota($kode_anggota, Request $request)
     {
-        return Pinjaman::japan()
-            ->join('t_jenis_pinjam', 't_pinjam.kode_jenis_pinjam', 't_jenis_pinjam.kode_jenis_pinjam')
-            ->where('kode_anggota', $kode_anggota)
-            ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
-            ->select('kode_pinjam', 'nama_pinjaman')
-            ->get();
+        $query = Pinjaman::where('kode_anggota', $kode_anggota);
+        if($request->jenisPinjaman == KATEGORI_JENIS_PINJAMAN_JANGKA_PANJANG)
+        {
+            $query = $query->japan();
+        }
+        elseif($request->jenisPinjaman == KATEGORI_JENIS_PINJAMAN_JANGKA_PENDEK)
+        {
+            $query = $query->japen();
+        }
+        $query = $query->join('t_jenis_pinjam', 't_pinjam.kode_jenis_pinjam', 't_jenis_pinjam.kode_jenis_pinjam')
+                        ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                        ->select('kode_pinjam', 'nama_pinjaman')
+                        ->get();
+
+        return $query;
     }
     public function updatesaldoawal(Request $request)
     {
