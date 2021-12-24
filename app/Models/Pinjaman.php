@@ -116,7 +116,7 @@ class Pinjaman extends Model implements Auditable
     {
         return $this->totalAngsuran + $this->totalDenda + $this->jasaPelunasanDipercepat + $this->tunggakan;
     }
-    public function getTotalbayarTopup()
+    public function getTotalbayarTopupAttribute()
     {
         return $this->totalAngsuran + $this->totalDenda + $this->JasaTopup + $this->tunggakan;
     }

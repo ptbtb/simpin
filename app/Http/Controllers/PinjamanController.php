@@ -408,7 +408,7 @@ class PinjamanController extends Controller
                 return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda masih memiliki pinjaman dengan jenis pinjaman ' . $jenisPinjaman->nama_pinjaman . ' yang belum lunas');
             }
         }
-
+        
         //check gaji
         $anggota = Anggota::find($request->kode_anggota);
         $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
@@ -614,6 +614,14 @@ class PinjamanController extends Controller
                         {
                             SimpananManager::createSimpananPagu($pengajuan);
                         }
+                    }
+
+                    if($pengajuan->ditolak())
+                    {
+                        $pengajuan->pengajuanTopup->each(function ($topup)
+                        {
+                            $topup->delete();
+                        });
                     }
 
                     event(new PengajuanUpdated($pengajuan));
