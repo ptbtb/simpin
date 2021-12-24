@@ -83,7 +83,7 @@ class Pinjaman extends Model implements Auditable
     }
 
     public function getPinjamanDiTransferAttribute() {
-        return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi - $this->biaya_asuransi - $this->totalPinjamanTopup;
+        return $this->besar_pinjam - $this->biaya_administrasi - $this->biaya_provisi - $this->biaya_asuransi - $this->totalPinjamanTopup - $this->pengajuan->transfer_simpanan_pagu;
     }
 
     public function getTotalPinjamanTopupAttribute()
