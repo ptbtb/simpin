@@ -431,7 +431,17 @@ class PinjamanController extends Controller
 
         $isCreatePagu = 0;
         $transferPagu = 0;
-        if ($maksimalPinjaman < $besarPinjaman) {
+        $saldoSimpanan = 0;
+
+        if ($jenisPinjaman->isDanaKopegmar()) {
+            $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+            $saldoSimpanan = $saldo->jumlah * 5;
+        } elseif ($jenisPinjaman->isDanaLain()) {
+            $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+            $saldoSimpanan =  $saldo->jumlah * 8;
+        }
+
+        if ($saldoSimpanan < $besarPinjaman) {
             $isCreatePagu = 1;
             $transferPagu = $besarPinjaman - $maksimalPinjaman;
         }
@@ -642,13 +652,28 @@ class PinjamanController extends Controller
             }
             elseif ($anggota->isAnggotaBiasa())
             {
-                if ($jenisPinjaman->isDanaKopegmar()) {
+                $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
+                    ->where('rule_name', 'gaji_bulanan')
+                    ->first();
+                $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
+                                    ->where('id_jenis_penghasilan', $jenisPenghasilan->id)
+                                    ->first();
+
+                if (is_null($gaji))
+                {
+                    return 0;
+                }
+                $gaji = $gaji->value;
+                $potonganGaji = 0.65 * $gaji;
+                return $potonganGaji * $jenisPinjaman->lama_angsuran;
+
+                /*if ($jenisPinjaman->isDanaKopegmar()) {
                     $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
                     return $saldo->jumlah * 5;
                 } elseif ($jenisPinjaman->isDanaLain()) {
                     $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
                     return $saldo->jumlah * 8;
-                }
+                }*/
             } 
             elseif ($anggota->isAnggotaLuarBiasa())
             {
