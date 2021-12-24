@@ -73,8 +73,6 @@
                 if($pengajuan->transfer_simpanan_pagu)
                 {
                     $rowspan = $rowspan + 1;
-                    $totalcredited = $totalcredited - $pengajuan->transfer_simpanan_pagu;
-                    $totaldebited = $totaldebited - $pengajuan->transfer_simpanan_pagu;
                 }
             @endphp
             <td rowspan="{{ $rowspan }}"></td>
