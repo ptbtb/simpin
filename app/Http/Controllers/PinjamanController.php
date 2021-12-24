@@ -443,7 +443,7 @@ class PinjamanController extends Controller
 
         if ($saldoSimpanan < $besarPinjaman) {
             $isCreatePagu = 1;
-            $transferPagu = $saldoSimpanan - $maksimalPinjaman;
+            $transferPagu = $besarPinjaman - $saldoSimpanan;
         }
 
 
