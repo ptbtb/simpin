@@ -120,7 +120,7 @@
                                 <td>
                                     <input type="date" name="tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->toDateString():'' }}">
                                 </td>
-                                <td ><input  type="text"  class=""name="id_akun_kredit[]" value="{{ ($angsuran->id_akun_kredit!==null)?$angsuran->akunKredit->CODE:'' }}"></td>
+                                <td ><input  type="text"  class=""name="id_akun_kredit[]" value="{{ ($angsuran->akunKredit)?$angsuran->akunKredit->CODE:'' }}"></td>
                                 <td ><input type="text"  class=""name="serial_number[]" value="{{ $angsuran->serial_number }}"></td>
                                 
                                 <td style="width" > {!! Form::select('id_status_angsuran[]', array(''=>'pilih status','1'=>'Belum Lunas','2'=>'Lunas'),$angsuran->id_status_angsuran, ['id' => 'id_status_angsuran', 'class' => 'form-control toRupiah']) !!}
