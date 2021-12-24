@@ -15,7 +15,7 @@ class EditTPengajuan extends Migration
     {
         Schema::table('t_pengajuan', function (Blueprint $table)
         {
-            $table->float('transfer_simpanan_pagu', 10,2)->nullable()->after('keterangan');
+            $table->float('transfer_simpanan_pagu', 28,2)->nullable()->after('keterangan');
         });
     }
 
