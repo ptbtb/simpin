@@ -88,10 +88,10 @@ class PinjamanController extends Controller
         }
         if ($request->jenistrans) {
             if ($request->jenistrans == 'A') {
-                $listPinjaman = Pinjaman::with('listAngsuran')->where('saldo_mutasi', '>', 0);
+                $listPinjaman = Pinjaman::where('saldo_mutasi', '>', 0);
             }
             if ($request->jenistrans == 'T') {
-                $listPinjaman = Pinjaman::with('listAngsuran')->where('saldo_mutasi', 0);
+                $listPinjaman = Pinjaman::where('saldo_mutasi', 0);
             }
         }
         if ($request->unit_kerja) {
