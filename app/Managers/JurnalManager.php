@@ -50,8 +50,8 @@ class JurnalManager
             // jurnal untuk debet
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
-            $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi);
+            $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+            $jurnal->tgl_transaksi = Carbon::parse($pinjaman->tgl_transaksi);
             $jurnal->akun_debet = $pinjaman->kode_jenis_pinjam;
             $jurnal->debet = $pinjaman->besar_pinjam;
             $jurnal->akun_kredit = 0;
@@ -69,8 +69,8 @@ class JurnalManager
             // jurnal untuk total credit bank
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
-            $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi);
+            $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+            $jurnal->tgl_transaksi = Carbon::parse( $pinjaman->tgl_transaksi);
             $jurnal->akun_debet = 0;
             $jurnal->debet = 0;
             if($pinjaman->akun_kredit)
@@ -93,7 +93,7 @@ class JurnalManager
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-            $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi);
+            $jurnal->tgl_transaksi = Carbon::parse( $pinjaman->tgl_transaksi);
             $jurnal->akun_kredit = COA_JASA_PROVISI;
             $jurnal->kredit = $pinjaman->biaya_provisi;
             $jurnal->akun_debet = 0;
@@ -108,8 +108,8 @@ class JurnalManager
             // jurnal untuk total ASURANSI
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
-            $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi);
+            $jurnal->nomer = Carbon::parse( $pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+            $jurnal->tgl_transaksi = Carbon::parse( $pinjaman->tgl_transaksi);
             $jurnal->akun_kredit = COA_UTIP_ASURANSI;
             $jurnal->kredit = $pinjaman->biaya_asuransi;
             $jurnal->akun_debet = 0;
@@ -124,8 +124,8 @@ class JurnalManager
             // jurnal untuk total ADMINISTRASI
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
-            $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_transaksi);
+            $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+            $jurnal->tgl_transaksi = Carbon::parse( $pinjaman->tgl_transaksi);
             $jurnal->akun_kredit = COA_JASA_ADMINISTRASI;
             $jurnal->kredit = $pinjaman->biaya_administrasi;
             $jurnal->akun_debet = 0;

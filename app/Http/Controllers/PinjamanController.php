@@ -445,7 +445,7 @@ class PinjamanController extends Controller
 
         if ($saldoSimpanan < $besarPinjaman) {
             $isCreatePagu = 1;
-            $transferPagu = ($besarPinjaman/$pengali) - $saldo;
+            $transferPagu = ($besarPinjaman/$pengali) - $saldo->jumlah;
         }
 
 
@@ -708,7 +708,7 @@ class PinjamanController extends Controller
 
             $jumlahPenghasilanTertentu = $penghasilanTertentu->sum('value');
             if ($anggota->isAnggotaBiasa()) {
-                return 100000000;
+                return 999999999;
             } elseif ($anggota->isAnggotaLuarBiasa()) {
                 return 100000000;
             } elseif ($anggota->isPensiunan()) {
