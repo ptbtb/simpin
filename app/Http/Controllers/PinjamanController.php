@@ -436,14 +436,16 @@ class PinjamanController extends Controller
         if ($jenisPinjaman->isDanaKopegmar()) {
             $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
             $saldoSimpanan = $saldo->jumlah * 5;
+            $pengali = 5;
         } elseif ($jenisPinjaman->isDanaLain()) {
             $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
             $saldoSimpanan =  $saldo->jumlah * 8;
+            $pengali = 8;
         }
 
         if ($saldoSimpanan < $besarPinjaman) {
             $isCreatePagu = 1;
-            $transferPagu = $besarPinjaman - $saldoSimpanan;
+            $transferPagu = ($besarPinjaman/$pengali) - $saldoSimpanan;
         }
 
 
