@@ -1705,6 +1705,8 @@ class PinjamanController extends Controller
                 }
                 $id_akun_kredit[$key] = $code->id;
 
+            }else{
+                $id_akun_kredit[$key] = NULL;
             }
 
         }
