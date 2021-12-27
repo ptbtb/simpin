@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Wildside\Userstamps\Userstamps;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Angsuran extends Model
+class Angsuran extends Model implements Auditable
 {
     use HasFactory;
     use Userstamps;
+    use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
+
 
     protected $table = "t_angsur";
     protected $primaryKey = "kode_angsur";
