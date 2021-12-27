@@ -369,7 +369,7 @@ class PinjamanController extends Controller
 
     public function storePengajuanPinjaman(Request $request)
     {
-        // dd($request);
+        dd($request);
         $user = Auth::user();
         $this->authorize('add pengajuan pinjaman', $user);
 
