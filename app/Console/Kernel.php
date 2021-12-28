@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\InvoiceGenerator::class,
         Commands\SaldoAwalCommand::class,
         Commands\MigrateJurnalTransaction::class,
+        Commands\ResetSequeceJKK::class,
     ];
 
     /**
@@ -33,6 +34,8 @@ class Kernel extends ConsoleKernel
         // Run the task on the first day of every year at 00:00
         // $schedule->command('tabungan:updatebatch')->yearly();
         // $schedule->command('invoice:generate')->monthly();
+
+        $schedule->command('reset:jkkseq')->monthlyOn(1,'1:0');
     }
 
     /**
