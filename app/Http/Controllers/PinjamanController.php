@@ -46,6 +46,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Database\Eloquent\ModelNotfoundException;
 
 class PinjamanController extends Controller
 {
@@ -1399,9 +1400,9 @@ public function storeImportDataPinjaman(Request $request)
             Excel::import(new PinjamanBaruImport, $request->file);
         });
         return redirect()->back()->withSuccess('Import data berhasil');
-    } catch (\Throwable $e) {
-        Log::error($e);
-        return redirect()->back()->withError('Gagal import data');
+    } catch (ModelNotFoundException $exception) {
+        // Log::error($exception);
+        return redirect()->back()->withError($exception->getMessage())->withInput();
     }
 }
 

@@ -13,6 +13,7 @@ use App\Managers\AngsuranManager;
 use App\Managers\PinjamanManager;
 use App\Managers\JurnalManager;
 use App\Models\Code;
+use Illuminate\Database\Eloquent\ModelNotfoundException;
 
 class PinjamanBaruImport implements OnEachRow
 {
@@ -26,8 +27,13 @@ class PinjamanBaruImport implements OnEachRow
         }
 
         $besar_pinjam = $row[2];
-        $code = Code::where('CODE',$row[8])->get();
-        $id_akun_debet=$code[0]->id;
+        $code = Code::where('CODE',$row[8])->first();
+        if ($code){
+            $id_akun_debet=$code->id;
+        }else{
+            throw new ModelNotfoundException('COA pada baris '.$rowIndex.' tidak ada dalah database');
+        }
+        
         if ($besar_pinjam > 0 )
         {
             // get next serial number
