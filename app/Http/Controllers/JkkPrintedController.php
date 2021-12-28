@@ -98,6 +98,7 @@ class JkkPrintedController extends Controller
 
         $data['tgl_print']= $jkkPrinted->printed_at;
         $data['listPenarikan'] = $listPenarikan;
+        $data['no_jkk'] = $jkkPrinted->jkk_number;
         $data['jenisSimpanan'] = JenisSimpanan::all();
         $data['reprint'] = 'reprint';
         view()->share('data', $data);
@@ -105,7 +106,7 @@ class JkkPrintedController extends Controller
         $pdf = PDF::loadView('penarikan.pdfJKK', $data)->setPaper('a4', 'landscape');
 
         // download PDF file with download method
-        $filename = $jkkPrinted->jkk_number . '-' . $data['tgl_print'] . '.pdf';
+        $filename = $jkkPrinted->jkk_number . '.pdf';
         return $pdf->download($filename);
     }
 
@@ -130,13 +131,14 @@ class JkkPrintedController extends Controller
         
         $data['listPengajuan'] = $listPengajuan;
         $data['tgl_print'] = $jkkPrinted->printed_at;
+        $data['no_jkk'] = $jkkPrinted->jkk_number;
         $data['reprint'] = 'reprint';
         view()->share('data',$data);
         PDF::setOptions(['margin-left' => 0,'margin-right' => 0]);
         $pdf = PDF::loadView('pinjaman.printJKK', $data)->setPaper('a4', 'landscape');
 
         // download PDF file with download method
-        $filename = $jkkPrinted->jkk_number.'-'.$data['tgl_print'].'.pdf';
+        $filename = $jkkPrinted->jkk_number.'.pdf';
         return $pdf->download($filename);
 
         // return view('pinjaman.printJKK', $data);

@@ -34,7 +34,8 @@
 </style>
 <body>
     <h5 style="margin: 0">REKAP TRANSFER PEMBAYARAN PINJAMAN</h5>
-    <h5 style="margin-top: 0">TGL {{ $tgl_print->format('d F Y') }}</h5>
+    <h5 style="margin: 0">TGL {{ $tgl_print->format('d F Y') }}</h5>
+    <h5 style="margin-top: 0">Nomor JKK : {{ $no_jkk }}</h5>
 
     <table class="border-collapse">
         <tr>

@@ -34,10 +34,7 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group">
-                                <label>No JKK</label>
-                                <input type="text" name="no_jkk" id="noJkk" class="form-control" placeholder="Nomor JKK" autocomplete="off" required>
-                            </div>
+                            
                             <div class="form-group">
                                 <label>Kode Pengajuan Pinjaman</label>
                                 <select name="kode_pengajuan[]" id="kodePengajuan" class="form-control select2" multiple required>

@@ -555,11 +555,16 @@ class PenarikanController extends Controller
     public function storePrintJkk(Request $request)
     {
         try {
+            //start create sequence number
+            $bookno_jkk= DB::select("SELECT NEXTVAL(jkk_sequence) as nextnum")[0]->nextnum;
+            $no_jkk = Carbon::createFromFormat('Y-m-d', $request->tgl_print)->format('y').Carbon::createFromFormat('Y-m-d', $request->tgl_print)->format('m').Carbon::createFromFormat('Y-m-d', $request->tgl_print)->format('d').sprintf('%04d', $bookno_jkk);
+           
+            //end create sequence number
             $listPenarikan = Penarikan::whereIn('kode_ambil', $request->kode_ambil)
                 ->get();
 
             foreach ($listPenarikan as $penarikan) {
-                $penarikan->no_jkk = $request->no_jkk;
+                $penarikan->no_jkk = $no_jkk;
                 $penarikan->status_jkk = 1;
                 $penarikan->save();
             }
@@ -569,7 +574,7 @@ class PenarikanController extends Controller
             if (is_null($jkkPrinted))
             {
                 $jkkPrinted = new JkkPrinted();
-                $jkkPrinted->jkk_number = $request->no_jkk;
+                $jkkPrinted->jkk_number = $no_jkk;
                 $jkkPrinted->jkk_printed_type_id = JKK_PRINTED_TYPE_PENARIKAN_SIMPANAN;
                 $jkkPrinted->printed_at = Carbon::createFromFormat('Y-m-d', $request->tgl_print);
                 $jkkPrinted->printed_by = Auth::user()->id;
@@ -579,13 +584,14 @@ class PenarikanController extends Controller
             $data['tgl_print']=Carbon::createFromFormat('Y-m-d', $request->tgl_print);
 
             $data['listPenarikan'] = $listPenarikan;
+            $data['no_jkk'] = $no_jkk;
             $data['jenisSimpanan'] = JenisSimpanan::all();
             view()->share('data', $data);
             PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
             $pdf = PDF::loadView('penarikan.pdfJKK', $data)->setPaper('a4', 'landscape');
 
             // download PDF file with download method
-            $filename = $request->no_jkk . '-' . $data['tgl_print'] . '.pdf';
+            $filename = $no_jkk . '.pdf';
             return $pdf->download($filename);
 
             // return view('penarikan.pdfJKK', $data);
