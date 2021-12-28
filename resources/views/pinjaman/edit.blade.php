@@ -112,18 +112,19 @@
                     <tbody class="table-body">
                         @foreach ($listAngsuran as $angsuran)
                             <tr>
-                                <td><input type="number" name="angsuran_ke[]" value="{{ $angsuran->angsuran_ke }}"></td>
-                                <td><input type="text" class="toRupiah" name="besar_angsuran[]" value="{{ $angsuran->besar_angsuran }}"></td>
-                                <td><input type="text" class="toRupiah" name="jasa[]" value="{{ $angsuran->jasa }}"></td>
-                                <td><input type="date" name="jatuh_tempo[]" value="{{ $angsuran->jatuh_tempo->toDateString() }}"></td>
-                                <td><input type="text"  class="toRupiah"name="besar_pembayaran[]" value="{{ $angsuran->besar_pembayaran }}"></td>
+                                <td><input type="hidden" name="kode_angsur[]" value="{{ $angsuran->kode_angsur }}">
+                                    <input type="number" name="edit_angsuran_ke[]" value="{{ $angsuran->angsuran_ke }}"></td>
+                                <td><input type="text" class="toRupiah" name="edit_besar_angsuran[]" value="{{ $angsuran->besar_angsuran }}"></td>
+                                <td><input type="text" class="toRupiah" name="edit_jasa[]" value="{{ $angsuran->jasa }}"></td>
+                                <td><input type="date" name="edit_jatuh_tempo[]" value="{{ $angsuran->jatuh_tempo->toDateString() }}"></td>
+                                <td><input type="text"  class="toRupiah"name="edit_besar_pembayaran[]" value="{{ $angsuran->besar_pembayaran }}"></td>
                                 <td>
-                                    <input type="date" name="tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->toDateString():'' }}">
+                                    <input type="date" name="edit_tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->toDateString():'' }}">
                                 </td>
-                                <td ><input  type="text"  class=""name="id_akun_kredit[]" value="{{ ($angsuran->akunKredit)?$angsuran->akunKredit->CODE:'' }}"></td>
-                                <td ><input type="text"  class=""name="serial_number[]" value="{{ $angsuran->serial_number }}"></td>
+                                <td ><input  type="text"  class=""name="edit_id_akun_kredit[]" value="{{ ($angsuran->akunKredit)?$angsuran->akunKredit->CODE:'' }}"></td>
+                                <td ><input type="text"  class=""name="edit_serial_number[]" value="{{ $angsuran->serial_number }}" readonly></td>
                                 
-                                <td style="width" > {!! Form::select('id_status_angsuran[]', array(''=>'pilih status','1'=>'Belum Lunas','2'=>'Lunas'),$angsuran->id_status_angsuran, ['id' => 'id_status_angsuran', 'class' => 'form-control toRupiah']) !!}
+                                <td style="width" > {!! Form::select('edit_id_status_angsuran[]', array(''=>'pilih status','1'=>'Belum Lunas','2'=>'Lunas'),$angsuran->id_status_angsuran, ['id' => 'id_status_angsuran', 'class' => 'form-control toRupiah']) !!}
                                 </td>
                                 <td>
                                     <a class="btn btn-xs btn-danger text-white btn-delete-row"><i class="fa fa-trash"></i> Delete Row</a>
@@ -134,8 +135,14 @@
                 </table>
             </div>
             <div class="form-group">
-                <button class="btn btn-sm btn-success" id="btnSubmit"><i class="fas fa-save"></i> Simpan</button>
+                <button class="btn btn-sm btn-success" id="btnSubmit"  name="sub" value="submit"><i class="fas fa-save"></i> Simpan</button>
+                <button class="btn btn-sm btn-primary" id="btnPost" name="sub" value="posting"><i class="fas fa-save"></i> Post Jurnal</button>
+                
             </div>
+            <div class="row">
+                <label class="ml-1 form-group" style="color: red;">Keterangan Posting Jurnal: <br>* Agar Jurnal Bisa Di posting harap diisi nilai COA Kredit <br>* Untuk Delete Jurnal Cukup Hapus nilai COA Kredit</label>
+            </div>
+            
         </form>
     </div>
 </div>
