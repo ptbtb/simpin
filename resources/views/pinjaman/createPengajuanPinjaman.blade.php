@@ -44,6 +44,14 @@
     <div class="card-body">
         <form action="{{ route('pengajuan-pinjaman-add') }}" method="post" enctype="multipart/form-data">
             @csrf
+             @can('bypass role')
+            <div class="row">
+                <div class="form-group">
+                <input id="bypassrole" type="checkbox" name="terms" value="true">
+                <label>By Pass Role</label>
+            </div>
+            </div>
+            @endcan
             <div class="row">
                 @if (\Auth::user()->isAnggota())
                     <div class="col-md-6 form-group">
@@ -188,10 +196,15 @@
             $('#jenisPinjaman').on('change', function ()
             {
                 var kode_anggota = $('#anggotaName').val();
+                if ($('#bypassrole').is(':checked')) {
+                var role = true;
+            }else{
+                var role = false;
+            }
                 var selectedId = $(this).find(":selected").val();
                 var besarPinjaman = $('#besarAngsuran').val();
                 selectedJenisPinjaman = jenisPinjaman.where('kode_jenis_pinjam', selectedId).first().kategori_jenis_pinjaman_id;
-                updateInfo(selectedId, kode_anggota);
+                updateInfo(selectedId, kode_anggota,role);
                 if (selectedId != '' && selectedId != null)
                 {
                     $('#besarPinjaman').removeAttr('readonly');
@@ -258,10 +271,15 @@
                 {
                     kode_anggota = $(this).find(":selected").val();
                 }
+                if ($('#bypassrole').is(':checked')) {
+                var role = true;
+            }else{
+                var role = false;
+            }
 
                 selectedAnggotaId = kode_anggota;
 
-                updateInfo(selectedId, kode_anggota);
+                updateInfo(selectedId, kode_anggota,role);
 
                 if(selectedAnggotaId && selectedJenisPinjaman)
                 {
@@ -375,14 +393,15 @@
             });
        }
 
-        function updateInfo(id, kode_anggota)
+        function updateInfo(id, kode_anggota,role)
         {
             var selectedJenisPinjaman = jenisPinjaman.where('kode_jenis_pinjam',id).first();
             $.ajax({
                 url: '{{ route('pengajuan-pinjaman-calculate-max-pinjaman') }}',
                 data: {
                     id_jenis_pinjaman: id,
-                    kode_anggota: kode_anggota
+                    kode_anggota: kode_anggota,
+                    role:role
                 },
                 type: 'get',
                 success: function (data) {
