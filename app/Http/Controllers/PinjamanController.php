@@ -963,83 +963,86 @@ public function bayarAngsuran(Request $request, $id)
     try {
         $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
         $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
-        $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
-        if($request->jenis_pembayaran)
-        {
-            $kode = $request->jenis_pembayaran;
-            $tabungan = Tabungan::where('kode_trans', $kode)
-            ->where('kode_anggota', $pinjaman->kode_anggota)
-            ->first();
-            $anggota = $pinjaman->anggota;
 
-            if ($tabungan->besar_tabungan < $pembayaran)
+        for ($i=0; $i < count($request->besar_pembayaran); $i++)
+        { 
+            $pembayaran = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
+            if($request->jenis_pembayaran[$i])
             {
-                return redirect()->back()->withError('Sisa tabungan tidak mencukupi untuk melakukan pembayaran');
-            }
-        }
-
-        foreach ($listAngsuran as $angsuran) {
-            $serialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
-            if ($angsuran->besar_pembayaran) {
-                $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
-            }
-            if ($pembayaran >= $angsuran->totalAngsuran) {
-
-                $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
-                $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
-                $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
-                $pinjaman->save();
-            } else {
-                $angsuran->besar_pembayaran = $pembayaran;
+                $kode = $request->jenis_pembayaran[$i];
+                $tabungan = Tabungan::where('kode_trans', $kode)
+                ->where('kode_anggota', $pinjaman->kode_anggota)
+                ->first();
+                $anggota = $pinjaman->anggota;
+    
+                if ($tabungan->besar_tabungan < $pembayaran)
+                {
+                    return redirect()->back()->withError('Sisa tabungan tidak mencukupi untuk melakukan pembayaran');
+                }
             }
 
-
-            $pembayaran = $pembayaran - $angsuran->totalAngsuran;
-            $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
-            $angsuran->u_entry = Auth::user()->name;
-            if($request->jenis_pembayaran)
+            foreach ($listAngsuran as $angsuran) {
+                $serialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                if ($angsuran->besar_pembayaran) {
+                    $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
+                }
+                if ($pembayaran >= $angsuran->totalAngsuran) {
+    
+                    $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
+                    $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
+                    $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
+                    $pinjaman->save();
+                } else {
+                    $angsuran->besar_pembayaran = $pembayaran;
+                }
+    
+    
+                $pembayaran = $pembayaran - $angsuran->totalAngsuran;
+                $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $angsuran->u_entry = Auth::user()->name;
+                if($request->jenis_pembayaran[$i])
+                {
+                    $codeCoa = Code::where('CODE', $tabungan->kode_trans)->first();
+                    $angsuran->id_akun_kredit = $codeCoa->id;
+                }
+                else
+                {
+                    $angsuran->id_akun_kredit = ($request->id_akun_kredit[$i]) ? $request->id_akun_kredit[$i] : null;
+                }
+                $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $angsuran->serial_number = $serialNumber;
+                $angsuran->save();
+    
+                    // create JKM angsuran
+                JurnalManager::createJurnalAngsuran($angsuran);
+    
+                if ($pembayaran <= 0) {
+                    $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
+                    $pinjaman->save();
+                    break;
+                }
+                if ($pinjaman->sisa_pinjaman <= 0) {
+                    $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+                    $pinjaman->save();
+                }
+            }
+    
+                // save tgl transaksi
+            $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+            $pinjaman->save();
+    
+            if($request->jenis_pembayaran[$i])
             {
-                $codeCoa = Code::where('CODE', $tabungan->kode_trans)->first();
-                $angsuran->id_akun_kredit = $codeCoa->id;
-            }
-            else
-            {
-                $angsuran->id_akun_kredit = ($request->id_akun_kredit) ? $request->id_akun_kredit : null;
-            }
-            $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
-            $angsuran->serial_number = $serialNumber;
-            $angsuran->save();
-
-                // create JKM angsuran
-            JurnalManager::createJurnalAngsuran($angsuran);
-
-            if ($pembayaran <= 0) {
-                $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
-                $pinjaman->save();
-                break;
-            }
-            if ($pinjaman->sisa_pinjaman <= 0) {
-                $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
-                $pinjaman->save();
-            }
-        }
-
-            // save tgl transaksi
-        $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
-        $pinjaman->save();
-
-        if($request->jenis_pembayaran)
-        {
-            $penarikan = new Penarikan();
-                // get next serial number
-            $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
-            $kode = $request->jenis_pembayaran;
-            $tabungan = Tabungan::where('kode_trans', $kode)->first();
-            $besarPenarikan = $request->besar_pembayaran;
-            $anggota = $pinjaman->anggota;
-            $user = Auth::user();
-
-            DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber, $pinjaman) {
+                $penarikan = new Penarikan();
+                    // get next serial number
+                $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                $kode = $request->jenis_pembayaran[$i];
+                $tabungan = Tabungan::where('kode_trans', $kode)->first();
+                $besarPenarikan = $request->besar_pembayaran[$i];
+                $anggota = $pinjaman->anggota;
+                $user = Auth::user();
+    
+                DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber, $pinjaman, $request) {
                 $penarikan->kode_anggota = $anggota->kode_anggota;
                 $penarikan->kode_tabungan = $tabungan->kode_tabungan;
                 $penarikan->id_tabungan = $tabungan->id;
@@ -1057,9 +1060,10 @@ public function bayarAngsuran(Request $request, $id)
                 $penarikan->paid_by_cashier = $user->id;
                 $penarikan->description = 'Pengambilan pelunasan angsuran untuk pinjaman '. $pinjaman->kode_pinjam;
                 $penarikan->save();
-            });
-
-            JurnalManager::createJurnalPenarikan($penarikan);
+                });
+    
+                JurnalManager::createJurnalPenarikan($penarikan);
+            }
         }
 
         return redirect()->back()->withSuccess('berhasil melakukan pembayaran');

@@ -188,35 +188,46 @@
                                 <label>Total Angsuran</label>
                                 <input type="text" name="total_angsuran" class="form-control" value="Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}" readonly>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label for="tgl_transaksi">Tgl Transaksi</label>
                                 <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="jenisPembayaran">Jenis Pembayaran</label>
-                                <select name="jenis_pembayaran" id="jenisPembayaran1" class="form-control">
-                                    <option value="0">Tunai</option>
-                                    @foreach ($tabungan as $value)
-                                        <option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan,0,",","." ) }})</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-12 multipleform">
+                                <div class="row pembayaranform">
+                                    <div class="col-12">
+                                        <hr>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Jenis Pembayaran</label>
+                                        <select name="jenis_pembayaran[]" class="form-control jenisPembayaran1">
+                                            <option value="0">KAS/BANK</option>
+                                            @foreach ($tabungan as $value)
+                                                <option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan,0,",","." ) }})</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6 jenisAkun1Cover">
+                                        <label>Jenis Akun</label>
+                                        <select name="jenis_akun[]" id="jenisAkun1" class="form-control select2 jenisAkun" required>
+                                            <option value="1">KAS</option>
+                                            <option value="2" selected>BANK</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-12 akun1Cover">
+                                        <label>Akun</label>
+                                        <select name="id_akun_kredit[]"  class="code1 form-control select2" required>
+                                            <option value="" selected disabled>Pilih Akun</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Besar Pembayaran</label>
+                                        <input type="text" name="besar_pembayaran[]" class="form-control" placeholder="Besar Pembayaran">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group col-md-12" id="jenisAkun1Cover">
-                                <label>Jenis Akun</label>
-                                <select name="jenis_akun" id="jenisAkun1" class="form-control select2 jenisAkun" required>
-                                    <option value="1">KAS</option>
-                                    <option value="2" selected>BANK</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-12" id="akun1Cover">
-                                <label>Akun</label>
-                                <select name="id_akun_kredit" id="code1" class="form-control select2" required>
-                                    <option value="" selected disabled>Pilih Akun</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label>Besar Pembayaran</label>
-                                <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
+                            <div class="col-12 text-right">
+                                <a class="btn btn-xs btn-danger text-white btn-delete-jenis-pembayaran"><i class="fa fa-trash"></i> Hapus Jenis Pembayaran</a>
+                                <a class="btn btn-xs btn-warning text-white btn-add-jenis-pembayaran"><i class="fa fa-plus"></i> Tambah Jenis Pembayaran</a>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -315,7 +326,7 @@
                             </div>
                             <div class="form-group" id="akun2Cover">
                                 <label>Akun</label>
-                                <select name="id_akun_kredit" id="code2" class="form-control select2" required>
+                                <select name="id_akun_kredit" class="form-control code2 select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>
                                 </select>
                             </div>
@@ -459,21 +470,25 @@
                 $('#akun2Cover').removeClass('d-none');
             }
         })
-        $(document).on('change', '#jenisPembayaran1', function ()
+        
+        $(document).on('change', '.jenisPembayaran1', function ()
         {
             var selected = this.value;
+            var rootClass = $(this).parent().parent();
             if (selected != 0)
             {
-                $('#jenisAkun1Cover').addClass('d-none');
-                $('#akun1Cover').addClass('d-none');
+                rootClass.find('.jenisAkun1Cover').addClass('d-none');
+                rootClass.find('.akun1Cover').addClass('d-none');
+                rootClass.find('.jenisPembayaran1').parent().addClass('col-md-12');
                 // console.log(saldo.where('kode_trans', selected).first().besar_tabungan);
                 // // $('#viewSaldo').show();
                 // // $('#saldo').val();
             }
             else
             {
-                $('#jenisAkun1Cover').removeClass('d-none');
-                $('#akun1Cover').removeClass('d-none');
+                rootClass.find('.jenisAkun1Cover').removeClass('d-none');
+                rootClass.find('.akun1Cover').removeClass('d-none');
+                rootClass.find('.jenisPembayaran1').parent().removeClass('col-md-12');
             }
         })
 
@@ -492,9 +507,10 @@
         // trigger to get kas or bank select option
         $(document).on('change', '.jenisAkun', function () 
         {
+            var rootClass = $(this).parent().parent();
             // remove all option in code
-            $('#code1').empty();
-            $('#code2').empty();
+            rootClass.find('.code1').empty();
+            rootClass.find('.code2').empty();
 
             // get jenis akun
             var jenisAkun = $(this).val();
@@ -515,19 +531,19 @@
                     }
                     
                     // insert new option
-                    $('#code1').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
-                    $('#code2').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+                    rootClass.find('.code1').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+                    rootClass.find('.code2').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
                 });
             }
             else if(jenisAkun == 1)
             {
                 // insert new option 
-                $('#code1').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
-                $('#code2').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+                rootClass.find('.code1').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+                rootClass.find('.code2').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
             }
 
-            $('#code1').trigger( "change" );
-            $('#code2').trigger( "change" );
+            rootClass.find('.code1').trigger( "change" );
+            rootClass.find('.code2').trigger( "change" );
         });
 
         // action button on click
@@ -720,5 +736,52 @@
             $('#totalBayarDiscount1').html("<b>" + toRupiah(Math.round(total)) + "<b>");
             $('#totalBayarHidden1').val(Math.round(total));
         })
+
+        $(document).on('click', '.btn-add-jenis-pembayaran', function ()
+        {
+            var pattern = '<div class="row pembayaranform">' +
+                                '<div class="col-12"><hr></div><div class="form-group col-md-6">' +
+                                    '<label>Jenis Pembayaran</label>' +
+                                    '<select name="jenis_pembayaran[]" class="form-control jenisPembayaran1">' +
+                                        '<option value="0">KAS/BANK</option>' +
+                                        '@foreach ($tabungan as $value)' +
+                                            '<option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan,0,",","." ) }})</option>' +
+                                        '@endforeach' +
+                                    '</select>' +
+                                '</div>' +
+                                '<div class="form-group col-md-6 jenisAkun1Cover">' +
+                                    '<label>Jenis Akun</label>' +
+                                    '<select name="jenis_akun[]" id="jenisAkun1" class="form-control select2 jenisAkun" required>' +
+                                        '<option value="1">KAS</option>' +
+                                        '<option value="2" selected>BANK</option>' +
+                                    '</select>' +
+                                '</div>' +
+                                '<div class="form-group col-md-12 akun1Cover">' +
+                                    '<label>Akun</label>' +
+                                    '<select name="id_akun_kredit[]" class="code1 form-control select2" required>' +
+                                        '<option value="" selected disabled>Pilih Akun</option>' +
+                                    '</select>' +
+                                '</div>' +
+                                '<div class="form-group col-md-12">' +
+                                    '<label>Besar Pembayaran</label>' +
+                                    '<input type="text" name="besar_pembayaran[]" class="form-control" placeholder="Besar Pembayaran">' +
+                                '</div>' +
+                            '</div>';
+            
+            $('.multipleform').append(pattern);
+            $('.select2').select2();
+
+            var lastChild = $('.multipleform').find('.pembayaranform:last');
+            lastChild.find('.jenisAkun').trigger( "change" );
+            // console.log(pattern);
+        });
+
+        $(document).on('click', '.btn-delete-jenis-pembayaran', function ()
+        {
+            var countChild = $('.multipleform').find('.pembayaranform').length;
+            var lastChild = $('.multipleform').find('.pembayaranform:last');
+            if(countChild > 1)
+                lastChild.remove();
+        });
     </script>
 @endsection
