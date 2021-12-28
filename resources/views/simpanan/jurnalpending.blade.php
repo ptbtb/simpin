@@ -79,6 +79,7 @@
                 <tr class="info">
                     <th><input type="checkbox" name="select_all" value="1" id="select-all"></th>
                     <th>No</th>
+                    <th>Nomor Anggota</th>
                     <th>Nama Anggota</th>
                     <th>Jenis Simpanan</th>
                     <th>Periode</th>
@@ -96,7 +97,8 @@
             	<tr>
             	<td><input type="checkbox" name="kode_simpan[]" value="{{ $item->kode_simpan }}"></td>
             	<td>{{ $loop->iteration }}</td>
-            	<td>{{ ($item->anggota)?$item->anggota->nama_anggota:'-' }}</td>
+            	<td>{{ $item->kode_anggota }}</td>
+                <td>{{ ($item->anggota)?$item->anggota->nama_anggota:'-' }}</td>
             	<td>{{ $item->jenis_simpan }}</td>
             	<td>{{ $item->periode_view }}</td>
             	<td>{{ $item->besar_simpanan_rupiah }}</td>
