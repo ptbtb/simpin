@@ -118,7 +118,7 @@ class Pinjaman extends Model implements Auditable
     }
     public function getTotalbayarTopupAttribute()
     {
-        return $this->totalAngsuran + $this->totalDenda + $this->JasaTopup + $this->tunggakan;
+        return $this->sisa_pinjaman + $this->totalDenda + $this->JasaTopup + $this->tunggakan;
     }
 
     public function getTunggakanAttribute() {
