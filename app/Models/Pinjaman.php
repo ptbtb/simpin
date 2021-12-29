@@ -23,7 +23,7 @@ class Pinjaman extends Model implements Auditable
     // public $incrementing = false;
     protected $dates = ['tgl_entri', 'tgl_tempo'];
     protected $appends = ['serial_number_view'];
-    protected $fillable = ['kode_anggota'];
+    protected $fillable = ['kode_anggota','kode_jenis_pinjam','besar_pinjam','sisa_pinjaman','biaya_asuransi','biaya_provisi','biaya_administrasi','id_status_pinjaman'];
 
     public function anggota() {
         return $this->belongsTo(Anggota::class, 'kode_anggota');
