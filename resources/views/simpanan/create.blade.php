@@ -217,7 +217,7 @@
         else if(jenisAkun == 1)
         {
             // insert new option
-            $('#form'+data_form+' .code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+            $('#form'+data_form+' .code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option><option value="153" >404.08.000 SETORAN BELUM RINCI</option>');
         }
 
         $('#form'+data_form+' .code').trigger( "change" );
