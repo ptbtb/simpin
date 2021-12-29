@@ -234,6 +234,7 @@
                 <a href="anggota/edit/{{$searchResult->kode_anggota}}" class="btn btn-default btn-sm w-100 mt-1"><i class="fa fa-money-bill"></i> Edit Anggota</a>
                 <a href="{{ route('simpanan-add', ['kode_anggota'=>$searchResult->kode_anggota]) }}" class="btn btn-success btn-sm w-100 mt-1"><i class="fa fa-money-bill"></i> Simpanan</a>
                 <a href="pinjaman/list/{{$searchResult->kode_anggota}}" class="btn btn-info btn-sm w-100 mt-1"><i class="fas fa-hand-holding-usd"></i> Pinjaman</a>
+                <a href="anggota/history/{{$searchResult->kode_anggota}}" class="btn btn-warning btn-sm w-100 mt-1"><i class="fa fa-file"></i> History</a>
             </div>
             @if($searchResult->tabungan->isNotEmpty())
             <div class="col-md-2">

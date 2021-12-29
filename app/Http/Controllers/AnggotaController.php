@@ -285,7 +285,7 @@ class AnggotaController extends Controller {
             }
 
             // alihkan halaman tambah buku ke halaman books
-            return redirect()->route('anggota-list')->withSuccess('Data anggota Berhasil Dirubah');
+            return redirect()->back()->withSuccess('Data anggota Berhasil Dirubah');
         }
         catch (\Exception $e)
         {
@@ -496,5 +496,16 @@ class AnggotaController extends Controller {
             Log::error($message);
             return redirect()->back()->withErrors($message);
         }
+    }
+
+    public function history($id){
+        $this->authorize('view anggota', Auth::user());
+        $anggota = Anggota::findOrFail($id);
+        $last = $anggota->audits;
+        $data['title'] = 'History';
+        $data['list'] = $last;
+        return view('anggota.history', $data);
+        dd($last);
+
     }
 }

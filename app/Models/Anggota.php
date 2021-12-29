@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 use Carbon\Carbon;
 
-class Anggota extends Model
+class Anggota extends Model implements Auditable
 {
     use HasFactory, SoftDeletes;
+     use \OwenIt\Auditing\Auditable;
     protected $table = "t_anggota";
     protected $primaryKey = 'kode_anggota';
     protected $appends = ['kode_anggota_prefix', 'unit_kerja','tgl_lahir_view'];
