@@ -22,11 +22,11 @@ class AuditController extends Controller
         $this->authorize('view audit', Auth::user());
         if(!$request->from)
             {          
-                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+                $request->from = Carbon::today()->startOfDay()->format('d-m-Y');
             }
             if(!$request->to)
             {          
-                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+                $request->to = Carbon::today()->endOfDay()->format('d-m-Y');
             }
             $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
            $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
