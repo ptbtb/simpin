@@ -504,8 +504,9 @@ class AnggotaController extends Controller {
         $last = $anggota->audits;
         $data['title'] = 'History';
         $data['list'] = $last;
+        
         return view('anggota.history', $data);
-        dd($last);
+        
 
     }
 }

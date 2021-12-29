@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Arr;
 use Carbon\Carbon;
 
 class Anggota extends Model implements Auditable
@@ -141,5 +142,22 @@ class Anggota extends Model implements Auditable
         }
 
         return '-';
+    }
+    public function transformAudit(array $data): array
+    {
+        if (Arr::has($data, 'new_values.company_id')) {
+            $data['old_values']['company_id'] = Company::find($this->getOriginal('company_id'))->nama;
+            $data['new_values']['company_id'] = Company::find($this->getAttribute('company_id'))->nama;
+        }
+         if (Arr::has($data, 'new_values.kelas_company_id')) {
+            $data['old_values']['kelas_company_id'] = KelasCompany::find($this->getOriginal('kelas_company_id'))->nama;
+            $data['new_values']['kelas_company_id'] = Company::find($this->getAttribute('kelas_company_id'))->nama;
+        }
+        if (Arr::has($data, 'new_values.id_jenis_anggota')) {
+            $data['old_values']['id_jenis_anggota'] = KelasCompany::find($this->getOriginal('id_jenis_anggota'))->nama_jenis_anggota;
+            $data['new_values']['id_jenis_anggota'] = Company::find($this->getAttribute('id_jenis_anggota'))->nama_jenis_anggota;
+        }
+
+        return $data;
     }
 }
