@@ -271,7 +271,7 @@
                                         <th>Jasa</th>
                                         <th>:</th>
                                         <td id="jasaDiscount">Rp. {{ number_format($pinjaman->jasaPelunasanDipercepat,0,",",".") }}</td>
-                                        <th>Tunggakan</th>
+                                        <th>Pembayaran Angs Sebagian</th>
                                         <th>:</th>
                                         <td>Rp. {{ number_format($pinjaman->tunggakan,0,",",".") }}</td>
                                     </tr>
