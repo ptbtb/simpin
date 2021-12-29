@@ -302,7 +302,7 @@
                                 <label for="saldo">Sisa saldo</label>
                                 <input type="text" name="saldo" id="saldo" class="form-control" readonly>
                             </div> --}}
-                            @can('set diskon angsuran')
+                           
                                 <div class="form-group">
                                     <label>Discount (%)</label>
                                     <input type="number" name="discount" id="discount" class="form-control" placeholder="Ex: 15 (15%)" min="0" max="100">
@@ -312,7 +312,6 @@
                                     <br>
                                     <input type="file" name="confirmation_document" id="confirmationDocument">
                                 </div>
-                            @endcan
                             <div class="form-group">
                                 <label>Besar Pembayaran</label>
                                 <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">

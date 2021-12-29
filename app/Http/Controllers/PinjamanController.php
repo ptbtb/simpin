@@ -1110,13 +1110,16 @@ public function bayarAngsuranDipercepat(Request $request, $id)
             Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
         }
 
-        if ($request->confirmation_document->isValid())
+        if (isset($request->confirmation_document)){
+            if ($request->confirmation_document->isValid())
         {
             $filename = uniqid() .'.'. $request->confirmation_document->getClientOriginalExtension();
 
             Storage::disk($config['disk'])->putFileAs($config['upload_path'], $request->confirmation_document, $filename);
             $pinjaman->confirmation_document = $config['disk'].$config['upload_path'].'/'.$filename;
         }
+        }
+        
         $pinjaman->save();
 
         if($request->jenis_pembayaran)
