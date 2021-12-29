@@ -22,14 +22,14 @@ class AuditController extends Controller
         $this->authorize('view audit', Auth::user());
         if(!$request->from)
             {          
-                $request->from = Carbon::today()->startOfDay()->format('d-m-Y');
+                $request->from = Carbon::today()->format('d-m-Y');
             }
             if(!$request->to)
             {          
-                $request->to = Carbon::today()->endOfDay()->format('d-m-Y');
+                $request->to = Carbon::today()->format('d-m-Y');
             }
-            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
-           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
+            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
+           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
         $audit= Audit::wherebetween('created_at',[$startUntilPeriod,$endUntilPeriod])->orderby('created_at','desc')->get();
         $data['title'] = 'Audit Log';
         $data['list'] = $audit;
