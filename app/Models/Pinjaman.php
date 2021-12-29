@@ -114,7 +114,7 @@ class Pinjaman extends Model implements Auditable
 
     public function getTotalbayarPelunasanDipercepatAttribute()
     {
-        return $this->totalAngsuran + $this->totalDenda + $this->jasaPelunasanDipercepat + $this->tunggakan;
+        return $this->sisa_pinjaman + $this->totalDenda + $this->jasaPelunasanDipercepat + $this->tunggakan;
     }
     public function getTotalbayarTopupAttribute()
     {

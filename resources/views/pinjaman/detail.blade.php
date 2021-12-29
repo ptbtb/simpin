@@ -259,7 +259,7 @@
                                         <td style="width: 20%">{{ $tagihan->jatuh_tempo->format('M Y') }} - {{ $pinjaman->listAngsuran->sortByDesc('jatuh_tempo')->first()->jatuh_tempo->format('M Y') }}</td>
                                         <th style="width: 15%">Total Angsuran</th>
                                         <th>:</th>
-                                        <td style="width: 20%" id="totalAngsuranDiscount1">Rp. {{ number_format($pinjaman->totalAngsuran,0,",",".") }}</td>
+                                        <td style="width: 20%" id="totalAngsuranDiscount1">Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
                                         <th style="width: 15%">Denda</th>
                                         <th>:</th>
                                         <td style="width: 20%">Rp. {{ number_format($pinjaman->total_denda,0,",",".") }}</td>
