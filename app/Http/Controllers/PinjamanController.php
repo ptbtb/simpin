@@ -1076,6 +1076,7 @@ public function bayarAngsuran(Request $request, $id)
 
 public function bayarAngsuranDipercepat(Request $request, $id)
 {
+    dd($request);
     try {
         $rule['besar_pembayaran'] = 'required';
 

@@ -725,12 +725,18 @@
         {
             var discount = $(this).val();
             var jasaPelunasanDipercepat = {{ $pinjaman->jasaPelunasanDipercepat }};
-            var totalAngsuran = {{ $pinjaman->totalAngsuran }};
+             // console.log(jasaPelunasanDipercepat);
+            var totalAngsuran = {{ $pinjaman->sisa_pinjaman }};
+             // console.log(totalAngsuran);
             var totalDenda = {{ $pinjaman->totalDenda }};
+             // console.log(totalDenda);
             var tunggakan = {{ $pinjaman->tunggakan }};
+             // console.log(tunggakan);
             var totalDiscount = discount/100*jasaPelunasanDipercepat;
+            // console.log(totalDiscount);
             var total = totalAngsuran + totalDenda + tunggakan + jasaPelunasanDipercepat - totalDiscount;
-            $('#totalAngsuranDiscount1').html(toRupiah(Math.round(total)));
+            // console.log(total);
+            $('#totalAngsuranDiscount1').html(toRupiah(Math.round(totalAngsuran)));
             $('#jasaDiscount').html(toRupiah(Math.round(jasaPelunasanDipercepat - totalDiscount)));
             $('#totalBayarDiscount1').html("<b>" + toRupiah(Math.round(total)) + "<b>");
             $('#totalBayarHidden1').val(Math.round(total));
