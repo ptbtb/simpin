@@ -64,16 +64,15 @@ class PinjamanController extends Controller
                 return redirect()->back()->withError('Your account has no members');
             }
 
-            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_entri', 'asc')
-            ->notPaid();
+            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_entri', 'asc');
         } else {
             if ($request->id) {
                 $anggota = Anggota::find($request->id);
 
                 $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                ->notPaid();
+                ;
             } else {
-                $listPinjaman = Pinjaman::notPaid();
+                $listPinjaman = Pinjaman::all();
             }
         }
 
