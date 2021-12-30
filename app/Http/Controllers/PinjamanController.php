@@ -72,7 +72,7 @@ class PinjamanController extends Controller
                 $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
                 ;
             } else {
-                $listPinjaman = Pinjaman::all();
+                $listPinjaman = Pinjaman::orderby('created_at','desc');
             }
         }
 
