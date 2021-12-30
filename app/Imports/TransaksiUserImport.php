@@ -55,7 +55,7 @@ class TransaksiUserImport
 					$simpanan->tgl_entri = $tgl_transaksi;
 					$simpanan->tgl_transaksi = $tgl_transaksi;
 					$simpanan->kode_jenis_simpan ='411.12.000';
-					$simpanan->keterangan = $nama_simpanan->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
+					$simpanan->keterangan = $transaksi['KETERANGAN'];
 					$simpanan->mutasi = 0;
 					$simpanan->serial_number = SimpananManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 					$simpanan->id_akun_debet = ($idakun->id) ? $idakun->id : null;
@@ -79,7 +79,7 @@ class TransaksiUserImport
 					$simpanan->tgl_entri = $tgl_transaksi;
 					$simpanan->tgl_transaksi = $tgl_transaksi;
 					$simpanan->kode_jenis_simpan ='502.01.000';
-					$simpanan->keterangan = $nama_simpanan2->nama_simpanan." ". $anggota->nama_aggota." ".$periode;
+					$simpanan->keterangan = $transaksi['KETERANGAN'];
 					$simpanan->mutasi = 0;
 					$simpanan->serial_number = SimpananManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 					$simpanan->id_akun_debet = ($idakun->id) ? $idakun->id : null;
@@ -126,6 +126,7 @@ class TransaksiUserImport
 						$angsuran1->updated_by = Auth::user()->id;
 						$angsuran1->id_akun_kredit = ($idakun->id) ? $idakun->id : null;
 						$angsuran1->serial_number=$serialNumber;
+						$angsuran1->keterangan=$transaksi['KETERANGAN'];
 						$angsuran1->save();
 
             // create JKM angsuran
@@ -186,6 +187,7 @@ class TransaksiUserImport
 						$angsuran2->updated_by = Auth::user()->id;
 						$angsuran2->id_akun_kredit = ($idakun->id) ? $idakun->id : null;
 						$angsuran2->serial_number=$serialNumber2;
+						$angsuran2->keterangan=$transaksi['KETERANGAN'];
 						$angsuran2->save();
 
             // create JKM angsuran

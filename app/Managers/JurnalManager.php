@@ -34,7 +34,7 @@ class JurnalManager
             $jurnal->akun_kredit = '102.18.000';
         }
         $jurnal->kredit = $penarikan->besar_ambil;
-        $jurnal->keterangan = 'Pengambilan simpanan anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
+        $jurnal->keterangan = $penarikan->keterangan;
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
 
@@ -190,7 +190,12 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->debet = ($angsur>0)?$angsur:0;
         $jurnal->akun_kredit = 0;
         $jurnal->kredit = 0;
-        $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angsuran->keterangan;
+        }
+       
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
@@ -213,7 +218,11 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal->akun_kredit = COA_BANK_MANDIRI;
         }
         $jurnal->kredit = $angsuran->besar_pembayaran;
-        $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+       if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angsuran->keterangan;
+        }
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
          $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
@@ -238,7 +247,11 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal->akun_debet = '701.02.001';
         }
         $jurnal->debet = $jasa;
-        $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angsuran->keterangan;
+        }
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
          $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
@@ -265,7 +278,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
                 $jurnal->akun_debet = COA_BANK_MANDIRI;
             }
             $jurnal->debet = $simpanan->besar_simpanan;
-            $jurnal->keterangan = 'Simpanan '.strtolower($simpanan->jenis_simpan) . ' anggota '. ucwords(strtolower($simpanan->anggota->nama_anggota));
+            $jurnal->keterangan = $simpanan->keterangan;
             $jurnal->created_by = $simpanan->created_by;
             if($jurnal->updated_by){
                 $jurnal->updated_by = $simpanan->updated_by;
