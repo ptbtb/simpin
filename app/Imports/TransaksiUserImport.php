@@ -28,10 +28,10 @@ class TransaksiUserImport
 			\Log::info($transaksi['NIPP']);
 			
 			if($transaksi['THN']){
-			$period_raw=$transaksi['THN'].'-'.sprintf('%02d', $transaksi['BLN']);
+			$period_raw=$transaksi['THN'].'-'.sprintf('%02d', $transaksi['BLN']).'-01';
         	 //dd($period_raw);die;
         	//simpanan wajib
-			$periode=Carbon::createFromFormat('Y-m',$period_raw)->endOfMonth();
+			$periode=Carbon::createFromFormat('Y-m-d',$period_raw);
 			$idakun=Code::where('CODE',$transaksi['COA_PERANTARA'])->first();
 			$anggota=Anggota::where('kode_anggota',$transaksi['NO_ANG'])->first();
 			$tgl_transaksi = Carbon::parse($transaksi['TGL_TRANSAKSI'])->format('Y-m-d');
