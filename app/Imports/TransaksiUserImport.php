@@ -32,6 +32,7 @@ class TransaksiUserImport
         	 //dd($period_raw);die;
         	//simpanan wajib
 			$periode=Carbon::createFromFormat('Y-m-d',$period_raw);
+			 // dd($periode->format('Y-m'));
 			$idakun=Code::where('CODE',$transaksi['COA_PERANTARA'])->first();
 			$anggota=Anggota::where('kode_anggota',$transaksi['NO_ANG'])->first();
 			$tgl_transaksi = Carbon::parse($transaksi['TGL_TRANSAKSI'])->format('Y-m-d');
@@ -39,7 +40,7 @@ class TransaksiUserImport
 			if($transaksi['S_WAJIB']>0){
 				$check= Simpanan::where('kode_jenis_simpan','411.12.000')
 				->where('kode_anggota',$transaksi['NO_ANG'])
-				->whereraw("DATE_FORMAT(periode, '%Y-%m')='".$period_raw."'")->first();
+				->whereraw("DATE_FORMAT(periode, '%Y-%m')='".$periode->format('Y-m')."'")->first();
 				$nama_simpanan=JenisSimpanan::where('kode_jenis_simpan','411.12.000')->first();
 				
 
@@ -65,7 +66,7 @@ class TransaksiUserImport
 			if($transaksi['S_SUKARELA']>0){
 				$check2= Simpanan::where('kode_jenis_simpan','502.01.000')
 				->where('kode_anggota',$transaksi['NO_ANG'])
-				->whereraw("DATE_FORMAT(periode, '%Y-%m')='".$period_raw."'")->first();
+				->whereraw("DATE_FORMAT(periode, '%Y-%m')='".$periode->format('Y-m')."'")->first();
 				$nama_simpanan2=JenisSimpanan::where('kode_jenis_simpan','502.01.000')->first();
 				if(!$check2){
 					$simpanan = new Simpanan();
@@ -94,7 +95,7 @@ class TransaksiUserImport
 				->where('id_status_pinjaman',1)->first();
 				if ($pinjaman1){
 					$angsuran1= Angsuran::where('kode_pinjam',$pinjaman1['kode_pinjam'])
-					->whereraw("DATE_FORMAT(jatuh_tempo, '%Y-%m')='".$period_raw."'")->first();
+					->whereraw("DATE_FORMAT(jatuh_tempo, '%Y-%m')='".$periode->format('Y-m')."'")->first();
 
 					if ($angsuran1)
 					{
@@ -159,7 +160,7 @@ class TransaksiUserImport
 				->where('kode_anggota',$transaksi['NO_ANG'])->first();
 				if ($pinjaman2){
 					$angsuran2= Angsuran::where('kode_pinjam',$pinjaman2['kode_pinjam'])
-					->whereraw("DATE_FORMAT(jatuh_tempo, '%Y-%m')='".$period_raw."'")->first();
+					->whereraw("DATE_FORMAT(jatuh_tempo, '%Y-%m')='".$periode->format('Y-m')."'")->first();
 
 					if ($angsuran2)
 					{
