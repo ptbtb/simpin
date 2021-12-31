@@ -124,7 +124,7 @@
         <tr>
             <td></td>
             <td style="width: 40%"></td>
-            <td style="text-align: left">Jakarta, {{ \Carbon\Carbon::now()->format('d F Y') }}</td>
+            <td style="text-align: left">Jakarta, {{  $tgl_print->format('d F Y') }}</td>
         </tr>
         <tr>
             <td colspan="3" style="text-align: left">Mengetahui</td>
