@@ -37,7 +37,7 @@ class JurnalManager
         if($penarikan->keterangan){
             $jurnal->keterangan = $penarikan->keterangan;
         }else{
-             $jurnal->keterangan = 'Penarikan '.strtolower($penarikan->code_trans->nama_simpanan) . ' anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
+             $jurnal->keterangan = 'Penarikan '.strtolower($penarikan->jenisSimpanan->nama_simpanan) . ' anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
         }
         
         $jurnal->created_by = Auth::user()->id;
