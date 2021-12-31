@@ -64,10 +64,10 @@ class JkkPrintedController extends Controller
         }
         else
         {
-            $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan', function ($query) use ($startUntilPeriod,&$endUntilPeriod)
+            $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan', function ($query1) use ($startUntilPeriod,&$endUntilPeriod)
             {
-                return $query->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
-            }
+                return $query1->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+            })
                                     ->orWhereHas('jkkPengajuan', function ($query)use ($startUntilPeriod,&$endUntilPeriod)
                                     {
                                         return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
