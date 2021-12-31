@@ -21,8 +21,16 @@ class JkkPrintedController extends Controller
     {
         $user = Auth::user();
         $this->authorize('print jkk', $user);
-
+        // dd($request);
         $types = JkkPrintedType::all();
+        if(!$request->from)
+            {          
+                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+            }
+            if(!$request->to)
+            {          
+                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+            }
         $data['types'] = $types;
         $data['title'] = 'Jkk Printed';
         $data['request'] = $request;
@@ -33,27 +41,40 @@ class JkkPrintedController extends Controller
     {
         $user = Auth::user();
         $this->authorize('print jkk', $user);
+          $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
+         $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
 
         $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan')
                                 ->orderBy('printed_at', 'desc');
         if (isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN)
         {
-            $jkkPrinted = $jkkPrinted->whereHas('jkkPengajuan', function ($query)
+            $jkkPrinted = $jkkPrinted->whereHas('jkkPengajuan', function ($query) use ($startUntilPeriod,&$endUntilPeriod)
             {
-                return $query->has('pinjaman');
+                return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
             });
         }
         elseif(isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENARIKAN_SIMPANAN)
         {
-            $jkkPrinted = $jkkPrinted->has('jkkPenarikan');
+            $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan', function ($query) use ($startUntilPeriod,&$endUntilPeriod)
+            {
+                return $query->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+            }
+
+        );
         }
         else
         {
-            $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan')
-                                    ->orWhereHas('jkkPengajuan', function ($query)
+            $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan', function ($query) use ($startUntilPeriod,&$endUntilPeriod)
+            {
+                return $query->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+            }
+                                    ->orWhereHas('jkkPengajuan', function ($query)use ($startUntilPeriod,&$endUntilPeriod)
                                     {
-                                        return $query->has('pinjaman');
+                                        return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
                                     });
+        }
+        if ($request->no_jkk){
+            $jkkPrinted = $jkkPrinted->where('jkk_number',$request->no_jkk);
         }
 
         return DataTables::eloquent($jkkPrinted)

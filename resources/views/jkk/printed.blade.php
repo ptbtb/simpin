@@ -22,6 +22,7 @@
 @section('plugins.SweetAlert2', true)
 
 @section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous" />
     <style>
         .btn-sm {
             font-size: .8rem;
@@ -46,11 +47,23 @@
                                 <option value="">Select All</option>
                                 @foreach ($types as $type)
                                     <option value="{{ $type->id }}"
-                                        {{ $request->type_id && $request->role_id == $type->id ? 'selected' : '' }}>
+                                        {{ $request->type_id && $request->type_id == $type->id ? 'selected' : '' }}>
                                         {{ $type->name }}</option>
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-3">
+                        <label>TGL TRX Dari</label>
+                        <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="from" name="from" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y') }}" autocomplete="off" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>TGL TRX Sampai</label>
+                        <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}" autocomplete="off" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>No JKK</label>
+                        <input class="form-control"  name="no_jkk" value="{{ $request->no_jkk}}" autocomplete="off" />
+                    </div>
                         <div class="col-md-1 form-group" style="margin-top: 26px">
                             <button type="submit" class="btn btn-sm btn-success form-control">
                                 <i class="fa fa-filter"></i>Filter
@@ -108,6 +121,7 @@
 @endsection
 
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
     <script>
         $.fn.dataTable.ext.errMode = 'none';
         $('.table').DataTable({
@@ -118,6 +132,12 @@
                 dataSrc: 'data',
                 data: function(data) {
                     @if (isset($request->type_id)) data.type_id = '{{ $request->type_id }}'; @endif
+                    var from = '{{ $request->from }}';
+                        data.from = from;
+                        var to = '{{ $request->to }}';
+                        data.to = to;
+                        var no_jkk = '{{ $request->no_jkk }}';
+                        data.no_jkk = no_jkk;
                 }
             },
             aoColumns: [{
@@ -180,6 +200,13 @@
             setTimeout(function(){
                 window.location.reload(1);
             }, 3000);
-        })
+        });
+          $('.datepicker').datepicker({
+                format: "dd-mm-yyyy"
+            });
+
+            $('input.datepicker').bind('keyup keydown keypress', function (evt) {
+                return true;
+            });
     </script>
 @endsection

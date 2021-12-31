@@ -81,6 +81,7 @@
                         <th>Kode Ambil</th>
                         <th>#</th>
                         <th>No</th>
+                        <th>NO JKK</th>
                         <th>Tanggal Penarikan</th>
                         <th>Nama Anggota</th>
                         <th>Jenis Simpanan</th>
@@ -186,6 +187,9 @@
                     className: "dt-body-center", 'name': 'DT_RowIndex',
                 },
                 {
+                    mData: 'no_jkk', sType: "string",
+                    className: "dt-body-center", "name": "no_jkk"
+                },{
                     mData: 'tgl_ambil', sType: "string",
                     className: "dt-body-center", "name": "tgl_ambil"
                 },

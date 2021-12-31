@@ -54,8 +54,8 @@ class JurnalController extends Controller
 
         try
         {
-         $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
-         $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
+         $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
+         $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
          $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
          if ($request->id_tipe_jurnal)
          {

@@ -91,6 +91,7 @@
                         <th>Id</th>
                         <th>#</th>
                         <th>No</th>
+                        <th>No JKK</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Nomer Anggota</th>
                         <th>Nama Anggota</th>
@@ -205,6 +206,10 @@
                 {
                     mData: 'DT_RowIndex',
                     className: "dt-body-center", 'name': 'DT_RowIndex',
+                },
+                {
+                    mData: 'no_jkk', sType: "string",
+                    className: "dt-body-center", "name": "no_jkk"
                 },
                 {
                     mData: 'tgl_pengajuan', sType: "string",
