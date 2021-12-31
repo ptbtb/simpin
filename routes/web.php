@@ -540,6 +540,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
      Route::get('postsimpanannojurnal', [App\Http\Controllers\AdminController::class, 'postsimpanannojurnal'])->name('admin-post-simpanan-nojurnal');
      Route::get('cekjurnalnotrans', [App\Http\Controllers\AdminController::class, 'cekjurnalnotrans'])->name('admin-cek-jurnal-notrans');
      Route::get('cekangsuran', [App\Http\Controllers\AdminController::class, 'cekangsuran'])->name('admin-cek-cekangsuran');
+     Route::get('cekpinjamantanpaangsuran', [App\Http\Controllers\AdminController::class, 'cekpinjamantanpaangsuran'])->name('admin-pinjaman-noangsuran');
     
     
 });

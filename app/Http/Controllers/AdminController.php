@@ -12,10 +12,12 @@ use App\Models\Jurnal;
 use App\Models\JurnalTemp;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
+use App\Models\Pinjaman;
 use App\Models\Code;
 use Illuminate\Http\Request;
 
 use App\Managers\JurnalManager;
+use App\Managers\AngsuranManager;
 use App\Managers\SimpananManager;
 use App\Models\Company;
 use Auth;
@@ -214,5 +216,17 @@ class AdminController extends Controller
              // dd($id);
 
         }
+    }
+
+    public function cekpinjamantanpaangsuran(){
+       
+        
+
+        $trans=Pinjaman::doesntHave('listAngsuran')->get();
+        // dd($trans);
+        foreach ($trans as $pinjam){
+            AngsuranManager::generateAngsuran($pinjam);
+        }                            
+
     }
 }
