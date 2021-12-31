@@ -34,7 +34,12 @@ class JurnalManager
             $jurnal->akun_kredit = '102.18.000';
         }
         $jurnal->kredit = $penarikan->besar_ambil;
-        $jurnal->keterangan = $penarikan->keterangan;
+        if($penarikan->keterangan){
+            $jurnal->keterangan = $penarikan->keterangan;
+        }else{
+             $jurnal->keterangan = 'Penarikan '.strtolower($penarikan->code_trans->nama_simpanan) . ' anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
+        }
+        
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
 

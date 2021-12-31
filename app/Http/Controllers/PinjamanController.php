@@ -1470,7 +1470,7 @@ public function destroy($id, Request $request)
         return response()->json(['message' => 'Delete data success'], 200);
     } catch (\Throwable $e) {
         \Log::error($e);
-        return response()->json(['message' => $e], 500);
+        return response()->json(['message' => 'Delete data gagal'], 500);
     }
 }
 
