@@ -50,6 +50,11 @@ class Pinjaman extends Model implements Auditable
         return $this->belongsTo(Code::class, 'id_akun_debet');
     }
 
+    public function akunKredit()
+    {
+        return $this->belongsTo(Code::class, 'id_akun_kredit');
+    }
+
     /**
      * Get all of the pinjaman's jurnals.
     */

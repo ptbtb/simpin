@@ -48,6 +48,7 @@ use Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Database\Eloquent\ModelNotfoundException;
 
+
 class PinjamanController extends Controller
 {
 
@@ -601,7 +602,7 @@ class PinjamanController extends Controller
                             $pinjaman = $pengajuan->pinjaman;
 
                             if ($pinjaman) {
-                                $pinjaman->id_akun_debet = $request->id_akun_debet;
+                                $pinjaman->id_akun_kredit = $request->id_akun_debet;
                                 $pinjaman->tgl_transaksi = $request->tgl_transaksi;
                                 $pinjaman->save();
                             }
@@ -1075,7 +1076,7 @@ public function bayarAngsuran(Request $request, $id)
 
 public function bayarAngsuranDipercepat(Request $request, $id)
 {
-    // dd($request);
+     // dd($request);
     try {
         $rule['besar_pembayaran'] = 'required';
 
@@ -1139,7 +1140,6 @@ public function bayarAngsuranDipercepat(Request $request, $id)
         $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
             //$serialNumber=Anguran::getSerialNumber(Carbon::now()->format('d-m-Y'));
         foreach ($listAngsuran as $angsuran) {
-            $serialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
             $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
             $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
             $angsuran->paid_at = Carbon::now();
@@ -1154,19 +1154,33 @@ public function bayarAngsuranDipercepat(Request $request, $id)
                 $angsuran->id_akun_kredit = ($request->id_akun_kredit) ? $request->id_akun_kredit : null;
             }
             $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
-            $angsuran->serial_number = $serialNumber;
+            // $angsuran->serial_number = $serialNumber;
             $angsuran->save();
 
-            $pinjaman->sisa_angsuran = 0;
-            $pinjaman->sisa_pinjaman = 0;
-            $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
-            $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
 
-            $pinjaman->save();
+            // $pinjaman->sisa_angsuran = 0;
+            // $pinjaman->sisa_pinjaman = 0;
+            // $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+            // $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+
+            // $pinjaman->save();
 
                 // create JKM angsuran
-            JurnalManager::createJurnalAngsuran($angsuran);
+            // JurnalManager::createJurnalAngsuran($angsuran);
         }
+        $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+
+        if($request->jenis_pembayaran)
+            {
+                $codeCoa = Code::where('CODE', $tabungan->kode_trans)->first();
+                $pinjaman->id_akun_debet = $codeCoa->id;
+            }
+            else
+            {
+                $pinjaman->id_akun_debet = ($request->id_akun_kredit) ? $request->id_akun_kredit : null;
+            }
+        $pinjaman->serial_number= PinjamanManager::getSerialNumber(Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi));
+        $pinjaman->save();
 
         if($request->jenis_pembayaran)
         {
@@ -1203,7 +1217,11 @@ public function bayarAngsuranDipercepat(Request $request, $id)
         }
 
             //dd($angsuran);die;
-            //JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
+            JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
+            $pinjaman->sisa_angsuran = 0;
+            $pinjaman->sisa_pinjaman = 0;
+            $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+            $pinjaman->save();
         return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
     } catch (\Throwable $e) {
         \Log::error($e);
@@ -1430,16 +1448,29 @@ public function destroy($id, Request $request)
             return response()->json(['message' => 'Pinjaman not found'], 404);
         }
 
+
         $listAngsuran = $pinjaman->listAngsuran;
         foreach ($listAngsuran as $angsuran) {
             $angsuran->delete();
+            if ($angsuran->jurnals()){
+            $angsuran->jurnals()->delete();    
+            }
+            
         }
 
+        if ($pinjaman->jurnals()){
+           $pinjaman->jurnals()->delete();
+        }
+        if($pinjaman->pengajuan){
+            $pinjaman->pengajuan->delete();
+        }
+        
         $pinjaman->delete();
 
         return response()->json(['message' => 'Delete data success'], 200);
     } catch (\Throwable $e) {
-        return response()->json(['message' => 'Terjadi Kesalahan'], 500);
+        \Log::error($e);
+        return response()->json(['message' => $e], 500);
     }
 }
 

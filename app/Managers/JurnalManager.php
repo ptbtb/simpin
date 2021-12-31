@@ -73,9 +73,9 @@ class JurnalManager
             $jurnal->tgl_transaksi = Carbon::parse( $pinjaman->tgl_transaksi);
             $jurnal->akun_debet = 0;
             $jurnal->debet = 0;
-            if($pinjaman->akun_kredit)
+            if($pinjaman->akunKredit)
             {
-                $jurnal->akun_kredit = $pinjaman->akunDebet->CODE;
+                $jurnal->akun_kredit = $pinjaman->akunKredit->CODE;
             }
             else
             {
@@ -470,69 +470,70 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         }
     }
 
-    public static function createJurnalPelunasanDipercepat(Angsuran $angsuran){
+    public static function createJurnalPelunasanDipercepat(Pinjaman $pinjaman){
 
+        //kredit
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
-        $jurnal->debet = $angsuran->besar_angsuran;
-        $jurnal->akun_kredit = 0;
-        $jurnal->kredit = 0;
-        $jurnal->keterangan = 'Pelunasan dipercepat Pinjaman anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
-        $jurnal->created_by = Auth::user()->id;
-        $jurnal->updated_by = Auth::user()->id;
-        $jurnal->tgl_transaksi =$angsuran->tgl_transaksi;
-
-        // save as polymorphic
-        $angsuran->jurnals()->save($jurnal);
-
-        // kredit
-        $jurnal = new Jurnal();
-        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)>format('Ymd').(Jurnal::count()+1);
+        $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
         $jurnal->akun_debet = 0;
         $jurnal->debet = 0;
-        if($angsuran->akunKredit)
+        $jurnal->akun_kredit = $pinjaman->kode_jenis_pinjam;
+        $jurnal->kredit = $pinjaman->sisa_pinjaman;
+        $jurnal->keterangan = 'Pelunasan dipercepat Pinjaman anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+        $jurnal->created_by = Auth::user()->id;
+        $jurnal->updated_by = Auth::user()->id;
+        $jurnal->tgl_transaksi =$pinjaman->tgl_transaksi;
+
+        // save as polymorphic
+        $pinjaman->jurnals()->save($jurnal);
+
+        // debit
+        $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_kredit = 0;
+        $jurnal->kredit = 0;
+        if($pinjaman->akunDebet)
         {
-            $jurnal->akun_kredit = $angsuran->akunKredit->CODE;
+            $jurnal->akun_debet = $pinjaman->akunDebet->CODE;
         }
         else
         {
-            $jurnal->akun_kredit = COA_BANK_MANDIRI;
+            $jurnal->akun_debet = COA_BANK_MANDIRI;
         }
-        $jurnal->kredit = $angsuran->besar_pembayaran;
-        $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        $jurnal->debet = $pinjaman->totalBayarPelunasanDipercepat;
+        $jurnal->keterangan = 'Pelunasan dipercepat pinjaman   anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->tgl_transaksi =$angsuran->tgl_transaksi;
+        $jurnal->tgl_transaksi =$pinjaman->tgl_transaksi;
 
         // save as polymorphic
-        $angsuran->jurnals()->save($jurnal);
+        $pinjaman->jurnals()->save($jurnal);
 
         // jurnal untuk JASA
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_kredit = 0;
-        $jurnal->kredit = 0;
+        $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
         // japen
-        if($angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
+        if($pinjaman->kode_jenis_pinjam == '105.01.001')
         {
-            $jurnal->akun_debet = '701.02.003';
+            $jurnal->akun_kredit = '701.02.003';
         }
         // japan and others
         else
         {
-            $jurnal->akun_debet = '701.02.001';
+            $jurnal->akun_kredit = '701.02.001';
         }
-        $jurnal->debet = $angsuran->jasa;
-        $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        $jurnal->kredit = $pinjaman->jasaPelunasanDipercepat;
+        $jurnal->keterangan = 'Pelunasan dipercepat pinjaman   anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->tgl_transaksi =$angsuran->tgl_transaksi;
+        $jurnal->tgl_transaksi =$pinjaman->tgl_transaksi;
 
         // save as polymorphic
-        $angsuran->jurnals()->save($jurnal);
+        $pinjaman->jurnals()->save($jurnal);
     }
 }
