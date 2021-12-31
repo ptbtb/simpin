@@ -180,11 +180,13 @@
                             '<td><input type="number" name="angsuran_ke[]"></td>' +
                             '<td><input type="text" class="toRupiah"" name="besar_angsuran[]"></td>' +
                             '<td><input type="text" class="toRupiah" name="jasa[]"></td>' +
-                            '<td><input type="text" class="toRupiah" name="total_angsuran"></td>' +
                             '<td><input type="date" name="jatuh_tempo[]"></td>' +
                             '<td><input type="text" class="toRupiah" name="besar_pembayaran[]"></td>' +
                             '<td>' +
-                                '<input type="date" name="tanggal_pembayaran[]">' +
+                                '<input type="date" name="tanggal_pembayaran[]"></td>' +
+                                '<td><input type="text" name="id_akun_kredit[]"></td>' +
+                                '<td><input type="text" name="serial_number[]"></td>' +
+                                '<td><select  name="id_status_angsuran[]"><option value="1">Belum Lunas</option><option value="2">Lunas</option></select></td>' +
                             '</td>' +
                             '<td>' +
                                 '<a class="btn btn-xs btn-danger text-white btn-delete-row"><i class="fa fa-trash"></i> Delete Row</a>' +
