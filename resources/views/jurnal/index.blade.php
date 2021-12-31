@@ -86,6 +86,15 @@
                         
                     </tr>
                 </thead>
+                <tfoot>
+                <tr>
+                <th colspan="5" style="text-align:right">Total:</th>
+                <th id="totaldebet" style="text-align:right"></th>
+                <th></th>
+                <th id="totalkredit" style="text-align:right"></th>
+                <th colspan="2"></th>
+            </tr>
+        </tfoot>
             </table>
         </div>
     </div>
@@ -192,7 +201,13 @@
                         mData: 'created_by.name', sType: "string",
                         className: "dt-body-center", "name": "created_by.name",
                     },*/
-                ]
+                ],
+                drawCallback:function(settings)
+    {
+      $('#totaldebet').html(toRupiah(settings.json.totaldebet));
+      $('#totalkredit').html(toRupiah(settings.json.totalkredit));
+    }
+                
             });
 
             // add index column
@@ -201,6 +216,8 @@
                     cell.innerHTML = i+1;
                 } );
             }).draw();
+            
+
         }
 
 
@@ -209,7 +226,7 @@
             var stringNumber = number.toString();
             var length = stringNumber.length;
             var temp = length;
-            var res = "Rp ";
+            var res = "";
             for (let i = 0; i < length; i++) {
                 res = res + stringNumber.charAt(i);
                 temp--;

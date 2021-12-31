@@ -54,11 +54,11 @@ class JurnalController extends Controller
 
         try
         {
-           $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
-           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
-           $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
-           if ($request->id_tipe_jurnal)
-           {
+         $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
+         $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
+         $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+         if ($request->id_tipe_jurnal)
+         {
             $jurnal = $jurnal->where('id_tipe_jurnal', $request->id_tipe_jurnal);
         }
 
@@ -67,7 +67,7 @@ class JurnalController extends Controller
             $tipeJurnal = substr($request->serial_number,0,3);
             $year = substr($request->serial_number,3,4);
             $month = substr($request->serial_number,7,2);
-            $serialNumber = (int)substr($request->serial_number,9,4);
+            $serialNumber = (int)substr($request->serial_number,9);
 
             if($tipeJurnal == 'ANG')
             {
@@ -129,24 +129,31 @@ class JurnalController extends Controller
             $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
         }
         if($request->code){
-           $jurnal = $jurnal
-           ->where(function ($query) use($request) {
+         $jurnal = $jurnal
+         ->where(function ($query) use($request) {
 
-             $query->where('akun_debet', 'like', '%' . $request->code . '%')
-             ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
-             
-     });
+           $query->where('akun_debet', 'like', '%' . $request->code . '%')
+           ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
 
-       }
+       });
 
-
+     }
 
 
-       $jurnal = $jurnal->orderBy('tgl_transaksi', 'desc');
-       return DataTables::eloquent($jurnal)->addIndexColumn()->make(true);
-   }
-   catch (\Throwable $e)
-   {
+
+
+     $jurnal = $jurnal->orderBy('tgl_transaksi', 'desc');
+     return DataTables::eloquent($jurnal)->addIndexColumn()
+     ->with('totaldebet', function() use ($jurnal) {
+        return $jurnal->sum('debet');
+   })
+     ->with('totalkredit', function() use ($jurnal) {
+        return $jurnal->sum('kredit');
+   })
+     ->make(true);
+ }
+ catch (\Throwable $e)
+ {
     $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
     Log::error($message);
     return response()->json(['message' => 'error'], 500);
@@ -157,15 +164,15 @@ public function createExcel(Request $request)
 {
     try{
         if(!$request->from)
-            {          
-                $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
-            }
-            if(!$request->to)
-            {          
-                $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
-            }
-         $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
-           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
+        {          
+            $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+        }
+        if(!$request->to)
+        {          
+            $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+        }
+        $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->format('Y-m-d');
+        $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->format('Y-m-d');
         $jurnal = Jurnal::with('tipeJurnal','createdBy')->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);;
         if ($request->id_tipe_jurnal)
         {
@@ -177,7 +184,7 @@ public function createExcel(Request $request)
             $tipeJurnal = substr($request->serial_number,0,3);
             $year = substr($request->serial_number,3,4);
             $month = substr($request->serial_number,7,2);
-            $serialNumber = (int)substr($request->serial_number,9,4);
+            $serialNumber = (int)substr($request->serial_number,9);
 
             if($tipeJurnal == 'ANG')
             {
@@ -235,26 +242,26 @@ public function createExcel(Request $request)
             }
         }
         if($request->code){
-           $jurnal = $jurnal
-           ->where(function ($query) use($request) {
+         $jurnal = $jurnal
+         ->where(function ($query) use($request) {
 
-             $query->where('akun_debet', 'like', '%' . $request->code . '%')
-             ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
-             
-     });
+           $query->where('akun_debet', 'like', '%' . $request->code . '%')
+           ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
 
-       }
-       
+       });
 
-       if($request->keterangan)
-        {
-            $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
-        }
+     }
+
+
+     if($request->keterangan)
+     {
+        $jurnal = $jurnal->where('keterangan', 'like', '%' . $request->keterangan . '%');
+    }
 
     $jurnal = $jurnal->orderBy('tgl_transaksi', 'desc')->get();
     $data['jurnal']= $jurnal;
     return (new FastExcel($jurnal))->download('export_jurnal_excel_' . Carbon::now()->format('d M Y') . '.xlsx',function($item){
-         return [
+       return [
         'Nomor' => $item->ser_num_view,
         'No Anggota' => $item->kode_anggota_view,
         'Tipe Jurnal' => ($item->tipeJurnal)?$item->tipeJurnal->name:'',
@@ -265,7 +272,7 @@ public function createExcel(Request $request)
         'Keterangan' => $item->keterangan,
         'Tanggal' => $item->tgl_transaksi,
     ];
-    });
+});
     // $filename = 'export_jurnal_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
     // return Excel::download(new JurnalExport($data), $filename);
 }
