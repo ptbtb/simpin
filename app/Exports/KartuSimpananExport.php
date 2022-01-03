@@ -65,7 +65,7 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
            4. nama jenis simpanan
            5. total saldo akhir tiap jenis simpanan
        */
-
+        $year= Carbon::today()->subYear()->endOfYear();
        $listSimpanan = [];
        $index = count($requiredKey);
        foreach ($groupedListSimpanan as $key => $list)
@@ -74,8 +74,18 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
            if ($jenisSimpanan)
            {
                $tabungan = $anggota->simpanSaldoAwal->where('kode_trans',$key)->first();
+               $transsimpan = $anggota->listSimpanan
+                                    ->where('kode_jenis_simpan', $key)
+                                    ->where('periode','<',$year)
+                                    ->where('mutasi',0)
+                                    ->sum('besar_simpanan');
+                        $transtarik = $anggota->listPenarikan
+                                    ->where('code_trans', $key)
+                                    ->where('tgl_ambil','<',$year)
+                                    ->where('mutasi',0)
+                                    ->sum('besar_ambil');
                $res['name'] = $jenisSimpanan->nama_simpanan;
-               $res['balance'] = ($tabungan)? $tabungan->besar_tabungan:0;
+               $res['balance'] = ($tabungan)? $tabungan->besar_tabungan+$transsimpan-$transtarik:0;
                $res['list'] = $list;
                $res['amount'] = $list->sum('besar_simpanan');
                $res['final_balance'] = $res['balance'] + $res['amount'];

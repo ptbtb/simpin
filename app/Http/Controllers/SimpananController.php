@@ -520,7 +520,7 @@ public function indexCard(Request $request)
     }
 }
 
-public function showCard($kodeAnggota)
+public function showCard(Request $request,$kodeAnggota)
 {
     try {
             // get anggota
@@ -567,15 +567,29 @@ public function showCard($kodeAnggota)
                 4. nama jenis simpanan
                 5. total saldo akhir tiap jenis simpanan
             */
-
+                if(!$request->year){
+                    $year= Carbon::today()->subYear()->endOfYear();
+                }else{
+                    $year= Carbon::createFromFormat('Y',$$request->year)->subYear()->endOfYear();
+                }
                 $listSimpanan = [];
                 $index = count($requiredKey);
                 foreach ($groupedListSimpanan as $key => $list) {
                     $jenisSimpanan = JenisSimpanan::find($key);
                     if ($jenisSimpanan) {
                         $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
+                        $transsimpan = $anggota->listSimpanan
+                                    ->where('kode_jenis_simpan', $key)
+                                    ->where('periode','<',$year)
+                                    ->where('mutasi',0)
+                                    ->sum('besar_simpanan');
+                        $transtarik = $anggota->listPenarikan
+                                    ->where('code_trans', $key)
+                                    ->where('tgl_ambil','<',$year)
+                                    ->where('mutasi',0)
+                                    ->sum('besar_ambil');
                         $res['name'] = $jenisSimpanan->nama_simpanan;
-                        $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan : 0;
+                        $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan+$transsimpan-$transtarik : 0;
                         $res['list'] = $list;
                         $res['amount'] = $list->sum('besar_simpanan');
                         $res['final_balance'] = $res['balance'] + $res['amount'];
@@ -602,7 +616,7 @@ public function showCard($kodeAnggota)
             }
         }
 
-        public function downloadPDFCard($kodeAnggota)
+        public function downloadPDFCard(Request $request,$kodeAnggota)
         {
             try {
             // get anggota
@@ -648,15 +662,29 @@ public function showCard($kodeAnggota)
                 4. nama jenis simpanan
                 5. total saldo akhir tiap jenis simpanan
             */
-
+                if(!$request->year){
+                    $year= Carbon::today()->subYear()->endOfYear();
+                }else{
+                    $year= Carbon::createFromFormat('Y',$$request->year)->subYear()->endOfYear();
+                }
                 $listSimpanan = [];
                 $index = count($requiredKey);
                 foreach ($groupedListSimpanan as $key => $list) {
                     $jenisSimpanan = JenisSimpanan::find($key);
                     if ($jenisSimpanan) {
                         $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
+                        $transsimpan = $anggota->listSimpanan
+                                    ->where('kode_jenis_simpan', $key)
+                                    ->where('periode','<',$year)
+                                    ->where('mutasi',0)
+                                    ->sum('besar_simpanan');
+                        $transtarik = $anggota->listPenarikan
+                                    ->where('code_trans', $key)
+                                    ->where('tgl_ambil','<',$year)
+                                    ->where('mutasi',0)
+                                    ->sum('besar_ambil');
                         $res['name'] = $jenisSimpanan->nama_simpanan;
-                        $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan : 0;
+                        $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan+$transsimpan-$transtarik : 0;
                         $res['list'] = $list;
                         $res['amount'] = $list->sum('besar_simpanan');
                         $res['final_balance'] = $res['balance'] + $res['amount'];
