@@ -114,10 +114,10 @@
                             <tr>
                                 <td><input type="hidden" name="kode_angsur[]" value="{{ $angsuran->kode_angsur }}">
                                     <input type="number" name="edit_angsuran_ke[]" value="{{ $angsuran->angsuran_ke }}"></td>
-                                <td><input type="text" class="toRupiah" name="edit_besar_angsuran[]" value="{{ $angsuran->besar_angsuran }}"></td>
-                                <td><input type="text" class="toRupiah" name="edit_jasa[]" value="{{ $angsuran->jasa }}"></td>
+                                <td><input type="text" class="toRupiah" name="edit_besar_angsuran[]" value="{{ number_format($angsuran->besar_angsuran,0,',','.') }}"></td>
+                                <td><input type="text" class="toRupiah" name="edit_jasa[]" value="{{ number_format($angsuran->jasa,0,',','.') }}"></td>
                                 <td><input type="date" name="edit_jatuh_tempo[]" value="{{ $angsuran->jatuh_tempo->toDateString() }}"></td>
-                                <td><input type="text"  class="toRupiah"name="edit_besar_pembayaran[]" value="{{ $angsuran->besar_pembayaran }}"></td>
+                                <td><input type="text"  class="toRupiah"name="edit_besar_pembayaran[]" value="{{ number_format($angsuran->besar_pembayaran,0,',','.') }}"></td>
                                 <td>
                                     <input type="date" name="edit_tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->toDateString():'' }}">
                                 </td>
