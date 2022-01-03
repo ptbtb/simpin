@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Tambah Data Anggota')
+@section('title',  $title )
 @section('plugins.Datatables', true)
 @section('plugins.Select2', true)
 @section('content_header')
@@ -66,8 +66,8 @@
 									<select id="kelasCompany" name="kelas_company" class="form-control" disabled>
 										<option value="">Pilih Satu</option>
 										@if($kelasCompany != "")
-											@foreach ($kelasCompany as $listKelasCompany)
-												<option value="{{ $listKelasCompany->id }}" {{ $listKelasCompany->id == $anggota->kelas_company_id ? 'selected' : ''}}>{{ $listKelasCompany->nama }}</option>
+											@foreach ($kelasCompany as $lk)
+												<option value="{{ $lk->id }}" {{ $lk->id == $anggota->kelas_company_id ? 'selected' : ''}}>{{ $lk->nama }}</option>
 											@endforeach
 										@endif
 									</select>
@@ -212,6 +212,8 @@
 	<script src="{{ asset('vendor/jquery-validation/jquery.validate.js') }}"></script>
 <script>
 	var companyId = $('#companyId').val();
+	var kcompanyId = $('#kelasCompany').val();
+	console.log(kcompanyId);
 	var jenisAnggotaId = $('#jenisAnggota').val();
 	var listKelasCompany = collect({!!$kelasCompany!!});
 
@@ -333,10 +335,7 @@
 		}
 	})
 
-	if (companyId!=""){
-	$('#kelasCompany').val('');
-			getKelasCompany(companyId, jenisAnggotaId);	
-	}
+	
 
 	$('#jenisAnggota').on('change', function(){
 		if($(this).children("option:selected").val() != jenisAnggotaId){
@@ -354,26 +353,8 @@
 
 	function initiateSelect2()
 	{
-		 $("#kelasCompany").select2({
-            ajax: {
-                url: '{{ route('anggota-ajax-getKelasCompany') }}',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    var query = {
-                        search: params.term,
-                     	companyId : companyId,
-						jenisAnggotaId : jenisAnggotaId
-                    }
-                    return query;
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                }
-            }
-        });
+
+		 // $("#kelasCompany").val(kcompanyId);
 	}
 
 	function getKelasCompany(companyId, jenisAnggotaId){

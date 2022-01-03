@@ -121,6 +121,7 @@ class SimpananController extends Controller
     {
         $this->authorize('add simpanan', Auth::user());
         try {
+            
             // check password
             $check = Hash::check($request->password, Auth::user()->password);
             if (!$check) {
@@ -129,7 +130,7 @@ class SimpananController extends Controller
 
             foreach ($request->jenis_simpanan as $key => $value)
             {
-                $besarSimpanan = filter_var($request->besar_simpanan[$key], FILTER_SANITIZE_NUMBER_INT);
+                $besarSimpanan = filter_var($request->besar_simpanan[$key], FILTER_SANITIZE_NUMBER_FLOAT);
                 $jenisSimpanan = JenisSimpanan::find($request->jenis_simpanan[$key]);
                 $anggotaId = $request->kode_anggota;
 
@@ -210,7 +211,13 @@ class SimpananController extends Controller
                     $simpanan->u_entry = Auth::user()->name;
                     $simpanan->tgl_entri = Carbon::now();
                     $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                    $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                    if ($request->periode){
+                        $simpanan->periode = Carbon::createFromFormat('Y-m-d', $request->periode[$key]);
+                    }else{
+                        $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                    }
+                    
+                    
                     $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                     $simpanan->keterangan = ($request->keterangan[$key]) ? $request->keterangan[$key] : null;
                     $simpanan->id_akun_debet = ($request->id_akun_debet[$key]) ? $request->id_akun_debet[$key] : null;
