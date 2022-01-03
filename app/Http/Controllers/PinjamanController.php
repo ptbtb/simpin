@@ -77,16 +77,16 @@ class PinjamanController extends Controller
             }
         }
 
-        if (!$request->from) {
-            if ($request->id) {
-                $request->from = Carbon::today()->firstOfYear()->format('Y-m-d');
-            } else {
-                $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
-            }
-        }
-        if (!$request->to) {
-            $request->to = Carbon::today()->format('Y-m-d');
-        }
+        // if (!$request->from) {
+        //     if ($request->id) {
+        //         $request->from = Carbon::today()->firstOfYear()->format('Y-m-d');
+        //     } else {
+        //         $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
+        //     }
+        // }
+        // if (!$request->to) {
+        //     $request->to = Carbon::today()->format('Y-m-d');
+        // }
         if ($request->jenistrans) {
             if ($request->jenistrans == 'A') {
                 $listPinjaman = Pinjaman::where('saldo_mutasi', '>', 0);
