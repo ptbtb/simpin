@@ -43,7 +43,7 @@ class PinjamanManager
             // biaya administrasi
             $biayaAdministrasi = 0;
             $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
-            if ($pengajuan->besar_pinjam > $simpinRule->value)
+            if ($pengajuan->besar_pinjam >= $simpinRule->value)
             {
                 $biayaAdministrasi = $simpinRule->amount;
             }
