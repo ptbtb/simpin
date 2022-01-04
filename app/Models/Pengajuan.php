@@ -164,6 +164,9 @@ class Pengajuan extends Model implements Auditable
 
     public function getViewBiayaAdminAttribute()
     {
+        if($this->pinjaman){
+            return 'Rp '.number_format($this->pinjaman->biaya_administrasi, '2', ',', '.');
+        }
         return 'Rp '.number_format($this->jenisPinjaman->biaya_admin, '2', ',', '.');
     }
 
