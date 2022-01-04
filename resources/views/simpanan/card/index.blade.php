@@ -187,10 +187,10 @@
             var urlExport = baseURL + "/simpanan/card/download";
             $('#exportButton').removeClass('d-none');
 			@if(\Auth::user()->isAnggota())
-				$('#pdfButton').attr('href', urlExport+"/pdf/"+selectedValue);
+				$('#pdfButton').attr('href', urlExport+"/pdf/"+selectedValue+"?year="+selectedyear);
 			@else
-				$('#pdfButton').attr('href', urlExport+"/pdf/"+selectedValue);
-				$('#excelButton').attr('href', urlExport+"/excel/"+selectedValue);
+				$('#pdfButton').attr('href', urlExport+"/pdf/"+selectedValue+"?year="+selectedyear);
+				$('#excelButton').attr('href', urlExport+"/excel/"+selectedValue+"?year="+selectedyear);
 			@endif
 		});
 	</script>
