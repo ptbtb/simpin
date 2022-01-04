@@ -13,7 +13,6 @@ use App\Managers\AngsuranManager;
 use App\Managers\PinjamanManager;
 use App\Managers\JurnalManager;
 use App\Models\Code;
-use Illuminate\Database\Eloquent\ModelNotfoundException;
 
 class PinjamanBaruImport implements OnEachRow
 {
@@ -31,7 +30,7 @@ class PinjamanBaruImport implements OnEachRow
         if ($code){
             $id_akun_debet=$code->id;
         }else{
-            throw new ModelNotfoundException('COA pada baris '.$rowIndex.' tidak ada dalam database');
+           throw new \Exception('COA pada baris '.$rowIndex.' tidak ada dalam database');
         }
         
         if ($besar_pinjam > 0 )
