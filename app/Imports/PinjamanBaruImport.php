@@ -31,7 +31,7 @@ class PinjamanBaruImport implements OnEachRow
         if ($code){
             $id_akun_debet=$code->id;
         }else{
-            throw new ModelNotfoundException('COA pada baris '.$rowIndex.' tidak ada dalah database');
+            throw new ModelNotfoundException('COA pada baris '.$rowIndex.' tidak ada dalam database');
         }
         
         if ($besar_pinjam > 0 )

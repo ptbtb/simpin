@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Database\Eloquent\ModelNotfoundException;
 
 class AngsuranController extends Controller
 {
@@ -32,17 +34,21 @@ class AngsuranController extends Controller
         {
             DB::transaction(function () use ($request)
             {
-                Excel::import(new AngsuranImport, $request->file); 
+                // Excel::import(new AngsuranImport, $request->file); 
+                $collection = (new FastExcel)->import($request->file);
+                foreach ($collection as $transaksi) {
+                    AngsuranImport::generatetransaksi($transaksi);
+                }
             });
 
             return redirect()->back()->withSuccess('Berhasil Import Data');
         }
-        catch (\Throwable $e)
+        catch (ModelNotFoundException $exception)
         {
-            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
-            Log::error($message);
+            
+            Log::error($exception->getMessage());
 
-            return redirect()->back()->withError('Terjadi Kesalahan');
+            return redirect()->back()->withError($exception->getMessage())->withInput();
         }
     }
 }
