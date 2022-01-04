@@ -111,6 +111,15 @@ class JurnalController extends Controller
 
                 $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function($query) use($year, $month, $serialNumber)
                 {
+                    $query->whereYear('tgl_entri', '=', $year)->whereMonth('tgl_entri', '=', $month)->where('serial_number_kredit', $serialNumber);
+                });
+            }
+            else if($tipeJurnal == 'PCP')
+            {
+                $jurnalableType = 'App\Models\Pinjaman';
+
+                $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function($query) use($year, $month, $serialNumber)
+                {
                     $query->whereYear('tgl_entri', '=', $year)->whereMonth('tgl_entri', '=', $month)->where('serial_number', $serialNumber);
                 });
             }
