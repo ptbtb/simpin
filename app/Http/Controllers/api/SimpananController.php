@@ -122,7 +122,7 @@ class SimpananController extends Controller
                         $transtarik = $anggota->listPenarikan
                                     ->where('code_trans', $key)
                                     ->where('tgl_ambil','<',$year)
-                                    ->where('mutasi',0)
+                                    ->where('paid_by_cashier',1)
                                     ->sum('besar_ambil');
                     $res['name'] = $jenisSimpanan->nama_simpanan;
                     $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan+$transsimpan-$transtarik : 0;
