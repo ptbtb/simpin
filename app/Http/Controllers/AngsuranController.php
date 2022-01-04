@@ -43,12 +43,12 @@ class AngsuranController extends Controller
 
             return redirect()->back()->withSuccess('Berhasil Import Data');
         }
-        catch (ModelNotFoundException $exception)
+        catch (\Throwable $e)
         {
-            
-            Log::error($exception->getMessage());
+            $message = $e->getMessage();
+            Log::error($message);
 
-            return redirect()->back()->withError($exception->getMessage())->withInput();
+            return redirect()->back()->withError($message);
         }
     }
 }

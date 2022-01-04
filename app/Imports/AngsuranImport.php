@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Row;
 use App\Models\Code;
 use Maatwebsite\Excel\Concerns\OnEachRow;
-use Illuminate\Database\Eloquent\ModelNotfoundException;
 use Illuminate\Support\Facades\Log;
 
 class AngsuranImport 
@@ -28,10 +27,10 @@ class AngsuranImport
         $idkredit=($transaksi['coa'] == "\N" || $transaksi['coa'] == '' || $transaksi['coa'] == null) ? null : $transaksi['coa'];
         $idakunkredit=Code::where('CODE',$idkredit)->first();
         if (!$idakunkredit){
-             throw new ModelNotfoundException('Coa '.$idkredit.' untuk pinjaman '.$transaksi['kode pinjam'].' tidak ada dalam database');
+             throw new \Exception('Coa '.$idkredit.' untuk pinjaman '.$transaksi['kode pinjam'].' tidak ada dalam database');
         }
         if (!$angsuran){
-             throw new ModelNotfoundException('Angsuran ke '.$transaksi['angsuran ke'].' untuk pinjaman '.$transaksi['kode pinjam'].' tidak ada dalam database');
+             throw new \Exception('Angsuran ke '.$transaksi['angsuran ke'].' untuk pinjaman '.$transaksi['kode pinjam'].' tidak ada dalam database');
         }
         
             $payDate =$tgl_bayar;
