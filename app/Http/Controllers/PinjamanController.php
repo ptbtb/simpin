@@ -1845,7 +1845,6 @@ return false;
 }
 
 public function updateSubmit(Request $request){
-
     $id_akun_kredit = [];
     $pinjaman = Pinjaman::where('kode_pinjam',$request->kode_pinjam)->first();
     if (isset($request->angsuran_ke)){
@@ -1931,12 +1930,12 @@ if (isset($request->angsuran_ke)){
         $angsuran->jasa = filter_var($request->jasa[$key], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
         $angsuran->u_entry = Auth::user()->name;
         $angsuran->jatuh_tempo = $request->jatuh_tempo[$key];
-        $angsuran->besar_pembayaran = filter_var($request->besar_pembayaran[$key], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+        $angsuran->besar_pembayaran = filter_var(($request->besar_pembayaran[$key]!==null)?$request->besar_pembayaran[$key]:0, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
         $angsuran->tgl_transaksi = $request->tanggal_pembayaran[$key];
         $angsuran->tgl_entri = Carbon::now();;
         $angsuran->paid_at = $request->tanggal_pembayaran[$key];
         $angsuran->id_akun_kredit =$id_akun_kredit[$key];
-        $angsuran->id_status_angsuran = $request->status_angsuran[$key];
+        $angsuran->id_status_angsuran = $request->id_status_angsuran[$key];
         $angsuran->serial_number = $request->serial_number[$key];
         $angsuran->save();
 
