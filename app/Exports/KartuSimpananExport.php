@@ -24,7 +24,13 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
        $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($this->kodeAnggota);
 
        // get this year
-       $thisYear = Carbon::now()->year;
+      if(!$request->year){
+                    $year= Carbon::today()->subYear()->endOfYear();
+                    $thisYear = Carbon::now()->year;
+                }else{
+                    $year= Carbon::createFromFormat('Y',$request->year)->subYear()->endOfYear();
+                    $thisYear = Carbon::createFromFormat('Y',$request->year)->year;
+                }
 
        // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
         $listSimpanan = Simpanan::whereYear('tgl_entri', $thisYear)
@@ -65,7 +71,7 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
            4. nama jenis simpanan
            5. total saldo akhir tiap jenis simpanan
        */
-        $year= Carbon::today()->subYear()->endOfYear();
+        
        $listSimpanan = [];
        $index = count($requiredKey);
        foreach ($groupedListSimpanan as $key => $list)

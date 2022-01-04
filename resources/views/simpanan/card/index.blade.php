@@ -54,6 +54,14 @@
 									</select>
 								</div>
 							@endif
+							<div class="col-md-6 form-group" id="anggotaSelect2">
+									<label for="tahun">Tahun</label>
+									<select name="year" id="pilihyear" class="form-control">
+										@foreach ($listtahun as $y)
+                        <option value="{{$y}}" {{ ($y==$tahun)?'selected':''}}>{{$y}}</option>
+                        @endforeach
+									</select>
+								</div>
 							<div class="col-12 form-group mt-2 " id="anggotaForm">
 								<label for="detailAnggota">Preview Kartu Simpanan</label>
 								<div id="exportButton" class="d-none text-right my-2">
@@ -157,6 +165,23 @@
 			var selectedValue = $(this).children("option:selected").val();
 			var baseURL = {!! json_encode(url('/')) !!};
 			$.get(baseURL + "/simpanan/card/view/" + selectedValue, function( data ) {
+				$('#detailAnggota').html(data);
+			});
+            var urlExport = baseURL + "/simpanan/card/download";
+            $('#exportButton').removeClass('d-none');
+			@if(\Auth::user()->isAnggota())
+				$('#pdfButton').attr('href', urlExport+"/pdf/"+selectedValue);
+			@else
+				$('#pdfButton').attr('href', urlExport+"/pdf/"+selectedValue);
+				$('#excelButton').attr('href', urlExport+"/excel/"+selectedValue);
+			@endif
+		});
+		$('#pilihyear').on('change', function ()
+		{
+			var selectedValue = $('#anggotaName').children("option:selected").val();
+			var selectedyear = $(this).children("option:selected").val();
+			var baseURL = {!! json_encode(url('/')) !!};
+			$.get(baseURL + "/simpanan/card/view/" + selectedValue+"?year="+selectedyear, function( data ) {
 				$('#detailAnggota').html(data);
 			});
             var urlExport = baseURL + "/simpanan/card/download";
