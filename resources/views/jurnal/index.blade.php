@@ -158,8 +158,12 @@
                         className: "dt-body-center", "name": "jurnalable_view",
                         mRender: function(data, type, full)
                         {
+
                             if(data)
                             {
+                                if (full.id_tipe_jurnal==2 && full.jurnalable_type=="App\\Models\\Pinjaman"){
+                                     return data.serial_number_kredit_view;
+                                }
                                 return data.serial_number_view;
                             }
                         }

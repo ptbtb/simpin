@@ -604,6 +604,7 @@ public function updateStatusPengajuanPinjaman(Request $request)
                         if ($pinjaman) {
                             $pinjaman->id_akun_kredit = $request->id_akun_debet;
                             $pinjaman->tgl_transaksi = $request->tgl_transaksi;
+                            $pinjaman->serial_number_kredit= PinjamanManager::getSerialNumberKredit(Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi));
                             $pinjaman->save();
                         }
                     }
@@ -622,6 +623,7 @@ public function updateStatusPengajuanPinjaman(Request $request)
                 }
 
                 if ($pengajuan->diterima() && $pengajuan->pinjaman) {
+                   
                     JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
                     if($pengajuan->transfer_simpanan_pagu)
                     {
@@ -1362,7 +1364,6 @@ public function store(Request $request)
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($request->sisa_angsuran[$key] - 1);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
             $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
-            $pinjaman->serial_number = $nextSerialNumber;
             $pinjaman->save();
                 //            dd($pinjaman);die;
 

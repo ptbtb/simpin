@@ -75,6 +75,7 @@ class Jurnal extends Model implements Auditable
     {
         if($this->jurnalable)
         {
+            
             return $this->jurnalable;
         }
         else
@@ -86,6 +87,9 @@ class Jurnal extends Model implements Auditable
     {
         if($this->jurnalable)
         {
+            if ($this->id_tipe_jurnal==TIPE_JURNAL_JKK && $this->jurnalable_type=='App\Models\Pinjaman' ){
+                return $this->jurnalable->serial_number_kredit_view;
+            }
             return $this->jurnalable->serial_number_view;
         }
         else

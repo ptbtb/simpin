@@ -22,7 +22,7 @@ class Pinjaman extends Model implements Auditable
     // protected $keyType = 'string';
     // public $incrementing = false;
     protected $dates = ['tgl_entri', 'tgl_tempo'];
-    protected $appends = ['serial_number_view'];
+    protected $appends = ['serial_number_view','serial_number_kredit_view'];
     protected $fillable = ['kode_anggota','kode_jenis_pinjam','besar_pinjam','sisa_pinjaman','biaya_asuransi','biaya_provisi','biaya_administrasi','id_status_pinjaman'];
 
     public function anggota() {
@@ -165,7 +165,16 @@ class Pinjaman extends Model implements Auditable
     {
         if ($this->tgl_entri && $this->serial_number)
         {
-            return 'PIJ' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+            return 'PCP' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        }
+        return '-';
+    }
+
+    public function getSerialNumberKreditViewAttribute()
+    {
+        if ($this->tgl_entri && $this->serial_number_kredit)
+        {
+            return 'PIJ' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number_kredit, 4, "0", STR_PAD_LEFT);
         }
         return '-';
     }
