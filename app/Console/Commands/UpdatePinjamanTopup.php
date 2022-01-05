@@ -39,6 +39,8 @@ class UpdatePinjamanTopup extends Command
     public function handle()
     {
         $pengajuanTopup = PengajuanTopup::whereNull('total_bayar_pelunasan_dipercepat')
+        ->orWherenull('jasa_pelunasan_dipercepat')
+        ->orwhere('jasa_pelunasan_dipercepat',0)
                                         ->get();
         $pengajuanTopup->each(function ($topup)
         {
