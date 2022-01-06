@@ -39,15 +39,20 @@ class UpdatePinjamanTopup extends Command
     public function handle()
     {
         $pengajuanTopup = PengajuanTopup::whereNull('total_bayar_pelunasan_dipercepat')
+        ->orWherenull('jasa_pelunasan_dipercepat')
+        ->orwhere('jasa_pelunasan_dipercepat',0)
                                         ->get();
         $pengajuanTopup->each(function ($topup)
         {
-            $pinjaman = $topup->pinjaman;
+            if($topup->pinjaman){
+              $pinjaman = $topup->pinjaman;
             $topup->jasa_pelunasan_dipercepat = $pinjaman->jasaTopup;
             $topup->total_bayar_pelunasan_dipercepat = $pinjaman->totalBayarTopup;
             $topup->save();
 
-            echo "topup id ".$topup->id." updated\n";
+            echo "topup id ".$topup->id." updated\n";  
+            }
+            
         });
     }
 }
