@@ -129,6 +129,11 @@ class TransaksiUserImport
 						$angsuran1->keterangan=$transaksi['KETERANGAN'];
 						$angsuran1->save();
 
+						if ($angsuran1->jurnals->count()>0){
+							foreach ($angsuran1->jurnals as $jurn){
+								$jurn->delete();
+							}
+						}
             // create JKM angsuran
 						JurnalManager::createJurnalAngsuran($angsuran1);
 				// 		$yesterday=Carbon::now()->subDays(1);
@@ -189,7 +194,11 @@ class TransaksiUserImport
 						$angsuran2->serial_number=$serialNumber2;
 						$angsuran2->keterangan=$transaksi['KETERANGAN'];
 						$angsuran2->save();
-
+						if ($angsuran2->jurnals->count()>0){
+							foreach ($angsuran2->jurnals as $jurn){
+								$jurn->delete();
+							}
+						}
             // create JKM angsuran
 						JurnalManager::createJurnalAngsuran($angsuran2);
 				// 		$yesterday=Carbon::now()->subDays(1);
