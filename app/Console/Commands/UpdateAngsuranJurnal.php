@@ -44,6 +44,7 @@ class UpdateAngsuranJurnal extends Command
         $listAngsuran = DB::table('t_jurnal_backup_060121')
                         ->where('kredit','>',0)
                         ->where('jurnalable_type','App\\Models\\Angsuran')
+                        ->wherenotnull('deleted_at')
                         ->get();
 
         foreach($listAngsuran as $angs){
