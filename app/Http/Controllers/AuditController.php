@@ -28,8 +28,8 @@ class AuditController extends Controller
             {          
                 $request->to = Carbon::today()->format('d-m-Y');
             }
-            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
-           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
+            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay();
+           $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay();
         $audit= Audit::wherebetween('created_at',[$startUntilPeriod,$endUntilPeriod])->orderby('created_at','desc')->get();
         $data['title'] = 'Audit Log';
         $data['list'] = $audit;
