@@ -2,6 +2,7 @@
 namespace App\Managers;
 
 use App\Models\Angsuran;
+use App\Models\AngsuranPartial;
 use App\Models\Jurnal;
 use App\Models\Penarikan;
 use App\Models\Pinjaman;
@@ -12,6 +13,7 @@ use App\Models\Code;
 use App\Models\Simpanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 use Illuminate\Support\Facades\Log;
 
@@ -180,7 +182,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
 
     public static function createJurnalAngsuran(Angsuran $angsuran)
     {
-        // debet
+        // kredit
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
@@ -263,6 +265,106 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
+    }
+    public static function createJurnalAngsuranPartial(AngsuranPartial $angs)
+    {
+        // kredit
+        DB::beginTransaction();
+        try
+        {
+        if($angs->besar_angsuran>0){
+            $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angs->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_kredit = $angs->angsuran->pinjaman->kode_jenis_pinjam;
+        $jurnal->kredit = $angs->besar_angsuran;
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
+        if (is_null($angs->keterangan) || $angs->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angs->angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angs->angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angs->angsuran->keterangan;
+        }
+       
+        $jurnal->created_by = $angs->created_by;
+        $jurnal->updated_by = $angs->updated_by;
+        $jurnal->tgl_transaksi = $angs->tgl_transaksi;
+
+        // save as polymorphic
+        $angs->jurnals()->save($jurnal);
+        }
+        
+
+        // debet
+        if ($angs->besar_pembayaran>0){
+            $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angs->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_kredit = 0;
+        $jurnal->kredit = 0;
+        if($angs->akunKredit)
+        {
+            $jurnal->akun_debet = $angs->akunKredit->CODE;
+        }
+        else
+        {
+            $jurnal->akun_debet = COA_BANK_MANDIRI;
+        }
+        $jurnal->debet = $angs->besar_pembayaran;
+       if (is_null($angs->keterangan) || $angs->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angs->angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angs->angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angs->angsuran->keterangan;
+        }
+        $jurnal->created_by = $angs->created_by;
+        $jurnal->updated_by = $angs->updated_by;
+         $jurnal->tgl_transaksi = $angs->tgl_transaksi;
+
+        // save as polymorphic
+        $angs->jurnals()->save($jurnal);
+        }
+        
+
+        // jurnal untuk JASA
+        if ($angs->jasa>0){
+            $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angs->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
+        // japen
+        if($angs->angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
+        {
+            $jurnal->akun_kredit = '701.02.003';
+        }
+        // japan and others
+        else
+        {
+            $jurnal->akun_kredit = '701.02.001';
+        }
+        $jurnal->kredit = $angs->jasa;
+        if (is_null($angs->keterangan) || $angs->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angs->angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angs->angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angs->angsuran->keterangan;
+        }
+        $jurnal->created_by = $angs->updated_by;
+        $jurnal->updated_by = $angs->updated_by;
+         $jurnal->tgl_transaksi = $angs->tgl_transaksi;
+
+        // save as polymorphic
+        $angs->jurnals()->save($jurnal);
+        }
+        
+         DB::commit();
+        }
+    catch(\Exception $e)
+    {
+         DB::rollback();
+        \Log::info($e->getMessage());
+        throw new \Exception($e->getMessage());
+        
+    }
     }
 
     public static function createJurnalSimpanan(Simpanan $simpanan)

@@ -31,6 +31,11 @@ class Angsuran extends Model implements Auditable
         return $this->belongsTo(Pinjaman::class, 'kode_pinjam', 'kode_pinjam');
     }
 
+    public function angsuranPartial()
+    {
+        return $this->hasMany(AngsuranPartial::class, 'kode_angsur', 'kode_angsur');
+    }
+
     /**
      * Get the createdBy that owns the Angsuran
      *

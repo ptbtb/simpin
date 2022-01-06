@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Managers\JurnalManager;
 use App\Managers\AngsuranManager;
+use App\Managers\AngsuranPartialManager;
 use App\Managers\SimpananManager;
 use App\Models\Angsuran;
 use App\Models\Anggota;
@@ -119,7 +120,7 @@ class TransaksiUserImport
 
 
 
-						$pembayaran = $pembayaran - $angsuran1->totalAngsuran;
+						
 						
 						$angsuran1->paid_at =  $tgl_transaksi;
 						$angsuran1->tgl_transaksi =  $tgl_transaksi;
@@ -134,8 +135,15 @@ class TransaksiUserImport
 								$jurn->delete();
 							}
 						}
+						if ($angsuran1->angsuranPartial->count()>0){
+							foreach ($angsuran1->angsuranPartial as $jurn){
+								$jurn->delete();
+							}
+						}
             // create JKM angsuran
-						JurnalManager::createJurnalAngsuran($angsuran1);
+						AngsuranPartialManager::generate($angsuran1,$pembayaran);
+						$pembayaran = $pembayaran - $angsuran1->totalAngsuran;
+						// JurnalManager::createJurnalAngsuran($angsuran1);
 				// 		$yesterday=Carbon::now()->subDays(1);
 				// 		DB::statement("SET SQL_SAFE_UPDATES = 0");
 				// 		DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE 
@@ -186,7 +194,7 @@ class TransaksiUserImport
 						}
 
 
-						$pembayaran = $pembayaran - $angsuran2->totalAngsuran;
+						
 						$angsuran2->paid_at =  $tgl_transaksi;
 						$angsuran2->tgl_transaksi =  $tgl_transaksi;
 						$angsuran2->updated_by = Auth::user()->id;
@@ -199,8 +207,15 @@ class TransaksiUserImport
 								$jurn->delete();
 							}
 						}
+						if ($angsuran2->angsuranPartial->count()>0){
+							foreach ($angsuran2->angsuranPartial as $jurn){
+								$jurn->delete();
+							}
+						}
             // create JKM angsuran
-						JurnalManager::createJurnalAngsuran($angsuran2);
+						AngsuranPartialManager::generate($angsuran2,$pembayaran);
+						$pembayaran = $pembayaran - $angsuran2->totalAngsuran;
+						// JurnalManager::createJurnalAngsuran($angsuran2);
 				// 		$yesterday=Carbon::now()->subDays(1);
 				// 		DB::statement("SET SQL_SAFE_UPDATES = 0");
 				// 		DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE 

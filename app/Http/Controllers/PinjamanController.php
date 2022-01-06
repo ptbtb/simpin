@@ -30,6 +30,7 @@ use App\Managers\PinjamanManager;
 use App\Managers\AngsuranManager;
 use App\Managers\PenarikanManager;
 use App\Managers\SimpananManager;
+use App\Managers\AngsuranPartialManager;
 use App\Models\Angsuran;
 use App\Models\Company;
 use App\Models\Penarikan;
@@ -962,6 +963,7 @@ public function detailPembayaran($id)
 
 public function bayarAngsuran(Request $request, $id)
 {
+    DB::beginTransaction();
     try {
         $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
         $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
@@ -969,6 +971,7 @@ public function bayarAngsuran(Request $request, $id)
         for ($i=0; $i < count($request->besar_pembayaran); $i++)
         { 
             $pembayaran = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
+            $payment = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
             if($request->jenis_pembayaran[$i])
             {
                 $kode = $request->jenis_pembayaran[$i];
@@ -999,7 +1002,7 @@ public function bayarAngsuran(Request $request, $id)
                 }
                 
                 
-                $pembayaran = $pembayaran - $angsuran->totalAngsuran;
+                
                 $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->u_entry = Auth::user()->name;
                 if($request->jenis_pembayaran[$i])
@@ -1011,12 +1014,15 @@ public function bayarAngsuran(Request $request, $id)
                 {
                     $angsuran->id_akun_kredit = ($request->id_akun_kredit[$i]) ? $request->id_akun_kredit[$i] : null;
                 }
+
                 $angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->serial_number = $serialNumber;
                 $angsuran->save();
+                AngsuranPartialManager::generate($angsuran,$pembayaran);
+                $pembayaran = $pembayaran - $angsuran->totalAngsuran;
                 
                     // create JKM angsuran
-                JurnalManager::createJurnalAngsuran($angsuran);
+                // JurnalManager::createJurnalAngsuran($angsuran);
                 
                 if ($pembayaran <= 0) {
                     $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
@@ -1067,12 +1073,13 @@ public function bayarAngsuran(Request $request, $id)
                 JurnalManager::createJurnalPenarikan($penarikan);
             }
         }
-
+        DB::commit();
         return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
     } catch (\Throwable $e) {
         \Log::error($e);
         $message = $e->getMessage();
-        return redirect()->back()->withError('gagal melakukan pembayaran');
+        DB::rollback();
+        return redirect()->back()->withError($e->getMessage());
     }
 }
 
@@ -1817,7 +1824,7 @@ if (isset($request->kode_angsur)){
         if ($angsuran->jurnals()){
             if(isset($edit_id_akun_kredit[$key])){
                 $angsuran->jurnals()->delete();
-                JurnalManager::createJurnalAngsuran($angsuran);
+                // JurnalManager::createJurnalAngsuran($angsuran);
             }else{
                 $angsuran->serial_number = NULL;
                 $angsuran->id_akun_kredit = NULL;
@@ -1831,9 +1838,30 @@ if (isset($request->kode_angsur)){
                 $angsuran->serial_number = $serialNumber;
                 $angsuran->save();
 
-                JurnalManager::createJurnalAngsuran($angsuran);
+                // JurnalManager::createJurnalAngsuran($angsuran);
             }
         }
+         if ($angsuran->angsuranPartial){
+            if(isset($edit_id_akun_kredit[$key])){
+                if ($angsuran->angsuranPartial->jurnals()){
+                    $angsuran->angsuranPartial->jurnals->delete();
+                }
+                    $angsuran->angsuranPartial->delete();
+                    AngsuranPartialManager::generate($angsuran);
+            
+            }else{
+                if ($angsuran->angsuranPartial->jurnals()){
+                    $angsuran->angsuranPartial->jurnals->delete();
+                }
+                    $angsuran->angsuranPartial->delete();
+            }
+            
+         }else{
+             if (isset($edit_id_akun_kredit[$key])){
+                AngsuranPartialManager::generate($angsuran);
+             }
+            
+         }
 
 
 
@@ -1916,6 +1944,10 @@ if (isset($request->kode_angsur)){
         $angsuran->id_status_angsuran = $request->edit_id_status_angsuran[$key];
         $angsuran->serial_number = $request->edit_serial_number[$key];
         $angsuran->save();
+         if ($angsuran->angsuranPartial){
+             $angsuran->angsuranPartial->delete();
+         }
+          AngsuranPartialManager::generatetanpaposting($angsuran);
 
 
     }
@@ -1941,6 +1973,10 @@ if (isset($request->angsuran_ke)){
         $angsuran->id_status_angsuran = $request->id_status_angsuran[$key];
         $angsuran->serial_number = $request->serial_number[$key];
         $angsuran->save();
+        if ($angsuran->angsuranPartial){
+             $angsuran->angsuranPartial->delete();
+         }
+          AngsuranPartialManager::generatetanpaposting($angsuran);
 
 
     }

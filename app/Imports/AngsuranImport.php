@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Managers\JurnalManager;
 use App\Managers\AngsuranManager;
+use App\Managers\AngsuranPartialManager;
 use App\Models\Angsuran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -51,7 +52,7 @@ class AngsuranImport
             }
 
 
-            $pembayaran = $pembayaran - $angsuran->totalAngsuran;
+            
             $angsuran->paid_at = $payDate;
             $angsuran->updated_by = Auth::user()->id;
             $angsuran->id_akun_kredit = ($idakunkredit->id) ? $idakunkredit->id : null;
@@ -60,7 +61,9 @@ class AngsuranImport
             $angsuran->save();
 
             // create JKM angsuran
-            JurnalManager::createJurnalAngsuran($angsuran);
+            AngsuranPartialManager::generate($angsuran,$pembayaran);
+            $pembayaran = $pembayaran - $angsuran->totalAngsuran;
+            // JurnalManager::createJurnalAngsuran($angsuran);
 
             if ($pembayaran <= 0) {
                 $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
