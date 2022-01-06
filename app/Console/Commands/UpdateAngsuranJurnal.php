@@ -52,6 +52,7 @@ class UpdateAngsuranJurnal extends Command
         DB::beginTransaction();  
         try
         {
+             echo $angs->id."\n";
             $jurnal = Jurnal::find($angs->id);
             $jurnal->akun_debet = $angs->akun_kredit;
             $jurnal->debet = $angs->kredit;
@@ -67,7 +68,7 @@ class UpdateAngsuranJurnal extends Command
         throw new \Exception($e->getMessage());
         }
             
-            echo $angs->id."\n";
+            
         }
          
     
