@@ -42,7 +42,6 @@ class UpdateAngsuranJurnal extends Command
     public function handle()
     {
         $listAngsuran = DB::table('t_jurnal_backup_060121')
-                        ->where('kredit','>',0)
                         ->where('jurnalable_type','App\\Models\\Angsuran')
                         ->wherenull('deleted_at')
                         ->get();
