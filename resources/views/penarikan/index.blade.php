@@ -87,6 +87,7 @@
                         <th>NO JKK</th>
                         <th>Tanggal Penarikan</th>
                         <th>Nama Anggota</th>
+                        <th>No Anggota</th>
                         <th>Jenis Simpanan</th>
                         <th>Besar Penarikan</th>
                         <th>Status</th>
@@ -212,6 +213,9 @@
 
                         return markup;
                     },
+                },{
+                    mData: 'kode_anggota', sType: "string",
+                    className: "dt-body-center", "name": "kode_anggota"
                 },
                 {
                     mData: 'jenis_simpanan', sType: "string",

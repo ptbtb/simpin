@@ -103,6 +103,7 @@
                     <th>No</th>
                     <th style="width: 10%">Kode Simpan</th>
                     <th>Nama Anggota</th>
+                    <th>No Anggota</th>
                     <th>Jenis Simpanan</th>
                     <th>Periode</th>
                     <th>Besar Simpanan</th>
@@ -207,6 +208,16 @@
                 {
                     mData: 'anggota.nama_anggota', sType: "string",
                     className: "dt-body-center", "name": "anggota.nama_anggota"	,
+                    mRender: function (data, type, full) {
+                        if (data == null || data == '') {
+                            return '-';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    mData: 'kode_anggota', sType: "string",
+                    className: "dt-body-center", "name": "kode_anggota" ,
                     mRender: function (data, type, full) {
                         if (data == null || data == '') {
                             return '-';

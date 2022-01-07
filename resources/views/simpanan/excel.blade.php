@@ -14,6 +14,7 @@
                 <th>No</th>
                 <th>Jenis Simpanan</th>
                 <th>Besar Simpanan</th>
+                <th>Periode</th>
                 <th>Kode Anggota</th>
                 <th>User Entry</th>
                 <!-- <th>Tanggal Mulai</th> -->
@@ -35,6 +36,7 @@
                             -
                         @endif
                     </td> -->
+                    <td>{{ $simpanan->periode_view }}</td>
                     <td>{{ $simpanan->kode_anggota }}</td>
                     <td>{{ $simpanan->u_entry }}</td>
                     <td>

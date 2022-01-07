@@ -13,7 +13,8 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Kode Anggota</th>
+                    <th>Nama Anggota</th>
+                    <th>No Anggota</th>
                     <th>Kode Tabungan</th>
                     <th>Besar Ambil</th>
                     <th>Tanggal Pengajuan</th>
@@ -26,6 +27,7 @@
                 @foreach ($listPenarikan as $penarikan)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                         <td>{{ ($penarikan->anggota)?$penarikan->anggota->nama_anggota:'' }}</td>
                         <td>{{ $penarikan->anggota->kode_anggota }}</td>
                         <td>{{ $penarikan->anggota->tabungan->where('id', $penarikan->id_tabungan)->first()->kode_tabungan ?? '-' }}</td>
                         <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>

@@ -4,6 +4,7 @@
         <tr>
             <th>Tanggal Penarikan</th>
             <th>Nama Anggota</th>
+            <th>No Anggota</th>
             <th>Jenis Simpanan</th>
             <th>Besar Penarikan</th>
             <th>Status</th>
@@ -19,7 +20,8 @@
         @foreach ($listPenarikan as $penarikan)
             <tr>
                 <td>{{ $penarikan->tgl_ambil->toDateString() }}</td>
-                <td>{{ ($penarikan->anggota)?$penarikan->anggota->nama_anggota:$penarikan->kode_anggota }}</td>
+                <td>{{ ($penarikan->anggota)?$penarikan->anggota->nama_anggota:'' }}</td>
+                 <td>{{ $penarikan->kode_anggota }}</td>
                 <td>{{ ($penarikan->jenisSimpanan)?$penarikan->jenisSimpanan->nama_simpanan:'-' }}</td>
                 <td>{{ $penarikan->besar_ambil }}</td>
                 <td>{{ $penarikan->statusPenarikan->name }}</td>

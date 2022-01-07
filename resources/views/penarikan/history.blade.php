@@ -77,6 +77,7 @@
                         <th>Kode Ambil</th>
                         <th>Tanggal Penarikan</th>
                         <th>Nama Anggota</th>
+                        <th>No Anggota</th>
                         <th>Jenis Simpanan</th>
                         <th>Besar Penarikan</th>
                         <th>Status</th>
@@ -96,6 +97,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
                             <td>{{ $penarikan->anggota->nama_anggota }}</td>
+                            <td>{{ $penarikan->kode_anggota }}</td>
                             <td>{{ optional($penarikan->jenisSimpanan)->nama_simpanan }}</td>
                             <td>Rp. {{ number_format($penarikan->besar_ambil,0,",",".") }}</td>
                             <td>{{ $penarikan->statusPenarikan->name }}</td>
