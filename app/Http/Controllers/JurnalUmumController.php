@@ -7,6 +7,8 @@ use App\Models\Code;
 use App\Models\JurnalUmum;
 use App\Models\JurnalUmumItem;
 use App\Models\Jurnal;
+use App\Models\JenisSimpanan;
+use App\Models\JenisPinjaman;
 use App\Models\JurnalUmumLampiran;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
@@ -59,18 +61,17 @@ class JurnalUmumController extends Controller
     public function create(Request $request)
     {
         $this->authorize('add jurnal umum', Auth::user());
+        $codeSim = JenisSimpanan::pluck('kode_jenis_simpan')->toArray();
+        $codePin = JenisPinjaman::pluck('kode_jenis_pinjam')->toArray();
+        // dd($codeSim);
+        $codeSimPin = array_merge($codeSim,$codePin);
+        
         $debetCodes = Code::where('is_parent', 0)
-                            ->where('CODE', 'not like', "411%")
-                            ->where('CODE', 'not like', "106%")
-                            ->where('CODE', 'not like', "502%")
-                            ->where('CODE', 'not like', "105%")
+                            ->whereNotIn('CODE',$codeSimPin)
                             ->get();
-
+                            
         $creditCodes = Code::where('is_parent', 0)
-                            ->where('CODE', 'not like', "411%")
-                            ->where('CODE', 'not like', "106%")
-                            ->where('CODE', 'not like', "502%")
-                            ->where('CODE', 'not like', "105%")
+                            ->whereNotIn('CODE',$codeSimPin)
                             ->get();
         
         $data['title'] = "Tambah Jurnal Umum";
