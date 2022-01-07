@@ -195,8 +195,8 @@ class JurnalController extends Controller
        $jurnal = $jurnal
        ->where(function ($query) use($request) {
 
-         $query->where('akun_debet', 'like', '%' . $request->code . '%')
-         ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+         $query->where('akun_debet', 'like',  $request->code . '%')
+         ->orwhere('akun_kredit', 'like',  $request->code . '%');
 
      });
 
@@ -370,8 +370,8 @@ public function createExcel(Request $request)
            $jurnal = $jurnal
            ->where(function ($query) use($request) {
 
-             $query->where('akun_debet', 'like', '%' . $request->code . '%')
-             ->orwhere('akun_kredit', 'like', '%' . $request->code . '%');
+             $query->where('akun_debet', 'like',  $request->code . '%')
+             ->orwhere('akun_kredit', 'like',  $request->code . '%');
 
          });
 
