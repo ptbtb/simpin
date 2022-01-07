@@ -16,9 +16,10 @@
                     <th>Kode Anggota</th>
                     <th>Kode Tabungan</th>
                     <th>Besar Ambil</th>
-                    <th>Tanggal Ambil</th>
+                    <th>Tanggal Pengajuan</th>
                     <th>Keterangan</th>
                     <th>Kode Transaksi</th>
+                    <th>Tanggal Posting</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +32,7 @@
                         <td>{{ $penarikan->tgl_ambil->format('d M Y') }}</td>
                         <td>{{ $penarikan->keterangan }}</td>
                         <td>{{ $penarikan->code_trans }}</td>
+                        <td>{{ $penarikan->tgl_transaksi_view}}</td>
                     </tr>
                 @endforeach
             </tbody>

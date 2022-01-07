@@ -85,6 +85,7 @@
                         <th>Dikonfirmasi Oleh</th>
                         <th>Pembayaran Oleh</th>
                         <th>Bukti Pembayaran</th>
+                        <th>Posting</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -102,6 +103,7 @@
                             <td>{{ optional($penarikan->createdBy)->name }}</td>
                             <td>{{ optional($penarikan->approvedBy)->name }}</td>
                             <td>{{ optional($penarikan->paidByCashier)->name }}</td>
+                            <td>{{ $penarikan->tgl_transaksi_view }}</td>
                             <td>
                                 @if($penarikan->bukti_pembayaran)
                                     <a class="btn btn-warning btn-sm" href="{{ url($penarikan->bukti_pembayaran) }}" target="_blank"><i class="fa fa-file"></i></a>

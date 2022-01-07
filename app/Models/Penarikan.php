@@ -19,7 +19,7 @@ class Penarikan extends Model implements Auditable
     protected $primaryKey = "kode_ambil";
     protected $dates = ['tgl_ambil', 'tgl_acc','tgl_transaksi','deleted_at'];
     protected $fillable = ['kode_anggota', 'kode_tabungan','besar_ambil','tgl_ambil','keterangan','code_trans','u_entry'];
-    protected $appends = ['serial_number_view', 'created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view'];
+    protected $appends = ['serial_number_view', 'created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view','tgl_transaksi_view'];
 
     public function anggota()
     {
@@ -193,5 +193,13 @@ class Penarikan extends Model implements Auditable
             return $this->approvedBy->name;
         }
         return '-';
+    }
+    public function getTglTransaksiViewAttribute()
+    {
+        if ($this->tgl_transaksi)
+        {
+            return $this->tgl_transaksi->format('d M Y');
+        }
+        return $this->tgl_mulai;
     }
 }

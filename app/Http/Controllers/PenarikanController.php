@@ -692,7 +692,7 @@ class PenarikanController extends Controller
 
             $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet')
                                         ->orderBy('tgl_ambil','desc');
-
+            
             if($request->status_penarikan != "")
             {
                 $listPenarikan->where('status_pengambilan', $request->status_penarikan);

@@ -42,6 +42,8 @@
             <label class="m-0">Filter</label>
         </div>
         <div class="card-body">
+             <form action="{{ route('penarikan-index') }}" method="post">
+                 @csrf
             <div class="row">
                 <div class="form-group col-md-4">
                     <label>Status</label>
@@ -62,9 +64,10 @@
                     </select>
                 </div>
                 <div class="col-md-1 form-group" style="margin-top: 26px">
-                    <a class="btn btn-sm btn-success form-control" id="btnFiterSubmitSearch" style="color:white; padding-top:8px"><i class="fa fa-filter"></i> Filter</a>
+                    <button type="submit" class="btn btn-sm btn-success form-control"><i class="fa fa-filter"></i> Filter</button>
                 </div>
             </div>
+            </form>
         </div>
     </div>
     <div class="card">
@@ -92,6 +95,7 @@
                         <th>Dikonfirmasi Oleh</th>
                         <th>Keterangan</th>
                         <th>Pembayaran Oleh</th>
+                        <th>Posting</th>
                         <th>Bukti Pembayaran</th>
                         <th style="width: 20%">Action</th>
                     </tr>
@@ -168,9 +172,10 @@
                 url : baseURL+'/penarikan/list/data',
                 dataSrc: 'data',
                 data: function(data){
-                    data.status_penarikan = $('#select_status_penarikan').val();
-                    data.tgl_ambil = $('#input_tgl_ambil').val();
-                    data.anggota = $('#select_anggota').val();
+                     @if(isset($request->status_penarikan)) data.status_penarikan = '{{ $request->status_penarikan }}'; @endif
+                     @if(isset($request->tgl_ambil)) data.tgl_ambil = '{{ $request->tgl_ambil }}'; @endif
+                     @if(isset($request->anggota)) data.anggota = '{{ $request->anggota }}'; @endif
+                    
                 },
             },
             aoColumns:
@@ -283,6 +288,10 @@
 
                         return markup;
                     },
+                },
+                {
+                    mData: 'tgl_transaksi_view', sType: "string",
+                    className: "dt-body-center", "name": "tgl_transaksi_view"
                 },
                 {
                     mData: 'bukti_pembayaran', sType: "string",
@@ -452,9 +461,9 @@
             },
         });
 
-        $('#btnFiterSubmitSearch').click(function(){
-			$('#penarikan-table').DataTable().draw(true);
-		});
+  //       $('#btnFiterSubmitSearch').click(function(){
+		// 	$('#penarikan-table').DataTable().draw(true);
+		// });
 
         $.fn.modal.Constructor.prototype._enforceFocus = function() {};
         $('#input_tgl_ambil').datepicker({
