@@ -219,7 +219,7 @@ class PenarikanController extends Controller
         $user = Auth::user();
         $this->authorize('view history penarikan', $user);
 
-        $listPenarikan = Penarikan::with('anggota')->whereraw('paid_by_cashier is not null')->orderBy('tgl_ambil','desc');
+        $listPenarikan = Penarikan::with('anggota')->whereraw('paid_by_cashier =1')->orderBy('tgl_ambil','desc');
 
         if ($request->kode_anggota) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);
@@ -250,7 +250,7 @@ class PenarikanController extends Controller
         $user = Auth::user();
         $this->authorize('view history penarikan', $user);
 
-        $listPenarikan = Penarikan::with('anggota');
+        $listPenarikan = Penarikan::with('anggota')->where('paid_by_cashier',1);
 
         if ($request->kode_anggota) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);

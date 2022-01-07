@@ -858,8 +858,8 @@ public function showCard(Request $request,$kodeAnggota)
 
                 if($year)
                 {
-                    $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = '.$year));
-                    $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year));
+                    $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = '.$year.' and deleted_at is null and id_status_simpanan=1'));
+                    $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year.' and deleted_at is null and paid_by_cashier=1'));
                     $simpananPerbulan = $simpanan->groupBy('month')
                     ->map(function ($s)
                     {
@@ -920,8 +920,8 @@ public function showCard(Request $request,$kodeAnggota)
             ->get();
             if($year)
             {
-                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = '.$year));
-                $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year));
+                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = '.$year.' and deleted_at is null and id_status_simpanan=1'));
+                    $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = '.$year.' and deleted_at is null and paid_by_cashier=1'));
                 $simpananPerbulan = $simpanan->groupBy('month')
                 ->map(function ($s)
                 {

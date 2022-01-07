@@ -17,7 +17,7 @@ class PenarikanExport implements FromView
 
     public function view(): View
     {
-        $listPenarikan = Penarikan::with('anggota');
+        $listPenarikan = Penarikan::with('anggota')->where('paid_by_cashier',1);
 
         if ($this->request->kode_anggota)
         {
