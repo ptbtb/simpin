@@ -17,7 +17,7 @@
                 <th>Kode Anggota</th>
                 <th>User Entry</th>
                 <!-- <th>Tanggal Mulai</th> -->
-                <th>Tanggal Entri</th>
+                <th>Tanggal Posting</th>
                 <th>Kode Jenis Simpan</th>
                 <th>Keterangan</th>
             </tr>
@@ -38,8 +38,8 @@
                     <td>{{ $simpanan->kode_anggota }}</td>
                     <td>{{ $simpanan->u_entry }}</td>
                     <td>
-                        @if ($simpanan->tgl_entri)
-                            {{ $simpanan->tgl_entri->format('d M Y') }}
+                        @if ($simpanan->tgl_transaksi)
+                            {{ $simpanan->tgl_transaksi }}
                         @else
                             -
                         @endif
