@@ -329,6 +329,10 @@
                                     <option value="" selected disabled>Pilih Akun</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="">Keterangan</label>
+                                <textarea name="description" id="description" class="form-control"></textarea>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success">Submit</button>

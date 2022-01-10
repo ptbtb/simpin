@@ -1110,6 +1110,7 @@ public function bayarAngsuranDipercepat(Request $request, $id)
         $totalDiskon = $request->discount/100*$pinjaman->jasaPelunasanDipercepat;
         $pinjaman->diskon = $request->discount;
         $pinjaman->total_diskon = $totalDiskon;
+        $pinjaman->keterangan = $request->keterangan;
 
         $pinjamanId = $pinjaman->id;
         $config['disk'] = 'upload';
