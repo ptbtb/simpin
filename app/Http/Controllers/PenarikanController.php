@@ -91,17 +91,19 @@ class PenarikanController extends Controller
                                     ->values();
             $tenor2 = $listPinjaman->whereIn('lama_angsuran', [10, 20, 30])
                                     ->values();
-            $total_besar_penarikan = array_sum($request->besar_penarikan);
 
-            if (is_null($tabungan))
+            $totalSaldotabungan = $anggota->tabungan->sum('besar_tabungan');
+            $totalPenarikan = array_sum($request->besar_penarikan);
+
+                 if ($totalSaldotabungan < $totalPenarikan)
                 {
-                    return redirect()->back()->withError($anggota->nama_anggota . " belum memiliki tabungan");
+                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi");
                 }
                 else if($tenor1->count())
                 {
                     $sisaPinjaman = $tenor1->sum('sisa_pinjaman');
                     $minSaldo = 1/8*$sisaPinjaman;
-                    if ($total_besar_penarikan < $minSaldo)
+                    if ($totalSaldotabungan < $minSaldo)
                     {
                         return redirect()->back()->withError("Saldo tabungan tidak mencukupi. Minimal saldo yang tersisa harus lebih dari Rp ". number_format($minSaldo, 0, ',', '.'));
                     }
@@ -110,11 +112,12 @@ class PenarikanController extends Controller
                 {
                     $sisaPinjaman = $tenor2->sum('sisa_pinjaman');
                     $minSaldo = 1/5*$sisaPinjaman;
-                    if ($total_besar_penarikan < $minSaldo)
+                    if ($totalSaldotabungan < $minSaldo)
                     {
                         return redirect()->back()->withError("Saldo tabungan tidak mencukupi. Minimal saldo yang tersisa harus lebih dari Rp ". number_format($minSaldo, 0, ',', '.'));
                     }
                 }
+
             foreach ($request->jenis_simpanan as $kode)
             {
                 $jenissimpanan = JenisSimpanan::where('kode_jenis_simpan', $kode)->first();
@@ -122,11 +125,12 @@ class PenarikanController extends Controller
                 $besarPenarikan = filter_var($request->besar_penarikan[$kode], FILTER_SANITIZE_NUMBER_INT);
                 $maxtarik = $tabungan->totalBesarTabungan * $jenissimpanan->max_withdraw;
                 
-                 if ($tabungan->totalBesarTabungan < $besarPenarikan)
+                if (is_null($tabungan))
                 {
-                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi");
+                    return redirect()->back()->withError($anggota->nama_anggota . " belum memiliki tabungan");
                 }
-                 else if ($besarPenarikan > $maxtarik + 1)
+                
+                else if ($besarPenarikan > $maxtarik + 1)
                 {
                     return redirect()->back()->withError("Penarikan simpanan " . $jenissimpanan->nama_simpanan . " tidak boleh melebihi ".$jenissimpanan->max_withdraw." dari saldo tabungan");
                 }
