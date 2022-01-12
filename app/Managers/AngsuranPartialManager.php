@@ -34,9 +34,9 @@ class AngsuranPartialManager
             }
             $jasabaru = $angsuran->jasa - $jasalama;
             $bsbaru = $angsuran->besar_angsuran - $bsangslama;
-            $bayar =  $pembayaran- $bayarlama;
+            $bayar =  $pembayaran- $bayarlama-$bayarlama;
             $bayarnya =  $bayar;
-          
+            // dd($bayarnya);
 
 
            if ($jasabaru>0) {
@@ -63,6 +63,8 @@ class AngsuranPartialManager
              }else{
                 $bspay =0;
              }
+
+             $pembayaran_final = $jasabaru+$bspay;
                // throw new \Exception('jasa  '.$jasapay.' bayar kas '.$bayarnya.' angsurannya '.$bspay);
 
              $angsp = new AngsuranPartial();
@@ -71,7 +73,7 @@ class AngsuranPartialManager
              $angsp->kode_anggota = $angsuran->kode_anggota;
              $angsp->jasa = $jasapay;
              $angsp->besar_angsuran = $bspay;
-             $angsp->besar_pembayaran = $bayarnya;
+             $angsp->besar_pembayaran = $pembayaran_final;
              $angsp->tgl_transaksi = $angsuran->tgl_transaksi;
              $angsp->id_akun_kredit = $angsuran->id_akun_kredit;
              $angsp->serial_number = $serialNumber;
