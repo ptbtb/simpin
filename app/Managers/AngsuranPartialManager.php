@@ -148,14 +148,14 @@ public static function generatetanpaposting(Angsuran $angsuran,$pembayaran=NULL)
                 $bspay =0;
              }
                // throw new \Exception('jasa  '.$jasapay.' bayar kas '.$bayarnya.' angsurannya '.$bspay);
-
+             $pembayaran_final = $jasabaru+$bspay;
              $angsp = new AngsuranPartial();
               $serialNumber = static::getSerialNumber(Carbon::parse($angsuran->tgl_transaksi)->format('d-m-Y'));
              $angsp->kode_angsur = $angsuran->kode_angsur;
              $angsp->kode_anggota = $angsuran->kode_anggota;
              $angsp->jasa = $jasapay;
              $angsp->besar_angsuran = $bspay;
-             $angsp->besar_pembayaran = $bayarnya;
+             $angsp->besar_pembayaran = $pembayaran_final;
              $angsp->tgl_transaksi = $angsuran->tgl_transaksi;
              $angsp->id_akun_kredit = $angsuran->id_akun_kredit;
              $angsp->serial_number = $serialNumber;
