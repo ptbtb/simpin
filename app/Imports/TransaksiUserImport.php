@@ -130,18 +130,12 @@ class TransaksiUserImport
 						$angsuran1->keterangan=$transaksi['KETERANGAN'];
 						$angsuran1->save();
 
-						if ($angsuran1->jurnals->count()>0){
-							foreach ($angsuran1->jurnals as $jurn){
-								$jurn->delete();
-							}
+						if ($angsuran1->jurnals()){
+							$angsuran1->jurnals()->delete();
 						}
-						if ($angsuran1->angsuranPartial->count()>0){
-							foreach ($angsuran1->angsuranPartial as $jurn){
-								$jurn->delete();
-							}
-						}
+						
             // create JKM angsuran
-						AngsuranPartialManager::generate($angsuran1,$pembayaran);
+						AngsuranPartialManager::generateFromEdit($angsuran1);
 						$pembayaran = $pembayaran - $angsuran1->totalAngsuran;
 						// JurnalManager::createJurnalAngsuran($angsuran1);
 				// 		$yesterday=Carbon::now()->subDays(1);
@@ -202,18 +196,11 @@ class TransaksiUserImport
 						$angsuran2->serial_number=$serialNumber2;
 						$angsuran2->keterangan=$transaksi['KETERANGAN'];
 						$angsuran2->save();
-						if ($angsuran2->jurnals->count()>0){
-							foreach ($angsuran2->jurnals as $jurn){
-								$jurn->delete();
-							}
-						}
-						if ($angsuran2->angsuranPartial->count()>0){
-							foreach ($angsuran2->angsuranPartial as $jurn){
-								$jurn->delete();
-							}
+						if ($angsuran2->jurnals()){
+							$angsuran2->jurnals()->delete();
 						}
             // create JKM angsuran
-						AngsuranPartialManager::generate($angsuran2,$pembayaran);
+						AngsuranPartialManager::generateFromEdit($angsuran2);
 						$pembayaran = $pembayaran - $angsuran2->totalAngsuran;
 						// JurnalManager::createJurnalAngsuran($angsuran2);
 				// 		$yesterday=Carbon::now()->subDays(1);

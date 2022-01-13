@@ -33,7 +33,7 @@ class Angsuran extends Model implements Auditable
 
     public function angsuranPartial()
     {
-        return $this->hasMany(AngsuranPartial::class, 'kode_angsur', 'kode_angsur');
+        return $this->hasMany(AngsuranPartial::class, 'kode_angsur');
     }
 
     /**
