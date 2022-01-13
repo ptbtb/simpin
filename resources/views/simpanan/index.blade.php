@@ -82,7 +82,7 @@
        
     @endcan
     @can('posting jurnal')
-    <a href="{{ route('simpanan-pending-jurnal', ['from' => $request->from, 'to' => $request->to]) }}" class="btn btn-danger btn-sm"><i class="fa fa-check-square"></i>Pending Jurnal</a>
+    <a href="{{ route('simpanan-pending-jurnal') }}" class="btn btn-danger btn-sm"><i class="fa fa-check-square"></i>Pending Jurnal</a>
     @endcan
      </div>
     <!-- /.card-header -->
