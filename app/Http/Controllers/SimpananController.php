@@ -613,7 +613,7 @@ public function showCard(Request $request,$kodeAnggota)
                                     ->wherenotnull('paid_by_cashier')
                                     ->sum('besar_ambil');
                         $res['name'] = $jenisSimpanan->nama_simpanan;
-                        $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan+$transsimpan-$transtarik : 0;
+                        $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan+$transsimpan-$transtarik : $transsimpan-$transtarik;
                         $res['list'] = $list;
                         $res['amount'] = $list->sum('besar_simpanan');
                         $res['final_balance'] = $res['balance'] + $res['amount'];
