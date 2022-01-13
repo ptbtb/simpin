@@ -1843,19 +1843,22 @@ if (isset($request->kode_angsur)){
             }
         }
          if ($angsuran->angsuranPartial){
-            if(isset($edit_id_akun_kredit[$key])){
-                if ($angsuran->angsuranPartial->jurnals()){
-                    $angsuran->angsuranPartial->jurnals->delete();
+            foreach ($angsuran->angsuranPartial as $angspar){
+                if(isset($edit_id_akun_kredit[$key])){
+                if ($angspar->jurnals()){
+                    $angspar->jurnals->delete();
                 }
-                    $angsuran->angsuranPartial->delete();
+                    $angspar->delete();
                     AngsuranPartialManager::generate($angsuran);
             
             }else{
-                if ($angsuran->angsuranPartial->jurnals()){
-                    $angsuran->angsuranPartial->jurnals->delete();
+                if ($angspar->jurnals()){
+                    $angspar->jurnals->delete();
                 }
-                    $angsuran->angsuranPartial->delete();
+                    $angspar->delete();
             }
+            }
+            
             
          }else{
              if (isset($edit_id_akun_kredit[$key])){
@@ -1946,7 +1949,9 @@ if (isset($request->kode_angsur)){
         $angsuran->serial_number = $request->edit_serial_number[$key];
         $angsuran->save();
          if ($angsuran->angsuranPartial){
-             $angsuran->angsuranPartial->delete();
+            foreach($angsuran->angsuranPartial as $angspar){
+             $angspar->delete();
+            }
          }
           AngsuranPartialManager::generatetanpaposting($angsuran);
 
@@ -1975,7 +1980,9 @@ if (isset($request->angsuran_ke)){
         $angsuran->serial_number = $request->serial_number[$key];
         $angsuran->save();
         if ($angsuran->angsuranPartial){
-             $angsuran->angsuranPartial->delete();
+            foreach($angsuran->angsuranPartial as $angspar){
+             $angspar->delete();
+            }
          }
           AngsuranPartialManager::generatetanpaposting($angsuran);
 
