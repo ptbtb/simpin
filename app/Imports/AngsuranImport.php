@@ -58,10 +58,14 @@ class AngsuranImport
             $angsuran->id_akun_kredit = ($idakunkredit->id) ? $idakunkredit->id : null;
             $angsuran->serial_number=$serialNumber;
             $angsuran->tgl_transaksi=$payDate;
+            $angsuran->keterangan=$transaksi['keterangan'];
             $angsuran->save();
 
             // create JKM angsuran
-            AngsuranPartialManager::generate($angsuran,$pembayaran);
+            if ($angsuran->jurnals()){
+                            $angsuran->jurnals()->delete();
+                        }
+            AngsuranPartialManager::generateFromEdit($angsuran);
             $pembayaran = $pembayaran - $angsuran->totalAngsuran;
             // JurnalManager::createJurnalAngsuran($angsuran);
 
