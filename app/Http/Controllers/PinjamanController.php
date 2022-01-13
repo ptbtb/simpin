@@ -1801,9 +1801,12 @@ public function update(Request $request){
 public function updatePosting(Request $request){
     $id_akun_kredit = [];
 
-    if (isset($request->kode_angsur)){
-        foreach ($request->kode_angsur as $key => $val){
-            if (isset($request->edit_id_akun_kredit[$key])){
+    
+
+if (isset($request->kode_angsur)){
+
+    foreach ($request->kode_angsur as $key => $val){
+        if (isset($request->edit_id_akun_kredit[$key])){
                 $code =Code::where('CODE',$request->edit_id_akun_kredit[$key])->first();
                 $baris = $key+1;
                 if(!$code){
@@ -1815,23 +1818,18 @@ public function updatePosting(Request $request){
             $edit_id_akun_kredit[$key] = NULL;
         }
 
-    }
-}
-
-if (isset($request->kode_angsur)){
-    foreach ($request->kode_angsur as $key => $val){
-
         $angsuran =  Angsuran::findOrFail($val);
-        if ($angsuran->jurnals()){
+        if ($angsuran->jurnals->count()>0){
             if(isset($edit_id_akun_kredit[$key])){
                 $angsuran->jurnals()->delete();
+                
                 // JurnalManager::createJurnalAngsuran($angsuran);
             }else{
                 $angsuran->serial_number = NULL;
                 $angsuran->id_akun_kredit = NULL;
                 $angsuran->save();
-
                 $angsuran->jurnals()->delete();
+                
             }
         }else{
             if (isset($edit_id_akun_kredit[$key])){
@@ -1842,32 +1840,25 @@ if (isset($request->kode_angsur)){
                 // JurnalManager::createJurnalAngsuran($angsuran);
             }
         }
-         if ($angsuran->angsuranPartial){
-            foreach ($angsuran->angsuranPartial as $angspar){
-                if(isset($edit_id_akun_kredit[$key])){
-                if ($angspar->jurnals()){
-                    $angspar->jurnals->delete();
-                }
-                    $angspar->delete();
-                    AngsuranPartialManager::generate($angsuran);
-            
-            }else{
-                if ($angspar->jurnals()){
-                    $angspar->jurnals->delete();
-                }
-                    $angspar->delete();
-            }
-            }
-            
-            
+         if ($edit_id_akun_kredit[$key]!==NULL){
+                
+            AngsuranPartialManager::generateFromEdit($angsuran);
+
          }else{
-             if (isset($edit_id_akun_kredit[$key])){
-                AngsuranPartialManager::generate($angsuran);
-             }
+            if ($angsuran->angsuranPartial){
+                foreach ($angsuran->angsuranPartial as $angsp){
+                    $angsp->jurnals()->delete();
+                }
+                
+                $angsuran->angsuranPartial()->delete();
+                
+            }
+            $angsuran->serial_number = NULL;
+            $angsuran->save();
             
          }
 
-
+             
 
     }
     return true;

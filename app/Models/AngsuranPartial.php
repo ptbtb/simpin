@@ -21,7 +21,7 @@ class AngsuranPartial extends Model implements Auditable
 
     public function angsuran()
     {
-        return $this->belongsTo(Angsuran::class, 'kode_angsur');
+        return $this->belongsTo(Angsuran::class, 'kode_angsur','kode_angsur');
     }
 
     public function createdBy()
