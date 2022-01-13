@@ -1004,6 +1004,7 @@ public function pendingJurnal(Request $request){
    {          
     $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
 }
+
 if(!$request->to)
 {          
     $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
