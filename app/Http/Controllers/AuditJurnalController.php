@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Jurnal;
 use App\Models\Angsuran;
+use App\Models\Pinjaman;
 use App\Models\AngsuranPartial;
+use App\Models\Simpanan;
+use App\Models\Penarikan;
+use App\Models\JurnalTemp;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 use App\Models\TipeJurnal;
@@ -58,7 +62,7 @@ class AuditJurnalController extends Controller
         {
            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
            $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
-           $jurnal = Jurnal::whereDoesntHaveMorph('jurnalable', AngsuranPartial::class)->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+           $jurnal = Jurnal::whereDoesntHaveMorph('jurnalable', [AngsuranPartial::class,Pinjaman::class,Simpanan::class,Penarikan::class,Angsuran::class,JurnalTemp::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
 
 
            if ($request->id_tipe_jurnal)
