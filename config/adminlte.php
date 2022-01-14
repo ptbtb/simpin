@@ -645,6 +645,12 @@ return [
             'icon' => 'fas fa-fw fa-list-alt',
              'can'  => ['view audit'],
         ],
+        [
+            'text' => 'Audit Jurnal',
+            'url' => 'auditJurnal',
+            'icon' => 'fas fa-fw fa-list-alt',
+             'can'  => ['view audit'],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

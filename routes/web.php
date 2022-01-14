@@ -40,6 +40,10 @@ Route::get('/clear-cache', function() {
 Route::get('generate-jkk', [MigrationController::class, 'generateJkkPrinted']);
 Route::get('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
 Route::post('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
+Route::get('auditJurnal', [App\Http\Controllers\AuditJurnalController::class, 'index'])->name('auditJurnal');
+Route::get('auditJurnalAjax', [App\Http\Controllers\AuditJurnalController::class, 'auditJurnalAjax'])->name('audit-jurnal-ajax');
+Route::post('auditJurnal', [App\Http\Controllers\AuditJurnalController::class, 'index'])->name('auditJurnal');
+Route::post('auditJurnal/delete', [App\Http\Controllers\AuditJurnalController::class, 'destroy'])->name('auditJurnal-delete');
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
