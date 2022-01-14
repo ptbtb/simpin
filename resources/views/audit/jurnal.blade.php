@@ -332,13 +332,20 @@
             
         });
 
-    $('.datepicker').datepicker({
-        format: "dd-mm-yyyy"
-    });
+    
 
     $('input.datepicker').bind('keyup keydown keypress', function (evt) {
         return true;
     });
+    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+        $('#from').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'dd-mm-yyyy'
+        });
+        $('#to').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'dd-mm-yyyy'
+        });
     function toRupiah(number)
         {
             var stringNumber = number.toString();
