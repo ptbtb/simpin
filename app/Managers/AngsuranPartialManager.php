@@ -77,6 +77,7 @@ class AngsuranPartialManager
              $angsp->besar_angsuran = $bspay;
              $angsp->besar_pembayaran = $pembayaran_final;
              $angsp->tgl_transaksi = $angsuran->tgl_transaksi;
+             $angsp->keterangan = $angsuran->keterangan;
              $angsp->id_akun_kredit = $angsuran->id_akun_kredit;
              $angsp->serial_number = $serialNumber;
 
@@ -163,6 +164,7 @@ public static function generateFromEdit(Angsuran $angsuran)
              $angsp->besar_angsuran = $bspay;
              $angsp->besar_pembayaran = $pembayaran_final;
              $angsp->tgl_transaksi = $angsuran->tgl_transaksi;
+             $angsp->keterangan = $angsuran->keterangan;
              $angsp->id_akun_kredit = $angsuran->id_akun_kredit;
              $angsp->serial_number = $serialNumber;
 
@@ -246,6 +248,7 @@ public static function generatetanpaposting(Angsuran $angsuran,$pembayaran=NULL)
              $angsp->besar_angsuran = $bspay;
              $angsp->besar_pembayaran = $pembayaran_final;
              $angsp->tgl_transaksi = $angsuran->tgl_transaksi;
+             $angsp->keterangan = $angsuran->keterangan;
              $angsp->id_akun_kredit = $angsuran->id_akun_kredit;
              $angsp->serial_number = $serialNumber;
              $angsp->created_at = $angsuran->created_at;
