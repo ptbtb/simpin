@@ -11,7 +11,7 @@
     <table class="table table-bordered">
         <thead>
           <tr>
-            <th colspan="5" style="text-align: center; font-weight: bold;"> Buku Besar Periode {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->period)->format('d M Y his')}}</th>
+            <th colspan="5" style="text-align: center; font-weight: bold;"> Buku Besar Periode {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->period)->format('d M Y')}}</th>
           </tr>
             <tr>
                 <th>No</th>
