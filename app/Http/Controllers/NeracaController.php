@@ -401,12 +401,13 @@ class NeracaController extends Controller
           $data['kewajibanlancar'] = $kewajibanlancar;
           $data['kewajibanjangkapanjang'] = $kewajibanjangkapanjang;
           $data['kekayaanbersih'] = $kekayaanbersih;
+          $data['request'] = $request;
 
 
 
 
 
-            $filename = 'export_neraca_excel_' .$request->period. '_'. Carbon::now()->format('d M Y') . '.xlsx';
+            $filename = 'export_neraca_excel_' .$request->period. '_printed_'. Carbon::now()->format('d M Y his') . '.xlsx';
             return Excel::download(new NeracaExport($data), $filename);
         } catch (\Throwable $e) {
             Log::error($e);

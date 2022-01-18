@@ -8,7 +8,9 @@
 </style>
 <table class="table table-striped table-aktiva">
                     <thead>
-                       
+                       <tr>
+                         <th colspan="5" style="text-align: center; font-weight: bold;"> Neraca Periode {{$request->period}}</th>
+                       </tr>
                         <tr>
                             <th></th>
                             <th>Rek</th>
@@ -155,4 +157,9 @@
                             <td>{{$kekayaanbersih->sum('saldoLastMonth')+$kewajibanjangkapanjang->sum('saldoLastMonth')+$kewajibanlancar->sum('saldoLastMonth') }}</td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                      <tr>
+                        <th style="font-style: italic;">&copy; escndl printed on {{\Carbon\Carbon::now()->format('d M Y his')}}</th>
+                      </tr>
+                    </tfoot>
                 </table>
