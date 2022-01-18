@@ -10,6 +10,9 @@
 <body>
     <table class="table table-bordered">
         <thead>
+          <tr>
+            <th colspan="5" style="text-align: center; font-weight: bold;"> Buku Besar Periode {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->period)->format('d M Y his')}}</th>
+          </tr>
             <tr>
                 <th>No</th>
                 <th>Code</th>
@@ -36,7 +39,12 @@
                     </td>
                 </tr>
             @endforeach
-        </tbody> 
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="5"  style="font-style: italic;">&copy; escndl printed on {{\Carbon\Carbon::now()->format('d M Y his')}}</th>
+          </tr>
+        </tfoot>
     </table>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

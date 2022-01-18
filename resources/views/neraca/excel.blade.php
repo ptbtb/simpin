@@ -159,7 +159,7 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th style="font-style: italic;">&copy; escndl printed on {{\Carbon\Carbon::now()->format('d M Y his')}}</th>
+                        <th colspan="5"  style="font-style: italic;">&copy; escndl printed on {{\Carbon\Carbon::now()->format('d M Y his')}}</th>
                       </tr>
                     </tfoot>
                 </table>

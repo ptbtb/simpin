@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <form id="myForm" role="form" method="GET" enctype="multipart/form-data" action="{{ route('buku-besar-list') }}">
                     {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
-                    
+
                     <div class="col-md-6">
                         <label>Tanggal</label>
                         <input class="form-control datepicker" placeholder="yyyy-mm-dd" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d') }}" autocomplete="off" />
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        @if ($request->search)    
+        @if ($request->search)
             <div class="card-body row">
                 <div class="col-md-6 table-responsive">
                     <h5 class="text-center">Aktiva</h5>
@@ -60,7 +60,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             @foreach($bukuBesars->where('code_type_id',CODE_TYPE_ACTIVA) as $item)
                             <tr>
                                 <td></td>
@@ -84,7 +84,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             @foreach($bukuBesars->where('code_type_id',CODE_TYPE_PASSIVA) as $item)
                             <tr>
                                 <td></td>
@@ -108,7 +108,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                            
+
                             @foreach($bukuBesars->where('code_type_id',CODE_TYPE_LABA) as $item)
                             <tr>
                                 <td></td>
@@ -132,7 +132,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             @foreach($bukuBesars->where('code_type_id',CODE_TYPE_RUGI) as $item)
                             <tr>
                                 <td></td>
@@ -172,11 +172,11 @@
         function initiateDatatables()
         {
             $.fn.dataTable.ext.errMode = 'none';
-            
 
-            
 
-            
+
+
+
 
             // add index column
             tableAktiva.on( 'xhr.dt', function () {
