@@ -121,7 +121,7 @@ class SimpananController extends Controller
     {
         $this->authorize('add simpanan', Auth::user());
         try {
-            
+
             // check password
             $check = Hash::check($request->password, Auth::user()->password);
             if (!$check) {
@@ -211,13 +211,13 @@ class SimpananController extends Controller
                     $simpanan->u_entry = Auth::user()->name;
                     $simpanan->tgl_entri = Carbon::now();
                     $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                    if ($request->periode){
+                    if ($request->periode[$key]!==null){
                         $simpanan->periode = Carbon::createFromFormat('Y-m-d', $request->periode[$key]);
                     }else{
                         $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
                     }
-                    
-                    
+
+
                     $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                     $simpanan->keterangan = ($request->keterangan[$key]) ? $request->keterangan[$key] : null;
                     $simpanan->id_akun_debet = ($request->id_akun_debet[$key]) ? $request->id_akun_debet[$key] : null;
@@ -497,7 +497,7 @@ public function storeImportExcel(Request $request)
 
         DB::transaction(function () use ($request)
         {
-                // Excel::import(new TransaksiUserImport, $request->file); 
+                // Excel::import(new TransaksiUserImport, $request->file);
             $collection = (new FastExcel)->import($request->file);
             foreach ($collection as $transaksi) {
                     // dd($transaksi);
@@ -528,7 +528,7 @@ public function indexCard(Request $request)
         }else{
             $tahun = Carbon::createFromFormat('Y-m-d',$request->year)->format('Y');
         }
-        
+
         $data['title'] = "Kartu Simpanan";
          $data['listtahun'] = $listtahun;
         $data['tahun'] = $tahun;
@@ -554,11 +554,11 @@ public function showCard(Request $request,$kodeAnggota)
                     $year= Carbon::createFromFormat('Y',$request->year)->subYear()->endOfYear();
                     $thisYear = Carbon::createFromFormat('Y',$request->year)->year;
                 }
-        
+
             // $thisYear = 2020;
 
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
-        
+
         $listSimpanan = Simpanan::whereYear('tgl_transaksi', $thisYear)
         ->where('kode_anggota', $anggota->kode_anggota)
         ->where("mutasi",0)
@@ -595,7 +595,7 @@ public function showCard(Request $request,$kodeAnggota)
                 4. nama jenis simpanan
                 5. total saldo akhir tiap jenis simpanan
             */
-                
+
                 $listSimpanan = [];
                 $index = count($requiredKey);
                 foreach ($groupedListSimpanan as $key => $list) {
@@ -629,7 +629,7 @@ public function showCard(Request $request,$kodeAnggota)
                     }
                 }
 
-               
+
                 $data['anggota'] = $anggota;
                 $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
             // dd($data);
@@ -648,7 +648,7 @@ public function showCard(Request $request,$kodeAnggota)
                 $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($kodeAnggota);
 
             // get this year
-               
+
                  if(!$request->year){
                     $year= Carbon::today()->subYear()->endOfYear();
                     $thisYear = Carbon::now()->year;
@@ -694,7 +694,7 @@ public function showCard(Request $request,$kodeAnggota)
                 4. nama jenis simpanan
                 5. total saldo akhir tiap jenis simpanan
             */
-                
+
                 $listSimpanan = [];
                 $index = count($requiredKey);
                 foreach ($groupedListSimpanan as $key => $list) {
@@ -1001,23 +1001,23 @@ public function pendingJurnal(Request $request){
 
    $this->authorize('posting jurnal', Auth::user());
    if(!$request->from)
-   {          
+   {
     $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
 }
 
 if(!$request->to)
-{          
+{
     $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
 }
 $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
 $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
 $trans=Simpanan::
-where('mutasi',0) 
-->wherenotin('u_entry',['Admin BTB','System']) 
-->whereBetween('tgl_transaksi',[ $startUntilPeriod,$endUntilPeriod]) 
+where('mutasi',0)
+->wherenotin('u_entry',['Admin BTB','System'])
+->whereBetween('tgl_transaksi',[ $startUntilPeriod,$endUntilPeriod])
 ->whereDoesntHave('jurnals')->limit(500)
                      // ->toSql();
-->get();       
+->get();
 
 $data['title'] = 'List Pending Jurnal Simpanan';
 $data['list'] = $trans;

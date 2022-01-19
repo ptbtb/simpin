@@ -422,7 +422,7 @@
                     if(type ===  '409.01.000')
                     {
                         var dateMonthYear = moment(latestPayment).format('YYYY-MM-DD');
-                        $('#form'+data_form+' .periode').val(dateMonthYear);
+                        $('#form'+data_form+' .periode').val('');
                         $('#angsuranSimpanan'+data_form).hide();
                         $('#periodeDetail'+data_form).hide();
 
