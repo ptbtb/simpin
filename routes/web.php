@@ -488,7 +488,7 @@ Route::Group(['prefix' => 'bank', 'middleware' => 'auth'], function (){
 });
 
 // company route
-Route::group(['prefix' => 'company', 'middleware' => 'auth,cors'], function ()
+Route::group(['prefix' => 'company', 'middleware' => ['auth','cors']], function ()
 {
     Route::get('', [App\Http\Controllers\CompanyController::class, 'index'])->name('company.index');
     Route::get('create', [App\Http\Controllers\CompanyController::class, 'create'])->name('company.create');
