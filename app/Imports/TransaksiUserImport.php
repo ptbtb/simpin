@@ -20,14 +20,14 @@ use App\Models\Code;
 use Illuminate\Support\Facades\Log;
 
 
-class TransaksiUserImport 
+class TransaksiUserImport
 {
 	static function generatetransaksi($transaksi)
 	{
 		try
 		{
 			\Log::info($transaksi['NIPP']);
-			
+
 			if($transaksi['THN']){
 			$period_raw=$transaksi['THN'].'-'.sprintf('%02d', $transaksi['BLN']).'-01';
         	 //dd($period_raw);die;
@@ -43,7 +43,7 @@ class TransaksiUserImport
 				->where('kode_anggota',$transaksi['NO_ANG'])
 				->whereraw("DATE_FORMAT(periode, '%Y-%m')='".$periode->format('Y-m')."'")->first();
 				$nama_simpanan=JenisSimpanan::where('kode_jenis_simpan','411.12.000')->first();
-				
+
 
 				if(!$check){
 					$simpanan = new Simpanan();
@@ -84,12 +84,12 @@ class TransaksiUserImport
 					$simpanan->mutasi = 0;
 					$simpanan->serial_number = SimpananManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
 					$simpanan->id_akun_debet = ($idakun->id) ? $idakun->id : null;
-					
+
 					$simpanan->save();
                  JurnalManager::createJurnalSimpanan($simpanan);
 				}
 			}
-			
+
 			if($transaksi['PINJ1']>0){
 				$pinjaman1= Pinjaman::where('kode_jenis_pinjam',$transaksi['REK_PINJ_1'])
 				->where('kode_anggota',$transaksi['NO_ANG'])
@@ -107,21 +107,21 @@ class TransaksiUserImport
 						// 	$pembayaran = $pembayaran + $angsuran1->besar_pembayaran;
 						// }
 						if ($pembayaran >= $angsuran1->totalAngsuran-5) {
-							
+
 							$angsuran1->besar_pembayaran = $angsuran1->totalAngsuran;
 							$angsuran1->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
 							$pinjaman1->sisa_angsuran = $pinjaman1->sisa_angsuran - 1;
 							$pinjaman1->save();
 						} else {
-							
+
 							$angsuran1->besar_pembayaran = $pembayaran;
 							$angsuran1->id_status_angsuran = STATUS_ANGSURAN_BELUM_LUNAS;
 						}
 
 
 
-						
-						
+
+
 						$angsuran1->paid_at =  $tgl_transaksi;
 						$angsuran1->tgl_transaksi =  $tgl_transaksi;
 						$angsuran1->updated_by = Auth::user()->id;
@@ -133,21 +133,21 @@ class TransaksiUserImport
 						if ($angsuran1->jurnals()){
 							$angsuran1->jurnals()->delete();
 						}
-						
+
             // create JKM angsuran
 						AngsuranPartialManager::generateFromEdit($angsuran1);
 						$pembayaran = $pembayaran - $angsuran1->totalAngsuran;
 						// JurnalManager::createJurnalAngsuran($angsuran1);
 				// 		$yesterday=Carbon::now()->subDays(1);
 				// 		DB::statement("SET SQL_SAFE_UPDATES = 0");
-				// 		DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE 
-				// 			t1.id < t2.id AND 
+				// 		DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE
+				// 			t1.id < t2.id AND
     // t1.keterangan = t2.keterangan AND
     // t1.akun_debet = t2.akun_debet AND
-    // t1.akun_kredit = t2.akun_kredit 
+    // t1.akun_kredit = t2.akun_kredit
     // and t1.jurnalable_type ='App\\\Models\\\Angsuran' and t1.created_at>'$yesterday'");
 				// 		DB::statement("SET SQL_SAFE_UPDATES = 1");
-						
+
 
 
 						if ($pembayaran <= 0) {
@@ -160,23 +160,32 @@ class TransaksiUserImport
 						}
 					}
 				}
-				
-			}
 
+			}
 			if($transaksi['PINJ2']>0){
-				$pinjaman2= Pinjaman::where('kode_jenis_pinjam',$transaksi['REK_PINJ_1'])
+				$pinjaman2= Pinjaman::where('kode_jenis_pinjam',$transaksi['REK_PINJ_2'])
 				->where('kode_anggota',$transaksi['NO_ANG'])->first();
+				if (!$pinjaman2){
+					throw new \Exception("Pinjaman Tidak Ditemukan");
+
+				}
+
 				if ($pinjaman2){
 					$angsuran2= Angsuran::where('kode_pinjam',$pinjaman2['kode_pinjam'])
 					->whereraw("DATE_FORMAT(jatuh_tempo, '%Y-%m')='".$periode->format('Y-m')."'")->first();
+					if (!$angsuran2){
+						throw new \Exception("Pinjaman Tidak Ditemukan");
+
+					}
 
 					if ($angsuran2)
 					{
 						$serialNumber2=AngsuranManager::getSerialNumber($transaksi['TGL_TRANSAKSI']->format('d-m-Y'));
-						$pembayaran =$transaksi['POKOK_PINJ1']+$transaksi['JS_PINJ1'];
+						$pembayaran =$transaksi['POKOK_PINJ2']+$transaksi['JS_PINJ2'];
 						// if ($angsuran2->besar_pembayaran) {
 						// 	$pembayaran = $pembayaran + $angsuran2->besar_pembayaran;
 						// }
+
 						if ($pembayaran >= $angsuran2->totalAngsuran-5) {
 							$angsuran2->besar_pembayaran = $angsuran2->totalAngsuran;
 							$angsuran2->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
@@ -188,7 +197,7 @@ class TransaksiUserImport
 						}
 
 
-						
+
 						$angsuran2->paid_at =  $tgl_transaksi;
 						$angsuran2->tgl_transaksi =  $tgl_transaksi;
 						$angsuran2->updated_by = Auth::user()->id;
@@ -205,14 +214,14 @@ class TransaksiUserImport
 						// JurnalManager::createJurnalAngsuran($angsuran2);
 				// 		$yesterday=Carbon::now()->subDays(1);
 				// 		DB::statement("SET SQL_SAFE_UPDATES = 0");
-				// 		DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE 
-				// 			t1.id < t2.id AND 
+				// 		DB::statement("delete t1 FROM t_jurnal t1 INNER JOIN t_jurnal t2 WHERE
+				// 			t1.id < t2.id AND
     // t1.keterangan = t2.keterangan AND
     // t1.akun_debet = t2.akun_debet AND
-    // t1.akun_kredit = t2.akun_kredit 
+    // t1.akun_kredit = t2.akun_kredit
     // and t1.jurnalable_type ='App\\\Models\\\Angsuran' and t1.created_at>'$yesterday'");
 				// 		DB::statement("SET SQL_SAFE_UPDATES = 1");
-						
+
 
 						if ($pembayaran <= 0) {
 							$pinjaman2->sisa_pinjaman = $angsuran2->sisaPinjaman;
@@ -224,10 +233,10 @@ class TransaksiUserImport
 						}
 					}
 				}
-				
+
 			}
 		}
-		
+
 	}
 	catch (\Exception $e)
 	{
