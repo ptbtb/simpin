@@ -98,8 +98,8 @@
         $('#companyTable').on('click', 'a.btn-edit', function ()
         {
             var data_id = $(this).data('id');
-            var url = "{{ route('company.kelas.edit', ['id']) }}";
-            url = url.replace('id', data_id);
+            var url = "{{ route('company.kelas.edit', ['replace_id']) }}";
+            url = url.replace('replace_id', data_id);
             $.ajax({
                 url: url,
                 success: function (data, status, xhr)
@@ -116,8 +116,8 @@
         $('.btn-create').on('click', function ()
         {
             var data_id = $(this).data('id');
-            var url = "{{ route('company.kelas.create', ['id']) }}";
-            url = url.replace('id', data_id);
+            var url = "{{ route('company.kelas.create', ['replace_id']) }}";
+            url = url.replace('replace_id', data_id);
             $.ajax({
                 url: url,
                 success: function (data, status, xhr)
