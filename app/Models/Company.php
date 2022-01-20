@@ -28,7 +28,7 @@ class Company extends Model implements Auditable
 
     public function kelasCompany()
     {
-        return $this->hasMany(kelasCompany::class, 'company_id', 'id');
+        return $this->hasMany(KelasCompany::class, 'company_id', 'id');
     }
 
     public function isKopegmarGroup()
