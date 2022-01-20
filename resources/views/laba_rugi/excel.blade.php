@@ -13,6 +13,9 @@
                         @endphp
                 <table class="table table-striped">
                     <thead>
+                      <tr>
+                        <th colspan="9" style="text-align: center; font-weight: bold;"> Laba Rugi Periode {{$request->period}}</th>
+                      </tr>
                         <tr>
                             <th rowspan="2"></th>
                             <th rowspan="2">Rek</th>
@@ -304,7 +307,7 @@
                             <td>{{ substr($biayapenyisihan[0]['code']->CODE, 0, 6) }}</td>
                             <td colspan="8"><b>BIAYA Penyisihan</b></td>
                         </tr>
-                        
+
                          @foreach ($biayapenyusutan as $item)
                         <tr>
                             <td></td>
@@ -409,5 +412,9 @@
                             <td></td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="9"  style="font-style: italic;">&copy; escndl printed on {{\Carbon\Carbon::now()->format('d M Y his')}}</th>
+                      </tr>
+                    </tfoot>
                 </table>
-            

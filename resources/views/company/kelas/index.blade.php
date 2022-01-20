@@ -12,7 +12,8 @@
         <div class="col-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item active">Company</li>
+                <li class="breadcrumb-item"><a href="{{ route('company.index') }}">Company</a></li>
+                <li class="breadcrumb-item active">Kelas</li>
             </ol>
         </div>
     </div>
@@ -27,7 +28,7 @@
 @section('content')
     <div class="card">
         <div class="card-header text-right">
-            <a class="btn btn-sm btn-success btn-create" href="{{route('company.create')}}">
+            <a class="btn btn-sm btn-success btn-create" data-id="{{ $company->id }}">
                 <i class="fa fa-plus"></i> Add
             </a>
         </div>
@@ -38,22 +39,19 @@
                         <tr>
                             <th style="width: 5%">No</th>
                             <th style="width: 20%">Name</th>
-                            <th style="width: 55%">Group</th>
+                            <th style="width: 20%">Jenis Anggota</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($companies as $company)
+                        @foreach ($list as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $company->nama }}</td>
-                                <td>{{ $company->companyGroup->name ?? '-' }}</td>
+                                <td>{{ $item->nama }}</td>
+                                <td>{{ ($item->jenisAnggota)?$item->jenisAnggota->nama_jenis_anggota:'-' }}</td>
                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-warning btn-edit" data-id="{{ $company->id }}">
+                                    <a class="btn btn-sm btn-warning btn-edit" data-id="{{ $item->id }}">
                                         <i class="fa fa-edit"></i> Edit
-                                    </a>
-                                    <a class="btn btn-sm btn-primary btn-child" href="{{route('company.kelas.index',[$company->id])}}"">
-                                        <i class="fa fa-list"></i> Kelas
                                     </a>
                                 </td>
                             </tr>
@@ -100,7 +98,25 @@
         $('#companyTable').on('click', 'a.btn-edit', function ()
         {
             var data_id = $(this).data('id');
-            var url = "{{ route('company.edit', ['id']) }}";
+            var url = "{{ route('company.kelas.edit', ['id']) }}";
+            url = url.replace('id', data_id);
+            $.ajax({
+                url: url,
+                success: function (data, status, xhr)
+                {
+                    $('.modal-body').html(data);
+                    $('#editCompany').modal();
+                },
+                error: function (xhr, status, th)
+                {
+                    console.log(status);
+                }
+            });
+        })
+        $('.btn-create').on('click', function ()
+        {
+            var data_id = $(this).data('id');
+            var url = "{{ route('company.kelas.create', ['id']) }}";
             url = url.replace('id', data_id);
             $.ajax({
                 url: url,

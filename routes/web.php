@@ -490,10 +490,19 @@ Route::Group(['prefix' => 'bank', 'middleware' => 'auth'], function (){
 // company route
 Route::group(['prefix' => 'company', 'middleware' => 'auth'], function ()
 {
-    Route::get('', [CompanyController::class, 'index'])->name('company.index');
-    Route::get('{id}/edit', [CompanyController::class, 'edit'])->name('company.edit');
-    Route::put('{id}/edit', [CompanyController::class, 'update'])->name('company.update');
+    Route::get('', [App\Http\Controllers\CompanyController::class, 'index'])->name('company.index');
+    Route::get('create', [App\Http\Controllers\CompanyController::class, 'create'])->name('company.create');
+    Route::post('create', [App\Http\Controllers\CompanyController::class, 'store'])->name('company.create');
+    Route::get('{id}/edit', [App\Http\Controllers\CompanyController::class, 'edit'])->name('company.edit');
+    Route::put('{id}/edit', [App\Http\Controllers\CompanyController::class, 'update'])->name('company.update');
+    Route::get('{id}/kelas', [App\Http\Controllers\KelasCompanyController::class, 'index'])->name('company.kelas.index');
+    Route::get('{id}/kelas/edit', [App\Http\Controllers\KelasCompanyController::class, 'edit'])->name('company.kelas.edit');
+    Route::put('{id}/kelas/edit', [App\Http\Controllers\KelasCompanyController::class, 'update'])->name('company.kelas.update');
+    Route::get('{id}/kelas/create', [App\Http\Controllers\KelasCompanyController::class, 'create'])->name('company.kelas.create');
+    Route::put('{id}/kelas/create', [App\Http\Controllers\KelasCompanyController::class, 'store'])->name('company.kelas.create');
+
 });
+
 
 // jenis penghasilan route
 Route::group(['prefix' => 'jenis-penghasilan', 'middleware' => 'auth'], function ()
@@ -505,15 +514,15 @@ Route::group(['prefix' => 'jenis-penghasilan', 'middleware' => 'auth'], function
 
 Route::prefix('budget')->middleware('auth')->group(function ()
 {
-    Route::get('list', [BudgetController::class, 'index'])->name('budget.list');
-    Route::get('list/data', [BudgetController::class, 'indexAjax'])->name('budget.data');
-    Route::get('create', [BudgetController::class, 'create'])->name('budget.create');
-    Route::post('store', [BudgetController::class, 'store'])->name('budget.store');
-    Route::get('{id}/edit', [BudgetController::class, 'edit'])->name('budget.edit');
-    Route::put('{id}/update', [BudgetController::class, 'update'])->name('budget.update');
-    Route::get('excel', [BudgetController::class, 'excel'])->name('budget.excel');
-    Route::get('import', [BudgetController::class, 'import'])->name('budget.import');
-    Route::post('import/store', [BudgetController::class, 'importStore'])->name('budget.import.store');
+    Route::get('list', [App\Http\Controllers\BudgetController::class, 'index'])->name('budget.list');
+    Route::get('list/data', [App\Http\Controllers\BudgetController::class, 'indexAjax'])->name('budget.data');
+    Route::get('create', [App\Http\Controllers\BudgetController::class, 'create'])->name('budget.create');
+    Route::post('store', [App\Http\Controllers\BudgetController::class, 'store'])->name('budget.store');
+    Route::get('{id}/edit', [App\Http\Controllers\BudgetController::class, 'edit'])->name('budget.edit');
+    Route::put('{id}/update', [App\Http\Controllers\BudgetController::class, 'update'])->name('budget.update');
+    Route::get('excel', [App\Http\Controllers\BudgetController::class, 'excel'])->name('budget.excel');
+    Route::get('import', [App\Http\Controllers\BudgetController::class, 'import'])->name('budget.import');
+    Route::post('import/store', [App\Http\Controllers\BudgetController::class, 'importStore'])->name('budget.import.store');
 });
 
 Route::Group(['prefix' => 'arus-kas', 'middleware' => 'auth'], function ()
@@ -523,16 +532,16 @@ Route::Group(['prefix' => 'arus-kas', 'middleware' => 'auth'], function ()
     Route::get('laporan/excel', [App\Http\Controllers\ArusKasController::class,  'downloadExcel'])->name('excel.laporan.arus-kas');
 });
 
-Route::get('code/search', [CodeController::class, 'search'])->name('code.search');
-Route::get('code/search/{id}', [CodeController::class, 'searchId'])->name('code.search.id');
+Route::get('code/search', [App\Http\Controllers\CodeController::class, 'search'])->name('code.search');
+Route::get('code/search/{id}', [App\Http\Controllers\CodeController::class, 'searchId'])->name('code.search.id');
 
 Route::group(['prefix' => 'jkk-printed', 'middleware' => 'auth'], function ()
 {
-    Route::get('list', [JkkPrintedController::class, 'index'])->name('jkk-printed-list');
-    Route::post('list', [JkkPrintedController::class, 'index'])->name('jkk-printed-list');
-    Route::get('list/data', [JkkPrintedController::class, 'indexAjax'])->name('jkk-printed-data');
-    Route::post('reprint/{id}', [JkkPrintedController::class, 'reprint'])->name('jkk-printed-reprint');
-    Route::get('detail/{id}', [JkkPrintedController::class, 'show'])->name('jkk-printed-show');
+    Route::get('list', [App\Http\Controllers\JkkPrintedController::class, 'index'])->name('jkk-printed-list');
+    Route::post('list', [App\Http\Controllers\JkkPrintedController::class, 'index'])->name('jkk-printed-list');
+    Route::get('list/data', [App\Http\Controllers\JkkPrintedController::class, 'indexAjax'])->name('jkk-printed-data');
+    Route::post('reprint/{id}', [App\Http\Controllers\JkkPrintedController::class, 'reprint'])->name('jkk-printed-reprint');
+    Route::get('detail/{id}', [App\Http\Controllers\JkkPrintedController::class, 'show'])->name('jkk-printed-show');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
@@ -546,6 +555,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
      Route::get('cekjurnalnotrans', [App\Http\Controllers\AdminController::class, 'cekjurnalnotrans'])->name('admin-cek-jurnal-notrans');
      Route::get('cekangsuran', [App\Http\Controllers\AdminController::class, 'cekangsuran'])->name('admin-cek-cekangsuran');
      Route::get('cekpinjamantanpaangsuran', [App\Http\Controllers\AdminController::class, 'cekpinjamantanpaangsuran'])->name('admin-pinjaman-noangsuran');
-    
-    
+
+
 });

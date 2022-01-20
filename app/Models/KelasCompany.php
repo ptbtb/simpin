@@ -31,4 +31,9 @@ class KelasCompany extends Model
     {
         return $this->hasOne(kelasSimpanan::class, 'kelas_company_id', 'id');
     }
+
+    public function jenisAnggota()
+    {
+        return $this->belongsTo(JenisAnggota::class, 'id_jenis_anggota');
+    }
 }

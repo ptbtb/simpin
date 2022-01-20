@@ -4,10 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Wildside\Userstamps\Userstamps;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Company extends Model
+class Company extends Model implements Auditable
 {
-    use HasFactory;
+  use HasFactory;
+  use Userstamps;
+  use SoftDeletes;
+  use \OwenIt\Auditing\Auditable;
 
     protected $table = 't_company';
 
@@ -18,6 +24,11 @@ class Company extends Model
     public function anggota()
     {
         return $this->hasMany(Anggota::class, 'company_id', 'id');
+    }
+
+    public function kelasCompany()
+    {
+        return $this->hasMany(kelasCompany::class, 'company_id', 'id');
     }
 
     public function isKopegmarGroup()
