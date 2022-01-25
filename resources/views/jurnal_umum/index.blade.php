@@ -188,8 +188,8 @@
                             {
                                 @can('approve jurnal umum spv')
                                 // temporary skip Asmanager, bendahara, ketua
-                                    // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
                                     markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 @endcan
                             }
