@@ -15,7 +15,7 @@ use App\Managers\JurnalManager;
 use App\Managers\JurnalUmumManager;
 
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\File;
 
 use Auth;
 use DB;
@@ -65,15 +65,15 @@ class JurnalUmumController extends Controller
         $codePin = JenisPinjaman::pluck('kode_jenis_pinjam')->toArray();
         // dd($codeSim);
         $codeSimPin = array_merge($codeSim,$codePin);
-        
+
         $debetCodes = Code::where('is_parent', 0)
                             ->whereNotIn('CODE',$codeSimPin)
                             ->get();
-                            
+
         $creditCodes = Code::where('is_parent', 0)
                             ->whereNotIn('CODE',$codeSimPin)
                             ->get();
-        
+
         $data['title'] = "Tambah Jurnal Umum";
         $data['request'] = $request;
         $data['debetCodes'] = $debetCodes;
@@ -98,7 +98,7 @@ class JurnalUmumController extends Controller
             {
                 return redirect()->back()->withError("Password yang anda masukkan salah");
             }
-            
+
             // get auth user
             $user = Auth::user();
 
@@ -111,15 +111,15 @@ class JurnalUmumController extends Controller
             $jurnalUmum->deskripsi = $request->deskripsi;
             $jurnalUmum->serial_number = $nextSerialNumber;
             $jurnalUmum->save();
-            
+
             // loop every item
             // total
             $totalDebet = 0;
             $totalCredit = 0;
 
             // debet
-            for ($i=0; $i < count($request->code_debet_id) ; $i++) 
-            { 
+            for ($i=0; $i < count($request->code_debet_id) ; $i++)
+            {
                 $filterNominal = filter_var($request->nominal[$i], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
                 $nominal = str_replace(",", ".", $filterNominal);
                 $jurnalUmumItem = new JurnalUmumItem();
@@ -132,8 +132,8 @@ class JurnalUmumController extends Controller
                 $totalDebet += $nominal;
             }
             // credit
-            for ($i=0; $i < count($request->code_credit_id) ; $i++) 
-            { 
+            for ($i=0; $i < count($request->code_credit_id) ; $i++)
+            {
                 $filterNominal = filter_var($request->nominal[$i + count($request->code_debet_id)], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
                 $nominal = str_replace(",", ".", $filterNominal);
 
@@ -146,16 +146,16 @@ class JurnalUmumController extends Controller
 
                 $totalCredit += $nominal;
             }
-            
+
             // loop every lampiran
-            for ($i=0; $i < count($request->lampiran) ; $i++) 
-            { 
+            for ($i=0; $i < count($request->lampiran) ; $i++)
+            {
                 $jurnalUmumLampiran = new JurnalUmumLampiran();
                 $jurnalUmumLampiran->jurnal_umum_id = $jurnalUmum->id;
 
                 // check file lampiran
                 $file = $request->lampiran[$i];
-                if ($file) 
+                if ($file)
                 {
                     $config['disk'] = 'upload';
                     $config['upload_path'] = '/jurnalumum/' . $jurnalUmum->id;
@@ -174,28 +174,29 @@ class JurnalUmumController extends Controller
                         $jurnalUmumLampiran->lampiran = $config['disk'] . $config['upload_path'] . '/' . $filename;
                     }
                 }
-                
+
                 $jurnalUmumLampiran->save();
             }
-            
-            if( $totalDebet > 10000000 || $totalCredit > 10000000)
-            {
-                // add status
-                $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_MENUNGGU_KONFIRMASI;
-                $jurnalUmum->save();
-            }
-            else
-            {
-                // add status
-                $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_DITERIMA;
-                $jurnalUmum->save();
 
-                // call function for create Jurnal
-                if($jurnalUmum)
-                {
-                    JurnalManager::createJurnalUmum($jurnalUmum);
-                }
-            }
+            // if( $totalDebet > 5000000 || $totalCredit > 5000000)
+            // {
+            //     // add status
+            //     $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_MENUNGGU_KONFIRMASI;
+                $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV;
+                $jurnalUmum->save();
+            // }
+            // else
+            // {
+            //     // add status
+            //     $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_DITERIMA;
+            //     $jurnalUmum->save();
+            //
+            //     // call function for create Jurnal
+            //     if($jurnalUmum)
+            //     {
+            //         JurnalManager::createJurnalUmum($jurnalUmum);
+            //     }
+            // }
 
             return redirect()->route('jurnal-umum-list')->withSuccess('Berhasil menambah transaksi');
         }
@@ -301,11 +302,11 @@ class JurnalUmumController extends Controller
 
             $jurnalUmumItemDebets = $jurnalUmumItemDebets->values();
             $jurnalUmumItemKredits = $jurnalUmumItemKredits->values();
-            
+
             // loop every item
             // debet
-            for ($i=0; $i < count($request->code_debet_id) ; $i++) 
-            { 
+            for ($i=0; $i < count($request->code_debet_id) ; $i++)
+            {
                 // update item
                 if ($i < $jurnalUmumItemDebets->count())
                 {
@@ -315,7 +316,7 @@ class JurnalUmumController extends Controller
                 {
                     $jurnalUmumItem = new JurnalUmumItem();
                 }
-                
+
                 $filterNominal = filter_var($request->nominal_debet[$i],  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
                 $nominal = str_replace(",", ".", $filterNominal);
 
@@ -325,10 +326,10 @@ class JurnalUmumController extends Controller
                 $jurnalUmumItem->normal_balance_id = NORMAL_BALANCE_DEBET;
                 $jurnalUmumItem->save();
             }
-            
+
             // kredit
-            for ($i=0; $i < count($request->code_credit_id) ; $i++) 
-            { 
+            for ($i=0; $i < count($request->code_credit_id) ; $i++)
+            {
                 // update item
                 if ($i < $jurnalUmumItemKredits->count() )
                 {
@@ -338,7 +339,7 @@ class JurnalUmumController extends Controller
                 {
                     $jurnalUmumItem = new JurnalUmumItem();
                 }
-                
+
                 $filterNominal = filter_var($request->nominal_credit[$i], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
                 $nominal = str_replace(",", ".", $filterNominal);
 
@@ -353,7 +354,7 @@ class JurnalUmumController extends Controller
             // debet
             if (count($request->code_debet_id) < $jurnalUmumItemDebets->count())
             {
-                for ($i=count($request->code_debet_id); $i < $jurnalUmumItemDebets->count(); $i++) { 
+                for ($i=count($request->code_debet_id); $i < $jurnalUmumItemDebets->count(); $i++) {
                     $jurnalUmumItem = $jurnalUmumItemDebets[$i];
                     $jurnalUmumItem->delete();
                 }
@@ -361,7 +362,7 @@ class JurnalUmumController extends Controller
             // credit
             if (count($request->code_credit_id) < $jurnalUmumItemKredits->count() )
             {
-                for ($i= count($request->code_credit_id); $i < $jurnalUmumItemKredits->count(); $i++) { 
+                for ($i= count($request->code_credit_id); $i < $jurnalUmumItemKredits->count(); $i++) {
                     $jurnalUmumItem = $jurnalUmumItemKredits[$i];
                     $jurnalUmumItem->delete();
                 }
@@ -371,8 +372,8 @@ class JurnalUmumController extends Controller
             if($request->lampiran)
             {
                 // loop every lampiran
-                for ($i=0; $i < count($request->lampiranCounts) ; $i++) 
-                { 
+                for ($i=0; $i < count($request->lampiranCounts) ; $i++)
+                {
                     // check if lampiran is exist
                     if(isset($request->lampiran[$i]))
                     {
@@ -389,7 +390,7 @@ class JurnalUmumController extends Controller
 
                         // check file lampiran
                         $file = $request->lampiran[$i];
-                        if ($file) 
+                        if ($file)
                         {
                             $config['disk'] = 'upload';
 
@@ -399,7 +400,7 @@ class JurnalUmumController extends Controller
                                 // delete old file
                                 File::delete($jurnalUmumLampirans[$i]->lampiran);
                             }
-                            
+
                             $config['upload_path'] = '/jurnalumum/' . $jurnalUmum->id;
                             $config['public_path'] = env('APP_URL') . '/upload/jurnalumum/' . $jurnalUmum->id;
 
@@ -419,19 +420,19 @@ class JurnalUmumController extends Controller
 
                         $jurnalUmumLampiran->save();
                     }
-                    
+
                 }
             }
 
             // delete item if jurnal umum lampirans less than request jurnal umum lampirans
             if (count($request->lampiranCounts) < $jurnalUmumLampirans->count())
             {
-                for ($i=count($request->lampiranCounts); $i < $jurnalUmumLampirans->count(); $i++) { 
+                for ($i=count($request->lampiranCounts); $i < $jurnalUmumLampirans->count(); $i++) {
                     $jurnalUmumLampiran = $jurnalUmumLampirans[$i];
 
                     // delete old file
                     File::delete($jurnalUmumLampiran->lampiran);
-                    
+
                     $jurnalUmumLampiran->delete();
                 }
             }
@@ -442,7 +443,7 @@ class JurnalUmumController extends Controller
                 // update jurnal data
                 JurnalManager::updateJurnalUmum($jurnalUmum);
             }
-            
+
             return redirect()->route('jurnal-umum-list')->withSuccess('Berhasil merubah transaksi');
         }
         catch (\Throwable $th)
@@ -475,7 +476,7 @@ class JurnalUmumController extends Controller
                 if($jurnalUmum && $jurnalUmum->status_jurnal_umum_id == $request->old_status)
                 {
 
-                    if ($request->status == STATUS_JURNAL_UMUM_DIBATALKAN) 
+                    if ($request->status == STATUS_JURNAL_UMUM_DIBATALKAN)
                     {
                         $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_DIBATALKAN;
                         $jurnalUmum->save();
@@ -483,14 +484,15 @@ class JurnalUmumController extends Controller
                     }
 
                     $this->authorize('approve pengajuan pinjaman', $user);
-                    if (is_null($jurnalUmum)) 
+                    if (is_null($jurnalUmum))
                     {
                         return response()->json(['message' => 'not found'], 404);
                     }
 
                     // jika debet < 5 juta, cukup sampai spv, lalu lanjut ke menunggu pembayaran
                     $totalNominalDebet = $jurnalUmum->total_nominal_debet;
-                    if ($totalNominalDebet < 5000000 && $request->status == STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN)
+                    // if ($totalNominalDebet < 5000000 && $request->status == STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN)
+                    if ($totalNominalDebet < 5000000 && $request->status == STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER)
                     {
                         $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_MENUNGGU_PEMBAYARAN;
                     }
@@ -503,7 +505,7 @@ class JurnalUmumController extends Controller
                     $jurnalUmum->approved_by = $user->id;
                     $jurnalUmum->save();
 
-                    if ($request->status == STATUS_JURNAL_UMUM_DITERIMA) 
+                    if ($request->status == STATUS_JURNAL_UMUM_DITERIMA)
                     {
                         JurnalManager::createJurnalUmum($jurnalUmum);
                     }
@@ -556,8 +558,8 @@ class JurnalUmumController extends Controller
 
             $jurnalUmum->status_jkk = 1;
             $jurnalUmum->save();
-            
-            
+
+
             $data['jurnalUmum'] = $jurnalUmum;
             $data['tgl_print']= Carbon::now()->format('d-m-Y');
             $data['terbilang'] = self::terbilang($jurnalUmum->total_nominal_debet) . ' rupiah';
