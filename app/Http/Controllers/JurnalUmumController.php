@@ -483,7 +483,7 @@ class JurnalUmumController extends Controller
                         return response()->json(['message' => 'success'], 200);
                     }
 
-                    $this->authorize('approve pengajuan pinjaman', $user);
+                    $this->authorize('approve jurnal umum', $user);
                     if (is_null($jurnalUmum))
                     {
                         return response()->json(['message' => 'not found'], 404);
