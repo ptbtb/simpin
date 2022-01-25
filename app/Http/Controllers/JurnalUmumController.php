@@ -491,8 +491,8 @@ class JurnalUmumController extends Controller
 
                     // jika debet < 5 juta, cukup sampai spv, lalu lanjut ke menunggu pembayaran
                     $totalNominalDebet = $jurnalUmum->total_nominal_debet;
-                    // if ($totalNominalDebet < 5000000 && $request->status == STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN)
-                    if ($totalNominalDebet < 5000000 && $request->status == STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER)
+                    if ($totalNominalDebet < 5000000 && $request->status == STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN)
+                    // if ($totalNominalDebet < 5000000 && $request->status == STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER)
                     {
                         $jurnalUmum->status_jurnal_umum_id = STATUS_JURNAL_UMUM_MENUNGGU_PEMBAYARAN;
                     }
