@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                </tbody> 
+                </tbody>
             </table>
         </div>
     </div>
@@ -112,33 +112,33 @@
                 mData: 'DT_RowIndex',
                 className: "dt-body-center", 'name': 'DT_RowIndex',
             },
-            { 
-                mData: 'view_tgl_transaksi', sType: "date-uk-pre", 
+            {
+                mData: 'view_tgl_transaksi', sType: "date-uk-pre",
                 className: "dt-body-center", "name": "view_tgl_transaksi",
                 mRender: function (data, type, full) {
                     if (data == null || data == '') {
                         return '-';
                     }
                     return data;
-                }					
+                }
             },
-            { 
-                mData: 'deskripsi', sType: "string", 
-                className: "dt-body-center", "name": "deskripsi"		
+            {
+                mData: 'deskripsi', sType: "string",
+                className: "dt-body-center", "name": "deskripsi"
             },
-            { 
-                mData: 'total_nominal_debet_rupiah', sType: "number", 
-                className: "dt-body-center", "name": "total_nominal_debet_rupiah"        
+            {
+                mData: 'total_nominal_debet_rupiah', sType: "number",
+                className: "dt-body-center", "name": "total_nominal_debet_rupiah"
             },
-            { 
-                mData: 'jurnal_umum_lampirans', sType: "string", 
-                className: "dt-body-center", "name": "jurnal_umum_lampirans",	
-                mRender: function(data, type, full) 
+            {
+                mData: 'jurnal_umum_lampirans', sType: "string",
+                className: "dt-body-center", "name": "jurnal_umum_lampirans",
+                mRender: function(data, type, full)
                 {
-                    var markup = ''; 
+                    var markup = '';
                     var baseURL = {!! json_encode(url('/')) !!};
-                    
-                    for (let index = 0; index < data.length; index++) 
+
+                    for (let index = 0; index < data.length; index++)
                     {
                         markup += '<a class="btn btn-warning btn-sm" href="' + baseURL + '/'+ data[index].lampiran + '" target="_blank"><i class="fa fa-file"></i></a>';
                         markup += '&nbsp';
@@ -148,20 +148,20 @@
                     return markup;
                 }
             },
-            { 
-                mData: 'created_by.name', sType: "string", 
-                className: "dt-body-center", "name": "created_by.name"        
+            {
+                mData: 'created_by.name', sType: "string",
+                className: "dt-body-center", "name": "created_by.name"
             },
-            { 
-                mData: 'status_jurnal_umum.name', sType: "string", 
-                className: "dt-body-center", "name": "status_jurnal_umum.name"        
+            {
+                mData: 'status_jurnal_umum.name', sType: "string",
+                className: "dt-body-center", "name": "status_jurnal_umum.name"
             },
-            { 
-                mData: 'id', sType: "string", 
-                className: "dt-body-center", "name": "id",	
-                mRender: function(data, type, full) 
+            {
+                mData: 'id', sType: "string",
+                className: "dt-body-center", "name": "id",
+                mRender: function(data, type, full)
                 {
-                    var markup = ''; 
+                    var markup = '';
                     var baseURL = {!! json_encode(url('/')) !!};
 
                     markup += '<a href="' + baseURL + '/jurnal-umum/detail/' + data + '" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Detail</a> '
@@ -187,20 +187,24 @@
                             else if (full.status_jurnal_umum_id == {{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }})
                             {
                                 @can('approve jurnal umum spv')
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                // temporary skip Asmanager, bendahara, ketua
+                                    // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
                                     markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_JURNAL_UMUM_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                 @endcan
                             }
                             else if (full.status_jurnal_umum_id == {{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }})
                             {
                                 // temporary skip manager, bendahara, ketua
-                                // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
                                 markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_JURNAL_UMUM_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                             }
                             else if (full.status_jurnal_umum_id == {{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }})
                             {
-                                markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                               // temporary skip asmanager, bendahara, ketua
+                                // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
                                 markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_JURNAL_UMUM_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                             }
                             else if (full.status_jurnal_umum_id == {{ STATUS_JURNAL_UMUM_MENUNGGU_APPROVAL_BENDAHARA }})
@@ -357,7 +361,7 @@
                 })
             }
         })
-        
+
     });
 
     </script>
