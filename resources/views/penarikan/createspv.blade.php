@@ -30,7 +30,7 @@
 @endsection
 
 @section('content')
-<form method="post" action="{{ route('penarikan-create') }}" enctype="multipart/form-data">
+<form method="post" action="{{ route('penarikan-createspv') }}" enctype="multipart/form-data">
 	{{ csrf_field() }}
 	<div class="card">
 		<div class="card-body">
@@ -50,7 +50,7 @@
 									<option value="">Pilih Salah Satu</option>
 								</select>
 							</div>
-							<div class="col-md-12 form-group" id="anggotaSelect2">
+              <div class="col-md-12 form-group" id="anggotaSelect2">
 								<label for="tanggalPenarikan">Tanggal Pengajuan</label>
 								<input type="date" name="tgl_penarikan" class="form-control" placeholder="Tgl Pengajuan" autocomplete="off" required>
 							</div>
@@ -66,6 +66,10 @@
 						<div class="col-md-12" id="besar-penarikan">
 							{{-- <label>Besar Penarikan</label>
 							<input type="text" name="besar_penarikan" class="form-control penarikan" placeholder="Besar Penarikan" autocomplete="off" required> --}}
+						</div>
+            <div class="col-md-12 form-group">
+							<label>Keterangan</label>
+							<input type="text" name="keterangan" class="form-control" placeholder="keterangan" autocomplete="off" required>
 						</div>
 						<div class="col-md-12 form-group">
 							<label>Password</label>

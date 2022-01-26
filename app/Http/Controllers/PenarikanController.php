@@ -54,6 +54,24 @@ class PenarikanController extends Controller
         }
     }
 
+    public function createSpv()
+    {
+        try {
+            $user = Auth::user();
+            $this->authorize('bypass', $user);
+
+            $data['title'] = "Buat Penarikan";
+            $data['jenisSimpanan'] = JenisSimpanan::where('is_normal_withdraw', 1)->get();
+            return view('penarikan.createspv', $data);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            if (isset($e->errorInfo[2])) {
+                $message = $e->errorInfo[2];
+            }
+            return redirect()->back()->withError($message);
+        }
+    }
+
     public function store(Request $request)
     {
         try {
@@ -124,12 +142,12 @@ class PenarikanController extends Controller
                 $tabungan = $anggota->tabungan->where('kode_trans', $kode)->first();
                 $besarPenarikan = filter_var($request->besar_penarikan[$kode], FILTER_SANITIZE_NUMBER_INT);
                 $maxtarik = $tabungan->totalBesarTabungan * $jenissimpanan->max_withdraw;
-                
+
                 if (is_null($tabungan))
                 {
                     return redirect()->back()->withError($anggota->nama_anggota . " belum memiliki tabungan");
                 }
-                
+
                 else if ($besarPenarikan > $maxtarik + 1)
                 {
                     return redirect()->back()->withError("Penarikan simpanan " . $jenissimpanan->nama_simpanan . " tidak boleh melebihi ".$jenissimpanan->max_withdraw." dari saldo tabungan");
@@ -143,8 +161,9 @@ class PenarikanController extends Controller
                 $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
                 $tabungan = $anggota->tabungan->where('kode_trans', $kode)->first();
                 $besarPenarikan = filter_var($request->besar_penarikan[$kode], FILTER_SANITIZE_NUMBER_INT);
+                $tglPenarikan=(isset($request->tgl_penarikan))?Carbon::createFromFormat('Y-m-d',$request->tgl_penarikan):Carbon::now();
 
-                DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber) {
+                DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber,$tglPenarikan) {
                     $penarikan->kode_anggota = $anggota->kode_anggota;
                     $penarikan->kode_tabungan = $tabungan->kode_tabungan;
                     $penarikan->id_tabungan = $tabungan->id;
@@ -154,6 +173,72 @@ class PenarikanController extends Controller
                     $penarikan->u_entry = $user->name;
                     $penarikan->created_by = $user->id;
                     $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_KONFIRMASI;
+                    $penarikan->serial_number = $nextSerialNumber;
+                    $penarikan->save();
+                });
+
+                event(new PenarikanCreated($penarikan, $tabungan));
+            }
+            // return redirect()->route('penarikan-receipt', ['id' => $penarikan->kode_ambil])->withSuccess("Penarikan berhasil");
+            return redirect()->back()->withSuccess('Permintaan penarikan berhasil disimpan dan dalam proses persetujuan');
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            if (isset($e->errorInfo[2])) {
+                $message = $e->errorInfo[2];
+            }
+            return redirect()->back()->withError($message);
+        }
+    }
+
+    public function storespv(Request $request)
+    {
+      // dd($request);
+        try {
+            $user = Auth::user();
+            $this->authorize('bypass', $user);
+
+            // check password
+            $check = Hash::check($request->password, $user->password);
+            if (!$check) {
+                return redirect()->back()->withError("Password yang anda masukkan salah");
+            }
+
+            $anggota = Anggota::with('tabungan')->find($request->kode_anggota);
+
+            // check max penarikan user
+            $thisYear = Carbon::now()->year;
+            $penarikanUser = Penarikan::approved()
+                                        ->where('kode_anggota', $anggota->kode_anggota)
+                                        ->whereYear('created_at', $thisYear)
+                                        ->get();
+
+            $simpinRule = SimpinRule::findOrFail(SIMPIN_RULE_MAX_PENGAMBILAN_DALAM_SETAHUN);
+
+            $totalSaldotabungan = $anggota->tabungan->sum('besar_tabungan');
+            $totalPenarikan = array_sum($request->besar_penarikan);
+
+            foreach ($request->jenis_simpanan as $kode)
+            {
+                $penarikan = new Penarikan();
+                // get next serial number
+                $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                $tabungan = $anggota->tabungan->where('kode_trans', $kode)->first();
+                $besarPenarikan = filter_var($request->besar_penarikan[$kode], FILTER_SANITIZE_NUMBER_INT);
+                $keterangan = $request->keterangan;
+                $tglPenarikan=(isset($request->tgl_penarikan))?Carbon::createFromFormat('Y-m-d',$request->tgl_penarikan):Carbon::now();
+
+                DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber,$keterangan,$tglPenarikan) {
+                    $penarikan->kode_anggota = $anggota->kode_anggota;
+                    $penarikan->kode_tabungan = $tabungan->kode_tabungan;
+                    $penarikan->id_tabungan = $tabungan->id;
+                    $penarikan->besar_ambil = $besarPenarikan;
+                    $penarikan->code_trans = $tabungan->kode_trans;
+                    $penarikan->tgl_ambil = $tglPenarikan;
+                    $penarikan->u_entry = $user->name;
+                    $penarikan->created_by = $user->id;
+                    $penarikan->status_pengambilan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                    $penarikan->keterangan = $keterangan;
+                    $penarikan->tgl_acc = Carbon::now();
                     $penarikan->serial_number = $nextSerialNumber;
                     $penarikan->save();
                 });
@@ -302,7 +387,7 @@ class PenarikanController extends Controller
             // Excel::import(new PenarikanImport, $request->file);
             DB::transaction(function () use ($request)
             {
-                // Excel::import(new TransaksiUserImport, $request->file); 
+                // Excel::import(new TransaksiUserImport, $request->file);
                 $collection = (new FastExcel)->import($request->file);
                 foreach ($collection as $transaksi) {
                     // dd($transaksi);
@@ -563,7 +648,7 @@ class PenarikanController extends Controller
             //start create sequence number
             $bookno_jkk= DB::select("SELECT NEXTVAL(jkk_sequence) as nextnum")[0]->nextnum;
             $no_jkk = Carbon::createFromFormat('Y-m-d', $request->tgl_print)->format('y').Carbon::createFromFormat('Y-m-d', $request->tgl_print)->format('m').Carbon::createFromFormat('Y-m-d', $request->tgl_print)->format('d').sprintf('%04d', $bookno_jkk);
-           
+
             //end create sequence number
             $listPenarikan = Penarikan::whereIn('kode_ambil', $request->kode_ambil)
                 ->get();
@@ -697,7 +782,7 @@ class PenarikanController extends Controller
 
             $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet')
                                         ->orderBy('tgl_ambil','desc');
-            
+
             if($request->status_penarikan != "")
             {
                 $listPenarikan->where('status_pengambilan', $request->status_penarikan);
@@ -750,7 +835,7 @@ class PenarikanController extends Controller
             {
                 $kodeAmbilIds = json_decode($request->kode_ambil_ids);
             }
-        
+
             foreach ($kodeAmbilIds as $key => $kodeAmbilId)
             {
                 $penarikan = Penarikan::find($kodeAmbilId);
@@ -761,9 +846,9 @@ class PenarikanController extends Controller
             }
                 $penarikan->delete();
             }
-           
+
          return response()->json(['message' => 'success'], 200);
-        
+
 
        }catch (\Throwable $th)
         {

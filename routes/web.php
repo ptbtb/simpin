@@ -313,7 +313,9 @@ Route::group(['prefix' => 'penarikan'], function () {
         Route::get('list/export-excel', [App\Http\Controllers\PenarikanController::class, 'exportExcel'])->name('penarikan-list-export-excel');
 
         Route::get('create', [App\Http\Controllers\PenarikanController::class, 'create'])->name('penarikan-create');
+        Route::get('createSpv', [App\Http\Controllers\PenarikanController::class, 'createspv'])->name('penarikan-createspv');
         Route::post('create', [App\Http\Controllers\PenarikanController::class, 'store'])->name('penarikan-create');
+        Route::post('createSpv', [App\Http\Controllers\PenarikanController::class, 'storespv'])->name('penarikan-createspv');
 
         Route::get('history', [App\Http\Controllers\PenarikanController::class, 'history'])->name('penarikan-history');
         Route::post('history', [App\Http\Controllers\PenarikanController::class, 'history'])->name('penarikan-history');

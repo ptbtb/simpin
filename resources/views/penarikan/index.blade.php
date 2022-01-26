@@ -50,17 +50,17 @@
                     <select name="status_penarikan" class="form-control input" id="select_status_penarikan">
                         <option value="" selected>All</option>
                         @foreach ($statusPenarikans as $statusPenarikan)
-                            <option value="{{ $statusPenarikan->id }}">{{ $statusPenarikan->name }}</option>
+                            <option value="{{ $statusPenarikan->id }}" {{($statusPenarikan->id==$request->status_penarikan)?'selected':''}}>{{ $statusPenarikan->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <label>Tgl. Penarikan</label>
-                    <input type="text" name="tgl_ambil" id="input_tgl_ambil" value="{{ old('tgl_ambil') }}" class="form-control" placeholder="dd-mm-yyyy" autocomplete="off">
+                    <label>Tgl. Pengajuan</label>
+                    <input type="text" name="tgl_ambil" id="input_tgl_ambil" value="{{ ($request->tgl_ambil)?$request->tgl_ambil:old('tgl_ambil') }}" class="form-control" placeholder="dd-mm-yyyy" autocomplete="off">
                 </div>
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
-                    <select name="anggota" id="select_anggota" class="form-control">
+                    <select name="anggota" id="select_anggota" class="form-control" value="{{ ($request->anggota)?$request->tgl_ambil:old('tgl_ambil') }}" >
                     </select>
                 </div>
                 <div class="col-md-1 form-group" style="margin-top: 26px">
@@ -72,6 +72,9 @@
     </div>
     <div class="card">
         <div class="card-header text-right">
+            @can('bypass')
+              <a href="{{ route('penarikan-createspv') }}" class="btn btn-sm btn-danger"><i class="fas fa-plus"></i> Add BYPASS</a>
+            @endcan
             @can('print jkk penarikan')
                 <a href="{{ route('penarikan-print-jkk') }}" class="btn btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
                 <a href="{{ route('penarikan-list-export-excel', $request->toArray()) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i> Export Excel</a>
@@ -85,7 +88,7 @@
                         <th>#</th>
                         <th>No</th>
                         <th>NO JKK</th>
-                        <th>Tanggal Penarikan</th>
+                        <th>Tanggal Pengajuan</th>
                         <th>Nama Anggota</th>
                         <th>No Anggota</th>
                         <th>Jenis Simpanan</th>
@@ -145,7 +148,7 @@
                 </div>
                 <div class="modal-footer">
                         <a data-id="" data-status="{{ STATUS_PENGAMBILAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}"class="text-white btn btn-sm btn-success btn-approval">Bayar</a>
-                    
+
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -176,7 +179,7 @@
                      @if(isset($request->status_penarikan)) data.status_penarikan = '{{ $request->status_penarikan }}'; @endif
                      @if(isset($request->tgl_ambil)) data.tgl_ambil = '{{ $request->tgl_ambil }}'; @endif
                      @if(isset($request->anggota)) data.anggota = '{{ $request->anggota }}'; @endif
-                    
+
                 },
             },
             aoColumns:
@@ -275,8 +278,8 @@
                     },
                 },
                 {
-                    mData: 'description', sType: "string",
-                    className: "dt-body-center", "name": "description"
+                    mData: 'keterangan', sType: "string",
+                    className: "dt-body-center", "name": "keterangan"
                 },
                 {
                     mData: 'paid_by_cashier', sType: "string",
@@ -397,7 +400,7 @@
                             @can('bayar pengajuan pinjaman')
                             if (full.status_pengambilan == {{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }})
                                 {
-                            
+
                                         if (full.status_jkk == 1)
                                         {
                                             markup += '<a data-id="'+data+'" data-status="{{ STATUS_PENGAMBILAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN }}"  class="text-white btn btn-sm btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
@@ -408,8 +411,8 @@
 
                                         }
                                         }
-                                
-                                
+
+
                             @endcan
 
                         @endif
@@ -590,7 +593,7 @@
             var id = $(this).data('id');
             var url = baseURL + '/penarikan/delete';
 
-            
+
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -780,5 +783,27 @@
                 }
             }
         });
+        updateSelect2();
+
+        function updateSelect2() {
+            // Fetch the preselected item, and add to the control
+            var challengeSelect = $('#select_anggota');
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('anggota-ajax-search') }}' + '/' + '{{ $request->anggota }}'
+            }).then(function(data) {
+                // create the option and append to Select2
+                var option = new Option(data.nama_anggota , data.kode_anggota, true, true);
+                challengeSelect.append(option).trigger('change');
+
+                // manually trigger the `select2:select` event
+                challengeSelect.trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: data
+                    }
+                });
+            });
+        }
     </script>
 @endsection
