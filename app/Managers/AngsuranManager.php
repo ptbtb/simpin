@@ -6,7 +6,7 @@ use App\Models\Pinjaman;
 
 use Carbon\Carbon;
 
-class AngsuranManager 
+class AngsuranManager
 {
     static function generateAngsuran(Pinjaman $pinjaman)
     {
@@ -14,7 +14,7 @@ class AngsuranManager
         {
             $sisaPinjaman = $pinjaman->besar_pinjam;
             for ($i=1; $i <= $pinjaman->lama_angsuran; $i++)
-            { 
+            {
                 // get next serial number
                 $nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
 
@@ -48,7 +48,7 @@ class AngsuranManager
      * @return \Illuminate\Http\Response
      */
     public static function getSerialNumber($date)
-    {        
+    {
         try
         {
             $nextSerialNumber = 1;
@@ -72,6 +72,24 @@ class AngsuranManager
         {
             \Log::info($e->getMessage());
             return false;
+        }
+    }
+
+    static function syncAngsuran(Pinjaman $pinjaman)
+    {
+        try
+        {
+            if ($pinjaman->listAngsuran->count()){
+              foreach ($pinjaman->listAngsuran as $angsuran) {
+                // dd($pinjaman->tgl_transaksi);
+                $angsuran->jatuh_tempo = Carbon::createFromFormat('Y-m-d',$pinjaman->tgl_transaksi)->addMonths($angsuran->angsuran_ke)->format('Y-m-d');
+                $angsuran->save();
+              }
+            }
+        }
+        catch (\Exception $e)
+        {
+            \Log::info($e);
         }
     }
 }

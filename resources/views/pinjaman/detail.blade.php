@@ -1,4 +1,5 @@
 @extends('adminlte::page')
+use Carbon\Carbon;
 
 @section('title')
     {{ $title }}
@@ -67,7 +68,7 @@
                 <tr>
                     <td>Tanggal Peminjaman</td>
                     <td>:</td>
-                    <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
+                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d',$pinjaman->tgl_transaksi)->format('d M Y') }}</td>
                     <td>Lama Angsuran</td>
                     <td>:</td>
                     <td>{{ $pinjaman->lama_angsuran }}</td>

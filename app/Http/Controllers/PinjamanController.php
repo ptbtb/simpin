@@ -604,7 +604,9 @@ class PinjamanController extends Controller
 
                             if ($pinjaman) {
                                 $pinjaman->id_akun_kredit = $request->id_akun_debet;
-                                $pinjaman->tgl_transaksi = $request->tgl_transaksi;
+                                // dd($request->tgl_transaksi);
+                                $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d',$request->tgl_transaksi)->format('Y-m-d');
+                                $pinjaman->tgl_tempo = Carbon::createFromFormat('Y-m-d',$request->tgl_transaksi)->addMonths($pinjaman->lama_angsuran+1)->format('Y-m-d');
                                 $pinjaman->serial_number_kredit= PinjamanManager::getSerialNumberKredit(Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi));
                                 $pinjaman->save();
                             }
@@ -625,16 +627,16 @@ class PinjamanController extends Controller
 
                     if ($pengajuan->diterima() && $pengajuan->pinjaman) {
                         JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
+                        AngsuranManager::syncAngsuran($pengajuan->pinjaman);
                         if ($pengajuan->pengajuanTopup->count()){
                           $pengajuan->pengajuanTopup->each(function ($topup) {
-                            foreach ($pengajuan->pengajuanTopup as $topup)
-                            {
+
                                 $pinjamandata = $topup->pinjaman;
                                 PinjamanManager::pembayaranPinjamanDipercepat($pinjamandata);
-                            }
+
                           });
                         }
-                        
+
                         if ($pengajuan->transfer_simpanan_pagu) {
                             SimpananManager::createSimpananPagu($pengajuan);
                         }
@@ -654,6 +656,7 @@ class PinjamanController extends Controller
         } catch (\Exception $e) {
             \Log::error($e);
             $message = $e->getMessage();
+            // return $e;
             return response()->json(['message' => $message], 500);
         }
     }

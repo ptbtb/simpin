@@ -121,7 +121,7 @@
                         @endif
                     </td>
                     @endif
-                    <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
+                    <td>{{ $pinjaman->tgl_transaksi->format('d M Y') }}</td>
                     <td>
                         @if ($pinjaman->jenisPinjaman)
                         {{ $pinjaman->jenisPinjaman->nama_pinjaman }}
@@ -148,7 +148,7 @@
                         @can('delete pinjaman')
                         <a class="btn btn-sm btn-danger text-white btn-delete" style="cursor: pointer" data-action='delete' data-id='{{ $pinjaman->kode_pinjam }}' data-token='{{ csrf_token() }}'><i class="fa fa-trash"></i> Delete</a>
                         @endcan
-                        
+
                         {{-- <a data-id="{{ $pinjaman->kode_pinjam }}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i> Detail</a> --}}
 
                   </td>
