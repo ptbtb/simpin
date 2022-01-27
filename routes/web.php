@@ -242,7 +242,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
         // import angsuran
         Route::get('import-angsuran', [App\Http\Controllers\AngsuranController::class, 'importAngsuran'])->name('import_angsuran');
         Route::post('import-angsuran', [App\Http\Controllers\AngsuranController::class, 'storeImportAngsuran'])->name('import_angsuran');
-
+        Route::get('angsuran/jurnal/{id}', [App\Http\Controllers\AngsuranController::class, 'jurnalShow'])->name('angsuran.jurnal');
         // laporan
         Route::get('report', [App\Http\Controllers\PinjamanController::class, 'report'])->name('pinjaman-report');
 

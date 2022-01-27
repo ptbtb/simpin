@@ -162,7 +162,11 @@ class PenarikanController extends Controller
                 $tabungan = $anggota->tabungan->where('kode_trans', $kode)->first();
                 $besarPenarikan = filter_var($request->besar_penarikan[$kode], FILTER_SANITIZE_NUMBER_INT);
                 $tglPenarikan=(isset($request->tgl_penarikan))?Carbon::createFromFormat('Y-m-d',$request->tgl_penarikan):Carbon::now();
-
+                // dd($besarPenarikan);
+                if ($besarPenarikan >$tabungan->besar_tabungan)
+                {
+                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi.");
+                }
                 DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber,$tglPenarikan) {
                     $penarikan->kode_anggota = $anggota->kode_anggota;
                     $penarikan->kode_tabungan = $tabungan->kode_tabungan;
@@ -217,6 +221,11 @@ class PenarikanController extends Controller
             $totalSaldotabungan = $anggota->tabungan->sum('besar_tabungan');
             $totalPenarikan = array_sum($request->besar_penarikan);
 
+                 if ($totalSaldotabungan < $totalPenarikan)
+                {
+                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi");
+                }
+
             foreach ($request->jenis_simpanan as $kode)
             {
                 $penarikan = new Penarikan();
@@ -226,7 +235,11 @@ class PenarikanController extends Controller
                 $besarPenarikan = filter_var($request->besar_penarikan[$kode], FILTER_SANITIZE_NUMBER_INT);
                 $keterangan = $request->keterangan;
                 $tglPenarikan=(isset($request->tgl_penarikan))?Carbon::createFromFormat('Y-m-d',$request->tgl_penarikan):Carbon::now();
-
+                // dd($tabungan);
+                if ($besarPenarikan >$tabungan->besar_tabungan)
+                {
+                    return redirect()->back()->withError("Saldo simpanan tidak mencukupi.");
+                }
                 DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber,$keterangan,$tglPenarikan) {
                     $penarikan->kode_anggota = $anggota->kode_anggota;
                     $penarikan->kode_tabungan = $tabungan->kode_tabungan;
@@ -236,9 +249,9 @@ class PenarikanController extends Controller
                     $penarikan->tgl_ambil = $tglPenarikan;
                     $penarikan->u_entry = $user->name;
                     $penarikan->created_by = $user->id;
-                    $penarikan->status_pengambilan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN;
+                    $penarikan->status_pengambilan = STATUS_PENGAMBILAN_MENUNGGU_APPROVAL_MANAGER;
                     $penarikan->keterangan = $keterangan;
-                    $penarikan->tgl_acc = Carbon::now();
+                    // $penarikan->tgl_acc = Carbon::now();
                     $penarikan->serial_number = $nextSerialNumber;
                     $penarikan->save();
                 });
