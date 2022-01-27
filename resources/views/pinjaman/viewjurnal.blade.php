@@ -44,7 +44,7 @@
                       <tr>
                           <td></td>
                           <td></td>
-                            <td>Simpanan Pagu</td>
+                            <td>409.03.000</td>
                             <td>Rp {{ number_format($pengajuan->transfer_simpanan_pagu, '2', ',', '.') }}</td>
                         </tr>
                     @endif
