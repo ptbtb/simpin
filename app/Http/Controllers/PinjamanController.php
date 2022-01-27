@@ -625,6 +625,16 @@ class PinjamanController extends Controller
 
                     if ($pengajuan->diterima() && $pengajuan->pinjaman) {
                         JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
+                        if ($pengajuan->pengajuanTopup->count()){
+                          $pengajuan->pengajuanTopup->each(function ($topup) {
+                            foreach ($pengajuan->pengajuanTopup as $topup)
+                            {
+                                $pinjamandata = $topup->pinjaman;
+                                PinjamanManager::pembayaranPinjamanDipercepat($pinjamandata);
+                            }
+                          });
+                        }
+                        
                         if ($pengajuan->transfer_simpanan_pagu) {
                             SimpananManager::createSimpananPagu($pengajuan);
                         }

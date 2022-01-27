@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 offset-md-3" style="font-size: 15px">
+          @if($pengajuan->pinjaman)
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
@@ -68,6 +69,9 @@
                     </tr>
                 </tbody>
             </table>
+          @else
+            Jurnal View Tersedia apabila Pengajuan sudah di Setujui
+          @endif
         </div>
     </div>
 </div>

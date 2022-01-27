@@ -14,7 +14,7 @@ class PengajuanTopupListener
             foreach ($pengajuanTopup as $topup)
             {
                 $pinjaman = $topup->pinjaman;
-                PinjamanManager::pembayaranPinjamanDipercepat($pinjaman);
+                // PinjamanManager::pembayaranPinjamanDipercepat($pinjaman);
             }
         }
     }
