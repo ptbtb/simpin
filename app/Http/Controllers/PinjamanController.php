@@ -540,6 +540,14 @@ class PinjamanController extends Controller
                 // check pengajuan's status must same as old_status
                 if ($pengajuan && $pengajuan->id_status_pengajuan == $request->old_status) {
                     if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN) {
+                        if ($pengajuan->pinjaman) {
+                            $pengajuan->pinjaman->each(function ($pinjam) {
+                                $pinjam->listAngsuran->each(function ($angsur) {
+                                    $angsur->delete();
+                                });
+                                $pinjam->delete();
+                            });
+                        }
                         $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN;
                         $pengajuan->save();
                         return response()->json(['message' => 'success'], 200);
@@ -605,8 +613,8 @@ class PinjamanController extends Controller
                             if ($pinjaman) {
                                 $pinjaman->id_akun_kredit = $request->id_akun_debet;
                                 // dd($request->tgl_transaksi);
-                                $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d',$request->tgl_transaksi)->format('Y-m-d');
-                                $pinjaman->tgl_tempo = Carbon::createFromFormat('Y-m-d',$request->tgl_transaksi)->addMonths($pinjaman->lama_angsuran+1)->format('Y-m-d');
+                                $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi)->format('Y-m-d');
+                                $pinjaman->tgl_tempo = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi)->addMonths($pinjaman->lama_angsuran+1)->format('Y-m-d');
                                 $pinjaman->serial_number_kredit= PinjamanManager::getSerialNumberKredit(Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi));
                                 $pinjaman->save();
                             }
@@ -628,13 +636,11 @@ class PinjamanController extends Controller
                     if ($pengajuan->diterima() && $pengajuan->pinjaman) {
                         JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
                         AngsuranManager::syncAngsuran($pengajuan->pinjaman);
-                        if ($pengajuan->pengajuanTopup->count()){
-                          $pengajuan->pengajuanTopup->each(function ($topup) {
-
+                        if ($pengajuan->pengajuanTopup->count()) {
+                            $pengajuan->pengajuanTopup->each(function ($topup) {
                                 $pinjamandata = $topup->pinjaman;
                                 PinjamanManager::pembayaranPinjamanDipercepat($pinjamandata);
-
-                          });
+                            });
                         }
 
                         if ($pengajuan->transfer_simpanan_pagu) {
@@ -649,6 +655,18 @@ class PinjamanController extends Controller
                     }
 
                     event(new PengajuanUpdated($pengajuan));
+                } else {
+                    if ($request->status == STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN) {
+                        if ($pengajuan->pinjaman) {
+                            $pengajuan->pinjaman->listAngsuran->each(function ($angsur) {
+                                $angsur->delete();
+                            });
+                            $pengajuan->pinjaman->delete();
+                        }
+                        $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN;
+                        $pengajuan->save();
+                        return response()->json(['message' => 'success'], 200);
+                    }
                 }
             }
 

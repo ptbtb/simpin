@@ -409,6 +409,7 @@
                                             markup += 'JKK Belum di Print';
 
                                         }
+                                        markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> BATALKAN</a>';
                                     }
                                     @endcan
 

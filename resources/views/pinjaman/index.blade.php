@@ -121,7 +121,7 @@
                         @endif
                     </td>
                     @endif
-                    <td>{{ $pinjaman->tgl_transaksi->format('d M Y') }}</td>
+                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d',$pinjaman->tgl_transaksi)->format('d M Y') }}</td>
                     <td>
                         @if ($pinjaman->jenisPinjaman)
                         {{ $pinjaman->jenisPinjaman->nama_pinjaman }}
