@@ -93,6 +93,7 @@ class TransaksiUserImport
 			if($transaksi['PINJ1']>0){
 				$pinjaman1= Pinjaman::where('kode_jenis_pinjam',$transaksi['REK_PINJ_1'])
 				->where('kode_anggota',$transaksi['NO_ANG'])
+				->wherenotnull('tgl_transaksi')
 				->where('id_status_pinjaman',1)->first();
 				if ($pinjaman1){
 					$angsuran1= Angsuran::where('kode_pinjam',$pinjaman1['kode_pinjam'])
@@ -164,7 +165,9 @@ class TransaksiUserImport
 			}
 			if($transaksi['PINJ2']>0){
 				$pinjaman2= Pinjaman::where('kode_jenis_pinjam',$transaksi['REK_PINJ_2'])
-				->where('kode_anggota',$transaksi['NO_ANG'])->first();
+				->where('kode_anggota',$transaksi['NO_ANG'])
+				->wherenotnull('tgl_transaksi')
+				->first();
 				if (!$pinjaman2){
 					throw new \Exception("Pinjaman Tidak Ditemukan");
 

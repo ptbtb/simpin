@@ -115,7 +115,7 @@
                 @can('bayar angsuran pinjaman')
                     <a class="btn btn-sm btn-success ml-2 mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
                 @endcan
-                @if (0)    
+                @if (0)
                     @can('set diskon angsuran')
                         <a class="btn btn-sm btn-primary ml-2 mb-2 btn-diskon text-white" data-toggle="modal" data-target="#discountModal"><i class="fas fa-plus"></i> Discount</a>
                     @endcan
@@ -302,7 +302,7 @@
                                 <label for="saldo">Sisa saldo</label>
                                 <input type="text" name="saldo" id="saldo" class="form-control" readonly>
                             </div> --}}
-                           
+
                                 <div class="form-group">
                                     <label>Discount (%)</label>
                                     <input type="number" name="discount" id="discount" class="form-control" placeholder="Ex: 15 (15%)" min="0" max="100">
@@ -344,8 +344,8 @@
         </div>
     @endif
 
-    @if (0)    
-        @can('set diskon angsuran')        
+    @if (0)
+        @can('set diskon angsuran')
             <!-- Modal -->
             <div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -437,11 +437,13 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/collect.js/4.29.0/collect.min.js"></script> --}}
     <script>
+    // $.fn.dataTable.ext.errMode = 'none';
+    var baseURL = {!! json_encode(url('/')) !!};
         var saldo = collect(@json($tabungan))
         $('.btn-bayarAngsuran').on('click', function ()
         {
             $('#my-modal').modal({
-                backdrop: false 
+                backdrop: false
             });
             $('#my-modal').modal('show');
             $('.jenisAkun').trigger( "change" );
@@ -450,7 +452,7 @@
         $('.btn-pelunasanDipercepat').on('click', function ()
         {
             $('#my-modal1').modal({
-                backdrop: false 
+                backdrop: false
             });
             $('#my-modal1').modal('show');
             $('.jenisAkun').trigger( "change" );
@@ -473,7 +475,7 @@
                 $('#akun2Cover').removeClass('d-none');
             }
         })
-        
+
         $(document).on('change', '.jenisPembayaran1', function ()
         {
             var selected = this.value;
@@ -506,9 +508,9 @@
         @foreach($bankAccounts as $key => $bankAccount)
             bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
         @endforeach
-        
+
         // trigger to get kas or bank select option
-        $(document).on('change', '.jenisAkun', function () 
+        $(document).on('change', '.jenisAkun', function ()
         {
             var rootClass = $(this).parent().parent();
             // remove all option in code
@@ -521,7 +523,7 @@
             if(jenisAkun == 2)
             {
                 // loop through code bank
-                $.each(bankAccountArray, function(key, bankAccount) 
+                $.each(bankAccountArray, function(key, bankAccount)
                 {
                     // set dafault to 102.18.000
                     if(bankAccount.id == 22)
@@ -532,7 +534,7 @@
                     {
                         var selected = '';
                     }
-                    
+
                     // insert new option
                     rootClass.find('.code1').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
                     rootClass.find('.code2').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
@@ -540,7 +542,7 @@
             }
             else if(jenisAkun == 1)
             {
-                // insert new option 
+                // insert new option
                 rootClass.find('.code1').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
                 rootClass.find('.code2').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
             }
@@ -559,55 +561,81 @@
             // show jurnal
             if (action == 'jurnal')
             {
-                var angsuran = listAngsuran.where('kode_angsur', dataId).first();
-                var jurnals = collect(angsuran.jurnals);
-                var htmlText = '<table class="table" style="font-size: 14px" >' +
-                                    '<thead class="thead-dark">' +
-                                        '<tr>' +
-                                            '<th>Akun Debet</th>' +
-                                            '<th>Debet</th>' +
-                                            '<th>Akun Kredit</th>' +
-                                            '<th>Kredit</th>' +
-                                            '</tr>' +
-                                    '</thead>' +
-                                    '<tbody>';
-                jurnals.each(function (jurnal)
-                {
-                    var body = '<tr>' +
-                                    '<td>' + jurnal['akun_debet'] + '</td>' +
-                                    '<td> Rp ' + new Intl.NumberFormat(['ban', 'id']).format(jurnal['debet']) + '</td>' +
-                                    '<td>' + jurnal['akun_kredit'] + '</td>' +
-                                    '<td> Rp ' + new Intl.NumberFormat(['ban', 'id']).format(jurnal['kredit']) + '</td>' +
-                                '</tr>';
-
-                    htmlText = htmlText + body;
-                });
-
-                htmlText = htmlText + '</tbody></table>';
-
-                Swal.fire({
-                    title: 'Jurnal',
-                    html: htmlText, 
-                    showCancelButton: false,
-                    confirmButtonText: "Ok",
-                    confirmButtonColor: "#00a65a",
-                });
+              // var dataId = $(this).data('id');
+              $.ajax({
+                  url: baseURL + '/pinjaman/angsuran/jurnal/' + dataId,
+                  success: function (data, status, xhr)
+                  {
+                      var htmlText = data;
+                      Swal.fire({
+                          title: 'Info',
+                          html: htmlText,
+                          showCancelButton: false,
+                          confirmButtonText: "Tutup",
+                          confirmButtonColor: "#00ff00",
+                      });
+                  },
+                  error: function (xhr,status,error)
+                  {
+                      Swal.fire({
+                          title: 'Error',
+                          html: 'Terjadi Kesalahan',
+                          icon: "error",
+                          showCancelButton: false,
+                          confirmButtonText: "Tutup",
+                          confirmButtonColor: "#00ff00",
+                      });
+                  }
+              });
+                // var angsuran = listAngsuran.where('kode_angsur', dataId).first();
+                // var jurnals = collect(angsuran.jurnals);
+                // var htmlText = '<table class="table" style="font-size: 14px" >' +
+                //                     '<thead class="thead-dark">' +
+                //                         '<tr>' +
+                //                             '<th>Akun Debet</th>' +
+                //                             '<th>Debet</th>' +
+                //                             '<th>Akun Kredit</th>' +
+                //                             '<th>Kredit</th>' +
+                //                             '</tr>' +
+                //                     '</thead>' +
+                //                     '<tbody>';
+                // jurnals.each(function (jurnal)
+                // {
+                //     var body = '<tr>' +
+                //                     '<td>' + jurnal['akun_debet'] + '</td>' +
+                //                     '<td> Rp ' + new Intl.NumberFormat(['ban', 'id']).format(jurnal['debet']) + '</td>' +
+                //                     '<td>' + jurnal['akun_kredit'] + '</td>' +
+                //                     '<td> Rp ' + new Intl.NumberFormat(['ban', 'id']).format(jurnal['kredit']) + '</td>' +
+                //                 '</tr>';
+                //
+                //     htmlText = htmlText + body;
+                // });
+                //
+                // htmlText = htmlText + '</tbody></table>';
+                //
+                // Swal.fire({
+                //     title: 'Jurnal',
+                //     html: htmlText,
+                //     showCancelButton: false,
+                //     confirmButtonText: "Ok",
+                //     confirmButtonColor: "#00a65a",
+                // });
             }
             else if(action == 'info')
             {
                 var angsuran = listAngsuran.where('kode_angsur', dataId).first();
-                var htmlText = '<div class="container-fluid">' + 
-                                    '<div class="row">' + 
-                                        '<div class="col-md-6 mx-0 my-2">Created At <br> <b>' + angsuran['created_at_view'] + '</b></div>' + 
-                                        '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + angsuran['created_by_view'] + '</b></div>' + 
-                                        '<div class="col-md-6 mx-0 my-2">Updated At <br> <b>' + angsuran['updated_at_view'] + '</b></div>' + 
-                                        '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + angsuran['updated_by_view'] + '</b></div>' + 
-                                    '</div>' + 
+                var htmlText = '<div class="container-fluid">' +
+                                    '<div class="row">' +
+                                        '<div class="col-md-6 mx-0 my-2">Created At <br> <b>' + angsuran['created_at_view'] + '</b></div>' +
+                                        '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + angsuran['created_by_view'] + '</b></div>' +
+                                        '<div class="col-md-6 mx-0 my-2">Updated At <br> <b>' + angsuran['updated_at_view'] + '</b></div>' +
+                                        '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + angsuran['updated_by_view'] + '</b></div>' +
+                                    '</div>' +
                                 '</div>';
 
                 Swal.fire({
                     title: 'Info',
-                    html: htmlText, 
+                    html: htmlText,
                     showCancelButton: false,
                     confirmButtonText: "Ok",
                     confirmButtonColor: "#00a65a",
@@ -619,12 +647,12 @@
                 var dataBesarPembayaran = $(this).data('pembayaran');
                 var dataAngsuran = $(this).data('angsuran');
                 var dataJasa = $(this).data('jasa');
-                
+
                 $('#modal-edit').modal({
-                    backdrop: false 
+                    backdrop: false
                 });
                 $('#modal-edit').modal('show');
-                
+
                 $(".modal-edit-body #kode_angsur").val( dataId );
                 $(".modal-edit-body #tgl_transaksi").val( dataTglTransaksi );
                 $(".modal-edit-body #besar_pembayaran").val( dataBesarPembayaran );
@@ -665,9 +693,9 @@
                     $.ajax({
                         type: 'post',
                         url: url,
-                        data: formData,   
+                        data: formData,
                         contentType: false,
-                        processData: false,                     
+                        processData: false,
                     success: function(data) {
                         Swal.fire({
                             icon: 'success',
@@ -695,7 +723,7 @@
                     })
                 }
             })
-            
+
         });
 
         function toRupiah(number)
@@ -776,7 +804,7 @@
                                     '<input type="text" name="besar_pembayaran[]" class="form-control" placeholder="Besar Pembayaran">' +
                                 '</div>' +
                             '</div>';
-            
+
             $('.multipleform').append(pattern);
             $('.select2').select2();
 

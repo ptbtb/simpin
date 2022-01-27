@@ -66,7 +66,10 @@ class PinjamanController extends Controller
                 return redirect()->back()->withError('Your account has no members');
             }
 
-            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_entri', 'asc');
+            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+            ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+            ->wherenotnull('tgl_transaksi')
+            ->orderBy('tgl_entri', 'asc');
         } else {
             if ($request->id) {
                 $anggota = Anggota::find($request->id);
@@ -260,7 +263,7 @@ class PinjamanController extends Controller
         $tabungan = Tabungan::where('kode_anggota', $pinjaman->kode_anggota)
         ->where('kode_trans', '!=', '411.01.000')
         ->get();
-        
+
         $listAngsuran = $pinjaman->listAngsuran->sortBy('angsuran_ke')->values();
         $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
@@ -371,7 +374,7 @@ class PinjamanController extends Controller
 
     public function storePengajuanPinjaman(Request $request)
     {
-        
+
         $user = Auth::user();
         $this->authorize('add pengajuan pinjaman', $user);
 
@@ -389,7 +392,7 @@ class PinjamanController extends Controller
                 return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda sudah pernah mengajukan pinjaman untuk jenis pinjaman ' . $jenisPinjaman->nama_pinjaman);
             }
         }
-        
+
 
 
         // check if topup
@@ -412,9 +415,9 @@ class PinjamanController extends Controller
                     return redirect()->back()->withError('Pengajuan pinjaman gagal. Anda masih memiliki pinjaman dengan jenis pinjaman ' . $jenisPinjaman->nama_pinjaman . ' yang belum lunas');
                 }
             }
-            
+
         }
-        
+
         //check gaji
         $anggota = Anggota::find($request->kode_anggota);
         $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
@@ -432,9 +435,9 @@ class PinjamanController extends Controller
         if($request->term=='false'){
          if ($angsuranPerbulan > $potonganGaji) {
             return redirect()->back()->withError('Pengajuan pinjaman gagal. Jumlah pinjaman yang anda ajukan melebihi batas 65 % '.$gajiraw->jenisPenghasilan->name.' Anda.');
-        } 
+        }
     }
-    
+
 
     $isCreatePagu = 0;
     $transferPagu = 0;
@@ -624,7 +627,7 @@ public function updateStatusPengajuanPinjaman(Request $request)
                 }
 
                 if ($pengajuan->diterima() && $pengajuan->pinjaman) {
-                   
+
                     JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
                     if($pengajuan->transfer_simpanan_pagu)
                     {
@@ -666,7 +669,7 @@ public function calculateMaxPinjaman(Request $request)
         $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
         if (is_null($saldo)) {
             return 0;
-            
+
         }
 
 
@@ -700,7 +703,7 @@ public function calculateMaxPinjaman(Request $request)
                     $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
                     return $saldo->jumlah * 8;
                 }*/
-            } 
+            }
             elseif ($anggota->isAnggotaLuarBiasa())
             {
                 $company = $anggota->company;
@@ -733,7 +736,7 @@ public function calculateMaxPinjaman(Request $request)
             }
         }
         return 0;
-        
+
     }else{
         $jenisPinjaman = JenisPinjaman::find($request->id_jenis_pinjaman);
         if (is_null($jenisPinjaman)) {
@@ -969,7 +972,7 @@ public function bayarAngsuran(Request $request, $id)
         $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
 
         for ($i=0; $i < count($request->besar_pembayaran); $i++)
-        { 
+        {
             $pembayaran = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
             $payment = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
             if($request->jenis_pembayaran[$i])
@@ -979,7 +982,7 @@ public function bayarAngsuran(Request $request, $id)
                 ->where('kode_anggota', $pinjaman->kode_anggota)
                 ->first();
                 $anggota = $pinjaman->anggota;
-                
+
                 if ($tabungan->besar_tabungan < $pembayaran)
                 {
                     return redirect()->back()->withError('Sisa tabungan tidak mencukupi untuk melakukan pembayaran');
@@ -992,7 +995,7 @@ public function bayarAngsuran(Request $request, $id)
                     $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
                 }
                 if ($pembayaran >= $angsuran->totalAngsuran) {
-                    
+
                     $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
                     $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
                     $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
@@ -1000,9 +1003,9 @@ public function bayarAngsuran(Request $request, $id)
                 } else {
                     $angsuran->besar_pembayaran = $pembayaran;
                 }
-                
-                
-                
+
+
+
                 $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->u_entry = Auth::user()->name;
                 if($request->jenis_pembayaran[$i])
@@ -1020,10 +1023,10 @@ public function bayarAngsuran(Request $request, $id)
                 $angsuran->save();
                 AngsuranPartialManager::generate($angsuran,$pembayaran);
                 $pembayaran = $pembayaran - $angsuran->totalAngsuran;
-                
+
                     // create JKM angsuran
                 // JurnalManager::createJurnalAngsuran($angsuran);
-                
+
                 if ($pembayaran <= 0) {
                     $pinjaman->sisa_pinjaman = $angsuran->sisaPinjaman;
                     $pinjaman->save();
@@ -1034,11 +1037,11 @@ public function bayarAngsuran(Request $request, $id)
                     $pinjaman->save();
                 }
             }
-            
+
                 // save tgl transaksi
             $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
             $pinjaman->save();
-            
+
             if($request->jenis_pembayaran[$i])
             {
                 $penarikan = new Penarikan();
@@ -1049,7 +1052,7 @@ public function bayarAngsuran(Request $request, $id)
                 $besarPenarikan = $request->besar_pembayaran[$i];
                 $anggota = $pinjaman->anggota;
                 $user = Auth::user();
-                
+
                 DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber, $pinjaman, $request) {
                     $penarikan->kode_anggota = $anggota->kode_anggota;
                     $penarikan->kode_tabungan = $tabungan->kode_tabungan;
@@ -1069,7 +1072,7 @@ public function bayarAngsuran(Request $request, $id)
                     $penarikan->description = 'Pengambilan pelunasan angsuran untuk pinjaman '. $pinjaman->kode_pinjam;
                     $penarikan->save();
                 });
-                
+
                 JurnalManager::createJurnalPenarikan($penarikan);
             }
         }
@@ -1130,7 +1133,7 @@ public function bayarAngsuranDipercepat(Request $request, $id)
                 $pinjaman->confirmation_document = $config['disk'].$config['upload_path'].'/'.$filename;
             }
         }
-        
+
         $pinjaman->save();
 
         if($request->jenis_pembayaran)
@@ -1464,9 +1467,9 @@ public function destroy($id, Request $request)
         foreach ($listAngsuran as $angsuran) {
             $angsuran->delete();
             if ($angsuran->jurnals()){
-                $angsuran->jurnals()->delete();    
+                $angsuran->jurnals()->delete();
             }
-            
+
         }
 
         if ($pinjaman->jurnals()){
@@ -1475,7 +1478,7 @@ public function destroy($id, Request $request)
      if($pinjaman->pengajuan){
         $pinjaman->pengajuan->delete();
     }
-    
+
     $pinjaman->delete();
 
     return response()->json(['message' => 'Delete data success'], 200);
@@ -1801,7 +1804,7 @@ public function update(Request $request){
 public function updatePosting(Request $request){
     $id_akun_kredit = [];
 
-    
+
 
 if (isset($request->kode_angsur)){
 
@@ -1810,7 +1813,7 @@ if (isset($request->kode_angsur)){
                 $code =Code::where('CODE',$request->edit_id_akun_kredit[$key])->first();
                 $baris = $key+1;
                 if(!$code){
-                   return redirect()->back()->withError('COA '. $request->edit_id_akun_kredit[$key] . ' pada angsuran baris ke '. $baris .' tidak ada dalam database'); 
+                   return redirect()->back()->withError('COA '. $request->edit_id_akun_kredit[$key] . ' pada angsuran baris ke '. $baris .' tidak ada dalam database');
                }
                $edit_id_akun_kredit[$key] = $code->id;
 
@@ -1822,14 +1825,14 @@ if (isset($request->kode_angsur)){
         if ($angsuran->jurnals->count()>0){
             if(isset($edit_id_akun_kredit[$key])){
                 $angsuran->jurnals()->delete();
-                
+
                 // JurnalManager::createJurnalAngsuran($angsuran);
             }else{
                 $angsuran->serial_number = NULL;
                 $angsuran->id_akun_kredit = NULL;
                 $angsuran->save();
                 $angsuran->jurnals()->delete();
-                
+
             }
         }else{
             if (isset($edit_id_akun_kredit[$key])){
@@ -1841,7 +1844,7 @@ if (isset($request->kode_angsur)){
             }
         }
          if ($edit_id_akun_kredit[$key]!==NULL){
-                
+
             AngsuranPartialManager::generateFromEdit($angsuran);
 
          }else{
@@ -1849,16 +1852,16 @@ if (isset($request->kode_angsur)){
                 foreach ($angsuran->angsuranPartial as $angsp){
                     $angsp->jurnals()->delete();
                 }
-                
+
                 $angsuran->angsuranPartial()->delete();
-                
+
             }
             $angsuran->serial_number = NULL;
             $angsuran->save();
-            
+
          }
 
-             
+
 
     }
     return true;
@@ -1879,7 +1882,7 @@ public function updateSubmit(Request $request){
                 $code =Code::where('CODE',$request->id_akun_kredit[$key])->first();
                 $baris = $key+1;
                 if(!$code){
-                   return redirect()->back()->withError('COA '. $request->id_akun_kredit[$key] . ' pada angsuran baris ke '. $baris .' tidak ada dalam database'); 
+                   return redirect()->back()->withError('COA '. $request->id_akun_kredit[$key] . ' pada angsuran baris ke '. $baris .' tidak ada dalam database');
                }
                $id_akun_kredit[$key] = $code->id;
 
@@ -1895,7 +1898,7 @@ if (isset($request->kode_angsur)){
             $code =Code::where('CODE',$request->edit_id_akun_kredit[$key])->first();
             $baris = $key+1;
             if(!$code){
-               return redirect()->back()->withError('COA '. $request->edit_id_akun_kredit[$key] . ' pada angsuran baris ke '. $baris .' tidak ada dalam database'); 
+               return redirect()->back()->withError('COA '. $request->edit_id_akun_kredit[$key] . ' pada angsuran baris ke '. $baris .' tidak ada dalam database');
            }
            $edit_id_akun_kredit[$key] = $code->id;
 
