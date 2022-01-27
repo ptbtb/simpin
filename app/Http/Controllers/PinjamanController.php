@@ -75,9 +75,12 @@ class PinjamanController extends Controller
                 $anggota = Anggota::find($request->id);
 
                 $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                ->wherenotnull('tgl_transaksi')
                 ;
             } else {
-                $listPinjaman = Pinjaman::orderby('created_at','desc');
+                $listPinjaman = Pinjaman::wherenotnull('tgl_transaksi')
+                ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)->orderby('created_at','desc');
             }
         }
 
