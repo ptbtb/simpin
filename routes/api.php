@@ -39,7 +39,7 @@ Route::group(['prefix' => 'simpanan'], function ()
         Route::get('saldo', 'App\Http\Controllers\api\SimpananController@Saldo')->name('api-get-simpanan-saldo');
         Route::get('rincian', 'App\Http\Controllers\api\SimpananController@Detail')->name('api-get-simpanan-detail');
         Route::get('card', 'App\Http\Controllers\api\SimpananController@ShowCard')->name('api-get-simpanan-card');
-        Route::get('listambil', 'App\Http\Controllers\api\PenarikanController@list')->name('api-list-penarikan');
+        Route::get('listambil', 'App\Http\Controllers\api\TransaksiController@list')->name('api-list-penarikan');
         Route::post('ajuambil', 'App\Http\Controllers\api\PenarikanController@ajuAmbil')->name('api-aju-penarikan');
     });
 });
