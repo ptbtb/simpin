@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Anggota;
 use App\Models\Simpanan;
 use App\Models\Penarikan;
+use App\ModelsView\ViewTransaksiSimpan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
