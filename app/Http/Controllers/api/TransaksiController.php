@@ -24,7 +24,7 @@ class TransaksiController extends Controller
       {
           $user = $request->user('api');
           $anggota = $user->anggota;
-          $list = ViewTransaksiSimpan::where('kode_anggota', $anggota->kode_anggota)->get();
+          $list = ViewTransaksiSimpan::where('kode_anggota', $anggota->kode_anggota)->orderBy('periode','desc')->get();
           $data = $list->map(function ($transaksi) use ($request)
           {
               $user = $request->user('api');
