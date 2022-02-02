@@ -394,6 +394,7 @@ Route::group(['prefix' => 'jurnal'], function() {
 Route::group(['prefix' => 'jurnal-umum'], function() {
     Route::group(['middleware' => ['auth']], function () {
         Route::get('list', [App\Http\Controllers\JurnalUmumController::class, 'index'])->name('jurnal-umum-list');
+        Route::post('list', [App\Http\Controllers\JurnalUmumController::class, 'index'])->name('jurnal-umum-list');
         Route::get('list/data', [App\Http\Controllers\JurnalUmumController::class, 'indexAjax'])->name('jurnal-umum-list-ajax');
         Route::get('create', [App\Http\Controllers\JurnalUmumController::class, 'create'])->name('jurnal-umum-create');
         Route::post('create', [App\Http\Controllers\JurnalUmumController::class, 'store'])->name('jurnal-umum-create');

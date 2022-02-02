@@ -24,11 +24,11 @@ class JkkPrintedController extends Controller
         // dd($request);
         $types = JkkPrintedType::all();
         if(!$request->from)
-            {          
+            {
                 $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
             }
             if(!$request->to)
-            {          
+            {
                 $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
             }
         $data['types'] = $types;
@@ -42,14 +42,14 @@ class JkkPrintedController extends Controller
         $user = Auth::user();
         $this->authorize('print jkk', $user);
           $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
-         $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
+          $endUntilPeriod = Carbon::createFromFormat   ('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
 
         $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan')
                                 ->orderBy('printed_at', 'desc');
         if ($request->no_jkk){
             $jkkPrinted = $jkkPrinted->where('jkk_number',$request->no_jkk);
         }
-        
+
 
         if (isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN)
         {
@@ -105,7 +105,7 @@ class JkkPrintedController extends Controller
             $jkkPrinted->payment_confirmation_path = $config['disk'].$config['upload_path'].'/'.$filename;
         }
         }
-        
+
         $jkkPrinted->save();
 
         if ($jkkPrinted->isPenarikanSimpanan())
@@ -154,7 +154,7 @@ class JkkPrintedController extends Controller
         {
             return redirect()->back()->withErrors('Pinjaman untuk jkk ini belum di generate. silahkan periksa kembali');
         }
-        
+
         $data['listPengajuan'] = $listPengajuan;
         $data['tgl_print'] = $jkkPrinted->printed_at;
         $data['no_jkk'] = $jkkPrinted->jkk_number;
