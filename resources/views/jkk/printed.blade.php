@@ -103,13 +103,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Payment Confirmation</label>
-                            <br>
-                            <input type="file" name="payment_confirmation" id="payment_confirmation" required>
-                        </div>
-                    </div>
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Print</button>

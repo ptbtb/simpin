@@ -1694,11 +1694,6 @@ class PinjamanController extends Controller
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
             }
 
-            if ($request->start_tgl_pengajuan == "" && $request->end_tgl_pengajuan == "") {
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', Carbon::now()->startOfMonth())
-            ->where('tgl_pengajuan', '<=', Carbon::now()->endOfMonth());
-            }
-
             if ($request->anggota != "") {
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
             }

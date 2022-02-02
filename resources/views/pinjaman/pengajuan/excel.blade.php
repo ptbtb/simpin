@@ -11,6 +11,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>No JKK</th>
                 <th>Tanggal Pengajuan</th>
                 <th>Nomer Anggota</th>
                 <th>Nama Anggota</th>
@@ -28,6 +29,7 @@
             @foreach ($listPengajuanPinjaman as $pengajuanPinjaman)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ $pengajuanPinjaman->no_jkk }}</td>
                     <td>{{ $pengajuanPinjaman->tgl_pengajuan->toDateString() }}</td>
                     <td>{{ $pengajuanPinjaman->kode_anggota }}</td>
                     <td>{{ $pengajuanPinjaman->anggota->nama_anggota }}</td>

@@ -46,6 +46,11 @@ class JkkPrintedController extends Controller
 
         $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan')
                                 ->orderBy('printed_at', 'desc');
+        if ($request->no_jkk){
+            $jkkPrinted = $jkkPrinted->where('jkk_number',$request->no_jkk);
+        }
+        
+
         if (isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN)
         {
             $jkkPrinted = $jkkPrinted->whereHas('jkkPengajuan', function ($query) use ($startUntilPeriod,&$endUntilPeriod)
@@ -73,9 +78,6 @@ class JkkPrintedController extends Controller
                                         return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
                                     });
         }
-        if ($request->no_jkk){
-            $jkkPrinted = $jkkPrinted->where('jkk_number',$request->no_jkk);
-        }
 
         return DataTables::eloquent($jkkPrinted)
                             ->make(true);
@@ -94,13 +96,16 @@ class JkkPrintedController extends Controller
         {
             Storage::disk($config['disk'])->makeDirectory($config['upload_path']);
         }
-        if ($request->payment_confirmation->isValid())
+        if ($request->payment_confirmation){
+            if ($request->payment_confirmation->isValid())
         {
             $filename = uniqid() .'.'. $request->payment_confirmation->getClientOriginalExtension();
 
             Storage::disk($config['disk'])->putFileAs($config['upload_path'], $request->payment_confirmation, $filename);
             $jkkPrinted->payment_confirmation_path = $config['disk'].$config['upload_path'].'/'.$filename;
         }
+        }
+        
         $jkkPrinted->save();
 
         if ($jkkPrinted->isPenarikanSimpanan())
