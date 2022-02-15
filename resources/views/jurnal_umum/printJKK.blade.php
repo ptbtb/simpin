@@ -37,7 +37,7 @@
         <tr>
             <td style="text-align: left ; width:25%">Koperasi Pegawai Maritim</td>
             <td></td>
-            <td style="text-align: left; width:25%">Rep. ID : B_JKK</td>
+            <td style="text-align: left; width:25%">Rep. ID : B_JU</td>
         </tr>
         <tr>
             <td style="text-align: left">JAKARTA</td>
