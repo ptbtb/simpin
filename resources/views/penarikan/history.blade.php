@@ -85,8 +85,9 @@
                         <th>Diajukan Oleh</th>
                         <th>Dikonfirmasi Oleh</th>
                         <th>Pembayaran Oleh</th>
-                        <th>Bukti Pembayaran</th>
+
                         <th>Posting</th>
+                        <th>Bukti Pembayaran</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -117,7 +118,7 @@
                             </td>
                         </tr>
                     @endforeach
-                </tbody> 
+                </tbody>
             </table>
         </div>
     </div>
@@ -129,14 +130,14 @@
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
         var kode_anggota = '{{ ($request->kode_anggota)? $request->kode_anggota:'' }}';
-        
+
         $(document).ready(function ()
         {
             $('#from').datepicker({
                 uiLibrary: 'bootstrap4',
                 format: 'yyyy-mm-dd'
             });
-            
+
             $('#to').datepicker({
                 uiLibrary: 'bootstrap4',
                 format: 'yyyy-mm-dd'
@@ -206,7 +207,7 @@
                     htmlText = data;
                     Swal.fire({
                         title: 'Jurnal Penarikan',
-                        html: htmlText, 
+                        html: htmlText,
                         icon: "info",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -223,7 +224,7 @@
                 error : function (xhr, status, error) {
                     Swal.fire({
                         title: 'Error',
-                        html: htmlText, 
+                        html: htmlText,
                         icon: "error",
                         showCancelButton: false,
                         confirmButtonText: "Ok",
@@ -245,18 +246,18 @@
             var dataId = $(this).data('id');
             var listPenarikan = collect(@json($listPenarikan));
             var penarikan = listPenarikan.where('kode_ambil', dataId).first();
-            var htmlText = '<div class="container-fluid">' + 
-                                '<div class="row">' + 
-                                    '<div class="col-md-6 mx-0 my-2">Created At <br> <b>' + penarikan['created_at_view'] + '</b></div>' + 
-                                    '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + penarikan['created_by_view'] + '</b></div>' + 
-                                    '<div class="col-md-6 mx-0 my-2">Updated At <br> <b>' + penarikan['updated_at_view'] + '</b></div>' + 
-                                    '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + penarikan['updated_by_view'] + '</b></div>' + 
-                                '</div>' + 
+            var htmlText = '<div class="container-fluid">' +
+                                '<div class="row">' +
+                                    '<div class="col-md-6 mx-0 my-2">Created At <br> <b>' + penarikan['created_at_view'] + '</b></div>' +
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + penarikan['created_by_view'] + '</b></div>' +
+                                    '<div class="col-md-6 mx-0 my-2">Updated At <br> <b>' + penarikan['updated_at_view'] + '</b></div>' +
+                                    '<div class="col-md-6 mx-0 my-2">Created By <br> <b>' + penarikan['updated_by_view'] + '</b></div>' +
+                                '</div>' +
                             '</div>';
 
             Swal.fire({
                 title: 'Info',
-                html: htmlText, 
+                html: htmlText,
                 showCancelButton: false,
                 confirmButtonText: "Ok",
                 confirmButtonColor: "#00a65a",
