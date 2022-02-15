@@ -360,13 +360,13 @@ class PenarikanController extends Controller
         }
 
         if ($request->from) {
-            $listPenarikan = $listPenarikan->where('tgl_ambil', '>=', $request->from);
+            $listPenarikan = $listPenarikan->where('tgl_transaksi', '>=', $request->from);
         }
         if ($request->to) {
-            $listPenarikan = $listPenarikan->where('tgl_ambil', '<=', $request->to);
+            $listPenarikan = $listPenarikan->where('tgl_transaksi', '<=', $request->to);
         }
 
-        $listPenarikan = $listPenarikan->orderBy('tgl_ambil', 'desc')
+        $listPenarikan = $listPenarikan->orderBy('tgl_transaksi', 'desc')
             ->has('anggota')
             ->get();
 

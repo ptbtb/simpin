@@ -26,14 +26,14 @@ class PenarikanExport implements FromView
 
         if ($this->request->from)
         {
-            $listPenarikan = $listPenarikan->where('tgl_ambil','>=', $this->request->from);
+            $listPenarikan = $listPenarikan->where('tgl_transaksi','>=', $this->request->from);
         }
         if ($this->request->to)
         {
-            $listPenarikan = $listPenarikan->where('tgl_ambil','<=', $this->request->to);
+            $listPenarikan = $listPenarikan->where('tgl_transaksi','<=', $this->request->to);
         }
 
-        $listPenarikan = $listPenarikan->orderBy('tgl_ambil','desc')
+        $listPenarikan = $listPenarikan->orderBy('tgl_transaksi','desc')
                                         ->has('anggota')
                                         ->get();
         return view('penarikan.excel', [
