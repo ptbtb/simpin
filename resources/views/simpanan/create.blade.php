@@ -75,6 +75,7 @@
                             <select name="jenis_akun[]" data-form="1" class="form-control select2 jenisAkun" required>
                                 <option value="1">KAS</option>
                                 <option value="2" selected>BANK</option>
+                                <option value="3" selected>SIMPANAN</option>
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
@@ -218,6 +219,10 @@
         {
             // insert new option
             $('#form'+data_form+' .code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option><option value="153" >404.08.000 SETORAN BELUM RINCI</option>');
+        }else if(jenisAkun == 3)
+        {
+            // insert new option
+            $('#form'+data_form+' .code').append('<option value="174" >409.01.000 SIMPANAN KHUSUS</option><option value="182" >409.03.000 SIMPANAN KHUSUS PAGU</option><option value="133" >402.01.000 R/K KOPEGMAR</option>');
         }
 
         $('#form'+data_form+' .code').trigger( "change" );

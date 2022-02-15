@@ -1,6 +1,7 @@
 <table class="table" style="font-size: 14px">
     <thead class="thead-dark">
         <tr>
+            <th>NO</th>
             <th>Akun Debet</th>
             <th>Debet</th>
             <th>Akun Kredit</th>
@@ -15,6 +16,7 @@
         @else
             @foreach ($jurnals as $jurnal)
                 <tr>
+                    <td>{{ $jurnal->ser_num_view }}</td>
                     <td>{{ $jurnal->akun_debet }}</td>
                     <td>Rp. {{ number_format($jurnal->debet, 2, ',', '.') }}</td>
                     <td>{{ $jurnal->akun_kredit }}</td>

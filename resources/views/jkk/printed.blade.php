@@ -80,6 +80,8 @@
                 <tr>
                     <th style="width: 5%">#</th>
                     <th style="width: 20%">No Jkk</th>
+                    <th>Kode</th>
+                    <th>Nama</th>
                     <th>Type</th>
                     <th>Created Date</th>
                     <th>Created By</th>
@@ -145,6 +147,18 @@
                 sType: "string",
                 className: "dt-body-center",
                 "name": "jkk_number"
+            },
+            {
+                mData: 'anggota_view',
+                sType: "string",
+                className: "dt-body-center",
+                "name": "anggota_view"
+            },
+            {
+                mData: 'nama_anggota_view',
+                sType: "string",
+                className: "dt-body-center",
+                "name": "nama_anggota_view"
             },
             {
                 mData: 'jkk_printed_type.name',

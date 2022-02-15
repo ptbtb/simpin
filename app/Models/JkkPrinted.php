@@ -11,7 +11,7 @@ class JkkPrinted extends Model
 
     protected $table = 'jkk_printed';
     protected $dates = ['printed_at'];
-    protected $appends = ['printed_at_view', 'printed_by_view', 'konfirmasi_pembayaran'];
+    protected $appends = ['printed_at_view', 'printed_by_view', 'konfirmasi_pembayaran','anggota_view','nama_anggota_view'];
 
     public function isPengajuanPinjaman()
     {
@@ -57,7 +57,7 @@ class JkkPrinted extends Model
     {
         if ($this->isPengajuanPinjaman())
         {
-            $list = $this->jkkPengajuan->pluck('id_status_pengajuan')->toArray();            
+            $list = $this->jkkPengajuan->pluck('id_status_pengajuan')->toArray();
             if (in_array(STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN, $list))
             {
                 return true;
@@ -73,5 +73,53 @@ class JkkPrinted extends Model
             }
             return false;
         }
+    }
+
+    public function getanggotaViewAttribute()
+    {
+        $anggota=[];
+        $datatarik = $this->jkkPenarikan;
+        if ($datatarik){
+          foreach ($datatarik as $value) {
+            array_push($anggota,$value->kode_anggota);
+          }
+
+        }
+        $datapinjam = $this->jkkPengajuan;
+        if ($datapinjam){
+          foreach ($datapinjam as $value) {
+            array_push($anggota,$value->kode_anggota);
+          }
+
+        }
+
+        $result = implode(',',$anggota);
+
+        return $result;
+
+    }
+
+    public function getNamaAnggotaViewAttribute()
+    {
+        $anggota=[];
+        $datatarik = $this->jkkPenarikan;
+        if ($datatarik){
+          foreach ($datatarik as $value) {
+            array_push($anggota,$value->anggota->nama_anggota);
+          }
+
+        }
+        $datapinjam = $this->jkkPengajuan;
+        if ($datapinjam){
+          foreach ($datapinjam as $value) {
+            array_push($anggota,$value->anggota->nama_anggota);
+          }
+
+        }
+
+        $result = implode(',',$anggota);
+
+        return $result;
+
     }
 }
