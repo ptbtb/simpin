@@ -322,23 +322,23 @@ class PenarikanController extends Controller
         $user = Auth::user();
         $this->authorize('view history penarikan', $user);
 
-        $listPenarikan = Penarikan::with('anggota')->whereraw('paid_by_cashier =1')->orderBy('tgl_ambil','desc');
+        $listPenarikan = Penarikan::with('anggota')->whereraw('paid_by_cashier =1')->orderBy('tgl_transaksi','desc');
 
         if ($request->kode_anggota) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);
         }
 
         if ($request->from) {
-            $listPenarikan = $listPenarikan->where('tgl_ambil', '>=', $request->from);
+            $listPenarikan = $listPenarikan->where('tgl_transaksi', '>=', $request->from);
         }
         if ($request->to) {
-            $listPenarikan = $listPenarikan->where('tgl_ambil', '<=', $request->to);
+            $listPenarikan = $listPenarikan->where('tgl_transaksi', '<=', $request->to);
         }
         if ($user->isAnggota()) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $user->anggota->kode_anggota);
         }
 
-        $listPenarikan = $listPenarikan->orderBy('tgl_ambil', 'desc')
+        $listPenarikan = $listPenarikan->orderBy('tgl_transaksi', 'desc')
             ->has('anggota')
             ->get();
 

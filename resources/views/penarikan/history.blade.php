@@ -50,11 +50,11 @@
                         </div>
                     @endif
                     <div class="col-md-4 form-group">
-                        <label>From</label>
+                        <label>From (posting)</label>
                         <input id="from" type="text" name="from" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->from)? $request->from:'' }}">
                     </div>
                     <div class="col-md-4 form-group">
-                        <label>To</label>
+                        <label>To (Posting)</label>
                         <input id="to" type="text" name="to" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->to)? $request->to:'' }}">
                     </div>
                     <div class="col-md-1 form-group">
