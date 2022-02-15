@@ -110,6 +110,50 @@
             </table>
         </div>
     </div>
+    <div id="edit-coa-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Rubah Coa KAS/BANK</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-detail"></div>
+                    <hr>
+                    <form enctype="multipart/form-data" id="formKonfirmasi">
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label>COA LAMA</label>
+                                <input id="coa_lama" type="text" name="coa_lama" class="form-control" readonly>
+                                <input id="id_jurnal" type="hidden" name="id" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Jenis Akun (COA BARU)</label>
+                                <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
+                                    <option value="1">KAS</option>
+                                    <option value="2" selected>BANK</option>
+                                    <option value="3" selected>R/K</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 form-group">
+                                <label>Akun</label>
+                                <select name="id_akun_debet" id="code" class="form-control select2" required>
+                                    <option value="" selected disabled>Pilih Akun</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                        <a data-id=""class="text-white btn mt-1 btn-sm btn-success btn-editcoa">update</a>
+
+                    <button type="button" class="btn mt-1 btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -132,6 +176,7 @@
                                 <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
+                                    <option value="3">R/K</option>
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
@@ -412,6 +457,13 @@
                                         markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> BATALKAN</a>';
                                     }
                                     @endcan
+                            @can('edit coa after payment')
+                              if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}){
+
+                                      markup += '<a data-id="'+full.kode_pengajuan+'" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm mt-1 btn-danger btn-editcoa1">Edit Coa</a>';
+                                    }
+
+                            @endcan
 
                         @endif
 
@@ -602,6 +654,111 @@
             $('#jenisAkun').trigger( "change" );
         });
 
+        $(document).on('click', '.btn-editcoa', function ()
+        {
+            var id = $(this).data('id');
+            var url = baseURL + '/pinjaman/pengajuan/update/data-coa/'+id;
+
+            var id_akun_debet = $('#code').val();
+            var id_jurnal = $('#id_jurnal').val();
+
+            // files is mandatory when status pengajuan pinjaman diterima
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    input: 'password',
+                    inputAttributes: {
+                        name: 'password',
+                        placeholder: 'Password',
+                        required: 'required',
+                        validationMessage:'Password required',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var password = result.value;
+                        var formData = new FormData();
+                        var token = "{{ csrf_token() }}";
+                        // var keterangan = $('#keterangan').val();
+                        formData.append('_token', token);
+                        formData.append('password', password);
+                        formData.append('id_akun_debet', id_akun_debet);
+                        formData.append('id_jurnal', id_jurnal);
+                        // getting selected checkboxes kode ambil(s)
+                        var ids_array = table
+                                        .rows({ selected: true })
+                                        .data()
+                                        .pluck('id')
+                                        .toArray();
+                        if (ids_array.length != 0)
+                        {
+                            // append ids array into form
+                            formData.append('ids', JSON.stringify(ids_array));
+                        }
+                        else
+                        {
+                            formData.append('ids', '['+id+']');
+                        }
+                        $.ajax({
+                            type: 'post',
+                            url: url,
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                        success: function(data) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Your has been changed',
+                                showConfirmButton: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        },
+                        error: function(error){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: error.responseJSON.message,
+                                showConfirmButton: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                        })
+                    }
+                })
+
+        });
+        $(document).on('click', '.btn-editcoa1', function ()
+        {
+            var id = $(this).data('id');
+            var action = $(this).data('action');
+            var url = baseURL + '/pinjaman/pengajuan/data-coa/'+id;
+
+            $.get(url, function( data ) {
+                $('#edit-coa-modal .form-detail').html(data);
+                $('.btn-editcoa').data('id', id);
+                $('#coa_lama').val(data.akun_kredit);
+                $('#id_jurnal').val(data.id);
+                $('#edit-coa-modal').modal({
+                    backdrop: false
+                });
+                $('#edit-coa-modal').modal('show');
+            });
+
+            $('#jenisAkun').trigger( "change" );
+        });
+
         $(document).on('click', '.btn-jurnal',function ()
         {
             htmlText = '';
@@ -613,14 +770,9 @@
                     Swal.fire({
                         title: 'Jurnal Pengajuan',
                         html: htmlText,
-                        icon: "info",
                         showCancelButton: false,
-                        confirmButtonText: "Ok",
-                        confirmButtonColor: "#00a65a",
-                        grow: 'row',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        allowEnterKey: false,
+                        confirmButtonText: "Tutup",
+                        confirmButtonColor: "#00ff00",
                     }).then((result) => {
                         if (result.value) {
                         }
@@ -628,16 +780,12 @@
                 },
                 error : function (xhr, status, error) {
                     Swal.fire({
-                        title: 'Error',
-                        html: htmlText,
-                        icon: "error",
-                        showCancelButton: false,
-                        confirmButtonText: "Ok",
-                        confirmButtonColor: "#00a65a",
-                        grow: 'row',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        allowEnterKey: false,
+                      title: 'Error',
+                      html: 'Terjadi Kesalahan',
+                      icon: "error",
+                      showCancelButton: false,
+                      confirmButtonText: "Tutup",
+                      confirmButtonColor: "#00ff00",
                     }).then((result) => {
                         if (result.value) {
                         }
@@ -783,6 +931,10 @@
             {
                 // insert new option
                 $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+            }else if(jenisAkun == 3)
+            {
+                // insert new option
+                $('#code').append('<option value="133">402.01.000 R/K KOPEGMAR</option>');
             }
 
             $('#code').trigger( "change" );

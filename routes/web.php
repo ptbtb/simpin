@@ -251,6 +251,8 @@ Route::group(['prefix' => 'pinjaman'], function () {
             Route::get('list/data/', [App\Http\Controllers\PinjamanController::class, 'indexPengajuanAjax'])->name('pengajuan-pinjaman-ajax');
             Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcelPengajuanPinjaman'])->name('download-pengajuan-pinjaman-excel');
             Route::get('data-jurnal/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'viewDataJurnalPinjaman'])->name('view-data-jurnal-pengajuan-pinjaman');
+            Route::get('data-coa/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'viewDataCoaBank'])->name('view-data-coa-pengajuan-pinjaman');
+            Route::post('update/data-coa/{kodepengajuan}', [App\Http\Controllers\PinjamanController::class, 'storeDataCoaBank'])->name('vupdate-coa-pengajuan-pinjaman');
             Route::get('print-jkk', [App\Http\Controllers\PengajuanController::class, 'indexJkk'])->name('pengajuan-pinjaman-print-jkk');
             Route::post('print-jkk-store', [App\Http\Controllers\PengajuanController::class, 'printJkk'])->name('store-pengajuan-pinjaman-print-jkk');
             Route::get('create', [App\Http\Controllers\PinjamanController::class, 'createPengajuanPinjaman'])->name('pengajuan-pinjaman-add')->middleware(['pinjaman']);

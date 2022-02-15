@@ -36,6 +36,7 @@ use App\Models\Company;
 use App\Models\Penarikan;
 use App\Models\Tabungan;
 use App\Models\SimpinRule;
+use App\Models\Jurnal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -1481,9 +1482,55 @@ class PinjamanController extends Controller
     public function viewDataJurnalPinjaman($id)
     {
         $pengajuan = Pengajuan::where('kode_pengajuan', $id)->first();
-        $data['pengajuan'] = $pengajuan;
-        return view('pinjaman.viewjurnal', $data);
+        // dd($pengajuan->pinjaman->jurnals);
+         if ($pengajuan->pinjaman->jurnals){
+             $data['jurnals'] = $pengajuan->pinjaman->jurnals;
+             return view('pinjaman.jurnal', $data);
+         }else{
+           $data['pengajuan'] = $pengajuan;
+          return view('pinjaman.viewjurnal', $data);
+         }
+
+
         // return response()->json(['message' => 'error'], 500);
+    }
+    public function viewDataCoaBank($id)
+    {
+        $pengajuan = Pengajuan::where('kode_pengajuan', $id)->first();
+        // dd($pengajuan->pinjaman->jurnals);
+         // if ($pengajuan->pinjaman->jurnals){
+         $kode= $pengajuan->pinjaman;
+         $code=Code::find($kode->id_akun_kredit);
+
+        $raw = $pengajuan->pinjaman->jurnals;
+        $data= $raw->where('akun_kredit',$code->CODE)->first();
+        // dd($data);
+        // dd($raw->where('akun_kredit',$code->CODE));
+             // return view('pinjaman.jurnal', $data);
+         // }
+
+
+         return response()->json($data, 200);
+    }
+
+    public function storeDataCoaBank(Request $request,$id)
+    {
+      try {
+        // dd($request);
+        $pengajuan= Pengajuan::where('kode_pengajuan', $id)->first();
+        $pinjaman= $pengajuan->pinjaman;
+        $pinjaman->id_akun_kredit=$request->id_akun_debet;
+        $pinjaman->save();
+        $coa= Code::find($request->id_akun_debet);
+        $jurnal = Jurnal::find($request->id_jurnal);
+        $jurnal->akun_kredit = $coa->CODE;
+        $jurnal->save();
+        return response()->json(['message' => 'Update Coa success'], 200);
+      } catch (\Throwable $e) {
+          \Log::error($e);
+          return response()->json(['message' => 'Update Coa gagal'], 500);
+      }
+
     }
 
     public function exportSaldoAwalPinjaman()
