@@ -6,7 +6,7 @@
     table tr td{
         font-size: 14px;
     }
-    
+
     .border-collapse, .border-collapse tr td, .border-collapse tr th {
         border: 1px solid black;
     }
@@ -46,7 +46,7 @@
         </tr>
         <tr>
             <td style="text-align: left">Unit Simpan Pinjam</td>
-            <td><b><span style="font-size:18px; text-align:center">BUKTI JURNAL BANK KELUAR</span></b></td>
+            <td><b><span style="font-size:18px; text-align:center">JURNAL UMUM</span></b></td>
             <td></td>
         </tr>
     </table>
