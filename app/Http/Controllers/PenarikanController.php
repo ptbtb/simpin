@@ -328,12 +328,15 @@ class PenarikanController extends Controller
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);
         }
 
-        if ($request->from) {
-            $listPenarikan = $listPenarikan->where('tgl_transaksi', '>=', $request->from);
+        if (!$request->from) {
+            $request->from = Carbon::now()->startOfMonth()->format('Y-m-d');
         }
-        if ($request->to) {
-            $listPenarikan = $listPenarikan->where('tgl_transaksi', '<=', $request->to);
+        if (!$request->to) {
+          $request->to = Carbon::now()->endOfMonth()->format('Y-m-d');
         }
+
+        $listPenarikan->whereBetween('tgl_transaksi',[$request->from,$request->to]);
+
         if ($user->isAnggota()) {
             $listPenarikan = $listPenarikan->where('kode_anggota', $user->anggota->kode_anggota);
         }
@@ -359,13 +362,14 @@ class PenarikanController extends Controller
             $listPenarikan = $listPenarikan->where('kode_anggota', $request->kode_anggota);
         }
 
-        if ($request->from) {
-            $listPenarikan = $listPenarikan->where('tgl_transaksi', '>=', $request->from);
+        if (!$request->from) {
+            $request->from = Carbon::now()->startOfMonth()->format('Y-m-d');
         }
-        if ($request->to) {
-            $listPenarikan = $listPenarikan->where('tgl_transaksi', '<=', $request->to);
+        if (!$request->to) {
+          $request->to = Carbon::now()->endOfMonth()->format('Y-m-d');
         }
 
+        $listPenarikan->whereBetween('tgl_transaksi',[$request->from,$request->to]);
         $listPenarikan = $listPenarikan->orderBy('tgl_transaksi', 'desc')
             ->has('anggota')
             ->get();
@@ -718,7 +722,14 @@ class PenarikanController extends Controller
     public function viewDataJurnalPenarikan($id)
     {
         $penarikan = Penarikan::find($id);
-        $data['penarikan'] = $penarikan;
+        if(!is_null($penarikan->is_simpanan_to_simpanan))
+        {
+          $jrn= $penarikan->simpananToSimpanan->jurnals;
+        }else{
+          $jrn= $penarikan->jurnals;
+        }
+        // dd($jrn);
+        $data['jurnals'] = $jrn;
         return view('penarikan.viewJurnal', $data);
     }
 

@@ -204,38 +204,24 @@
             $.ajax({
                 url: baseURL + '/penarikan/data-jurnal/' + id,
                 success : function (data, status, xhr) {
-                    htmlText = data;
+                    var htmlText = data;
                     Swal.fire({
-                        title: 'Jurnal Penarikan',
+                        title: 'Info',
                         html: htmlText,
-                        icon: "info",
                         showCancelButton: false,
-                        confirmButtonText: "Ok",
-                        confirmButtonColor: "#00a65a",
-                        grow: 'row',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        allowEnterKey: false,
-                    }).then((result) => {
-                        if (result.value) {
-                        }
+                        confirmButtonText: "Tutup",
+                        confirmButtonColor: "#00ff00",
                     });
                 },
-                error : function (xhr, status, error) {
+                error: function (xhr,status,error)
+                {
                     Swal.fire({
                         title: 'Error',
-                        html: htmlText,
+                        html: 'Terjadi Kesalahan',
                         icon: "error",
                         showCancelButton: false,
-                        confirmButtonText: "Ok",
-                        confirmButtonColor: "#00a65a",
-                        grow: 'row',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        allowEnterKey: false,
-                    }).then((result) => {
-                        if (result.value) {
-                        }
+                        confirmButtonText: "Tutup",
+                        confirmButtonColor: "#00ff00",
                     });
                 }
             });

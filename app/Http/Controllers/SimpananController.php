@@ -150,23 +150,7 @@ class SimpananController extends Controller
                   if($besarSimpanan>$tabungan->besar_tabungan){
                     return redirect()->route('simpanan-list')->withError('Saldo Simpanan tidak cukup');
                   }
-                      $penarikan->kode_anggota = $anggotaId;
-                      $penarikan->kode_tabungan = $anggotaId;
-                      $penarikan->id_tabungan = $tabungan->id;
-                      $penarikan->besar_ambil = $besarSimpanan;
-                      $penarikan->code_trans = $tabungan->kode_trans;
-                      $penarikan->tgl_ambil = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                      $penarikan->u_entry = Auth::user()->name;
-                      // $penarikan->created_by = Auth::user()->name;
-                      $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
-                      // $penarikan->serial_number = $nextSerialNumber;
-                      $penarikan->tgl_acc = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                      $penarikan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                      $penarikan->approved_by = Auth::user()->id;
-                      $penarikan->is_simpanan_to_simpanan = 1;
-                      $penarikan->paid_by_cashier = Auth::user()->id;
-                      $penarikan->keterangan = 'Pembayaran '.$jenisSimpanan->nama_simpanan.' dengan '.$kodes->NAMA_TRANSAKSI;
-                      $penarikan->save();
+
                 }
                 if ($jenisSimpanan->nama_simpanan === 'SIMPANAN POKOK') {
                     $checkSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
@@ -256,7 +240,25 @@ class SimpananController extends Controller
                     $simpanan->save();
                 }
 
-
+                if ($request->id_akun_debet[$key]==182 || $request->id_akun_debet[$key]==174){
+                  $penarikan->kode_anggota = $anggotaId;
+                  $penarikan->kode_tabungan = $anggotaId;
+                  $penarikan->id_tabungan = $tabungan->id;
+                  $penarikan->besar_ambil = $besarSimpanan;
+                  $penarikan->code_trans = $tabungan->kode_trans;
+                  $penarikan->tgl_ambil = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                  $penarikan->u_entry = Auth::user()->name;
+                  // $penarikan->created_by = Auth::user()->name;
+                  $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
+                  // $penarikan->serial_number = $nextSerialNumber;
+                  $penarikan->tgl_acc = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                  $penarikan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                  $penarikan->approved_by = Auth::user()->id;
+                  $penarikan->is_simpanan_to_simpanan = $simpanan->kode_simpan;
+                  $penarikan->paid_by_cashier = Auth::user()->id;
+                  $penarikan->keterangan = 'Pembayaran '.$jenisSimpanan->nama_simpanan.' dengan '.$kodes->NAMA_TRANSAKSI;
+                  $penarikan->save();
+                }
 
                 JurnalManager::createJurnalSimpanan($simpanan);
 

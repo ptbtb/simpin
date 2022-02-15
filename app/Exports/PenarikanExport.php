@@ -24,14 +24,14 @@ class PenarikanExport implements FromView
             $listPenarikan = $listPenarikan->where('kode_anggota', $this->request->kode_anggota);
         }
 
-        if ($this->request->from)
-        {
-            $listPenarikan = $listPenarikan->where('tgl_transaksi','>=', $this->request->from);
+        if (!$request->from) {
+            $request->from = Carbon::now()->startOfMonth()->format('Y-m-d');
         }
-        if ($this->request->to)
-        {
-            $listPenarikan = $listPenarikan->where('tgl_transaksi','<=', $this->request->to);
+        if (!$request->to) {
+          $request->to = Carbon::now()->endOfMonth()->format('Y-m-d');
         }
+
+        $listPenarikan->whereBetween('tgl_transaksi',[$request->from,$request->to]);
 
         $listPenarikan = $listPenarikan->orderBy('tgl_transaksi','desc')
                                         ->has('anggota')

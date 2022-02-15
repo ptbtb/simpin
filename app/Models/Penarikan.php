@@ -82,7 +82,7 @@ class Penarikan extends Model implements Auditable
     {
         return $query->where('status_pengambilan', STATUS_PENGAMBILAN_MENUNGGU_PEMBAYARAN);
     }
-    
+
     /**
      * Scope a query to only include Approved
      *
@@ -201,5 +201,10 @@ class Penarikan extends Model implements Auditable
             return $this->tgl_transaksi->format('d M Y');
         }
         return $this->tgl_mulai;
+    }
+
+    public function simpananToSimpanan()
+    {
+        return $this->belongsTo(Simpanan::class,'is_simpanan_to_simpanan');
     }
 }
