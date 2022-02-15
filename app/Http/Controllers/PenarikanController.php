@@ -863,6 +863,14 @@ class PenarikanController extends Controller
             foreach ($kodeAmbilIds as $key => $kodeAmbilId)
             {
                 $penarikan = Penarikan::find($kodeAmbilId);
+                if($penarikan->is_simpanan_to_simpanan){
+                  if ($penarikan->is_simpanan_to_simpanan->jurnals->count()>0){
+                    foreach ($penarikan->is_simpanan_to_simpanan->jurnals as $jurn){
+                        $jurn->delete();
+                    }
+                  }
+                  $penarikan->is_simpanan_to_simpanan->delete();
+                }
                 if ($penarikan->jurnals->count()>0){
                 foreach ($penarikan->jurnals as $jurn){
                     $jurn->delete();
