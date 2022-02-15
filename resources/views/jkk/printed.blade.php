@@ -80,7 +80,7 @@
                 <tr>
                     <th style="width: 5%">#</th>
                     <th style="width: 20%">No Jkk</th>
-                    <th>Kode</th>
+                    <th>NO.Angg</th>
                     <th>Nama</th>
                     <th>Type</th>
                     <th>Created Date</th>

@@ -11,7 +11,7 @@
 		<ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="">Jurnal Umum</a></li>
-			<li class="breadcrumb-item active">Print JKK</li>
+			<li class="breadcrumb-item active">Print JU</li>
 		</ol>
 	</div>
 </div>
@@ -27,7 +27,7 @@
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-header">
-                <h6 class="card-title">Donwload JKK</h6>
+                <h6 class="card-title">Donwload JU</h6>
             </div>
             <div class="card-body">
                 <form action="{{ route('jurnal-umum-print-jkk') }}" method="POST" enctype="multipart/form-data">

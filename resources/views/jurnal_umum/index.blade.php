@@ -44,7 +44,7 @@
 <div class="card">
     <div class="card-header text-right">
         @can('print jkk')
-        <a href="{{ route('jurnal-umum-index-jkk') }}" class="btn mt-1 btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
+        <a href="{{ route('jurnal-umum-index-jkk') }}" class="btn mt-1 btn-sm btn-info"><i class="fas fa-print"></i> Print JU</a>
         @endcan
         <form action="{{ route('jurnal-umum-list') }}" method="post">
             @csrf
