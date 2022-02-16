@@ -345,6 +345,9 @@ Route::group(['prefix' => 'penarikan'], function () {
         Route::post('keluar-anggota', [App\Http\Controllers\PenarikanController::class, 'storeFormKeluarAnggota'])->name('store-form-keluar-anggota');
         Route::get('delete/{id}', [App\Http\Controllers\PenarikanController::class, 'delete'])->name('penarikan-delete');
         Route::post('delete', [App\Http\Controllers\PenarikanController::class, 'delete'])->name('penarikan-delete');
+        Route::get('data-coa/{kodepengajuan}', [App\Http\Controllers\PenarikanController::class, 'viewDataCoaBank'])->name('view-data-coa-penarikan');
+        Route::post('update/data-coa/{kodepengajuan}', [App\Http\Controllers\PenarikanController::class, 'storeDataCoaBank'])->name('update-coa-penarikan');
+
     });
 });
 

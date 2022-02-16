@@ -21,6 +21,7 @@ use App\Models\Code;
 use App\Models\JkkPrinted;
 use App\Models\Pinjaman;
 use App\Models\SimpinRule;
+use App\Models\Jurnal;
 use App\Models\View\ViewSaldo;
 use App\Models\StatusPenarikan;
 use Carbon\Carbon;
@@ -725,12 +726,21 @@ class PenarikanController extends Controller
         if(!is_null($penarikan->is_simpanan_to_simpanan))
         {
           $jrn= $penarikan->simpananToSimpanan->jurnals;
+          $data['jurnals'] = $jrn;
+          return view('jurnal.jurnal', $data);
         }else{
-          $jrn= $penarikan->jurnals;
+          if($penarikan->jurnals->count()>0){
+            $jrn= $penarikan->jurnals;
+            $data['jurnals'] = $jrn;
+            return view('jurnal.jurnal', $data);
+          }else{
+            $data['penarikan'] = $penarikan;
+            return view('penarikan.viewJurnal', $data);
+          }
+
         }
         // dd($jrn);
-        $data['jurnals'] = $jrn;
-        return view('penarikan.viewJurnal', $data);
+
     }
 
     public function showFormKeluarAnggota()
@@ -888,5 +898,42 @@ class PenarikanController extends Controller
             Log::info($message);
             return redirect()->back()->withErrors($message);
         }
+    }
+
+    public function viewDataCoaBank($id)
+    {
+        $penarikan = Penarikan::where('kode_ambil', $id)->first();
+        // dd($pengajuan->pinjaman->jurnals);
+         // if ($pengajuan->pinjaman->jurnals){
+         $code=Code::find($penarikan->id_akun_debet);
+         // dd($penarikan->jurnals);
+        $raw = $penarikan->jurnals;
+        $data= $raw->where('akun_kredit',$code->CODE)->first();
+        // dd($data);
+        // dd($raw->where('akun_kredit',$code->CODE));
+             // return view('pinjaman.jurnal', $data);
+         // }
+
+
+         return response()->json($data, 200);
+    }
+
+    public function storeDataCoaBank(Request $request,$id)
+    {
+      try {
+        // dd($request);
+        $penarikan= Penarikan::where('kode_ambil', $id)->first();
+        $penarikan->id_akun_debet=$request->id_akun_debet;
+        $penarikan->save();
+        $coa= Code::find($request->id_akun_debet);
+        $jurnal = Jurnal::find($request->id_jurnal);
+        $jurnal->akun_kredit = $coa->CODE;
+        $jurnal->save();
+        return response()->json(['message' => 'Update Coa success'], 200);
+      } catch (\Throwable $e) {
+          \Log::error($e);
+          return response()->json(['message' => 'Update Coa gagal'], 500);
+      }
+
     }
 }
