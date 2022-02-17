@@ -25,6 +25,14 @@
 @if (\Auth::user()->isAnggota())
 	<div id="exportButton" class="d-none text-right my-2">
 		@if(\Auth::user()->isAnggota())
+			<div class="col-md-6 form-group" id="anggotaSelect2">
+					<label for="tahun">Tahun</label>
+					<select name="year" id="pilihyear" class="form-control">
+						@foreach ($listtahun as $y)
+								<option value="{{$y}}" {{ ($y==$tahun)?'selected':''}}>{{$y}}</option>
+								@endforeach
+					</select>
+				</div>
 			<a class="btn btn-sm btn-info" id="pdfButton"><i class="fas fa-download"></i> Export PDF</a>
 		@else
 			<a href="" class="btn btn-sm btn-info" id="pdfButton"><i class="fas fa-download"></i> Export PDF</a>
@@ -178,7 +186,13 @@
 		});
 		$('#pilihyear').on('change', function ()
 		{
-			var selectedValue = $('#anggotaName').children("option:selected").val();
+			@if(\Auth::user()->isAnggota())
+					var selectedValue = '{{ \Auth::user()->anggota->kode_anggota }}';
+
+				@else
+					var selectedValue = $('#anggotaName').children("option:selected").val();
+				@endif
+
 			var selectedyear = $(this).children("option:selected").val();
 			var baseURL = {!! json_encode(url('/')) !!};
 			$.get(baseURL + "/simpanan/card/view/" + selectedValue+"?year="+selectedyear, function( data ) {
