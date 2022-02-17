@@ -69,7 +69,7 @@
 <div class="card">
     <div class="card-header text-right">
     @can('add simpanan')
-        
+
             <!-- @if ($request->kode_anggota)
                 <a href="{{ route('simpanan-download-pdf', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan, 'kode_anggota' => $request->kode_anggota]) }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
                 <a href="{{ route('simpanan-download-excel', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan, 'kode_anggota' => $request->kode_anggota]) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a>
@@ -79,7 +79,7 @@
                 <a href="{{ route('simpanan-download-excel', ['from' => $request->from, 'to' => $request->to, 'jenis_simpanan' => $request->jenis_simpanan,'jenistrans'=>$request->jenistrans]) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a>
                 <a class="btn btn-success" href="{{ route('simpanan-add') }}"><i class="fas fa-plus"></i> Tambah Transaksi</a>
             <!-- @endif -->
-       
+
     @endcan
     @can('posting jurnal')
     <a href="{{ route('simpanan-pending-jurnal') }}" class="btn btn-danger btn-sm"><i class="fa fa-check-square"></i>Pending Jurnal</a>
@@ -97,7 +97,7 @@
             </div>
             @endif
         </div>
-        <table id="table_anggota" class="table table-striped">
+        <table id="tableSimpanan" class="table table-striped">
             <thead>
                 <tr class="info">
                     <th>No</th>
@@ -109,7 +109,7 @@
                     <th>Besar Simpanan</th>
                     <th>User Entry</th>
                     <th>Status</th>
-                    
+
                     <th>Posting</th>
                     <th>Input</th>
                     <th style="width: 15%">Action</th>
@@ -138,7 +138,7 @@
                         <label>Besar Simpanan</label>
                         <input type="text" name="besar_simpanan" id="besar_simpanan" onkeypress="return isNumberKey(event)" class="form-control" placeholder="Besar Simpanan">
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Submit</button>
@@ -148,24 +148,67 @@
         </div>
     </form>
 </div>
+<div id="edit-coa-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Rubah Coa KAS/BANK</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-detail"></div>
+                <hr>
+                <form enctype="multipart/form-data" id="formKonfirmasi">
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label>COA LAMA</label>
+                            <input id="coa_lama" type="text" name="coa_lama" class="form-control" readonly>
+                            <input id="id_jurnal" type="hidden" name="id" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Jenis Akun (COA BARU)</label>
+                            <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
+                                <option value="1">KAS</option>
+                                <option value="2" selected>BANK</option>
+                                <option value="3" selected>SIMPANAN DAN R/K</option>
+                            </select>
+                        </div>
 
+                        <div class="col-md-6 form-group">
+                            <label>Akun</label>
+                            <select name="id_akun_debet" id="code" class="form-control select2" required>
+                                <option value="" selected disabled>Pilih Akun</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                    <a data-id=""class="text-white btn mt-1 btn-sm btn-success btn-editcoa">update</a>
+
+                <button type="button" class="btn mt-1 btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section('js')
-<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
 <script>
-    $.fn.dataTable.ext.errMode = 'none';
-    var baseURL = {!! json_encode(url('/')) !!};
+var baseURL = {!! json_encode(url('/')) !!};
+$.fn.dataTable.ext.errMode = 'none';
 
-    $(document).ready(function ()
-    {
+
         initiateSelect2();
         @if($request->jenis_simpanan)
             updateSelect2();
         @endif
-        initiateDatatable();
+        // initiateDatatable();
         initiateDatepicker();
-        initiateEvent();
-    });
+
 
     function initiateDatepicker()
     {
@@ -179,9 +222,9 @@
         });
     }
 
-    function initiateDatatable()
-    {
-        var t = $('.table').DataTable({
+
+        var table = $('#tableSimpanan').on('xhr.dt', function ( e, settings, json, xhr ) {
+            }).DataTable({
             processing: true,
             serverside: true,
             responsive: true,
@@ -275,7 +318,7 @@
                         return data;
                     }
                 },
-                
+
                 {
                     mData: 'tgl_transaksi', sType: "string",
                     className: "dt-body-center", "name": "tgl_transaksi" ,
@@ -300,20 +343,27 @@
                     mData: 'kode_simpan', sType: "string",
                     className: "dt-body-center", "name": "action"	,
                     mRender: function (data, type, full) {
-                        var mark = '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
+                        var mark = '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 mr-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
                         if(full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }})
                         {
-                            mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 text-white" data-action="edit" data-id="' + data + '" data-simpanan="' + full.besar_simpanan + '" data-periode="' + full.periode_view + '"><i class="fa fa-edit"></i> Edit</a>';
+                            mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 mr-1 text-white" data-action="edit" data-id="' + data + '" data-simpanan="' + full.besar_simpanan + '" data-periode="' + full.periode_view + '"><i class="fa fa-edit"></i> Edit</a>';
                         }
                         mark = mark + '@can("edit simpanan")';
                             if(full.id_status_simpanan == {{ STATUS_SIMPANAN_MENUNGGU_APPROVAL }})
                             {
-                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITERIMA }}" class="text-white btn mt-1 btn-sm btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
-                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITOLAK }}" class="text-white btn mt-1 btn-sm btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITERIMA }}" class="text-white btn mt-1 btn-sm mr-1 btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
+                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITOLAK }}" class="text-white btn mt-1 btn-sm mr-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                             }
+                            @can('edit coa after payment')
+                              if (full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }}){
+
+                                      mark += '<a data-id="'+full.kode_simpan+'"  class="text-white btn btn-sm mt-1 mr-1 btn-danger btn-editcoa1">Edit Coa</a>';
+                                    }
+
+                            @endcan
                         mark = mark + '@endcan';
                         mark = mark + '@can("delete simpanan")';
-                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '"  class="text-white btn mt-1 ml-1 btn-sm btn-danger btn-hapus"><i class="fas fa-remove"></i> Hapus</a>';
+                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '"  class="text-white btn mt-1 mr-1 btn-sm btn-danger btn-hapus"><i class="fas fa-remove"></i> Hapus</a>';
                         mark = mark + '@endcan';
                         return mark;
                     }
@@ -321,12 +371,12 @@
             ]
         });
 
-        t.on( 'order.dt search.dt', function () {
-            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        table.on( 'order.dt search.dt', function () {
+            table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                 cell.innerHTML = i+1;
             } );
         } ).draw();
-    }
+
 
     function initiateSelect2() {
         $(".unitKerja").select2();
@@ -375,8 +425,7 @@
         });
     }
 
-    function initiateEvent()
-    {
+
         // event button table on click
         $(document).on('click', 'a', function ()
         {
@@ -391,7 +440,7 @@
 
                 var htmlText = '<div class="container-fluid" style="font-size : 14px">' +
                                     '<div class="row">' +
-                                        
+
                                         '<div class="col-md-6 mx-0 my-2">Tangggal Transaksi <br> <b>' + entryDate + '</b></div>' +
                                         '<div class="col-md-6 mx-0 my-2"></div>' +
                                         '<div class="col-md-6 mx-0 my-2">User Entri <br> <b>' + uEntry + '</b></div>' +
@@ -415,7 +464,7 @@
                     {
                         var htmlText = data;
                         Swal.fire({
-                            title: 'Info',
+                            title: 'Jurnal Simpanan',
                             html: htmlText,
                             showCancelButton: false,
                             confirmButtonText: "Tutup",
@@ -601,7 +650,198 @@
             })
 
         });
-    }
+
+
+        $(document).on('click', '.btn-jurnal',function ()
+        {
+            htmlText = '';
+            var id = $(this).data('id');
+            $.ajax({
+                url: baseURL + '/simpanan/data-jurnal/' + id,
+                success : function (data, status, xhr) {
+                    htmlText = data;
+                    Swal.fire({
+                        title: 'Jurnal Pengajuan',
+                        html: htmlText,
+                        showCancelButton: false,
+                        confirmButtonText: "Tutup",
+                        confirmButtonColor: "#00ff00",
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
+                },
+                error : function (xhr, status, error) {
+                    Swal.fire({
+                      title: 'Error',
+                      html: 'Terjadi Kesalahan',
+                      icon: "error",
+                      showCancelButton: false,
+                      confirmButtonText: "Tutup",
+                      confirmButtonColor: "#00ff00",
+                    }).then((result) => {
+                        if (result.value) {
+                        }
+                    });
+                }
+            });
+        });
+        var bankAccountArray = [];
+
+        // get bank account number from php
+        @foreach($bankAccounts as $key => $bankAccount)
+            bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
+        @endforeach
+
+        // trigger to get kas or bank select option
+        $(document).on('change', '#jenisAkun', function ()
+        {
+            // remove all option in code
+            $('#code').empty();
+
+            // get jenis akun
+            var jenisAkun = $('#jenisAkun').val();
+
+            if(jenisAkun == 2)
+            {
+                // loop through code bank
+                $.each(bankAccountArray, function(key, bankAccount)
+                {
+                    // set dafault to 102.18.000
+                    if(bankAccount.id == 22)
+                    {
+                        var selected = 'selected';
+                    }
+                    else
+                    {
+                        var selected = '';
+                    }
+
+                    // insert new option
+                    $('#code').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+                });
+            }
+            else if(jenisAkun == 1)
+            {
+                // insert new option
+                $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+            }else if(jenisAkun == 3)
+            {
+                // insert new option
+                $('#code').append('<option value="174" >409.01.000 SIMPANAN KHUSUS</option><option value="182" >409.03.000 SIMPANAN KHUSUS PAGU</option><option value="133" >402.01.000 R/K KOPEGMAR</option>');
+
+            }
+
+            $('#code').trigger( "change" );
+        });
+
+    $(document).on('click', '.btn-editcoa', function ()
+    {
+        var id = $(this).data('id');
+        var url = baseURL + '/simpanan/update/data-coa/'+id;
+
+        var id_akun_debet = $('#code').val();
+        var id_jurnal = $('#id_jurnal').val();
+
+        // files is mandatory when status pengajuan pinjaman diterima
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                    validationMessage:'Password required',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    // var keterangan = $('#keterangan').val();
+                    formData.append('_token', token);
+                    formData.append('password', password);
+                    formData.append('id_akun_debet', id_akun_debet);
+                    formData.append('id_jurnal', id_jurnal);
+                    // getting selected checkboxes kode ambil(s)
+                    var ids_array = table
+                                    .rows({ selected: true })
+                                    .data()
+                                    .pluck('id')
+                                    .toArray();
+                    if (ids_array.length != 0)
+                    {
+                        // append ids array into form
+                        formData.append('ids', JSON.stringify(ids_array));
+                    }
+                    else
+                    {
+                        formData.append('ids', '['+id+']');
+                    }
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your has been changed',
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.responseJSON.message,
+                            showConfirmButton: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                    })
+                }
+            })
+
+    });
+    $('#edit-coa-modal').on('shown.bs.modal', function() {
+    $(document).off('focusin.modal');
+});
+    $(document).on('click', '.btn-editcoa1', function ()
+    {
+        var id = $(this).data('id');
+        var action = $(this).data('action');
+        var url = baseURL + '/simpanan/data-coa/'+id;
+
+        $.get(url, function( data ) {
+            $('#edit-coa-modal .form-detail').html(data);
+            $('.btn-editcoa').data('id', id);
+            $('#coa_lama').val(data.akun_debet);
+            $('#id_jurnal').val(data.id);
+            $('#edit-coa-modal').modal({
+                backdrop: false
+            });
+            $('#edit-coa-modal').modal('show');
+        });
+
+        $('#jenisAkun').trigger( "change" );
+    });
 
     function toRupiah(number)
     {
