@@ -126,7 +126,7 @@
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Jenis Akun (COA BARU)</label>
-                                <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
+                                <select name="jenis_akun" id="jenisAkun2" class="form-control select2" required>
                                     <option value="1">KAS</option>
                                     <option value="2" selected>BANK</option>
                                     <option value="3" selected>R/K</option>
@@ -135,7 +135,7 @@
 
                             <div class="col-md-6 form-group">
                                 <label>Akun</label>
-                                <select name="id_akun_debet" id="code" class="form-control select2" required>
+                                <select name="id_akun_debet" id="code2" class="form-control select2" required>
                                     <option value="" selected disabled>Pilih Akun</option>
                                 </select>
                             </div>
@@ -812,6 +812,46 @@
             $('#code').trigger( "change" );
         });
 
+        $(document).on('change', '#jenisAkun2', function ()
+        {
+            // remove all option in code
+            $('#code2').empty();
+
+            // get jenis akun
+            var jenisAkun = $('#jenisAkun2').val();
+
+            if(jenisAkun == 2)
+            {
+                // loop through code bank
+                $.each(bankAccountArray, function(key, bankAccount)
+                {
+                    // set dafault to 102.18.000
+                    if(bankAccount.id == 22)
+                    {
+                        var selected = 'selected';
+                    }
+                    else
+                    {
+                        var selected = '';
+                    }
+
+                    // insert new option
+                    $('#code2').append('<option value="'+bankAccount.id+'"'+ selected +'>'+bankAccount.code+ ' ' + bankAccount.name + '</option>');
+                });
+            }
+            else if(jenisAkun == 1)
+            {
+                // insert new option
+                $('#code2').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
+            }else if(jenisAkun == 3)
+            {
+                // insert new option
+                $('#code2').append('<option value="133">402.01.000 R/K KOPEGMAR</option>');
+            }
+
+            $('#code2').trigger( "change" );
+        });
+
 
         $("#select_anggota").select2({
             ajax: {
@@ -936,7 +976,7 @@
                 $('#edit-coa-modal').modal('show');
             });
 
-            $('#jenisAkun').trigger( "change" );
+            $('#jenisAkun2').trigger( "change" );
         });
 
         function updateSelect2() {
