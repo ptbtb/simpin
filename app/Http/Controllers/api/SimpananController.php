@@ -65,10 +65,13 @@ class SimpananController extends Controller
             // get anggota
             $user = $request->user('api');
             $anggota = $user->anggota;
-            $year= Carbon::today()->subYear()->endOfYear();
-
-            // get this year
-            $thisYear = Carbon::now()->year;
+            if (!$request->year) {
+                $year= Carbon::today()->subYear()->endOfYear();
+                $thisYear = Carbon::now()->year;
+            } else {
+                $year= Carbon::createFromFormat('Y', $request->year)->subYear()->endOfYear();
+                $thisYear = Carbon::createFromFormat('Y', $request->year)->year;
+            }
             $listTabungan = \App\Models\View\ViewSimpanSaldoAwal::where('kode_anggota', $anggota->kode_anggota)
                 ->get();
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
