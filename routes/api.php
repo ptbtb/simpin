@@ -41,6 +41,7 @@ Route::group(['prefix' => 'simpanan'], function ()
         Route::get('card', 'App\Http\Controllers\api\SimpananController@ShowCard')->name('api-get-simpanan-card');
         Route::get('listambil', 'App\Http\Controllers\api\TransaksiController@list')->name('api-list-penarikan');
         Route::post('ajuambil', 'App\Http\Controllers\api\PenarikanController@ajuAmbil')->name('api-aju-penarikan');
+        Route::get('yearlist', 'App\Http\Controllers\api\SimpananController@YearList')->name('api-simpanan-yearlist');
     });
 });
 

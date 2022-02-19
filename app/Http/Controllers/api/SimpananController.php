@@ -166,5 +166,30 @@ class SimpananController extends Controller
         }
     }
 
+    public function YearList(Request $request)
+    {
+        try
+        {
+            $user = $request->user('api');
+            $anggota = $user->anggota;
+            $listtahun = [
+            Carbon::now()->format('Y'),
+            Carbon::now()->subYear()->format('Y'),
+        ];
+
+            $response['message'] = null;
+            $response['data'] = $listtahun;
+            return response()->json($response, 200);
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            Log::error($message);
+
+            $response['message'] = API_DEFAULT_ERROR_MESSAGE;
+            return response()->json($response, 500);
+        }
+    }
+
 
 }
