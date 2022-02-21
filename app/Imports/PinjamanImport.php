@@ -62,7 +62,7 @@ class PinjamanImport implements OnEachRow
                 // get next serial number
                 $nextSerialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
 
-                $jatuhTempo = $pinjaman->tgl_entri->addMonths($i)->endOfMonth();
+                $jatuhTempo = $pinjaman->tgl_transaksi->addMonths($i)->endOfMonth();
                 $sisaPinjaman = $pinjaman->sisa_pinjaman;
                 $angsuran = new Angsuran();
                 $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
