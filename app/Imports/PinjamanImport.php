@@ -48,7 +48,7 @@ class PinjamanImport implements OnEachRow
             $pinjaman->biaya_administrasi = 0;
             $pinjaman->u_entry = Auth::user()->name;
             $pinjaman->tgl_entri = Carbon::now();
-            $pinjaman->tgl_transaksi = '2021-01-01';
+            $pinjaman->tgl_transaksi = '2020-12-31';
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($row[5] - 1);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
             $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
