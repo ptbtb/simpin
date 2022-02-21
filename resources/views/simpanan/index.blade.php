@@ -135,7 +135,7 @@
                 <div class="modal-body row modal-edit-body">
                     <input type="hidden" name="kode_simpan" id="kode_simpan" class="form-control" value="">
                     <div class="form-group col-md-12">
-                        <label>Besar Simpanan</label>
+                        <label id="labelinput">Besar Simpanan</label>
                         <input type="text" name="besar_simpanan" id="besar_simpanan" onkeypress="return isNumberKey(event)" class="form-control" placeholder="Besar Simpanan">
                     </div>
 
@@ -216,6 +216,10 @@ $.fn.dataTable.ext.errMode = 'none';
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
         });
+        $('.datepicker').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
         $('#to').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
@@ -282,20 +286,41 @@ $.fn.dataTable.ext.errMode = 'none';
                     mData: 'periode_view', sType: "string",
                     className: "dt-body-center", "name": "periode_view" ,
                     mRender: function (data, type, full) {
+                      var mark='';
+
+                      mark = mark + '@can("edit simpanan")';
+                          mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 mr-1 text-white" data-action="editperiode" data-id="' + full.kode_simpan + '" data-periode="' + full.periode_full_view + '"><i class="fa fa-edit"></i> Edit</a>';
+
+                      mark = mark + '@endcan';
                         if (data == null || data == '') {
-                            return '-';
+                            return '-'+'<br>'+mark;
                         }
-                        return data;
+                        return data+'<br>'+mark;
                     }
                 },
                 {
                     mData: 'besar_simpanan_rupiah', sType: "string",
                     className: "dt-body-center", "name": "besar_simpanan_rupiah"	,
                     mRender: function (data, type, full) {
+                      var mark='';
+                      if(full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }})
+                      {
+                          mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 mr-1 text-white" data-action="edit" data-id="' + full.kode_simpan + '" data-simpanan="' + full.besar_simpanan + '" data-periode="' + full.periode_view + '"><i class="fa fa-edit"></i> Edit</a>';
+                      }
+                      mark = mark + '@can("edit simpanan")';
+                          if(full.id_status_simpanan == {{ STATUS_SIMPANAN_MENUNGGU_APPROVAL }})
+                          {
+                              mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITERIMA }}" class="text-white btn mt-1 btn-sm mr-1 btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
+                              mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITOLAK }}" class="text-white btn mt-1 btn-sm mr-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                          }
+
+                      mark = mark + '@endcan';
+
                         if (data == null || data == '') {
-                            return '-';
+                            return '-' +'<br>'+mark;
                         }
-                        return data;
+
+                        return data+'<br>'+mark;
                     }
                 },
                 {
@@ -344,24 +369,14 @@ $.fn.dataTable.ext.errMode = 'none';
                     className: "dt-body-center", "name": "action"	,
                     mRender: function (data, type, full) {
                         var mark = '<a style="cursor: pointer" class="btn btn-sm btn-info mt-1 mr-1 text-white" data-action="jurnal" data-id="' + data + '"><i class="fa fa-eye"></i> Jurnal</a>';
-                        if(full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }})
-                        {
-                            mark = mark + '<a style="cursor: pointer" class="btn btn-sm btn-warning mt-1 mr-1 text-white" data-action="edit" data-id="' + data + '" data-simpanan="' + full.besar_simpanan + '" data-periode="' + full.periode_view + '"><i class="fa fa-edit"></i> Edit</a>';
-                        }
-                        mark = mark + '@can("edit simpanan")';
-                            if(full.id_status_simpanan == {{ STATUS_SIMPANAN_MENUNGGU_APPROVAL }})
-                            {
-                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITERIMA }}" class="text-white btn mt-1 btn-sm mr-1 btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
-                                mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITOLAK }}" class="text-white btn mt-1 btn-sm mr-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
-                            }
-                            @can('edit coa after payment')
-                              if (full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }}){
 
-                                      mark += '<a data-id="'+full.kode_simpan+'"  class="text-white btn btn-sm mt-1 mr-1 btn-danger btn-editcoa1">Edit Coa</a>';
-                                    }
+                        @can('edit coa after payment')
+                          if (full.id_status_simpanan == {{ STATUS_SIMPANAN_DITERIMA }}){
 
-                            @endcan
-                        mark = mark + '@endcan';
+                                  mark += '<a data-id="'+full.kode_simpan+'"  class="text-white btn btn-sm mt-1 mr-1 btn-danger btn-editcoa1">Edit Coa</a>';
+                                }
+
+                        @endcan
                         mark = mark + '@can("delete simpanan")';
                                 mark = mark + '<a style="cursor: pointer" data-id="' + data + '"  class="text-white btn mt-1 mr-1 btn-sm btn-danger btn-hapus"><i class="fas fa-remove"></i> Hapus</a>';
                         mark = mark + '@endcan';
@@ -495,7 +510,29 @@ $.fn.dataTable.ext.errMode = 'none';
                 $('#modal-edit').modal('show');
 
                 $(".modal-edit-body #kode_simpan").val( dataId );
-                $(".modal-edit-body #besar_simpanan").val( toRupiah(dataBesarSimpanan) );
+                $(".modal-edit-body #besar_simpanan").remove();
+                $(".modal-edit-body").append('<input type="text" name="besar_simpanan" value="'+toRupiah(dataBesarSimpanan)+'" id="besar_simpanan" onkeypress="return isNumberKey(event)" class="form-control" placeholder="Besar Simpanan">');
+                $(".modal-edit-body #labelinput").html('Besar Simpanan');;
+                // $(".modal-edit-body #besar_simpanan").val( toRupiah(dataBesarSimpanan) );
+            }
+            else if(action == 'editperiode')
+            {
+                var dataperiode = $(this).data('periode');
+                var dataId = $(this).data('id');
+
+                $('#modal-edit').modal({
+                    backdrop: false
+                });
+                $('#modal-edit').modal('show');
+
+                $(".modal-edit-body #kode_simpan").val( dataId );
+                $(".modal-edit-body #besar_simpanan").remove();;
+                $(".modal-edit-body").append('<input type="text" name="periode" value="'+dataperiode+'" id="besar_simpanan"  class="form-control datepicker" placeholder="Periode">');
+                $(".modal-edit-body #labelinput").html('Periode');;
+                $('.datepicker').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    format: 'yyyy-mm-dd'
+                });
             }
         });
 

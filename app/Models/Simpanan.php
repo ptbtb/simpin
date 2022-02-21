@@ -18,7 +18,7 @@ class Simpanan extends Model implements Auditable
     protected $table = "t_simpan";
     protected $primaryKey = "kode_simpan";
     protected $dates = ['tgl_mulai', 'tgl_entri', 'periode','deleted_at'];
-    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view', 'status_simpanan_view','periode_view'];
+    protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah', 'serial_number_view', 'status_simpanan_view','periode_view','periode_full_view'];
     protected $fillable = ['jenis_simpan', 'besar_simpanan','kode_anggota','u_entry','tgl_mulai','tgl_entri','kode_jenis_simpan','keterangan'];
 
     public function anggota()
@@ -62,6 +62,14 @@ class Simpanan extends Model implements Auditable
         if ($this->periode)
         {
             return $this->periode->format('Y-m');
+        }
+        return $this->periode;
+    }
+    public function getPeriodeFullViewAttribute()
+    {
+        if ($this->periode)
+        {
+            return $this->periode->format('Y-m-d');
         }
         return $this->periode;
     }

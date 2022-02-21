@@ -296,15 +296,28 @@ class SimpananController extends Controller
     public function update(Request $request)
     {
         try {
-            $simpanan = Simpanan::where('kode_simpan', $request->kode_simpan)->first();
-            $besarSimpanan = filter_var($request->besar_simpanan, FILTER_SANITIZE_NUMBER_INT);
 
-            // save simpanan
-            $simpanan->updated_by = Auth::user()->id;
-            $simpanan->temp_besar_simpanan = $besarSimpanan;
-            $simpanan->updated_at = Carbon::now();
-            $simpanan->id_status_simpanan = STATUS_SIMPANAN_MENUNGGU_APPROVAL;
-            $simpanan->save();
+            $simpanan = Simpanan::where('kode_simpan', $request->kode_simpan)->first();
+            // dd($request);
+            if ($request->besar_simpanan){
+              $besarSimpanan = filter_var($request->besar_simpanan, FILTER_SANITIZE_NUMBER_INT);
+
+              // save simpanan
+              $simpanan->updated_by = Auth::user()->id;
+              $simpanan->temp_besar_simpanan = $besarSimpanan;
+              $simpanan->updated_at = Carbon::now();
+              $simpanan->id_status_simpanan = STATUS_SIMPANAN_MENUNGGU_APPROVAL;
+              $simpanan->save();
+            }
+
+            if ($request->periode){
+              $simpanan->updated_by = Auth::user()->id;
+              $simpanan->periode = Carbon::createFromFormat('Y-m-d',$request->periode);
+              $simpanan->updated_at = Carbon::now();
+              // $simpanan->id_status_simpanan = STATUS_SIMPANAN_MENUNGGU_APPROVAL;
+              $simpanan->save();
+            }
+
 
             return redirect()->back()->withSuccess('ubah data simpanan berhasil diajukan');
         } catch (\Throwable $e) {
