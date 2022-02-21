@@ -122,6 +122,55 @@ class PinjamanController extends Controller
         return view('pinjaman.index', $data);
     }
 
+    public function indexSingle(Request $request,$id)
+    {
+        $user = Auth::user();
+        $role = $user->roles->first();
+        $this->authorize('view pinjaman', $user);
+        $listtenor = JenisPinjaman::pluck('lama_angsuran', 'lama_angsuran')->sortBy('lama_angsuran');
+        // check role user
+        if ($user->roles->first()->id == ROLE_ANGGOTA) {
+            $anggota = $user->anggota;
+            if (is_null($anggota)) {
+                return redirect()->back()->withError('Your account has no members');
+            }
+
+            $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+            ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+            ->wherenotnull('tgl_transaksi')
+            ->orderBy('tgl_entri', 'asc');
+        } else {
+
+                $anggota = Anggota::find($id);
+                $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                ->wherenotnull('tgl_transaksi')
+                ;
+
+        }
+
+
+        if ($request->jenistrans) {
+            if ($request->jenistrans == 'A') {
+                $listPinjaman = $listPinjaman->where('saldo_mutasi', '>', 0);
+            }
+            if ($request->jenistrans == 'T') {
+                $listPinjaman = $listPinjaman->where('saldo_mutasi', 0);
+            }
+        }
+
+        // $data['unitKerja'] = Company::get()->pluck('nama', 'id');
+        // $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
+        $listPinjaman = $listPinjaman->get();
+        // dd($listPinjaman);
+        $data['title'] = "List Pinjaman";
+        $data['listPinjaman'] = $listPinjaman;
+        $data['request'] = $request;
+        $data['role'] = $role;
+        $data['listtenor'] = $listtenor;
+        return view('pinjaman.indexAnggota', $data);
+    }
+
     public function indexPengajuan(Request $request)
     {
         $user = Auth::user();
