@@ -39,22 +39,7 @@
         <label class="m-0">Filter</label>
     </div>
     <div class="card-body">
-        <form action="{{ route('pinjaman-list') }}" method="post">
-            @csrf
-            <input type="hidden" name="status" value="belum lunas">
-            <div class="row">
-                @if ($role->id !== ROLE_ANGGOTA)
-                <div class="col-md-4 form-group">
-                    <label>Jenis Transaksi</label>
-                    {!! Form::select('jenistrans', array('S'=>'Semua','A' => 'Saldo Awal', 'T' => 'Transaksi'),$request->jenistrans, ['id' => 'jenistrans', 'class' => 'form-control']) !!}
-                </div>
-                @endif
-
-                <div class="col-md-1 form-group" style="margin-top: 26px">
-                    <button type="submit" class="btn btn-sm btn-success form-control"><i class="fa fa-filter"></i> Filter</button>
-                </div>
-            </div>
-        </form>
+        
     </div>
 </div>
 <div class="card">
