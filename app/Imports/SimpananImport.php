@@ -14,11 +14,11 @@ use App\Models\AngsuranSimpanan;
 use Illuminate\Support\Facades\Log;
 use DB;
 
-class SimpananImport 
+class SimpananImport
 {
     static function generatetransaksi($transaksi)
     {
-        
+
        \Log::info($transaksi['kode_anggota']);
        \Log::info($transaksi['tgl_entri']->format('Y-m-d'));
         $tglEntri = $transaksi['tgl_entri']->format('Y-m-d');
@@ -41,7 +41,7 @@ class SimpananImport
             Log::info('SIMPANAN POKOK');
             $checkSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $fields['kode_anggota'] )->where('kode_jenis_simpan', '=', '411.01.000')->first();
 
-            
+
                 $simpanan = new Simpanan();
                 $simpanan->jenis_simpan = strtoupper($fields['jenis_simpan'] );
                 $simpanan->besar_simpanan = $fields['besar_simpanan'] ;
@@ -49,6 +49,7 @@ class SimpananImport
                 $simpanan->u_entry = Auth::user()->name;
                 $simpanan->tgl_entri = $fields['tgl_entri'];
                 $simpanan->tgl_transaksi = $fields['tgl_entri'];
+                $simpanan->periode = $fields['tgl_entri'];
                 $simpanan->kode_jenis_simpan = $fields['kode_jenis_simpan'] ;
                 $simpanan->keterangan = ($fields['keterangan'] ) ? $fields['keterangan']  : null;
                 $simpanan->id_akun_debet = ($idakundebet->id) ? $idakundebet->id : null;
@@ -75,7 +76,7 @@ class SimpananImport
 
                 }
 
-            
+
             Log::info('akhir SIMPANAN POKOK');
         }else {
 
@@ -110,7 +111,7 @@ class SimpananImport
                     }
                 }
             }else{
-            
+
             $simpanan = new Simpanan();
             $simpanan->jenis_simpan = strtoupper($fields['jenis_simpan']);
             $simpanan->besar_simpanan = $fields['besar_simpanan'];
@@ -126,11 +127,11 @@ class SimpananImport
             $simpanan->save();
             JurnalManager::createJurnalSimpanan($simpanan);
             }
-           
+
             Log::info('akhir BUKAN SIMPANAN POKOK');
         }
 
-        
+
         return true;;
     }
     /**
