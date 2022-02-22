@@ -116,7 +116,7 @@ class PenarikanController extends Controller
 
                  if ($totalSaldotabungan < $totalPenarikan)
                 {
-                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi");
+                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi, tabungan= ".$totalSaldotabungan.", Penarikan= ".$totalPenarikan);
                 }
                 else if($tenor1->count())
                 {
@@ -166,7 +166,7 @@ class PenarikanController extends Controller
                 // dd($besarPenarikan);
                 if ($besarPenarikan >$tabungan->besar_tabungan)
                 {
-                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi.");
+                    return redirect()->back()->withError("Saldo tabungan tidak mencukupi, tabungan= ".$tabungan->besar_tabungan.", Penarikan= ".$besarPenarikan);
                 }
                 DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber,$tglPenarikan) {
                     $penarikan->kode_anggota = $anggota->kode_anggota;
