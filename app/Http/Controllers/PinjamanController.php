@@ -367,24 +367,39 @@ class PinjamanController extends Controller
             $listPinjaman = Pinjaman::with('anggota');
         }
 
-        if ($request->from) {
-            $listPinjaman = $listPinjaman->where('tgl_entri', '>=', $request->from);
+        if (!$request->from) {
+            $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
+
         }
-        if ($request->to) {
-            $listPinjaman = $listPinjaman->where('tgl_entri', '<=', $request->to);
+        if (!$request->to) {
+            $request->to = Carbon::today()->format('Y-m-d');
         }
-        if ($request->status) {
+        if ($request->status)
+        {
             $listPinjaman = $listPinjaman->where('id_status_pinjaman', $request->status);
         }
-        if ($request->unit_kerja) {
-            $listPinjaman = $listPinjaman->whereHas('anggota', function ($query) use ($request) {
-                return $query->where('company_id', $request->unit_kerja);
-            });
-        }
-        if ($request->tenor) {
-            $listPinjaman = $listPinjaman->where('lama_angsuran', $request->tenor);
-        }
+        if($request->jenistrans){
+            if($request->jenistrans=='A'){
+                $listPinjaman = Pinjaman::where('saldo_mutasi','>',0);
+            }
+            if($request->jenistrans=='T'){
+                $listPinjaman = Pinjaman::where('saldo_mutasi',0);
+            }
 
+        }
+        if ($request->unit_kerja)
+        {
+            $r = $request;
+            $listPinjaman = $listPinjaman->whereHas('anggota', function ($query) use ($r)
+                                        {
+                                            return $query->where('company_id', $r->unit_kerja);
+                                        });
+        }
+       if ($request->tenor)
+        {
+            $listPinjaman = $listPinjaman->where('lama_angsuran',$request->tenor);
+        }
+        $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from,$request->to]);
         $listPinjaman = $listPinjaman->get();
 
         // share data to view
