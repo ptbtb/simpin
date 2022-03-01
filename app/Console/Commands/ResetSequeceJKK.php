@@ -38,7 +38,12 @@ class ResetSequeceJKK extends Command
      */
     public function handle()
     {
-        DB::select("SELECT SETVAL(jkk_sequence, 1)");
+        DB::statement("CREATE OR REPLACE SEQUENCE jkk_sequence START WITH 1
+          MINVALUE 1
+  MAXVALUE 99
+  INCREMENT BY 1
+  CACHE 20
+  CYCLE");
         echo "seq reset";
     }
 }
