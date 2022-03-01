@@ -39,7 +39,7 @@
                     </td>
                     <td>
                         @if ($pinjaman->anggota)
-                            {{ $pinjaman->anggota->kode_anggota }}
+                            {{ $pinjaman->anggota->nama_anggota }}
                         @endif
                     </td>
                     <td>
