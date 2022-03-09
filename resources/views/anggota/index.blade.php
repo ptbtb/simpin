@@ -183,6 +183,12 @@
                             markup += '<a href="' + baseURL + '/anggota/keluar-anggota/' + data + '" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Keluar Anggota</a> '
                         }
                     @endif
+                    @if(auth()->user()->can('edit anggota') || auth()->user()->can('delete anggota'))
+                        if(full['status'] == 'keluar' && full['sisa_saldo'] > 0)
+                        {
+                            markup += '<a href="' + baseURL + '/anggota/batal-keluar-anggota/' + data + '" class="btn btn-sm btn-info"><i class="fa fa-edit"></i>Batal Keluar Anggota</a> '
+                        }
+                    @endif
                     return markup;
                 }
             },

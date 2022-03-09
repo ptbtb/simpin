@@ -84,6 +84,7 @@ Route::group(['prefix' => 'anggota'], function () {
 
         Route::get('search-pinjaman/{id}', [PinjamanController::class, 'searchPinjamanAnggota'])->name('searchPinjamanAnggota');
         Route::get('keluar-anggota/{id}', [AnggotaController::class, 'keluarAnggota'])->name('keluar-anggota');
+        Route::get('batal-keluar-anggota/{id}', [AnggotaController::class, 'batalKeluarAnggota'])->name('keluar-anggota');
         Route::get('history/{id}', [App\Http\Controllers\AnggotaController::class, 'history'])->where('id', '[0-9]+')->name('anggota-history');
     });
 });

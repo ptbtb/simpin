@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Support\Arr;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Anggota extends Model implements Auditable
 {
@@ -15,7 +16,7 @@ class Anggota extends Model implements Auditable
      use \OwenIt\Auditing\Auditable;
     protected $table = "t_anggota";
     protected $primaryKey = 'kode_anggota';
-    protected $appends = ['kode_anggota_prefix', 'unit_kerja','tgl_lahir_view'];
+    protected $appends = ['kode_anggota_prefix', 'unit_kerja','tgl_lahir_view', 'sisa_saldo'];
     public $incrementing = false;
     public $dates = ['tgl_lahir', 'tgl_masuk'];
     protected $fillable = ['kode_anggota',
@@ -159,5 +160,16 @@ class Anggota extends Model implements Auditable
         }
 
         return $data;
+    }
+
+    public function getSisaSaldoAttribute()
+    {
+        $saldo = DB::table('v_saldo')->where('kode_anggota', $this->kode_anggota)->first();
+        if($saldo)
+        {
+            return $saldo->jumlah;
+        }
+
+        return 0;
     }
 }
