@@ -50,7 +50,7 @@ class AnggotaController extends Controller {
             $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
         }
 
-        $anggotas = $anggotas->take(20)->get();
+        $anggotas = $anggotas->get();
 
         return $anggotas;
     }
