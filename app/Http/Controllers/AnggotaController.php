@@ -487,7 +487,34 @@ class AnggotaController extends Controller {
                 return redirect()->back()->withError('Anggota not found');
             }
 
+            if($anggota->sisa_saldo > 0)
+            {
+                $message = "Gagal update data karena anggota masih memiliki sisa saldo simpanan/pinjaman. Harus keluar anggota melalui menu keluar anggota di menu penarikan";
+                return redirect()->back()->withErrors('Gagal ');
+            }
+
             AnggotaManager::keluarAnggota($anggota);
+            return redirect()->back()->withSuccess('Updated');
+        }
+        catch (\Throwable $th)
+        {
+            $message = $th->getMessage().' || '. $th->getFile().' || '. $th->getLine();
+            Log::error($message);
+            return redirect()->back()->withErrors($message);
+        }
+    }
+
+    public function batalKeluarAnggota($id)
+    {
+        try
+        {
+            $anggota = Anggota::where('kode_anggota', $id)->first();
+            if(is_null($anggota))
+            {
+                return redirect()->back()->withError('Anggota not found');
+            }
+
+            AnggotaManager::batalKeluarAnggota($anggota);
             return redirect()->back()->withSuccess('Updated');
         }
         catch (\Throwable $th)
