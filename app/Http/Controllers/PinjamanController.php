@@ -229,17 +229,17 @@ class PinjamanController extends Controller
             }
             else
             {
-                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan);
+                $tgl_pengajuan = Carbon::now()->addDays(-3);
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
             }
 
             if ($request->end_tgl_pengajuan != "") {
-                $tgl_pengajuan = Carbon::now();
+                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan);
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
             }
             else
             {
-                $tgl_pengajuan = Carbon::now()->addDays(-7);
+                $tgl_pengajuan = Carbon::now();
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
             }
 
