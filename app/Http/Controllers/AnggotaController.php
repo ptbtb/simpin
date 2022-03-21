@@ -328,7 +328,7 @@ class AnggotaController extends Controller {
                                 // ->where('status','aktif')
                                 ->where('kode_anggota', $search)
                                 ->orWhere('nama_anggota', 'like', '%'.$search.'%')
-                                ->limit(5)
+                                // ->limit(5)
                                 ->get();
 
                                 \Log::info('search');
