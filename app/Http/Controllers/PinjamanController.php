@@ -1153,7 +1153,7 @@ class PinjamanController extends Controller
                         $penarikan->save();
                     });
 
-                    JurnalManager::createJurnalPenarikan($penarikan);
+                    // JurnalManager::createJurnalPenarikan($penarikan);
                 }
             }
             DB::commit();
