@@ -440,6 +440,12 @@ class PenarikanController extends Controller
             $statusPenarikans = StatusPenarikan::get();
 
             $anggotas = Anggota::get();
+            if(!$request->from){
+              $request->from = Carbon::now()->startOfDay()->format('Y-m-d');
+            }
+            if(!$request->to){
+              $request->to = Carbon::now()->endOfDay()->format('Y-m-d');
+            }
 
             $data['title'] = "List Penarikan Simpanan";
             $data['listPenarikan'] = $listPenarikan;
@@ -475,12 +481,12 @@ class PenarikanController extends Controller
                 $listPenarikan->where('status_pengambilan', $request->status_penarikan);
             }
 
-            if($request->tgl_ambil != "")
-            {
-                $tgl_ambil = Carbon::createFromFormat('d-m-Y', $request->tgl_ambil)->toDateString();
-
-                $listPenarikan->where('tgl_ambil', $tgl_ambil);
-            }
+            // if($request->tgl_ambil != "")
+            // {
+            //     $tgl_ambil = Carbon::createFromFormat('d-m-Y', $request->tgl_ambil)->toDateString();
+            //
+            //     $listPenarikan->where('tgl_ambil', $tgl_ambil);
+            // }
 
             if($request->anggota != "")
             {
@@ -515,7 +521,13 @@ class PenarikanController extends Controller
                                     }
                                 })
                                 ->editColumn('jenis_simpanan', function ($request) use($jenisSimpanan){
-                                    return strtoupper($jenisSimpanan->where('kode_jenis_simpan', $request->code_trans)->first()->nama_simpanan);
+                                  $jnsSimp = strtoupper($jenisSimpanan->where('kode_jenis_simpan', $request->code_trans)->first());
+                                  if($jnsSimp){
+                                    return $jnsSimp->nama_simpanan;
+                                  }else{
+                                    return '-';
+                                  }
+
                                 })
                                 ->addIndexColumn()
                                 ->make(true);

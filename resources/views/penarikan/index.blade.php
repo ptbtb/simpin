@@ -55,8 +55,12 @@
                     </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <label>Tgl. Pengajuan</label>
-                    <input type="text" name="tgl_ambil" id="input_tgl_ambil" value="{{ ($request->tgl_ambil)?$request->tgl_ambil:old('tgl_ambil') }}" class="form-control" placeholder="dd-mm-yyyy" autocomplete="off">
+                    <label>Dari</label>
+                    <input type="text" name="from" id="from" value="{{ ($request->from)?$request->from:old('from') }}" class="form-control" placeholder="dd-mm-yyyy" autocomplete="off">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Sampai</label>
+                    <input type="text" name="to" id="to" value="{{ ($request->to)?$request->to:old('to') }}" class="form-control" placeholder="dd-mm-yyyy" autocomplete="off">
                 </div>
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
@@ -220,7 +224,8 @@
                 dataSrc: 'data',
                 data: function(data){
                      @if(isset($request->status_penarikan)) data.status_penarikan = '{{ $request->status_penarikan }}'; @endif
-                     @if(isset($request->tgl_ambil)) data.tgl_ambil = '{{ $request->tgl_ambil }}'; @endif
+                     @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
+                     @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
                      @if(isset($request->anggota)) data.anggota = '{{ $request->anggota }}'; @endif
 
                 },
@@ -531,13 +536,23 @@
             uiLibrary: 'bootstrap4',
             format: 'dd-mm-yyyy'
         });
+        $('#from').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
+        $('#to').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
 
         $(document).on('click','.btn-approval', function ()
         {
             var id = $(this).data('id');
             var status = $(this).data('status');
             var old_status = $(this).data('old-status');
-            var tgl_transaksi = $('#tgl_transaksi').val();
+            // var tgl_transaksi = $('#tgl_transaksi').val();
+            var from = $('#from').val();
+            var to = $('#to').val();
             var url = '{{ route("penarikan-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
@@ -571,7 +586,8 @@
                     formData.append('password', password);
                     formData.append('id_akun_debet', id_akun_debet);
                     formData.append('old_status', old_status);
-                    formData.append('tgl_transaksi', tgl_transaksi);
+                    formData.append('from', from);
+                    formData.append('from', from);
                     formData.append('keterangan', keterangan);
                     // getting selected checkboxes kode ambil(s)
                     var ids_array = table
