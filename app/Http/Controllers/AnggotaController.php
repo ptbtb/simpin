@@ -343,7 +343,7 @@ class AnggotaController extends Controller {
             }
             return [
                 'id' => $anggota->kode_anggota,
-                'text' => $anggota->nama_anggota,
+                'text' => $anggota->nama_anggota.'-'.$anggota->kode_anggota,
                 'company_group_id' => $group_id
             ];
         });
