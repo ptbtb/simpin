@@ -499,6 +499,7 @@ class PenarikanController extends Controller
 
                 $listPenarikan->where('kode_anggota', $anggota->kode_anggota);
             }
+            $listPenarikan= $listPenarikan->wherebetween('tgl_transaksi', [$request->from,$request->to]);
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
@@ -521,9 +522,9 @@ class PenarikanController extends Controller
                                     }
                                 })
                                 ->editColumn('jenis_simpanan', function ($request) use($jenisSimpanan){
-                                  $jnsSimp = strtoupper($jenisSimpanan->where('kode_jenis_simpan', $request->code_trans)->first());
+                                  $jnsSimp = $jenisSimpanan->where('kode_jenis_simpan', $request->code_trans)->first();
                                   if($jnsSimp){
-                                    return $jnsSimp->nama_simpanan;
+                                    return strtoupper($jnsSimp->nama_simpanan);
                                   }else{
                                     return '-';
                                   }
