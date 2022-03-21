@@ -78,9 +78,9 @@ class AnggotaController extends Controller {
         if ($company->company_group_id)
         {
             $groupId = $company->company_group_id;
-        }    
         }
-        
+        }
+
 
         $listJenisPenghasilan = JenisPenghasilan::show()
                                                 ->where('company_group_id', $groupId)
@@ -193,10 +193,10 @@ class AnggotaController extends Controller {
             $Anggota->emergency_kontak = $request->emergency_kontak;
             $Anggota->status = 'aktif';
             if ($request->company==22){
-               $Anggota->id_jenis_anggota = 4; 
+               $Anggota->id_jenis_anggota = 4;
             }
             if ($request->jenis_anggota==4){
-               $Anggota->company_id = 22; 
+               $Anggota->company_id = 22;
             }
 
             // save file KTP
@@ -320,12 +320,12 @@ class AnggotaController extends Controller {
             $anggotas = Anggota::with('company')
                                 ->orderby('nama_anggota','asc')
                                 ->limit(5)
-                                ->where('status','aktif')
+                                // ->where('status','aktif')
                                 ->get();
         }else{
             $anggotas = Anggota::with('company')
                                 ->orderby('nama_anggota','asc')
-                                ->where('status','aktif')
+                                // ->where('status','aktif')
                                 ->where('kode_anggota', $search)
                                 ->orWhere('nama_anggota', 'like', '%'.$search.'%')
                                 ->limit(5)
@@ -531,9 +531,9 @@ class AnggotaController extends Controller {
         $last = $anggota->audits;
         $data['title'] = 'History';
         $data['list'] = $last;
-        
+
         return view('anggota.history', $data);
-        
+
 
     }
 }
