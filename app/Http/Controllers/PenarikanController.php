@@ -499,7 +499,7 @@ class PenarikanController extends Controller
 
                 $listPenarikan->where('kode_anggota', $anggota->kode_anggota);
             }
-            $listPenarikan= $listPenarikan->wherebetween('tgl_transaksi', [$request->from,$request->to]);
+            $listPenarikan= $listPenarikan->wherebetween('tgl_ambil', [$request->from,$request->to]);
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
