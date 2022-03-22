@@ -550,9 +550,7 @@
             var id = $(this).data('id');
             var status = $(this).data('status');
             var old_status = $(this).data('old-status');
-            // var tgl_transaksi = $('#tgl_transaksi').val();
-            var from = $('#from').val();
-            var to = $('#to').val();
+            var tgl_transaksi = $('#tgl_transaksi').val();
             var url = '{{ route("penarikan-update-status") }}';
 
             var files = $('#buktiPembayaran')[0].files;
@@ -586,8 +584,7 @@
                     formData.append('password', password);
                     formData.append('id_akun_debet', id_akun_debet);
                     formData.append('old_status', old_status);
-                    formData.append('from', from);
-                    formData.append('from', from);
+                    formData.append('tgl_transaksi', tgl_transaksi);
                     formData.append('keterangan', keterangan);
                     // getting selected checkboxes kode ambil(s)
                     var ids_array = table
