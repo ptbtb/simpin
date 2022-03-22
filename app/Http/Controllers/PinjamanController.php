@@ -89,11 +89,16 @@ class PinjamanController extends Controller
             if ($request->id) {
                 $request->from = Carbon::createFromFormat('Y-m-d', '2021-01-01')->format('Y-m-d');
             } else {
-                $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
+                $request->from = Carbon::now()->startOfDay()->format('Y-m-d');
             }
+        }else{
+          $request->from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay()->format('Y-m-d');
         }
+
         if (!$request->to) {
-            $request->to = Carbon::today()->format('Y-m-d');
+            $request->to = Carbon::now()->endOfDay()->format('Y-m-d');
+        }else{
+          $request->to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay()->format('Y-m-d');
         }
         if ($request->jenistrans) {
             if ($request->jenistrans == 'A') {
