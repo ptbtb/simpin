@@ -216,10 +216,10 @@ $.fn.dataTable.ext.errMode = 'none';
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
         });
-        $('.datepicker').datepicker({
-            uiLibrary: 'bootstrap4',
-            format: 'yyyy-mm-dd'
-        });
+        // $('.datepicker').datepicker({
+        //     uiLibrary: 'bootstrap4',
+        //     format: 'yyyy-mm-dd'
+        // });
         $('#to').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
@@ -310,6 +310,7 @@ $.fn.dataTable.ext.errMode = 'none';
                       mark = mark + '@can("edit simpanan")';
                           if(full.id_status_simpanan == {{ STATUS_SIMPANAN_MENUNGGU_APPROVAL }})
                           {
+                              mark = mark + 'Ke : '+full.temp_besar_simpanan_rupiah+' ';
                               mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITERIMA }}" class="text-white btn mt-1 btn-sm mr-1 btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
                               mark = mark + '<a style="cursor: pointer" data-id="' + data + '" data-status="{{ STATUS_SIMPANAN_DITOLAK }}" class="text-white btn mt-1 btn-sm mr-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                           }

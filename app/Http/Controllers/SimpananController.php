@@ -185,7 +185,11 @@ class SimpananController extends Controller
                         $simpanan->u_entry = Auth::user()->name;
                         $simpanan->tgl_entri = Carbon::now();
                         $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                        if ($request->periode[$key]!==null) {
+                        $simpanan->periode = Carbon::createFromFormat('Y-m-d', $request->periode[$key]);
+                    } else {
                         $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                    }
                         $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                         $simpanan->keterangan = ($request->keterangan[$key]) ? $request->keterangan[$key] : '';
                         $simpanan->id_akun_debet = ($request->id_akun_debet[$key]) ? $request->id_akun_debet[$key] : null;
@@ -205,6 +209,7 @@ class SimpananController extends Controller
                             $angsurSimpanan->u_entry = Auth::user()->name;
                             $angsurSimpanan->tgl_entri = Carbon::now();
                             $angsurSimpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                            
                             $angsurSimpanan->created_at = Carbon::now();
                             $angsurSimpanan->updated_at = Carbon::now();
                             $angsurSimpanan->save();
