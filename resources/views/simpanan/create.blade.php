@@ -389,7 +389,7 @@
                         $('#detailAngsuran'+data_form).append('<div class="col-md-6">' + toRupiah(paymentValue) + '</div>');
 
                         $('#angsuranSimpanan'+data_form).show();
-                        $('#periodeDetail'+data_form).hide();
+                        $('#periodeDetail'+data_form).show();
 
                         if(angsuranSimpanan.length === 3)
                         {
@@ -429,7 +429,7 @@
                         var dateMonthYear = moment(latestPayment).format('YYYY-MM-DD');
                         $('#form'+data_form+' .periode').val('');
                         $('#angsuranSimpanan'+data_form).hide();
-                        $('#periodeDetail'+data_form).hide();
+                        $('#periodeDetail'+data_form).show();
 
                         $('#form'+data_form+' .besarSimpanan').attr('readonly',false);
                     }
