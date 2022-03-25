@@ -52,7 +52,7 @@ class TabunganImport implements OnEachRow
             $simpanan->id_akun_debet = null;
             $simpanan->serial_number = $nextSerialNumber;
             $simpanan->mutasi = 1;
-            // $simpanan->save();
+            $simpanan->save();
             // JurnalManager::createJurnalSaldoSimpanan($simpanan);
             // dd($simpanan);
         return $simpanan;
