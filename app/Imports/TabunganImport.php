@@ -44,8 +44,8 @@ class TabunganImport implements OnEachRow
             $simpanan->besar_simpanan = $row[2];
             $simpanan->kode_anggota = $row[0];
             $simpanan->u_entry = Auth::user()->name;
-            $simpanan->tgl_entri =  new Carbon('first day of January 2021', 'Asia/Jakarta');
-            $simpanan->tgl_transaksi =  new Carbon('first day of January 2021', 'Asia/Jakarta');
+            $simpanan->tgl_entri =  new Carbon('last day of December 2020', 'Asia/Jakarta');
+            $simpanan->tgl_transaksi =  new Carbon('last day of December 2020', 'Asia/Jakarta');
             $simpanan->periode = $simpanan->tgl_entri;
             $simpanan->kode_jenis_simpan = $row[1];
             $simpanan->keterangan = 'Mutasi '.strtoupper($jenisSimpanan->nama_simpanan). ' 2020';
