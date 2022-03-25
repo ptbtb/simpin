@@ -229,23 +229,23 @@ class PinjamanController extends Controller
             }
 
             if ($request->start_tgl_pengajuan != "") {
-                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan);
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
+                $start = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan);
+                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
             }
             else
             {
-                $tgl_pengajuan = Carbon::now()->addDays(-3);
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
+                $start = Carbon::now()->startOfDay();
+                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
             }
 
             if ($request->end_tgl_pengajuan != "") {
-                $tgl_pengajuan = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan);
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
+                $end = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan);
+                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
             }
             else
             {
-                $tgl_pengajuan = Carbon::now();
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
+                $end = Carbon::now()->endOfDay();
+                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
             }
 
             if ($request->anggota != "") {
@@ -258,7 +258,8 @@ class PinjamanController extends Controller
                     return redirect()->back()->withError('Your account has no members');
                 }
 
-                $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota);
+                $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota)
+                                          ->wherebetween('tgl_pengajuan',[$start,$end]);
             }
 
             return Datatables::eloquent($listPengajuanPinjaman)
