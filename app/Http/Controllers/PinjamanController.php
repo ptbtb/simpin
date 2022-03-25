@@ -187,24 +187,31 @@ class PinjamanController extends Controller
                 return redirect()->back()->withError('Your account has no members');
             }
 
-            $listPengajuanPinjaman = Pengajuan::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_pengajuan', 'asc')
-            ->get();
+            // $listPengajuanPinjaman = Pengajuan::where('kode_anggota', $anggota->kode_anggota)->orderBy('tgl_pengajuan', 'asc')
+            // ->get();
         } else {
-            $listPengajuanPinjaman = Pengajuan::with('anggota')->orderBy('tgl_pengajuan', 'asc')->get();
+            // $listPengajuanPinjaman = Pengajuan::with('anggota')->orderBy('tgl_pengajuan', 'asc')->get();
         }
-
+        if(!$request->start_tgl_pengajuan)
+        {
+            $request->start_tgl_pengajuan = Carbon::today()->startOfDay()->format('d-m-Y');
+        }
+        if(!$request->end_tgl_pengajuan)
+        {
+            $request->end_tgl_pengajuan = Carbon::today()->endOfDay()->format('d-m-Y');
+        }
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
         $statusPengajuans = StatusPengajuan::get();
 
-        $anggotas = Anggota::get();
+        // $anggotas = Anggota::get();
 
         $data['title'] = "List Pengajuan Pinjaman";
-        $data['listPengajuanPinjaman'] = $listPengajuanPinjaman;
+        $data['listPengajuanPinjaman'] = collect();;
         $data['request'] = $request;
         $data['bankAccounts'] = $bankAccounts;
         $data['statusPengajuans'] = $statusPengajuans;
-        $data['anggotas'] = $anggotas;
+        // $data['anggotas'] = $anggotas;
         return view('pinjaman.indexPengajuan', $data);
     }
 
@@ -227,26 +234,31 @@ class PinjamanController extends Controller
             } else {
                 $listPengajuanPinjaman = $listPengajuanPinjaman->whereNotIn('id_status_pengajuan', [8, 9, 10]);
             }
-
-            if ($request->start_tgl_pengajuan != "") {
-                $start = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan);
-                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
+            if ($request->start_tgl_pengajuan) {
+              $start = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan)->startOfDay();
             }
-            else
-            {
-                $start = Carbon::now()->startOfDay();
-                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
+            if ($request->end_tgl_pengajuan) {
+              $start = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan)->endOfDay();
             }
-
-            if ($request->end_tgl_pengajuan != "") {
-                $end = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan);
-                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
-            }
-            else
-            {
-                $end = Carbon::now()->endOfDay();
-                // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
-            }
+            // if ($request->start_tgl_pengajuan != "") {
+            //     $start = Carbon::createFromFormat('d-m-Y', $request->start_tgl_pengajuan);
+            //     // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
+            // }
+            // else
+            // {
+            //     $start = Carbon::now()->startOfDay();
+            //     // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '>=', $tgl_pengajuan);
+            // }
+            //
+            // if ($request->end_tgl_pengajuan != "") {
+            //     $end = Carbon::createFromFormat('d-m-Y', $request->end_tgl_pengajuan);
+            //     // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
+            // }
+            // else
+            // {
+            //     $end = Carbon::now()->endOfDay();
+            //     // $listPengajuanPinjaman = $listPengajuanPinjaman->where('tgl_pengajuan', '<=', $tgl_pengajuan);
+            // }
 
             if ($request->anggota != "") {
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $request->anggota);
@@ -259,7 +271,7 @@ class PinjamanController extends Controller
                 }
 
                 $listPengajuanPinjaman = $listPengajuanPinjaman->where('kode_anggota', $anggota->kode_anggota)
-                                          ->wherebetween('tgl_pengajuan',[$start,$end]);
+                                          ->wherebetween('tgl_pengajuan',[$request->start_tgl_pengajuan,$request->end_tgl_pengajuan ]);
             }
 
             return Datatables::eloquent($listPengajuanPinjaman)

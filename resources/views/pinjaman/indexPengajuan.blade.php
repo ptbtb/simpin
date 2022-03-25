@@ -54,16 +54,16 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>Tgl. Pengajuan</label>
-                    <input type="text" name="start_tgl_pengajuan" id="start_input_tgl_pengajuan" value="{{ old('start_tgl_pengajuan') }}" class="form-control" placeholder="Start date" autocomplete="off">
-                    <input type="text" name="end_tgl_pengajuan" id="end_input_tgl_pengajuan" value="{{ old('end_tgl_pengajuan') }}" class="form-control" placeholder="End Date" autocomplete="off">
+                    <input type="text" name="start_tgl_pengajuan" id="start_input_tgl_pengajuan" value="{{ ($request->start_tgl_pengajuan)?$request->start_tgl_pengajuan:old('start_tgl_pengajuan') }}" class="form-control" placeholder="Start date" autocomplete="off">
+                    <input type="text" name="end_tgl_pengajuan" id="end_input_tgl_pengajuan" value="{{ ($request->end_tgl_pengajuan)?$request->end_tgl_pengajuan:old('end_tgl_pengajuan') }}" class="form-control" placeholder="End Date" autocomplete="off">
                 </div>
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
                     <select name="anggota" class="form-control select2" id="select_anggota">
                         <option value="" selected>All</option>
-                        @foreach ($anggotas as $anggota)
+                        {{-- @foreach ($anggotas as $anggota)
                             <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
-                        @endforeach
+                        @endforeach --}}
                     </select>
                 </div>
                 <div class="col-md-1 form-group" style="margin-top: 26px">
