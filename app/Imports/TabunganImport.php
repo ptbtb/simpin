@@ -31,9 +31,9 @@ class TabunganImport implements OnEachRow
                             foreach ($simpanan_exist as $simpanans) {
                                  $simpanans->delete();
                             }
-                           
+
                         }
-                        
+
         $nextSerialNumber = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
         $jenisSimpanan =  JenisSimpanan::where('kode_jenis_simpan',$row[1])->first();
         if(!$jenisSimpanan){
@@ -45,16 +45,18 @@ class TabunganImport implements OnEachRow
             $simpanan->kode_anggota = $row[0];
             $simpanan->u_entry = Auth::user()->name;
             $simpanan->tgl_entri =  new Carbon('first day of January 2021', 'Asia/Jakarta');
+            $simpanan->tgl_transaksi =  new Carbon('first day of January 2021', 'Asia/Jakarta');
             $simpanan->periode = $simpanan->tgl_entri;
             $simpanan->kode_jenis_simpan = $row[1];
             $simpanan->keterangan = 'Mutasi '.strtoupper($jenisSimpanan->nama_simpanan). ' 2020';
             $simpanan->id_akun_debet = null;
             $simpanan->serial_number = $nextSerialNumber;
             $simpanan->mutasi = 1;
-            $simpanan->save();
+            // $simpanan->save();
             // JurnalManager::createJurnalSaldoSimpanan($simpanan);
+            // dd($simpanan);
         return $simpanan;
         }
-            
+
     }
 }
