@@ -260,7 +260,7 @@
                         }
                     });
                 }
-                
+
             });
 
             $('#anggotaName').on('change', function ()
@@ -399,7 +399,7 @@
             $.ajax({
                 url: '{{ route('pengajuan-pinjaman-calculate-max-pinjaman') }}',
                 data: {
-                    id_jenis_pinjaman: id,
+                    kode_jenis_pinjaman: id,
                     kode_anggota: kode_anggota,
                     role:role
                 },

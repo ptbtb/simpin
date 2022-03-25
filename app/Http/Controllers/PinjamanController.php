@@ -761,16 +761,21 @@ class PinjamanController extends Controller
 
     public function calculateMaxPinjaman(Request $request)
     {
+
         if ($request->role=='false') {
-            $jenisPinjaman = JenisPinjaman::find($request->id_jenis_pinjaman);
+            $jenisPinjaman = JenisPinjaman::find($request->kode_jenis_pinjaman);
+            // dd($jenisPinjaman);
             if (is_null($jenisPinjaman)) {
                 return 0;
             }
             $anggota = Anggota::find($request->kode_anggota);
+            // dd($anggota);
             if (is_null($anggota)) {
                 return 0;
             }
             $saldo = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
+            // dd($jenisPinjaman->isJangkaPanjang());
+            // dd($anggota->isAnggotaBiasa());
             if (is_null($saldo)) {
                 return 0;
             }
@@ -784,9 +789,11 @@ class PinjamanController extends Controller
                     $jenisPenghasilan = JenisPenghasilan::where('company_group_id', $anggota->company->company_group_id)
                 ->where('rule_name', 'gaji_bulanan')
                 ->first();
+                // dd($jenisPenghasilan->id);
                     $gaji = Penghasilan::where('kode_anggota', $request->kode_anggota)
                 ->where('id_jenis_penghasilan', $jenisPenghasilan->id)
                 ->first();
+                // dd($gaji);
 
                     if (is_null($gaji)) {
                         return 0;
@@ -832,7 +839,7 @@ class PinjamanController extends Controller
             }
             return 0;
         } else {
-            $jenisPinjaman = JenisPinjaman::find($request->id_jenis_pinjaman);
+            $jenisPinjaman = JenisPinjaman::find($request->kode_jenis_pinjaman);
             if (is_null($jenisPinjaman)) {
                 return 0;
             }

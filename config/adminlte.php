@@ -357,6 +357,13 @@ return [
             'icon' => 'fas fa-hand-holding-usd nav-icon',
             'can'  => ['view history pinjaman', 'view pinjaman', 'view pengajuan pinjaman'],
             'submenu' => [
+              [
+                  'text' => 'Buat Pengajuan Pinjaman',
+                  'url' => '/pinjaman/pengajuan/create',
+                  'icon' => 'fas fa-plus nav-icon',
+                  'can'  => ['view pengajuan pinjaman'],
+                  'active' => ['/pinjaman/pengajuan/create']
+              ],
                 [
                     'text' => 'Pengajuan Pinjaman',
                     'url' => '/pinjaman/pengajuan/list',
