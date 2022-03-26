@@ -21,6 +21,7 @@ use App\Models\StatusPengajuan;
 use App\Models\Code;
 use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
+use App\Exports\DetailPinjamanExport;
 use App\Exports\PengajuanPinjamanExport;
 use App\Exports\SaldoAwalPinjamanExport;
 use App\Imports\PinjamanImport;
@@ -377,6 +378,36 @@ class PinjamanController extends Controller
         $request->anggota = $anggota;
         $filename = 'export_pinjaman_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
         return Excel::download(new PinjamanExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function createExcelDetail($id, Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('view pinjaman', $user);
+
+        $pinjaman = Pinjaman::with('anggota', 'listAngsuran.jurnals')
+                            ->where('kode_pinjam', $id)
+                            ->first();
+
+        $tabungan = Tabungan::where('kode_anggota', $pinjaman->kode_anggota)
+                            ->where('kode_trans', '!=', '411.01.000')
+                            ->get();
+
+        $listAngsuran = $pinjaman->listAngsuran->sortBy('angsuran_ke')->values();
+        $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
+        $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+
+        $data['pinjaman'] = $pinjaman;
+        $data['title'] = 'Detail Pinjaman';
+        $data['jenisPinjaman'] = $pinjaman->jenisPinjaman;
+        $data['listAngsuran'] = $listAngsuran;
+        $data['tagihan'] = $tagihan;
+        $data['bankAccounts'] = $bankAccounts;
+        $data['tabungan'] = $tabungan;
+        // return view('pinjaman.detail', $data);
+
+        $filename = 'export_pinjaman_excel_detail_' . $pinjaman->anggota->nama_anggota . '.xlsx';
+        return Excel::download(new DetailPinjamanExport($data), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function createPDF(Request $request)

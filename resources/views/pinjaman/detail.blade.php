@@ -68,7 +68,11 @@ use Carbon\Carbon;
                 <tr>
                     <td>Tanggal Peminjaman</td>
                     <td>:</td>
-                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d',$pinjaman->tgl_transaksi)->format('d M Y') }}</td>
+                    <td>
+                        @if ($pinjaman->tgl_transaksi)
+                            {{ \Carbon\Carbon::createFromFormat('Y-m-d',$pinjaman->tgl_transaksi)->format('d M Y') }}
+                        @endif
+                    </td>
                     <td>Lama Angsuran</td>
                     <td>:</td>
                     <td>{{ $pinjaman->lama_angsuran }}</td>
@@ -115,6 +119,9 @@ use Carbon\Carbon;
                 @endcan
                 @can('bayar angsuran pinjaman')
                     <a class="btn btn-sm btn-success ml-2 mb-2 btn-bayarAngsuran text-white"><i class="fas fa-plus"></i> Bayar Angsuran</a>
+                @endcan
+                @can('bayar angsuran pinjaman')
+                    <a class="btn btn-sm btn-warning ml-2 mb-2" href="{{ route('pinjaman-detail-excel', [$pinjaman->kode_pinjam]) }}" ><i class="fas fa-download"></i> Download Excel</a>
                 @endcan
                 @if (0)
                     @can('set diskon angsuran')

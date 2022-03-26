@@ -217,6 +217,7 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::get('create', [App\Http\Controllers\PinjamanController::class, 'create'])->name('pinjaman-create');
         Route::post('create', [App\Http\Controllers\PinjamanController::class, 'store'])->name('pinjaman-create');
         Route::get('detail/{id}', [App\Http\Controllers\PinjamanController::class, 'show'])->name('pinjaman-detail');
+        Route::get('detail/{id}/excel', [App\Http\Controllers\PinjamanController::class, 'createExcelDetail'])->name('pinjaman-detail-excel');
         Route::get('edit', [App\Http\Controllers\PinjamanController::class, 'edit'])->name('pinjaman-edit');
         Route::post('edit', [App\Http\Controllers\PinjamanController::class, 'update'])->name('pinjaman-edit');
         Route::post('detail/{id}/set-discount', [App\Http\Controllers\PinjamanController::class, 'setDiscount'])->name('pinjaman-set-discount');
