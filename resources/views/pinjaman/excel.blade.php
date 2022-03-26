@@ -17,6 +17,7 @@
                 <th>JKK</th>
                 <th>Nama Anggota</th>
                 <th>Nomor Anggota</th>
+                <th>NIPP</th>
                 <th>Tanggal Pinjaman</th>
                 <th>Jenis Pinjaman</th>
                 <th>Besar Pinjaman</th>
@@ -47,6 +48,11 @@
                     <td>
                         @if ($pinjaman->anggota)
                             {{ $pinjaman->anggota->kode_anggota }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($pinjaman->anggota)
+                            {{ $pinjaman->anggota->nipp }}
                         @endif
                     </td>
                     <td>{{ $pinjaman->tgl_entri->format('d M Y') }}</td>
