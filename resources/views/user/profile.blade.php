@@ -49,7 +49,7 @@
                                 <div class="col-md-6 form-group">
                                     <label>Company</label>
                                     <input type="text" name="company" class="form-control"
-                                           value="@if($anggota->company) {{ $anggota->company->nama }} @else - @endif"
+                                           value="@if($anggota && $anggota->company) {{ $anggota->company->nama }} @else - @endif"
                                            readonly>
                                 </div>
                             @endif

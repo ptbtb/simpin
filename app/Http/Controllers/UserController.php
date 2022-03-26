@@ -245,9 +245,9 @@ class UserController extends Controller
     {
 		$user = Auth::user();
 		$anggota = Anggota::with('company')->find($user->kode_anggota);
-        $company = $anggota->company;
+        $company = $anggota? $anggota->company:null;
         $groupId = null;
-        if ($company->company_group_id)
+        if ($company && $company->company_group_id)
         {
             $groupId = $company->company_group_id;
         }

@@ -50,6 +50,19 @@ class AppServiceProvider extends ServiceProvider
                                                 ->where('has_read', 0);*/
 
                 /**
+                 * 26/03/2022 Arya Praza M
+                 * mengatasi error ketika user tidak punya role
+                 */
+                if(is_null($role))
+                {  
+                    $user = Auth::user(); 
+                    $user->assignRole('Anggota');
+                    $user->save();
+                    $role = $user->roles->first();
+                }
+
+                
+                /**
                  * saya update dengan code seperti ini
                  */
 
