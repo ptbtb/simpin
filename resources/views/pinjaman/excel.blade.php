@@ -13,6 +13,7 @@
             <tr>
                 <th>No</th>
                 <th>Kode Pinjam</th>
+                <th>Unit Kerja</th>
                 <th>JKK</th>
                 <th>Nama Anggota</th>
                 <th>Nomor Anggota</th>
@@ -30,6 +31,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $pinjaman->kode_pinjam }}</td>
+                    <td>{{ $pinjaman->anggota->company->nama }}</td>
                     <td>
                         @if ($pinjaman->pengajuan)
                             {{ $pinjaman->pengajuan->no_jkk }}
