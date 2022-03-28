@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
-                    <select name="kode_anggota" class="form-control select2" id="select_anggota">
+                    <select name="anggota" class="form-control select2" id="select_anggota">
                         <option value="" selected>All</option>
                         {{-- @foreach ($anggotas as $anggota)
                             <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
@@ -269,6 +269,7 @@ $.fn.dataTable.ext.errMode = 'none';
                     @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
                     @if(isset($request->jenis_simpanan)) data.jenis_simpanan = '{{ $request->jenis_simpanan }}'; @endif
                     @if(isset($request->kode_anggota)) data.kode_anggota = '{{ $request->kode_anggota }}'; @endif
+                    @if(isset($request->anggota)) data.anggota = '{{ $request->anggota }}'; @endif
                     @if(isset($request->jenistrans)) data.jenistrans = '{{ $request->jenistrans }}'; @endif
                 }
             },

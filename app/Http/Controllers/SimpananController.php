@@ -85,6 +85,9 @@ class SimpananController extends Controller
         if ($request->kode_anggota) {
             $simpanan = $simpanan->where('kode_anggota', $request->kode_anggota);
         }
+        if ($request->anggota) {
+            $simpanan = $simpanan->where('kode_anggota', $request->anggota);
+        }
         if ($request->jenistrans=='A') {
             $simpanan = $simpanan->where('mutasi', 1);
         } elseif ($request->jenistrans=='T') {
