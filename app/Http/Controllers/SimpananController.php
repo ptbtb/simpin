@@ -39,6 +39,13 @@ class SimpananController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view simpanan', Auth::user());
+        // dd($request);
+        if (!$request->from) {
+          $request->from = Carbon::now()->startOfDay()->format('Y-m-d');
+        }
+        if (!$request->to) {
+          $request->to = Carbon::now()->endOfDay()->format('Y-m-d');
+        }
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
         $data['bankAccounts'] = $bankAccounts;
         $data['title'] = "List Transaksi Simpanan";
@@ -57,19 +64,19 @@ class SimpananController extends Controller
             });
         }
 
-        if ($request->from || $request->to) {
-            if ($request->from) {
-                $simpanan = $simpanan->where('tgl_transaksi', '>=', $request->from);
-            }
-            if ($request->to) {
-                $simpanan = $simpanan->where('tgl_transaksi', '<=', $request->to);
-            }
-        } else {
-            $from = Carbon::now()->addDays(-30)->format('Y-m-d');
-            $to = Carbon::now()->format('Y-m-d');
-            $simpanan = $simpanan->where('tgl_transaksi', '>=', $from)
-            ->where('tgl_transaksi', '<=', $to);
-        }
+        // if ($request->from || $request->to) {
+        //     if ($request->from) {
+        //         $simpanan = $simpanan->where('tgl_transaksi', '>=', $request->from);
+        //     }
+        //     if ($request->to) {
+        //         $simpanan = $simpanan->where('tgl_transaksi', '<=', $request->to);
+        //     }
+        // } else {
+        //     $from = Carbon::now()->addDays(-30)->format('Y-m-d');
+        //     $to = Carbon::now()->format('Y-m-d');
+        //     $simpanan = $simpanan->where('tgl_transaksi', '>=', $from)
+        //     ->where('tgl_transaksi', '<=', $to);
+        // }
 
         if ($request->jenis_simpanan) {
             $simpanan = $simpanan->where('kode_jenis_simpan', $request->jenis_simpanan);
@@ -85,7 +92,7 @@ class SimpananController extends Controller
         } else {
             $simpanan = $simpanan;
         }
-        $simpanan = $simpanan->orderBy('tgl_transaksi', 'desc');
+        $simpanan = $simpanan->whereBetween('tgl_transaksi',[$request->from,$request->to])->orderBy('tgl_transaksi', 'desc');
         return DataTables::eloquent($simpanan)->make(true);
     }
 

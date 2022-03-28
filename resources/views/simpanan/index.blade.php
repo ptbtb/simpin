@@ -51,6 +51,15 @@
                     <label>Unit Kerja</label>
                     {!! Form::select('unit_kerja', $unitKerja, $request->unit_kerja, ['class' => 'form-control unitkerja', 'placeholder' => 'Pilih Satu']) !!}
                 </div>
+                <div class="form-group col-md-4">
+                    <label>Anggota</label>
+                    <select name="anggota" class="form-control select2" id="select_anggota">
+                        <option value="" selected>All</option>
+                        {{-- @foreach ($anggotas as $anggota)
+                            <option value="{{ $anggota->kode_anggota }}">{{ $anggota->nama_anggota }}</option>
+                        @endforeach --}}
+                    </select>
+                </div>
                 <div class="col-md-4 form-group">
                     <label>From</label>
                     <input id="from" type="text" name="from" class="form-control" placeholder="yyyy-mm-dd" value="{{ ($request->from)? $request->from:'' }}">
@@ -208,6 +217,25 @@ $.fn.dataTable.ext.errMode = 'none';
         @endif
         // initiateDatatable();
         initiateDatepicker();
+        $("#select_anggota").select2({
+            ajax: {
+                url: '{{ route('anggota-ajax-search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
 
 
     function initiateDatepicker()
@@ -216,10 +244,10 @@ $.fn.dataTable.ext.errMode = 'none';
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
         });
-        $('.datepicker').datepicker({
-            uiLibrary: 'bootstrap4',
-            format: 'yyyy-mm-dd'
-        });
+        // $('.datepicker').datepicker({
+        //     uiLibrary: 'bootstrap4',
+        //     format: 'yyyy-mm-dd'
+        // });
         $('#to').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
