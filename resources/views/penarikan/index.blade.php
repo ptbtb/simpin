@@ -489,7 +489,7 @@
                 { "targets": 5,"searchable": false, "orderable": false },
                 { "targets": 6,"searchable": false, "orderable": false },
                 { "targets": 7,"searchable": false, "orderable": false },
-                { "targets": 8,"searchable": true, "orderable": false },
+                { "targets": 8,"searchable": true, "orderable": true },
                 { "targets": 9,"searchable": true, "orderable": false },
                 { "targets": 10,"searchable": true, "orderable": false },
                 { "targets": 11,"searchable": false, "orderable": false },
