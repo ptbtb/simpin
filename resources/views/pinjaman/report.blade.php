@@ -50,8 +50,8 @@
                     <thead>
                         <tr>
                             <th rowspan="2" style="vertical-align: middle">Bulan</th>
-                            <th colspan="3">JAPAN 2021</th>
-                            <th colspan="3">JAPEN 2021</th>
+                            <th colspan="3">JAPAN {{ $request->period }}</th>
+                            <th colspan="3">JAPEN {{ $request->period }}</th>
                         </tr>
                         <tr>
                             <th>TRX</th>
