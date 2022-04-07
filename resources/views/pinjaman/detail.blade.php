@@ -297,15 +297,6 @@ use Carbon\Carbon;
                                 <label for="tgl_transaksi">Tgl Transaksi</label>
                                 <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
                             </div>
-                            <div class="form-group mt-2">
-                                <label for="jenisPembayaran">Jenis Pembayaran</label>
-                                <select name="jenis_pembayaran" id="jenisPembayaran" class="form-control">
-                                    <option value="0">Tunai</option>
-                                    @foreach ($tabungan as $value)
-                                        <option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan,0,",","." ) }})</option>
-                                    @endforeach
-                                </select>
-                            </div>
                             {{-- <div id="viewSaldo" class="form-group" style="display: none">
                                 <label for="saldo">Sisa saldo</label>
                                 <input type="text" name="saldo" id="saldo" class="form-control" readonly>
@@ -320,26 +311,46 @@ use Carbon\Carbon;
                                     <br>
                                     <input type="file" name="confirmation_document" id="confirmationDocument">
                                 </div>
-                            <div class="form-group">
-                                <label>Besar Pembayaran</label>
-                                <input type="text" name="besar_pembayaran" class="form-control" placeholder="Besar Pembayaran">
-                            </div>
-                            <div class="form-group" id="jenisAkun2Cover">
-                                <label>Jenis Akun</label>
-                                <select name="jenis_akun" id="jenisAkun2" class="form-control select2 jenisAkun" required>
-                                    <option value="1">KAS</option>
-                                    <option value="2" selected>BANK</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="akun2Cover">
-                                <label>Akun</label>
-                                <select name="id_akun_kredit" class="form-control code2 select2" required>
-                                    <option value="" selected disabled>Pilih Akun</option>
-                                </select>
+                            <div class="col-12 multipleform">
+                                <div class="row pembayaranform">
+                                    <div class="col-12">
+                                        <hr>
+                                    </div>
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="jenisPembayaran">Jenis Pembayaran</label>
+                                        <select name="jenis_pembayaran[]" id="jenisPembayaran" class="form-control">
+                                            <option value="0">Tunai</option>
+                                            @foreach ($tabungan as $value)
+                                                <option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan,0,",","." ) }})</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 form-group" id="jenisAkun2Cover">
+                                        <label>Jenis Akun</label>
+                                        <select name="jenis_akun[]" id="jenisAkun2" class="form-control select2 jenisAkun" required>
+                                            <option value="1">KAS</option>
+                                            <option value="2" selected>BANK</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 form-group" id="akun2Cover">
+                                        <label>Akun</label>
+                                        <select name="id_akun_kredit[]" class="form-control code2 select2" required>
+                                            <option value="" selected disabled>Pilih Akun</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>Besar Pembayaran</label>
+                                        <input type="text" name="besar_pembayaran[]" class="form-control" placeholder="Besar Pembayaran">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="">Keterangan</label>
                                 <textarea name="description" id="description" class="form-control"></textarea>
+                            </div>
+                            <div class="col-12 text-right">
+                                <a class="btn btn-xs btn-danger text-white btn-delete-jenis-pembayaran"><i class="fa fa-trash"></i> Hapus Jenis Pembayaran</a>
+                                <a class="btn btn-xs btn-warning text-white btn-add-jenis-pembayaran"><i class="fa fa-plus"></i> Tambah Jenis Pembayaran</a>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -823,8 +834,12 @@ use Carbon\Carbon;
 
         $(document).on('click', '.btn-delete-jenis-pembayaran', function ()
         {
-            var countChild = $('.multipleform').find('.pembayaranform').length;
-            var lastChild = $('.multipleform').find('.pembayaranform:last');
+            // var countChild = $('.multipleform').find('.pembayaranform').length;
+            // var lastChild = $('.multipleform').find('.pembayaranform:last');
+            // if(countChild > 1)
+            //     lastChild.remove();
+            var countChild = $(this).parent().parent().find('.pembayaranform').length;
+            var lastChild = $(this).parent().parent().find('.pembayaranform:last');
             if(countChild > 1)
                 lastChild.remove();
         });
