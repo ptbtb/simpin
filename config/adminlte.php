@@ -245,6 +245,13 @@ return [
                     'active' => ['/anggota/list', '/anggota/create', '/anggota/import/excel', 'regex:@^anggota/edit/[0-9]+$@'],
                     'can'  => ['view anggota'],
                 ],
+                [
+                    'text' => 'sumber-dana',
+                    'route' => 'sumber-dana.index',
+                    'icon' => 'fa fa-list nav-icon',
+                    'active' => ['/sumber-dana/create'],
+                    'can'  => ['view sumber dana'],
+                ],
             ],
         ],
         [

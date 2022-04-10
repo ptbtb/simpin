@@ -9,6 +9,7 @@ use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\SHUController;
+use App\Http\Controllers\SumberDanaController;
 use App\Http\Controllers\TransferredSHUController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -568,6 +569,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function ()
      Route::get('cekjurnalnotrans', [App\Http\Controllers\AdminController::class, 'cekjurnalnotrans'])->name('admin-cek-jurnal-notrans');
      Route::get('cekangsuran', [App\Http\Controllers\AdminController::class, 'cekangsuran'])->name('admin-cek-cekangsuran');
      Route::get('cekpinjamantanpaangsuran', [App\Http\Controllers\AdminController::class, 'cekpinjamantanpaangsuran'])->name('admin-pinjaman-noangsuran');
-
-
 });
+
+Route::resource('sumber-dana', SumberDanaController::class);
