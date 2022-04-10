@@ -73,9 +73,9 @@
                         <div class="col-md-6 form-group">
                             <label>Jenis Akun</label>
                             <select name="jenis_akun[]" data-form="1" class="form-control select2 jenisAkun" required>
-                                <option value="1">KAS</option>
-                                <option value="2" selected>BANK</option>
-                                <option value="3" selected>SIMPANAN</option>
+                                @foreach ($listSumberDana as $sumberDana)
+                                    <option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
@@ -124,6 +124,7 @@
     var besarSimpananPokok;
     var tipeSimpanan;
     var today;
+    var listSumberDana = collect(@json($listSumberDana));
 
     $(document).ready(function ()
     {
@@ -195,7 +196,23 @@
 
         // get jenis akun
         var jenisAkun = $(this).val();
+        selectedSumberDana = listSumberDana.where('id', parseInt(jenisAkun)).first();
+        currentCodes = collect(selectedSumberDana.codes);
 
+        var pattern = "";
+        currentCodes.each(function (code)
+        {
+            if(code.id == 22)
+            {
+                pattern = pattern + '<option value="'+ code.id +'" selected>'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+            }
+            else
+            {
+                pattern = pattern + '<option value="'+ code.id +'">'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+            }
+        });
+        $('#form'+data_form+' .code').html(pattern);
+        /* 
         if(jenisAkun == 2)
         {
             // loop through code bank
@@ -224,7 +241,7 @@
             // insert new option
             $('#form'+data_form+' .code').append('<option value="174" >409.01.000 SIMPANAN KHUSUS</option><option value="182" >409.03.000 SIMPANAN KHUSUS PAGU</option><option value="133" >402.01.000 R/K KOPEGMAR</option>');
         }
-
+         */
         $('#form'+data_form+' .code').trigger( "change" );
     });
 
@@ -526,8 +543,9 @@
                         '<div class="col-md-6 form-group">' +
                             '<label>Jenis Akun</label>' +
                             '<select name="jenis_akun[]" data-form="'+data_form+'" class="form-control select2 jenisAkun" required>' +
-                                '<option value="1">KAS</option>' +
-                                '<option value="2" selected>BANK</option>' +
+                                '@foreach ($listSumberDana as $sumberDana)' +
+                                    '<option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>' +
+                                '@endforeach' +
                             '</select>' +
                         '</div>' +
                         '<div class="col-md-6 form-group">' +

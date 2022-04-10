@@ -81,6 +81,14 @@ class MigrationSumberDana extends Command
                     '405.01.000'
                 ],
             ],
+            [
+                'name' => 'SIMPANAN',
+                'detail' => [
+                    '409.01.000',
+                    '409.03.000',
+                    '402.01.000',
+                ],
+            ],
         ];
 
         foreach ($dataMigration as $dataSumberDana)

@@ -217,8 +217,9 @@ use Carbon\Carbon;
                                     <div class="form-group col-md-6 jenisAkun1Cover">
                                         <label>Jenis Akun</label>
                                         <select name="jenis_akun[]" id="jenisAkun1" class="form-control select2 jenisAkun" required>
-                                            <option value="1">KAS</option>
-                                            <option value="2" selected>BANK</option>
+                                            @foreach ($listSumberDana as $sumberDana)
+                                                <option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group col-md-12 akun1Cover">
@@ -328,8 +329,9 @@ use Carbon\Carbon;
                                     <div class="col-md-6 form-group" id="jenisAkun2Cover">
                                         <label>Jenis Akun</label>
                                         <select name="jenis_akun[]" id="jenisAkun2" class="form-control select2 jenisAkun" required>
-                                            <option value="1">KAS</option>
-                                            <option value="2" selected>BANK</option>
+                                            @foreach ($listSumberDana as $sumberDana)
+                                                <option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-12 form-group" id="akun2Cover">
@@ -459,6 +461,7 @@ use Carbon\Carbon;
     // $.fn.dataTable.ext.errMode = 'none';
     var baseURL = {!! json_encode(url('/')) !!};
         var saldo = collect(@json($tabungan))
+        var listSumberDana = collect(@json($listSumberDana));
         $('.btn-bayarAngsuran').on('click', function ()
         {
             $('#my-modal').modal({
@@ -538,7 +541,24 @@ use Carbon\Carbon;
 
             // get jenis akun
             var jenisAkun = $(this).val();
+            selectedSumberDana = listSumberDana.where('id', parseInt(jenisAkun)).first();
+            currentCodes = collect(selectedSumberDana.codes);
 
+            var pattern = "";
+            currentCodes.each(function (code)
+            {
+                if(code.id == 22)
+                {
+                    pattern = pattern + '<option value="'+ code.id +'" selected>'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+                else
+                {
+                    pattern = pattern + '<option value="'+ code.id +'">'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+            });
+            $('.code1').html(pattern);
+            $('.code2').html(pattern);
+            /* 
             if(jenisAkun == 2)
             {
                 // loop through code bank
@@ -565,7 +585,7 @@ use Carbon\Carbon;
                 rootClass.find('.code1').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
                 rootClass.find('.code2').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
             }
-
+            */
             rootClass.find('.code1').trigger( "change" );
             rootClass.find('.code2').trigger( "change" );
         });
@@ -808,8 +828,9 @@ use Carbon\Carbon;
                                 '<div class="form-group col-md-6 jenisAkun1Cover">' +
                                     '<label>Jenis Akun</label>' +
                                     '<select name="jenis_akun[]" id="jenisAkun1" class="form-control select2 jenisAkun" required>' +
-                                        '<option value="1">KAS</option>' +
-                                        '<option value="2" selected>BANK</option>' +
+                                        '@foreach ($listSumberDana as $sumberDana)' +
+                                            '<option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>' +
+                                        '@endforeach' +
                                     '</select>' +
                                 '</div>' +
                                 '<div class="form-group col-md-12 akun1Cover">' +

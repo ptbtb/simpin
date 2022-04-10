@@ -38,6 +38,7 @@ use App\Models\Penarikan;
 use App\Models\Tabungan;
 use App\Models\SimpinRule;
 use App\Models\Jurnal;
+use App\Models\SumberDana;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -350,6 +351,10 @@ class PinjamanController extends Controller
         $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
+        $listSumberDana = SumberDana::with('codes')
+                                    ->whereIn('id', [1,2,3])
+                                    ->get();
+
         $data['pinjaman'] = $pinjaman;
         $data['title'] = 'Detail Pinjaman';
         $data['jenisPinjaman'] = $pinjaman->jenisPinjaman;
@@ -357,6 +362,7 @@ class PinjamanController extends Controller
         $data['tagihan'] = $tagihan;
         $data['bankAccounts'] = $bankAccounts;
         $data['tabungan'] = $tabungan;
+        $data['listSumberDana'] = $listSumberDana;
         return view('pinjaman.detail', $data);
     }
 

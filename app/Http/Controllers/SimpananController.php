@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
 use App\Managers\SimpananManager;
 use App\Models\Company;
+use App\Models\SumberDana;
 use Auth;
 use DB;
 use Hash;
@@ -112,11 +113,14 @@ class SimpananController extends Controller
             $data['anggota'] = Anggota::find($request->kode_anggota);
         }
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+        $listSumberDana = SumberDana::with('codes')
+                                    ->get();
 
         $data['title'] = "Tambah Transaksi Simpanan";
         $data['listJenisSimpanan'] = $listJenisSimpanan;
         $data['request'] = $request;
         $data['bankAccounts'] = $bankAccounts;
+        $data['listSumberDana'] = $listSumberDana;
         return view('simpanan.create', $data);
     }
 
