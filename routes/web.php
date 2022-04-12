@@ -224,7 +224,9 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::post('detail/{id}/set-discount', [App\Http\Controllers\PinjamanController::class, 'setDiscount'])->name('pinjaman-set-discount');
         Route::get('detail-pembayaran/{id}', [App\Http\Controllers\PinjamanController::class, 'detailPembayaran'])->name('pinjaman-detail-pembayaran');
         Route::get('download/pdf', [App\Http\Controllers\PinjamanController::class, 'createPDF'])->name('pinjaman-download-pdf');
+        Route::get('download/pdf', [App\Http\Controllers\PinjamanController::class, 'createPDFSingle'])->name('pinjaman-download-pdf-single');
         Route::get('download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcel'])->name('pinjaman-download-excel');
+        Route::get('download/excel/single', [App\Http\Controllers\PinjamanController::class, 'createExcelSingle'])->name('pinjaman-download-excel-single');
         Route::get('download-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'downloadFormPinjaman'])->name('download-form-pinjaman')->middleware(['pinjaman']);
         Route::post('download-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'simulasiPinjaman'])->name('download-form-pinjaman')->middleware(['pinjaman']);
         Route::get('generate-form-pinjaman', [App\Http\Controllers\PinjamanController::class, 'generateFormPinjaman'])->name('generate-form-pinjaman')->middleware(['pinjaman']);

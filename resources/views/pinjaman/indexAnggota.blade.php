@@ -43,7 +43,10 @@
     </div>
 </div>
 <div class="card">
-    
+    <div class="card-header text-right">
+        <a href="{{ route('pinjaman-download-pdf-single') }}?kodeAnggota={{ $anggota->kode_anggota }}" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
+        <a href="{{ route('pinjaman-download-excel-single') }}?kodeAnggota={{ $anggota->kode_anggota }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+    </div>
     <div class="card-body table-responsive">
         <table class="table table-striped">
             <thead>

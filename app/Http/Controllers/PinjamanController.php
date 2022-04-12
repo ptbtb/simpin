@@ -23,6 +23,7 @@ use App\Models\View\ViewSaldo;
 use App\Events\Pinjaman\PinjamanCreated;
 use App\Exports\DetailPinjamanExport;
 use App\Exports\PengajuanPinjamanExport;
+use App\Exports\PinjamanSingleExport;
 use App\Exports\SaldoAwalPinjamanExport;
 use App\Imports\PinjamanImport;
 use App\Managers\JurnalManager;
@@ -132,6 +133,7 @@ class PinjamanController extends Controller
     public function indexSingle(Request $request,$id)
     {
         $user = Auth::user();
+        $anggota = null;
         $role = $user->roles->first();
         $this->authorize('view pinjaman', $user);
         $listtenor = JenisPinjaman::pluck('lama_angsuran', 'lama_angsuran')->sortBy('lama_angsuran');
@@ -169,12 +171,13 @@ class PinjamanController extends Controller
         // $data['unitKerja'] = Company::get()->pluck('nama', 'id');
         // $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
         $listPinjaman = $listPinjaman->get();
-        // dd($listPinjaman);
+        // dd($listPinjaman->pluck('id'));
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
         $data['request'] = $request;
         $data['role'] = $role;
         $data['listtenor'] = $listtenor;
+        $data['anggota'] = $anggota;
         return view('pinjaman.indexAnggota', $data);
     }
 
@@ -386,6 +389,20 @@ class PinjamanController extends Controller
         return Excel::download(new PinjamanExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
+    public function createExcelSingle(Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('view pinjaman', $user);
+        $anggota = Anggota::find($request->kodeAnggota);
+        $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                                ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                                ->wherenotnull('tgl_transaksi')
+                                ->get();
+        $data['listPinjaman'] = $listPinjaman;
+        $filename = 'export_pinjaman_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+        return Excel::download(new PinjamanSingleExport($data), $filename);
+    }
+
     public function createExcelDetail($id, Request $request)
     {
         $user = Auth::user();
@@ -470,6 +487,27 @@ class PinjamanController extends Controller
         // share data to view
         view()->share('listPinjaman', $listPinjaman);
         $pdf = PDF::loadView('pinjaman.excel', $listPinjaman)->setPaper('a4', 'landscape');
+
+        // download PDF file with download method
+        $filename = 'export_pinjaman_' . Carbon::now()->format('d M Y') . '.pdf';
+        return $pdf->download($filename);
+    }
+
+    public function createPDFSingle(Request $request)
+    {
+        $user = Auth::user();
+        $this->authorize('view pinjaman', $user);
+
+        $anggota = Anggota::find($request->kodeAnggota);
+        $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                                ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                                ->wherenotnull('tgl_transaksi')
+                                ->get();
+        $data['listPinjaman'] = $listPinjaman;
+
+        // share data to view
+        view()->share('listPinjaman', $listPinjaman);
+        $pdf = PDF::loadView('pinjaman.excel1', $listPinjaman)->setPaper('a4', 'landscape');
 
         // download PDF file with download method
         $filename = 'export_pinjaman_' . Carbon::now()->format('d M Y') . '.pdf';
