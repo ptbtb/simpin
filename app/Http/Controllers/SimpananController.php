@@ -48,10 +48,14 @@ class SimpananController extends Controller
           $request->to = Carbon::now()->endOfDay()->format('Y-m-d');
         }
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+        $listSumberDana = SumberDana::with('codes')
+                                    ->whereIn('id', [1,2,3])
+                                    ->get();
         $data['bankAccounts'] = $bankAccounts;
         $data['title'] = "List Transaksi Simpanan";
         $data['request'] = $request;
         $data['unitKerja'] = Company::get()->pluck('nama', 'id');
+        $data['listSumberDana'] = $listSumberDana;
         return view('simpanan.index', $data);
     }
 

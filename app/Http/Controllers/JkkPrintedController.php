@@ -6,6 +6,7 @@ use App\Models\Code;
 use App\Models\JenisSimpanan;
 use App\Models\JkkPrinted;
 use App\Models\JkkPrintedType;
+use App\Models\SumberDana;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -176,11 +177,15 @@ class JkkPrintedController extends Controller
         {
             $jkkPrinted = JkkPrinted::findOrFail($id);
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+            $listSumberDana = SumberDana::with('codes')
+                                        ->whereIn('id', [1,2,3])
+                                        ->get();
             $data['title'] = $jkkPrinted->jkk_number;
             $data['jkk'] = $jkkPrinted;
             $data['listPengajuan'] = $jkkPrinted->jkkPengajuan;
             $data['listPenarikan'] = $jkkPrinted->jkkPenarikan;
             $data['bankAccounts'] = $bankAccounts;
+            $data['listSumberDana'] = $listSumberDana;
             return view('jkk.detail', $data);
         }
         catch (\Throwable $th)

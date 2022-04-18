@@ -208,6 +208,9 @@ class PinjamanController extends Controller
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
         $statusPengajuans = StatusPengajuan::get();
+        $listSumberDana = SumberDana::with('codes')
+                                    ->whereIn('id', [1,2,3])
+                                    ->get();
 
         // $anggotas = Anggota::get();
 
@@ -216,6 +219,7 @@ class PinjamanController extends Controller
         $data['request'] = $request;
         $data['bankAccounts'] = $bankAccounts;
         $data['statusPengajuans'] = $statusPengajuans;
+        $data['listSumberDana'] = $listSumberDana;
         // $data['anggotas'] = $anggotas;
         return view('pinjaman.indexPengajuan', $data);
     }

@@ -158,8 +158,9 @@
                                 <div class="col-md-6 form-group">
                                     <label>Jenis Akun</label>
                                     <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
-                                        <option value="1">KAS</option>
-                                        <option value="2" selected>BANK</option>
+                                        @foreach ($listSumberDana as $sumberDana)
+                                            <option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -208,8 +209,9 @@
                                 <div class="col-md-6 form-group">
                                     <label>Jenis Akun</label>
                                     <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
-                                        <option value="1">KAS</option>
-                                        <option value="2" selected>BANK</option>
+                                        @foreach ($listSumberDana as $sumberDana)
+                                            <option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -488,6 +490,7 @@
         @endforeach
         
         // trigger to get kas or bank select option
+        var listSumberDana = collect(@json($listSumberDana));
         $(document).on('change', '#jenisAkun', function ()
         {
             // remove all option in code
@@ -495,7 +498,22 @@
 
             // get jenis akun
             var jenisAkun = $('#jenisAkun').val();
-
+            selectedSumberDana = listSumberDana.where('id', parseInt(jenisAkun)).first();
+            currentCodes = collect(selectedSumberDana.codes);
+            var pattern = "";
+            currentCodes.each(function (code)
+            {
+                if(code.id == 22)
+                {
+                    pattern = pattern + '<option value="'+ code.id +'" selected>'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+                else
+                {
+                    pattern = pattern + '<option value="'+ code.id +'">'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+            });
+            $('#code').html(pattern);
+            /* 
             if(jenisAkun == 2)
             {
                 // loop through code bank
@@ -520,7 +538,7 @@
                 // insert new option
                 $('#code').append('<option value="4" >101.01.102 KAS SIMPAN PINJAM</option>');
             }
-
+            */
             $('#code').trigger( "change" );
             
             $(".select2").select2({

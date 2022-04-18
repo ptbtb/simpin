@@ -131,9 +131,9 @@
                             <div class="col-md-6 form-group">
                                 <label>Jenis Akun (COA BARU)</label>
                                 <select name="jenis_akun" id="jenisAkun2" class="form-control select2" required>
-                                    <option value="1">KAS</option>
-                                    <option value="2" selected>BANK</option>
-                                    <option value="3" selected>R/K</option>
+                                    @foreach ($listSumberDana as $sumberDana)
+                                        <option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -174,8 +174,9 @@
                             <div class="col-md-6 form-group">
                                 <label>Jenis Akun</label>
                                 <select name="jenis_akun" id="jenisAkun" class="form-control select2" required>
-                                    <option value="1">KAS</option>
-                                    <option value="2" selected>BANK</option>
+                                    @foreach ($listSumberDana as $sumberDana)
+                                        <option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
@@ -785,6 +786,7 @@
         @endforeach
 
         // trigger to get kas or bank select option
+        var listSumberDana = collect(@json($listSumberDana));
         $(document).on('change', '#jenisAkun', function ()
         {
             // remove all option in code
@@ -792,7 +794,22 @@
 
             // get jenis akun
             var jenisAkun = $('#jenisAkun').val();
-
+            selectedSumberDana = listSumberDana.where('id', parseInt(jenisAkun)).first();
+            currentCodes = collect(selectedSumberDana.codes);
+            var pattern = "";
+            currentCodes.each(function (code)
+            {
+                if(code.id == 22)
+                {
+                    pattern = pattern + '<option value="'+ code.id +'" selected>'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+                else
+                {
+                    pattern = pattern + '<option value="'+ code.id +'">'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+            });
+            $('#code').html(pattern);
+            /* 
             if(jenisAkun == 2)
             {
                 // loop through code bank
@@ -821,7 +838,7 @@
                 // insert new option
                 $('#code').append('<option value="133">402.01.000 R/K KOPEGMAR</option>');
             }
-
+             */
             $('#code').trigger( "change" );
         });
 
@@ -832,8 +849,23 @@
 
             // get jenis akun
             var jenisAkun = $('#jenisAkun2').val();
+            selectedSumberDana = listSumberDana.where('id', parseInt(jenisAkun)).first();
+            currentCodes = collect(selectedSumberDana.codes);
+            var pattern = "";
+            currentCodes.each(function (code)
+            {
+                if(code.id == 22)
+                {
+                    pattern = pattern + '<option value="'+ code.id +'" selected>'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+                else
+                {
+                    pattern = pattern + '<option value="'+ code.id +'">'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+                }
+            });
+            $('#code2').html(pattern);
 
-            if(jenisAkun == 2)
+            /* if(jenisAkun == 2)
             {
                 // loop through code bank
                 $.each(bankAccountArray, function(key, bankAccount)
@@ -860,7 +892,7 @@
             {
                 // insert new option
                 $('#code2').append('<option value="133">402.01.000 R/K KOPEGMAR</option>');
-            }
+            } */
 
             $('#code2').trigger( "change" );
         });

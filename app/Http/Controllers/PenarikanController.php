@@ -24,6 +24,7 @@ use App\Models\SimpinRule;
 use App\Models\Jurnal;
 use App\Models\View\ViewSaldo;
 use App\Models\StatusPenarikan;
+use App\Models\SumberDana;
 use Carbon\Carbon;
 use DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -446,6 +447,9 @@ class PenarikanController extends Controller
             if(!$request->to){
               $request->to = Carbon::now()->endOfDay()->format('Y-m-d');
             }
+            $listSumberDana = SumberDana::with('codes')
+                                        ->whereIn('id', [1,2,3])
+                                        ->get();
 
             $data['title'] = "List Penarikan Simpanan";
             $data['listPenarikan'] = $listPenarikan;
@@ -453,6 +457,7 @@ class PenarikanController extends Controller
             $data['bankAccounts'] = $bankAccounts;
             $data['statusPenarikans'] = $statusPenarikans;
             $data['anggotas'] = $anggotas;
+            $data['listSumberDana'] = $listSumberDana;
             return view('penarikan.index', $data);
         } catch (\Throwable $e) {
             Log::error($e);
