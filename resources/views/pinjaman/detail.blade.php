@@ -145,7 +145,8 @@ use Carbon\Carbon;
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($listAngsuran as $angsuran)
+                        @if ($listAngsuranLunas->count())
+                        @foreach ($listAngsuranLunas as $angsuran)
                             <tr>
                                 <td>{{ $angsuran->angsuran_ke }}</td>
                                 <td>Rp. {{ number_format($angsuran->besar_angsuran,0,",",".") }}</td>
@@ -170,13 +171,17 @@ use Carbon\Carbon;
                                 </td>
                             </tr>
                         @endforeach
+                        @else
+                            <td colspan="9" class="text-center">Belum ada tagihan yang di bayar</td>
+                        @endif
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-@if ($tagihan)
+
+@if ($pinjaman)
     @can('bayar angsuran pinjaman')
         <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <form action="{{ route('pinjaman-bayar-angsuran', ['id'=>$pinjaman->kode_pinjam]) }}" method="POST">
@@ -190,11 +195,12 @@ use Carbon\Carbon;
                         <div class="modal-body row">
                             <div class="form-group col-md-6">
                                 <label>Bulan</label>
-                                <input type="text" name="bulan" class="form-control" value="{{ ($tagihan->jatuh_tempo)? $tagihan->jatuh_tempo->format('d-m-Y'):'' }}" readonly>
+                                {{-- <input type="text" name="bulan" class="form-control" value="{{ ($tagihan->jatuh_tempo)? $tagihan->jatuh_tempo->format('d-m-Y'):'' }}" readonly> --}}
+                                <input type="text" name="bulan" class="form-control" value="{{ $pinjaman->tagihan_bulan->format('d-m-Y') }}" readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Total Angsuran</label>
-                                <input type="text" name="total_angsuran" class="form-control" value="Rp. {{ number_format($angsuran->besar_angsuran + $angsuran->jasa,0,",",".") }}" readonly>
+                                <input type="text" name="total_angsuran" class="form-control" value="Rp. {{ number_format($pinjaman->besar_angsuran,0,",",".") }}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="tgl_transaksi">Tgl Transaksi</label>
@@ -232,6 +238,16 @@ use Carbon\Carbon;
                                         <label>Besar Pembayaran</label>
                                         <input type="text" name="besar_pembayaran[]" class="form-control" placeholder="Besar Pembayaran">
                                     </div>
+                                    {{-- <div class="form-group col-md-12 akun1Cover">
+                                        <label>Akun</label>
+                                        <select name="id_akun_kredit_jasa[]"  class="code1 form-control select2" required>
+                                            <option value="" selected disabled>Pilih Akun</option>
+                                        </select>
+                                    </div> --}}
+                                    <div class="form-group col-md-12">
+                                        <label>Besar Pembayaran Jasa</label>
+                                        <input type="text" name="besar_pembayaran_jasa[]" class="form-control" placeholder="Besar Pembayaran">
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 text-right">
@@ -265,7 +281,7 @@ use Carbon\Carbon;
                                     <tr>
                                         <th style="width: 15%">Bulan</th>
                                         <th>:</th>
-                                        <td style="width: 20%">{{ $tagihan->jatuh_tempo->format('M Y') }} - {{ $pinjaman->listAngsuran->sortByDesc('jatuh_tempo')->first()->jatuh_tempo->format('M Y') }}</td>
+                                        <td style="width: 20%">{{ $pinjaman->tagihan_bulan->format('M Y') }} - {{ $pinjaman->tgl_tempo->format('M Y') }}</td>
                                         <th style="width: 15%">Total Angsuran</th>
                                         <th>:</th>
                                         <td style="width: 20%" id="totalAngsuranDiscount1">Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
@@ -596,6 +612,7 @@ use Carbon\Carbon;
             var dataId = $(this).data('id');
             var action = $(this).data('action');
             var listAngsuran = collect(@json($listAngsuran));
+            var listAngsuranLunas = collect(@json($listAngsuranLunas));
 
             // show jurnal
             if (action == 'jurnal')
@@ -662,7 +679,7 @@ use Carbon\Carbon;
             }
             else if(action == 'info')
             {
-                var angsuran = listAngsuran.where('kode_angsur', dataId).first();
+                var angsuran = listAngsuranLunas.where('kode_angsur', dataId).first();
                 var htmlText = '<div class="container-fluid">' +
                                     '<div class="row">' +
                                         '<div class="col-md-6 mx-0 my-2">Created At <br> <b>' + angsuran['created_at_view'] + '</b></div>' +
@@ -842,6 +859,16 @@ use Carbon\Carbon;
                                 '<div class="form-group col-md-12">' +
                                     '<label>Besar Pembayaran</label>' +
                                     '<input type="text" name="besar_pembayaran[]" class="form-control" placeholder="Besar Pembayaran">' +
+                                '</div>' +
+                                // '<div class="form-group col-md-12 akun1Cover">' +
+                                //     '<label>Akun</label>' +
+                                //     '<select name="id_akun_kredit_jasa[]" class="code1 form-control select2" required>' +
+                                //         '<option value="" selected disabled>Pilih Akun</option>' +
+                                //     '</select>' +
+                                // '</div>' +
+                                '<div class="form-group col-md-12">' +
+                                    '<label>Besar Pembayaran Jasa</label>' +
+                                    '<input type="text" name="besar_pembayaran_jasa[]" class="form-control" placeholder="Besar Pembayaran Jasa">' +
                                 '</div>' +
                             '</div>';
 

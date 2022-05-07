@@ -183,4 +183,34 @@ class Pinjaman extends Model implements Auditable
     {
         return $this->diskon/100*$this->biaya_jasa;
     }
+
+    /**
+     * Get the bulan tagihan
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTagihanBulanAttribute()
+    {
+        $angsuranLunas = $this->lama_angsuran - $this->sisa_angsuran;
+
+        $addMonth = 1;
+        if($angsuranLunas)
+        {
+            $addMonth = $angsuranLunas + 1;
+        }
+
+        return $this->tgl_entri->addMonths($addMonth)->endOfMonth();
+    }
+
+    /**
+     * Get the angsuran sekarang
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getAngsuranSekarangAttribute($value)
+    {
+        return $this->lama_angsuran - $this->sisa_angsuran + 1;
+    }
 }
