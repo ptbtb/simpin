@@ -1193,6 +1193,20 @@ class PinjamanController extends Controller
                 if ($angsuran->besar_pembayaran) {
                     $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
                 }
+                if($request->besar_pembayaran_jasa[$i])
+                {
+                    $pembayaranJasa =  filter_var($request->besar_pembayaran_jasa[$i], FILTER_SANITIZE_NUMBER_INT);
+                    if($angsuran->besar_pembayaran_jasa < $angsuran->jasa)
+                    {
+                        $angsuran->besar_pembayaran_jasa = $pembayaranJasa + $angsuran->besar_pembayaran_jasa;
+                    }
+                    else
+                    {
+                        return redirect()->back()->withError('Jasa sudah dibayar lunas. silahkan kosongkan input field jasa');
+                    }
+                    $pembayaran = $pembayaran + $pembayaranJasa;
+                }
+
                 if ($pembayaran >= $angsuran->totalAngsuran) {
                     $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
                     $angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;

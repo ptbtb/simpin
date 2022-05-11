@@ -311,7 +311,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         {
             $jurnal->akun_kredit = COA_BANK_MANDIRI;
         }
-        $jurnal->kredit = $angsuran->besar_pembayaran;
+        $jurnal->kredit = $angsuran->besar_pembayaran - $angsuran->besar_pembayaran_jasa;
        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         }else{
@@ -324,34 +324,37 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
 
-        // jurnal untuk JASA
-        $jurnal = new Jurnal();
-        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_kredit = 0;
-        $jurnal->kredit = 0;
-        // japen
-        if($angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
+        if($jasa)
         {
-            $jurnal->akun_debet = '701.02.003';
+            // jurnal untuk JASA
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = 0;
+            $jurnal->kredit = 0;
+            // japen
+            if($angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
+            {
+                $jurnal->akun_debet = '701.02.003';
+            }
+            // japan and others
+            else
+            {
+                $jurnal->akun_debet = '701.02.001';
+            }
+            $jurnal->debet = $jasa;
+            if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
+                $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+            }else{
+                 $jurnal->keterangan = $angsuran->keterangan;
+            }
+            $jurnal->created_by = $angsuran->updated_by;
+            $jurnal->updated_by = $angsuran->updated_by;
+             $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+    
+            // save as polymorphic
+            $angsuran->jurnals()->save($jurnal);
         }
-        // japan and others
-        else
-        {
-            $jurnal->akun_debet = '701.02.001';
-        }
-        $jurnal->debet = $jasa;
-        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
-            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
-        }else{
-             $jurnal->keterangan = $angsuran->keterangan;
-        }
-        $jurnal->created_by = $angsuran->updated_by;
-        $jurnal->updated_by = $angsuran->updated_by;
-         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
-
-        // save as polymorphic
-        $angsuran->jurnals()->save($jurnal);
     }
     
     public static function createJurnalAngsuranPartial(AngsuranPartial $angs)
