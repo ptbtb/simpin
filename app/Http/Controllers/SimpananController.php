@@ -239,7 +239,7 @@ class SimpananController extends Controller
                     $simpanan->tgl_entri = Carbon::now();
                     $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
                     if ($request->periode[$key]!==null) {
-                        $simpanan->periode = Carbon::createFromFormat('Y-m-d', $request->periode[$key]);
+                        $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->periode[$key]);
                     } else {
                         $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
                     }
@@ -278,6 +278,7 @@ class SimpananController extends Controller
             }
             return redirect()->route('simpanan-list')->withSuccess('Berhasil menambah transaksi');
         } catch (\Throwable $th) {
+            Log::error($th);
             Log::error($th->getMessage().'||'.$th->getFile().'||'.$th->getLine());
             return redirect()->back()->withError('Gagal menyimpan data');
         }
