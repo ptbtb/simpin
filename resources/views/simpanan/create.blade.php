@@ -375,13 +375,13 @@
                         {
                             var latestPayment = moment();
                             var monthYear = moment(latestPayment).format('MMMM YYYY');
-                            var dateMonthYear = moment(latestPayment).format('YYYY-MM-DD');
+                            var dateMonthYear = moment(latestPayment).format('DD-MM-YYYY');
                         }
                         else
                         {
                             var latestPayment = response.attribute.periode || response.attribute.tanggal_entri;
                             var monthYear = moment(latestPayment).add(1, 'months').format('MMMM YYYY');
-                            var dateMonthYear = moment(latestPayment).add(1, 'months').format('YYYY-MM-DD');
+                            var dateMonthYear = moment(latestPayment).add(1, 'months').format('DD-MM-YYYY');
                         }
                         $('#form'+data_form+' .periode').val(dateMonthYear);
                         $('#form'+data_form+' .besarSimpanan').val(toRupiah(paymentValue));

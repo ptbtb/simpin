@@ -238,12 +238,11 @@ class SimpananController extends Controller
                     $simpanan->u_entry = Auth::user()->name;
                     $simpanan->tgl_entri = Carbon::now();
                     $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                    if ($request->periode[$key]!==null) {
+                    if ($request->periode[$key] && !is_null($request->periode[$key]) && $request->periode[$key] != "") {
                         $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->periode[$key]);
                     } else {
                         $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
                     }
-
 
                     $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
                     $simpanan->keterangan = ($request->keterangan[$key]) ? $request->keterangan[$key] : '';
