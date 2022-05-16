@@ -63,6 +63,11 @@ class Pinjaman extends Model implements Auditable
         return $this->morphMany(Jurnal::class, 'jurnalable');
     }
 
+    public function PinjamanRestrukturisasi()
+    {
+        return $this->hasMany(PinjamanRestruktur::class, 'kode_pinjam');
+    }
+
     public function scopeNotPaid($query) {
         return $query->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS);
     }
