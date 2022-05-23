@@ -266,6 +266,97 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
     }
+
+    public static function createJurnalAngsuranBaru(Angsuran $angsuran, $jasa)
+    {
+        // kredit
+        $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
+
+        // make balance
+        // $jasa = ($angsuran->besar_pembayaran>$angsuran->jasa)?$angsuran->jasa:$angsuran->besar_pembayaran;
+        $angsur = ($angsuran->besar_pembayaran-$angsuran->jasa+2>$angsuran->besar_angsuran)?$angsuran->besar_angsuran:($angsuran->besar_pembayaran-$angsuran->jasa);
+
+        //end balancing
+
+        $jurnal->debet = ($angsur>0)?$angsur:0;
+        $jurnal->akun_kredit = 0;
+        $jurnal->kredit = 0;
+        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angsuran->keterangan;
+        }
+       
+        $jurnal->created_by = $angsuran->updated_by;
+        $jurnal->updated_by = $angsuran->updated_by;
+        $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+
+        // save as polymorphic
+        $angsuran->jurnals()->save($jurnal);
+
+        // kredit
+        $jurnal = new Jurnal();
+        $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+        $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
+        if($angsuran->akunKredit)
+        {
+            $jurnal->akun_kredit = $angsuran->akunKredit->CODE;
+        }
+        else
+        {
+            $jurnal->akun_kredit = COA_BANK_MANDIRI;
+        }
+        $jurnal->kredit = $angsuran->besar_pembayaran - $angsuran->besar_pembayaran_jasa;
+       if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
+            $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+        }else{
+             $jurnal->keterangan = $angsuran->keterangan;
+        }
+        $jurnal->created_by = $angsuran->updated_by;
+        $jurnal->updated_by = $angsuran->updated_by;
+         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+
+        // save as polymorphic
+        $angsuran->jurnals()->save($jurnal);
+
+        if($jasa)
+        {
+            // jurnal untuk JASA
+            $jurnal = new Jurnal();
+            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
+            $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
+            $jurnal->akun_kredit = 0;
+            $jurnal->kredit = 0;
+            // japen
+            if($angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
+            {
+                $jurnal->akun_debet = '701.02.003';
+            }
+            // japan and others
+            else
+            {
+                $jurnal->akun_debet = '701.02.001';
+            }
+            $jurnal->debet = $jasa;
+            if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
+                $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
+            }else{
+                 $jurnal->keterangan = $angsuran->keterangan;
+            }
+            $jurnal->created_by = $angsuran->updated_by;
+            $jurnal->updated_by = $angsuran->updated_by;
+             $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+    
+            // save as polymorphic
+            $angsuran->jurnals()->save($jurnal);
+        }
+    }
+    
     public static function createJurnalAngsuranPartial(AngsuranPartial $angs)
     {
         // kredit

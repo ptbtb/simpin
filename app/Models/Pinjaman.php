@@ -63,6 +63,11 @@ class Pinjaman extends Model implements Auditable
         return $this->morphMany(Jurnal::class, 'jurnalable');
     }
 
+    public function PinjamanRestrukturisasi()
+    {
+        return $this->hasMany(PinjamanRestruktur::class, 'kode_pinjam');
+    }
+
     public function scopeNotPaid($query) {
         return $query->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS);
     }
@@ -182,5 +187,35 @@ class Pinjaman extends Model implements Auditable
     public function getTotalDiscountAttribute()
     {
         return $this->diskon/100*$this->biaya_jasa;
+    }
+
+    /**
+     * Get the bulan tagihan
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTagihanBulanAttribute()
+    {
+        $angsuranLunas = $this->lama_angsuran - $this->sisa_angsuran;
+
+        $addMonth = 1;
+        if($angsuranLunas)
+        {
+            $addMonth = $angsuranLunas + 1;
+        }
+
+        return $this->tgl_entri->addMonths($addMonth)->endOfMonth();
+    }
+
+    /**
+     * Get the angsuran sekarang
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getAngsuranSekarangAttribute($value)
+    {
+        return $this->lama_angsuran - $this->sisa_angsuran + 1;
     }
 }

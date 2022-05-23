@@ -5,6 +5,7 @@ use App\Models\Angsuran;
 use App\Models\Pinjaman;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AngsuranManager
 {
@@ -91,5 +92,23 @@ class AngsuranManager
         {
             \Log::info($e);
         }
+    }
+
+    static function createAngsuran(Pinjaman $pinjaman, $request)
+    {
+        $angsuran = new Angsuran();
+        $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
+        $angsuran->angsuran_ke = $pinjaman->angsuran_sekarang;
+        $angsuran->besar_angsuran = $pinjaman->besar_angsuran_pokok;
+        $angsuran->u_entry = Auth::user()->name;
+        $angsuran->tgl_entri = Carbon::now();
+        // $angsuran->denda = 0;
+        $angsuran->jasa = $pinjaman->biaya_jasa;
+        $angsuran->kode_anggota = $pinjaman->kode_anggota;
+        $angsuran->jatuh_tempo = $pinjaman->tagihan_bulan;
+        $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+        $angsuran->save();
+
+        return $angsuran;
     }
 }
