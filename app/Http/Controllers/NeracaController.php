@@ -415,7 +415,7 @@ class NeracaController extends Controller
         }
     }
 
-    public function createPdf($period)
+    public function createPdf($period, Request $request)
     {
         $this->authorize('view jurnal', Auth::user());
         try {
@@ -459,7 +459,7 @@ class NeracaController extends Controller
             $endPeriod = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
 
             $startComparePeriod = Carbon::createFromFormat('Y-m-d', '2020-11-30')->format('Y-m-d');
-            $endComparePeriod = Carbon::createFromFormat('m-Y', $request->compare_period)->endOfMonth()->format('Y-m-d');
+            $endComparePeriod = Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('Y-m-d');
 
             foreach ($groupCodes as $key => $groupCode) {
                 $saldo = 0;
@@ -606,7 +606,7 @@ class NeracaController extends Controller
 
             // download PDF file with download method
             $filename = 'lap-neraca-'.$period.'-'.Carbon::now()->toDateString().'.pdf';
-            return $pdf->dtr($filename);
+            return $pdf->download($filename);
             // return view('neraca.createPdf', $data);
         } catch (\Throwable $e) {
             Log::error($e);

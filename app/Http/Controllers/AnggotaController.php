@@ -441,11 +441,11 @@ class AnggotaController extends Controller {
         $anggotas = Anggota::with('jenisAnggota');
         if ($request->status)
         {
-            $anggotas = $anggotas->where('status', $this->request->status);
+            $anggotas = $anggotas->where('status', $request->status);
         }
         if ($request->id_jenis_anggota)
         {
-            $anggotas = $anggotas->where('id_jenis_anggota', $this->request->id_jenis_anggota);
+            $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
         }
 
         $anggotas = $anggotas->get();
