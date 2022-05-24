@@ -465,6 +465,7 @@ Route::group(['prefix' => 'laba-rugi'], function () {
         Route::get('getshu', [App\Http\Controllers\LabaRugiController::class, 'getSHU'])->name('laba-rugi-shu');
         Route::post('', [App\Http\Controllers\LabaRugiController::class, 'index'])->name('laba-rugi-list');
         Route::get('download/excel', [App\Http\Controllers\LabaRugiController::class, 'createExcel'])->name('laba-rugi-download-excel');
+        Route::get('download/pdf', [App\Http\Controllers\LabaRugiController::class, 'createPdf'])->name('laba-rugi-download-pdf');
     });
 });
 
