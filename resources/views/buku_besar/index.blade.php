@@ -41,6 +41,7 @@
                     <div class="col-md-6 text-right" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary" name="search" value="search"><span class="fa fa-search"></span> Search</button>
                         <a href="{{ route('buku-besar-download-excel',['period' =>$request->period]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Excel</a>
+                        <a href="{{ route('buku-besar-download-pdf',['period' =>$request->period]) }}" class="btn btn-sm btn-info"><i class="fa fa-download"></i> Download PDF</a>
                     </div>
                 </form>
             </div>

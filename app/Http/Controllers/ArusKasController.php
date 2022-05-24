@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class ArusKasController extends Controller
 {
@@ -402,6 +403,16 @@ class ArusKasController extends Controller
             $data['totalPenerimaan'] = $totalPenerimaan;
             $data['saldoAkhir'] = $totalSaldoAwal + ($totalPenerimaan - $totalPengeluaran);
 
+            if($request->pdf)
+            {
+                $filename = 'arus-kas-'.$request->period.'.pdf';
+                 // share data to view
+                 view()->share('data',$data);
+                 $pdf = PDF::loadView('arus_kas.laporan-view', $data)->setPaper('a4', 'landscape');
+ 
+                 // download PDF file with download method
+                 return $pdf->download($filename);
+            }
             $filename = 'arus-kas-'.$request->period.'.xlsx';
             return Excel::download(new ArusKasExport($data), $filename);
         }

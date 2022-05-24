@@ -46,6 +46,7 @@
                     <div class="col-md-12 text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary" name="search" value="search"><span class="fa fa-search"></span> Search</button>
                          <a href="{{ route('laba-rugi-download-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Download Excel</a> 
+                         <a href="{{ route('laba-rugi-download-pdf') }}" class="btn btn-info"><i class="fa fa-download"></i> Download PDF</a> 
                     </div>
                 </form>
             </div>

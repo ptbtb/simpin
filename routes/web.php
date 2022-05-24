@@ -400,6 +400,7 @@ Route::group(['prefix' => 'jurnal'], function () {
         Route::get('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
         Route::get('data', [App\Http\Controllers\JurnalController::class, 'indexAjax'])->name('jurnal-list-ajax');
         Route::get('excel', [App\Http\Controllers\JurnalController::class, 'createExcel'])->name('jurnal-export-excel');
+        Route::get('pdf', [App\Http\Controllers\JurnalController::class, 'createPdf'])->name('jurnal-export-pdf');
         Route::post('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
     });
 });
@@ -443,6 +444,7 @@ Route::group(['prefix' => 'buku-besar'], function () {
         Route::get('data', [App\Http\Controllers\BukuBesarController::class, 'indexAjax'])->name('buku-besar-list-ajax');
         Route::post('', [App\Http\Controllers\BukuBesarController::class, 'index'])->name('buku-besar-list');
         Route::get('download/excel', [App\Http\Controllers\BukuBesarController::class, 'createExcel'])->name('buku-besar-download-excel');
+        Route::get('download/pdf', [App\Http\Controllers\BukuBesarController::class, 'createPdf'])->name('buku-besar-download-pdf');
     });
 });
 
@@ -463,6 +465,7 @@ Route::group(['prefix' => 'laba-rugi'], function () {
         Route::get('getshu', [App\Http\Controllers\LabaRugiController::class, 'getSHU'])->name('laba-rugi-shu');
         Route::post('', [App\Http\Controllers\LabaRugiController::class, 'index'])->name('laba-rugi-list');
         Route::get('download/excel', [App\Http\Controllers\LabaRugiController::class, 'createExcel'])->name('laba-rugi-download-excel');
+        Route::get('download/pdf', [App\Http\Controllers\LabaRugiController::class, 'createPdf'])->name('laba-rugi-download-pdf');
     });
 });
 

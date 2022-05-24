@@ -4,11 +4,10 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeSheet;
 
-class LabaRugiExport implements FromView, ShouldAutoSize, WithEvents
+class PendapatanExportPDF implements FromView, WithEvents
 {
     protected $data;
 
@@ -19,7 +18,7 @@ class LabaRugiExport implements FromView, ShouldAutoSize, WithEvents
 
     public function view(): View
     {
-        return view('laba_rugi.excel', $this->data);
+        return view('pendapatan.laporan-excel', $this->data);
     }
 
 	public function registerEvents(): array

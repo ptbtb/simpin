@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\KartuSimpananExport;
 use App\Exports\LaporanExcelExport;
+use App\Exports\LaporanExcelExportPDF;
 use App\Exports\SimpananExport;
 use App\Imports\SimpananImport;
 use App\Models\Anggota;
@@ -982,6 +983,26 @@ class SimpananController extends Controller
             $data['penarikanPerbulan'] = $penarikanPerbulan;
             $data['penarikanPerjenis'] = $penarikanPerjenis;
 
+            if($request->pdf)
+            {
+                $filename = 'laporan_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
+                /* $tabungan = Tabungan::join('t_anggota', 't_anggota.kode_anggota', '=', 't_tabungan.kode_anggota')
+                                    ->join('t_jenis_simpan', 't_jenis_simpan.kode_jenis_simpan', '=', 't_tabungan.kode_trans')
+                                    ->select('t_anggota.kode_anggota as kode_anggota','t_anggota.nama_anggota as nama','kode_trans as kode_jenis_simpanan','t_jenis_simpan.nama_simpanan as nama_simpanan','besar_tabungan as jumlah')
+                                        ->wherenotin('t_tabungan.kode_anggota', [0])
+                                        ->wherenotin('t_anggota.status', ['keluar'])
+                                        ->orderBy('t_tabungan.kode_anggota','asc')
+                                        ->orderBy('kode_trans','asc')
+                                        // ->limit(5)
+                                        ->get();
+                $data['tabungan'] = $tabungan; */
+                 // share data to view
+                view()->share('data',$data);
+                $pdf = PDF::loadView('simpanan.laporan-pdf', $data)->setPaper('a4', 'landscape');
+
+                // download PDF file with download method
+                return $pdf->download($filename);
+            }
             $filename = 'laporan_simpanan_' . Carbon::now()->format('d M Y') . '.xlsx';
             return Excel::download(new LaporanExcelExport($data), $filename);
         } else {

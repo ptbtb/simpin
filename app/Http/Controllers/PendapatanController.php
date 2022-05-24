@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PendapatanExport;
+use App\Exports\PendapatanExportPDF;
 use App\Models\Code;
 use App\Models\CodeCategory;
 use Carbon\Carbon;
@@ -323,6 +324,11 @@ class PendapatanController extends Controller
             $data['pendapatanByJenis'] = $pendapatan;
             $data['saldoMonthGroup'] = $saldoMonthGroup;
 
+            if($request->pdf)
+            {
+                $filename = 'pendapatan-'.Carbon::now()->format('Y').'.pdf';
+                return Excel::download(new PendapatanExportPDF($data), $filename);
+            }
             $filename = 'pendapatan-'.Carbon::now()->format('Y').'.xlsx';
             return Excel::download(new PendapatanExport($data), $filename);
         }

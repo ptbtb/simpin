@@ -40,6 +40,7 @@
                         <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
                         {{-- <a href="{{ route('neraca-download-pdf', ['period' => $request->period]) }}" class="btn btn-info"><i class="fas fa-print"></i> Print</a> --}}
                         <a href="{{ route('laporan-pinjaman-download-excel', ['period' => $request->period]) }}" class="btn btn-success"><i class="fa fa-download"></i> Excel</a>
+                        <a href="{{ route('laporan-pinjaman-download-excel', ['period' => $request->period, 'pdf' => 1]) }}" class="btn btn-info"><i class="fa fa-download"></i> PDF</a>
                     </div>
                 </form>
             </div>

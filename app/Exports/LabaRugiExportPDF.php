@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeSheet;
 
-class LabaRugiExport implements FromView, ShouldAutoSize, WithEvents
+class LabaRugiExportPDF implements FromView, WithEvents
 {
     protected $data;
 
