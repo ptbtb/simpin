@@ -54,6 +54,7 @@
             <div class="card-body table-responsive">
                 <div class="text-right mb-2">
                     <a target="_blank" href="{{ route('excel.laporan.arus-kas', ['period' => $request->period]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Laporan</a>
+                    <a target="_blank" href="{{ route('excel.laporan.arus-kas', ['period' => $request->period, 'pdf' => 1]) }}" class="btn btn-sm btn-info"><i class="fa fa-download"></i> Download Laporan PDF</a>
                 </div>
                 <div class="table-responsive">
                     @include('arus_kas.laporan-view')
