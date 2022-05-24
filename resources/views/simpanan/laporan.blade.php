@@ -54,6 +54,7 @@
             <div class="card-body table-responsive">
                 <div class="text-right mb-2">
                     <a target="_blank" href="{{ route('laporan-simpanan-excel', ['tahun' => $request->tahun]) }}" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Download Laporan</a>
+                    <a target="_blank" href="{{ route('laporan-simpanan-excel', ['tahun' => $request->tahun, 'pdf' => 1]) }}" class="btn btn-sm btn-info"><i class="fa fa-download"></i> Download Laporan PDF</a>
                 </div>
                 @include('simpanan.laporan-view')
             </div>
