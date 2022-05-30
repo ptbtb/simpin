@@ -657,7 +657,7 @@ class SimpananController extends Controller
                                     ->sum('besar_simpanan');
                     $transtarik = $anggota->listPenarikan
                                     ->where('code_trans', $key)
-                                    ->where('tgl_ambil', '<', $year)
+                                    ->where('tgl_transaksi', '<', $year)
                                     ->wherenotnull('paid_by_cashier')
                                     ->sum('besar_ambil');
                     $res['name'] = $jenisSimpanan->nama_simpanan;
