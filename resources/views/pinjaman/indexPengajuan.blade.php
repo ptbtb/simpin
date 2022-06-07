@@ -91,6 +91,7 @@
                         <th>Id</th>
                         <th>#</th>
                         <th>No</th>
+                        <th>Kode Pinj Lama</th>
                         <th>No JKK</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Nomer Anggota</th>
@@ -255,6 +256,10 @@
                 {
                     mData: 'no_jkk', sType: "string",
                     className: "dt-body-center", "name": "no_jkk"
+                },
+                {
+                    mData: 'kode_pinj_lama', sType: "string",
+                    className: "dt-body-center", "name": "kode_pinj_lama"
                 },
                 {
                     mData: 'tgl_pengajuan', sType: "string",

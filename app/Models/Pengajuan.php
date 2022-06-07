@@ -22,7 +22,7 @@ class Pengajuan extends Model implements Auditable
      *
      * @var array
      */
-    protected $appends = ['created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view'];
+    protected $appends = ['created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view','kode_pinj_lama'];
 
     public function anggota()
     {
@@ -245,5 +245,10 @@ class Pengajuan extends Model implements Auditable
             return $this->approvedBy->name;
         }
         return '-';
+    }
+
+    public function getKodePinjLamaAttribute()
+    {
+        return ($this->pengajuanTopup)?$this->pengajuanTopup->kode_jenis_pinjaman:'';
     }
 }
