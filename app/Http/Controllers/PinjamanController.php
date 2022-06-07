@@ -77,7 +77,7 @@ class PinjamanController extends Controller
                 $anggota = Anggota::find($request->id);
 
                 $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                    ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                    // ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
                     ->wherenotnull('tgl_transaksi');
             } else {
                 $listPinjaman = Pinjaman::wherenotnull('tgl_transaksi')
@@ -1177,7 +1177,7 @@ class PinjamanController extends Controller
                                         ->where('angsuran_ke', strval($pinjaman->angsuran_sekarang))
                                         ->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)
                                         ->first();
-                
+
                 if(is_null($angsuran))
                 {
                     $angsuran = AngsuranManager::createAngsuran($pinjaman, $request);
@@ -1189,7 +1189,7 @@ class PinjamanController extends Controller
                 } else {
                     $angsuran->id_akun_kredit = ($request->id_akun_kredit[$i]) ? $request->id_akun_kredit[$i] : null;
                 }
-  
+
                 if ($angsuran->besar_pembayaran) {
                     $pembayaran = $pembayaran + $angsuran->besar_pembayaran;
                 }
@@ -1990,7 +1990,7 @@ class PinjamanController extends Controller
                 // period
                 // check if period date has been selected
                 if(!$request->period)
-                {          
+                {
                     $request->period = Carbon::today()->format('Y');
                 }
 
@@ -2022,20 +2022,20 @@ class PinjamanController extends Controller
                 $totalJapenTrx = 0;
 
                 // loop for every month in year
-                for ($i=1; $i <=12 ; $i++) 
-                { 
+                for ($i=1; $i <=12 ; $i++)
+                {
                     $japenDiterima = 0;
                     $japenApproved = 0;
                     $japanDiterima = 0;
                     $japanApproved = 0;
                     $japenTemp = [];
                     $japanTemp = [];
-                    
+
                     if($i < 10)
                     {
                         if(property_exists((object)$pinjamanJapens->toArray(), '0' . $i))
                         {
-                            
+
                             $japenTemp = $pinjamanJapens['0' . $i];
                         }
 
@@ -2078,7 +2078,7 @@ class PinjamanController extends Controller
                             $japenDiterima += (int)$japen->besar_pinjam;
                         }
                     }
-                    
+
                     foreach($japanTemp as $japan)
                     {
                         if($japan->pengajuan)
@@ -2098,14 +2098,14 @@ class PinjamanController extends Controller
                         }
                     }
 
-                    $reports->put($i, ['trxJapen' => $trxJapen, 
-                                            'trxJapan' => $trxJapan, 
-                                            'japenDiterima' => $japenDiterima, 
+                    $reports->put($i, ['trxJapen' => $trxJapen,
+                                            'trxJapan' => $trxJapan,
+                                            'japenDiterima' => $japenDiterima,
                                             'japenApproved' => $japenApproved,
                                             'japanDiterima' => $japanDiterima,
                                             'japanApproved' => $japanApproved
                                         ]);
-                    
+
                     // total data
                     $totalJapanTrx += $trxJapan;
                     $totalJapenTrx += $trxJapen;
