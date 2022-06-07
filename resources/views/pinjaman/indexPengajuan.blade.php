@@ -91,8 +91,8 @@
                         <th>Id</th>
                         <th>#</th>
                         <th>No</th>
-                        <th>Kode Pinj Lama</th>
                         <th>No JKK</th>
+                        <th>Kode Pinj Lama</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Nomer Anggota</th>
                         <th>Nama Anggota</th>

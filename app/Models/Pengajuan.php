@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Log;
 
 class Pengajuan extends Model implements Auditable
 {
@@ -249,10 +250,11 @@ class Pengajuan extends Model implements Auditable
 
     public function getKodePinjLamaAttribute()
     {
-      if ($this->pengajuanTopup){
-        return $this->pengajuanTopup->kode_pinjaman;
+      if($this->pengajuanTopup){
+        $found = $this->pengajuanTopup->first();
+          return ($found)?$found->kode_pinjaman:'-';
       }
-      return '-';
+    return '-';
 
     }
 }
