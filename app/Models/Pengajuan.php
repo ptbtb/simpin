@@ -249,6 +249,10 @@ class Pengajuan extends Model implements Auditable
 
     public function getKodePinjLamaAttribute()
     {
-        return ($this->pengajuanTopup)?$this->pengajuanTopup->kode_jenis_pinjaman:'';
+      if ($this->pengajuanTopup){
+        return $this->pengajuanTopup->kode_pinjaman:'';
+      }
+      return '-';
+
     }
 }
