@@ -641,6 +641,11 @@ class PinjamanController extends Controller
             $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
             $pengajuan->sumber_dana = $request->sumber_dana;
             $pengajuan->tenor = $request->lama_angsuran;
+            $pengajuan->biaya_administrasi = filter_var($request->biaya_administrasi, FILTER_SANITIZE_NUMBER_INT);
+            $pengajuan->biaya_jasa = filter_var($request->biaya_jasa, FILTER_SANITIZE_NUMBER_INT);
+            $pengajuan->biaya_provisi = filter_var($request->biaya_provisi, FILTER_SANITIZE_NUMBER_INT);
+            $pengajuan->biaya_asuransi = filter_var($request->biaya_asuransi, FILTER_SANITIZE_NUMBER_INT);
+            $pengajuan->biaya_jasa_topup = filter_var($request->biaya_jasa_topup, FILTER_SANITIZE_NUMBER_INT);
             $pengajuan->created_by = $user->id;
 
             if ($isCreatePagu) {

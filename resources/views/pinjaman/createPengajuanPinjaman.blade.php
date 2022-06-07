@@ -130,6 +130,28 @@
                     <label>Lama Angsuran</label>
                     <input type="text" name="lama_angsuran" class="form-control" placeholder="Lama Angsuran" readonly id="lamaAngsuran">
                 </div>
+                @if (\Auth::user()->isAdmin())
+                    <div class="col-md-6 form-group">
+                        <label>Biaya Administrasi</label>
+                        <input type="text" name="biaya_administrasi" id="biaya_administrasi" class="form-control torupiah" placeholder="Biaya Administrasi" value="Rp 0">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Biaya Jasa</label>
+                        <input type="text" name="biaya_jasa" id="biaya_jasa" class="form-control torupiah" placeholder="Biaya Jasa" value="Rp 0">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Biaya Provisi</label>
+                        <input type="text" name="biaya_provisi" id="biaya_provisi" class="form-control torupiah" placeholder="Biaya Provisi" value="Rp 0">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Biaya Asuransi</label>
+                        <input type="text" name="biaya_asuransi" id="biaya_asuransi" class="form-control torupiah" placeholder="Biaya Asuransi" value="Rp 0">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Biaya Jasa Topup</label>
+                        <input type="text" name="biaya_jasa_topup" id="biaya_jasa_topup" class="form-control torupiah" placeholder="Biaya Topup" value="Rp 0">
+                    </div>
+                @endif
                 <div class="col-md-6 form-group">
                     <label>Upload Form Persetujuan Atasan</label>
                     <div class="custom-file">
@@ -342,6 +364,13 @@
                     $('#warningBesarPinjaman').hide();
                 }
                 $(this).val(toRupiah(besarPinjaman));
+            });
+            
+            $(document).on('keyup', '.torupiah', function ()
+            {
+                var val = $(this).val();
+                val = val.replace(/[^\d]/g, "",'');
+                $(this).val(toRupiah(val));
             });
 
             $(".custom-file-input").on("change", function() {

@@ -142,19 +142,22 @@ class Pengajuan extends Model implements Auditable
 
     public function getViewJasaAttribute()
     {
-        $value = round($this->jenisPinjaman->jasa*$this->besar_pinjam, 2);
+        // $value = round($this->jenisPinjaman->jasa*$this->besar_pinjam, 2);
+        $value = $this->biaya_jasa;
         return 'Rp '.number_format($value, '2', ',', '.');
     }
 
     public function getViewAsuransiAttribute()
     {
-        $value = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        // $value = round($this->jenisPinjaman->asuransi*$this->besar_pinjam, 2);
+        $value = $this->biaya_asuransi;
         return 'Rp '.number_format($value, '2', ',', '.');
     }
 
     public function getViewProvisiAttribute()
     {
-        $value = round($this->jenisPinjaman->provisi*$this->besar_pinjam, 2);
+        // $value = round($this->jenisPinjaman->provisi*$this->besar_pinjam, 2);
+        $value = $this->biaya_provisi;
         return 'Rp '.number_format($value, '2', ',', '.');
     }
 
@@ -165,10 +168,11 @@ class Pengajuan extends Model implements Auditable
 
     public function getViewBiayaAdminAttribute()
     {
-        if($this->pinjaman){
+        /* if($this->pinjaman){
             return 'Rp '.number_format($this->pinjaman->biaya_administrasi, '2', ',', '.');
         }
-        return 'Rp '.number_format($this->jenisPinjaman->biaya_admin, '2', ',', '.');
+        return 'Rp '.number_format($this->jenisPinjaman->biaya_admin, '2', ',', '.'); */
+        return 'Rp '.number_format($this->biaya_administrasi, '2', ',', '.');
     }
 
     public function getViewJasaPelunasanDipercepatAttribute()

@@ -64,10 +64,15 @@ class PinjamanManager
             $pinjaman->lama_angsuran = $lamaAngsuran;
             $pinjaman->sisa_angsuran = $lamaAngsuran;
             $pinjaman->sisa_pinjaman = $pengajuan->besar_pinjam;
-            $pinjaman->biaya_jasa = $jasaPerbulan;
+            $pinjaman->biaya_jasa = $pengajuan->biaya_jasa;
+            $pinjaman->biaya_asuransi = $pengajuan->biaya_asuransi;
+            $pinjaman->biaya_provisi = $pengajuan->biaya_provisi;
+            $pinjaman->biaya_administrasi = $pengajuan->biaya_administrasi;
+            $pinjaman->biaya_jasa_topup = $pengajuan->biaya_jasa_topup;
+            /* $pinjaman->biaya_jasa = $jasaPerbulan;
             $pinjaman->biaya_asuransi = $asuransi;
             $pinjaman->biaya_provisi = $provisi;
-            $pinjaman->biaya_administrasi = $biayaAdministrasi;
+            $pinjaman->biaya_administrasi = $biayaAdministrasi; */
             $pinjaman->u_entry = Auth::user()->name;
             $pinjaman->tgl_entri = Carbon::now();
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($lamaAngsuran);

@@ -119,7 +119,8 @@ class Pinjaman extends Model implements Auditable
     }
     public function getJasaTopup() {
         // return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
-        return $this->sisa_pinjaman * $this->jenisPinjaman->jasa_topup - $this->total_diskon;
+        // return $this->sisa_pinjaman * $this->jenisPinjaman->jasa_topup - $this->total_diskon;
+        return $this->biaya_jasa_topup;
     }
 
     public function getTotalbayarPelunasanDipercepatAttribute()
