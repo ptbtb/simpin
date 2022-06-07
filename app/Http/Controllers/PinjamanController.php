@@ -150,7 +150,7 @@ class PinjamanController extends Controller
 
             $anggota = Anggota::find($id);
             $listPinjaman = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+                // ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
                 ->wherenotnull('tgl_transaksi');
         }
 
