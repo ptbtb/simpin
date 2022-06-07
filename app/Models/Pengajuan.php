@@ -250,7 +250,7 @@ class Pengajuan extends Model implements Auditable
     public function getKodePinjLamaAttribute()
     {
       if ($this->pengajuanTopup){
-        return $this->pengajuanTopup->kode_pinjaman:'';
+        return $this->pengajuanTopup->kode_pinjaman;
       }
       return '-';
 
