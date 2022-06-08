@@ -88,7 +88,7 @@ class JurnalManager
             {
                 $jurnal->akun_kredit = '102.18.000';
             }
-            $jurnal->kredit = $pinjaman->besar_pinjam - $pinjaman->biaya_administrasi - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi;
+            $jurnal->kredit = $pinjaman->besar_pinjam - $pinjaman->biaya_administrasi - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi - $pinjaman->biaya_jasa_topup;
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
@@ -143,6 +143,32 @@ class JurnalManager
 
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
+
+            
+            // jurnal untuk topup
+            if($pinjaman->pengajuan->pengajuanTopup->count())
+            {
+                $coa = COA_JASA_TOP_UP_PINJ_JANGKA_PANJANG;
+                if($pinjaman->jenisPinjaman->kategori_jenis_pinjaman_id == KATEGORI_JENIS_PINJAMAN_JANGKA_PENDEK)
+                {
+                    $coa = COA_JASA_TOP_UP_PINJ_JANGKA_PENDEK;
+                }
+
+                $jurnal = new Jurnal();
+                $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+                $jurnal->nomer = Carbon::parse( $pinjaman->tgl_transaksi)->format('Ymd').(Jurnal::count()+1);
+                $jurnal->tgl_transaksi = Carbon::parse( $pinjaman->tgl_transaksi);
+                $jurnal->akun_kredit = $coa;
+                $jurnal->kredit = $pinjaman->biaya_jasa_topup;
+                $jurnal->akun_debet = 0;
+                $jurnal->debet = 0;
+                $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
+                $jurnal->created_by = Auth::user()->id;
+                $jurnal->updated_by = Auth::user()->id;
+    
+                // save as polymorphic
+                $pinjaman->jurnals()->save($jurnal);
+            }
         }
         catch (\Exception $e)
         {

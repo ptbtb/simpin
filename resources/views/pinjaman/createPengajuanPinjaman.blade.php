@@ -5,6 +5,7 @@
 @endsection
 
 @section('content_header')
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 <div class="row">
 	<div class="col-6"><h4>{{ $title }}</h4></div>
 	<div class="col-6">
@@ -151,6 +152,10 @@
                         <label>Biaya Jasa Topup</label>
                         <input type="text" name="biaya_jasa_topup" id="biaya_jasa_topup" class="form-control torupiah" placeholder="Biaya Topup" value="Rp 0">
                     </div>
+                    <div class="col-md-6 form-group">
+                        <label>Tanggal Pengajuan</label>
+                        <input type="text" readonly name="tanggal_pengajuan" id="tanggal_pengajuan" class="form-control" required placeholder="Tanggal Pengajuan" style="background: transparent">
+                    </div>
                 @endif
                 <div class="col-md-6 form-group">
                     <label>Upload Form Persetujuan Atasan</label>
@@ -189,6 +194,7 @@
 
 @section('js')
     <script src="{{ asset('js/collect.min.js') }}"></script>
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <script>
         var baseURL = {!! json_encode(url('/')) !!};
         var jenisPinjaman = collect({!!$listJenisPinjaman!!});
@@ -211,6 +217,13 @@
                 updateSumberDana(collection);
             @endif
             initialEvent();
+
+            @if(\Auth::user()->isAdmin())
+                $('#tanggal_pengajuan').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    format: 'yyyy-mm-dd'
+                });
+            @endif
         });
 
        function initialEvent()

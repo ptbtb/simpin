@@ -636,7 +636,8 @@ class PinjamanController extends Controller
 
             $pengajuan = new Pengajuan();
             $pengajuan->kode_pengajuan = $kodePengajuan;
-            $pengajuan->tgl_pengajuan = Carbon::now();
+            // $pengajuan->tgl_pengajuan = Carbon::now();
+            $pengajuan->tgl_pengajuan = Carbon::createFromFormat('Y-m-d', $request->tanggal_pengajuan);
             $pengajuan->kode_anggota = $request->kode_anggota;
             $pengajuan->kode_jenis_pinjam = $request->jenis_pinjaman;
             $pengajuan->besar_pinjam = $besarPinjaman;
