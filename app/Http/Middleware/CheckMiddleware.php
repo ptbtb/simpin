@@ -19,7 +19,11 @@ class CheckMiddleware
     {
         if (Auth::user()->isVerified())
         {
+             if (Auth::user()->isAllowed())
+        {
             return $next($request);
+        }
+            
         }
         Auth::logout();
         return redirect()->route('login')->withError('Akun anda belum di verifikasi');

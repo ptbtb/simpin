@@ -119,6 +119,11 @@ class User extends Authenticatable implements Auditable
         return $this->is_verified == 1;
     }
 
+    public function isAllowed()
+    {
+        return $this->is_allow == 1;
+    }
+
     public function scopeOperatorSimpin($query)
     {
         return $query->whereHas('roles', function ($q)
