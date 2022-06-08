@@ -638,7 +638,12 @@ class PinjamanController extends Controller
             $pengajuan->kode_jenis_pinjam = $request->jenis_pinjaman;
             $pengajuan->besar_pinjam = $besarPinjaman;
             $pengajuan->keperluan = $request->keperluan;
-            $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
+            if ($user->roles->first()->id == ROLE_ADMIN) {
+                $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA;
+            }else{
+               $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI; 
+            }
+            
             $pengajuan->sumber_dana = $request->sumber_dana;
             $pengajuan->tenor = $request->lama_angsuran;
             $pengajuan->biaya_administrasi = filter_var($request->biaya_administrasi, FILTER_SANITIZE_NUMBER_INT);
