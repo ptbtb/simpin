@@ -47,10 +47,7 @@ class JkkPrintedController extends Controller
 
         $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan')
                                 ->orderBy('printed_at', 'desc');
-        if ($request->no_jkk){
-            $jkkPrinted = $jkkPrinted->where('jkk_number',$request->no_jkk);
-        }
-
+        
 
         if (isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN)
         {
@@ -83,6 +80,10 @@ class JkkPrintedController extends Controller
                                          return $query->has('pinjaman');
                                     })
                                     ->whereBetween('printed_at',[$startUntilPeriod,$endUntilPeriod]);
+        }
+
+        if ($request->no_jkk){
+            $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan')->where('jkk_number',$request->no_jkk);
         }
 
         return DataTables::eloquent($jkkPrinted)
