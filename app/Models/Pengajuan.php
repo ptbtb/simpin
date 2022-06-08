@@ -177,7 +177,8 @@ class Pengajuan extends Model implements Auditable
 
     public function getViewJasaPelunasanDipercepatAttribute()
     {
-        return 'Rp '.number_format($this->pengajuanTopup->sum('jasa_pelunasan_dipercepat'), '2', ',', '.');
+        // return 'Rp '.number_format($this->pengajuanTopup->sum('jasa_pelunasan_dipercepat'), '2', ',', '.');
+        return 'Rp '.number_format($this->biaya_jasa_topup);
     }
 
     public function getViewSisaPinjamanAttribute()
