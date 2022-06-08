@@ -18,7 +18,9 @@ class LoginController extends Controller
             'password' => ['required']
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)
+        ->where('is_allow',1)
+        ->first();
 
         if (!$user)
         {
