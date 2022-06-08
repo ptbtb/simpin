@@ -746,7 +746,12 @@ class PinjamanController extends Controller
                             $pengajuan->id_status_pengajuan = $request->status;
                         }
                     } else {
+                        if ($user->roles->first()->id == ROLE_ADMIN) {
+                    $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA;
+                        }else{
                         $pengajuan->id_status_pengajuan = $request->status;
+                            }
+                       
                     }
 
                     $pengajuan->tgl_acc = Carbon::now();
