@@ -56,28 +56,33 @@ class JkkPrintedController extends Controller
         {
             $jkkPrinted = $jkkPrinted->whereHas('jkkPengajuan', function ($query) use ($startUntilPeriod,&$endUntilPeriod)
             {
-                return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
-            });
+                // return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+                 return $query->has('pinjaman');
+            })->whereBetween('printed_at',[$startUntilPeriod,$endUntilPeriod]);
         }
         elseif(isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENARIKAN_SIMPANAN)
         {
             $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan', function ($query) use ($startUntilPeriod,&$endUntilPeriod)
             {
-                return $query->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+                // return $query->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+                 return $query;
             }
 
-        );
+        )->whereBetween('printed_at',[$startUntilPeriod,$endUntilPeriod]);
         }
         else
         {
             $jkkPrinted = $jkkPrinted->whereHas('jkkPenarikan', function ($query1) use ($startUntilPeriod,&$endUntilPeriod)
             {
-                return $query1->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+                // return $query1->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+                return $query1;
             })
                                     ->orWhereHas('jkkPengajuan', function ($query)use ($startUntilPeriod,&$endUntilPeriod)
                                     {
-                                        return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
-                                    });
+                                        // return $query->has('pinjaman')->whereBetween('tgl_transaksi',[$startUntilPeriod,$endUntilPeriod]);
+                                         return $query->has('pinjaman');
+                                    })
+                                    ->whereBetween('printed_at',[$startUntilPeriod,$endUntilPeriod]);
         }
 
         return DataTables::eloquent($jkkPrinted)
