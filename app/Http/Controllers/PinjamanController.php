@@ -588,6 +588,9 @@ class PinjamanController extends Controller
         $gajiraw = Penghasilan::where('kode_anggota', $request->kode_anggota)
             ->where('id_jenis_penghasilan', $request->sumber_dana)
             ->first();
+        if (!$gajiraw){
+            return redirect()->back()->withError('Belum memiliki data penghasilan ');
+        }
         if ($gajiraw->value == 0) {
             return redirect()->back()->withError('Belum memiliki penghasilan ' . $gajiraw->jenisPenghasilan->name);
         }
