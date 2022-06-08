@@ -52,11 +52,11 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label>TGL TRX Dari</label>
+                    <label>TGL Print Dari</label>
                     <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="from" name="from" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y') }}" autocomplete="off" />
                 </div>
                 <div class="col-md-3">
-                    <label>TGL TRX Sampai</label>
+                    <label>TGL Print Sampai</label>
                     <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}" autocomplete="off" />
                 </div>
                 <div class="col-md-3">
