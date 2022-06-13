@@ -45,8 +45,8 @@
                     </div>
                     <div class="col-md-12 text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary" name="search" value="search"><span class="fa fa-search"></span> Search</button>
-                         <a href="{{ route('laba-rugi-download-excel') }}" class="btn btn-success"><i class="fa fa-download"></i> Download Excel</a> 
-                         <a href="{{ route('laba-rugi-download-pdf') }}" class="btn btn-info"><i class="fa fa-download"></i> Download PDF</a> 
+                         <a href="{{ route('laba-rugi-download-excel') }}" class="btn btn-success" id="excelbtn"><i class="fa fa-download"></i> Download Excel</a> 
+                         <a href="{{ route('laba-rugi-download-pdf') }}" class="btn btn-info" id="pdfbtn"><i class="fa fa-download"></i> Download PDF</a> 
                     </div>
                 </form>
             </div>
@@ -468,8 +468,13 @@
         {
 
             $("#period").change(function(){
-                console.log($('#period').val());
-                console.log({{ $request->period }});
+                var period = $('#period').val();
+                // console.log($('#period').val());
+                // console.log({{ $request->period }});
+                var url = $('#excelbtn').attr('href')+'?period='+period;
+                $('#excelbtn').prop("href", url);
+                var url = $('#pdfbtn').attr('href')+'?period='+period;
+                $('#pdfbtn').prop("href", url);
             });
 
             $('.datepicker').datepicker({
