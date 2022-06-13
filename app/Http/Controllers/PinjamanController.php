@@ -542,6 +542,7 @@ class PinjamanController extends Controller
         $this->authorize('add pengajuan pinjaman', $user);
 
         $besarPinjaman = filter_var($request->besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
+        $requestSimpananPagu = filter_var($request->simpanan_pagu, FILTER_SANITIZE_NUMBER_INT);
         $maksimalPinjaman = filter_var($request->maksimal_besar_pinjaman, FILTER_SANITIZE_NUMBER_INT);
 
         //  chek pengajuan yang belum accepted
@@ -623,7 +624,8 @@ class PinjamanController extends Controller
             $pengali = 8;
         }
 
-        if ($saldoSimpanan < $besarPinjaman) {
+        // if ($saldoSimpanan < $besarPinjaman) {
+        if ($requestSimpananPagu > 0) {
             $isCreatePagu = 1;
             $transferPagu = ($besarPinjaman / $pengali) - $saldojumlah;
         }
