@@ -318,7 +318,7 @@
                 if(selectedJenisPinjaman1 && besarPinjaman > 0)
                 {
                     $('#biaya_administrasi').val(toRupiah(selectedJenisPinjaman1.biaya_admin));
-                    $('#biaya_jasa').val(toRupiah(selectedJenisPinjaman1.jasa * besarPinjaman));
+                    // $('#biaya_jasa').val(toRupiah(selectedJenisPinjaman1.jasa * besarPinjaman));
                     $('#biaya_provisi').val(toRupiah(selectedJenisPinjaman1.provisi * besarPinjaman));
                     $('#biaya_asuransi').val(toRupiah(selectedJenisPinjaman1.asuransi * besarPinjaman));
                 }
@@ -400,7 +400,7 @@
                 if(selectedJenisPinjaman1 && besarPinjaman > 0)
                 {
                     $('#biaya_administrasi').val(toRupiah(selectedJenisPinjaman1.biaya_admin));
-                    $('#biaya_jasa').val(toRupiah(selectedJenisPinjaman1.jasa * besarPinjaman));
+                    // $('#biaya_jasa').val(toRupiah(selectedJenisPinjaman1.jasa * besarPinjaman));
                     $('#biaya_provisi').val(toRupiah(selectedJenisPinjaman1.provisi * besarPinjaman));
                     $('#biaya_asuransi').val(toRupiah(selectedJenisPinjaman1.asuransi * besarPinjaman));
                 }

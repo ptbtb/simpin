@@ -627,7 +627,8 @@ class PinjamanController extends Controller
         // if ($saldoSimpanan < $besarPinjaman) {
         if ($requestSimpananPagu > 0) {
             $isCreatePagu = 1;
-            $transferPagu = ($besarPinjaman / $pengali) - $saldojumlah;
+            // $transferPagu = ($besarPinjaman / $pengali) - $saldojumlah;
+            $transferPagu = $requestSimpananPagu;
         }
 
 
