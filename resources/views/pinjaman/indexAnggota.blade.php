@@ -71,7 +71,7 @@
             </thead>
             <tbody>
                 @foreach ($listPinjaman as $pinjaman)
-                @if ($pinjaman->listAngsuran->count('*') > 0)
+                @if ($pinjaman->listAngsuran->count('*') >= 0)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $pinjaman->kode_pinjam }}</td>
