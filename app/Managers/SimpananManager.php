@@ -153,9 +153,9 @@ class SimpananManager
         $simpanan->besar_simpanan = $pengajuan->transfer_simpanan_pagu;
         $simpanan->kode_anggota = $pengajuan->kode_anggota;
         $simpanan->u_entry = Auth::user()->name;
-        $simpanan->tgl_entri = Carbon::now();
-        $simpanan->tgl_transaksi = Carbon::now();
-        $simpanan->periode = Carbon::now();
+        $simpanan->tgl_entri = $pengajuan->tgl_transaksi;
+        $simpanan->tgl_transaksi = $pengajuan->tgl_transaksi;
+        $simpanan->periode = $pengajuan->tgl_transaksi;
         $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
         $simpanan->keterangan = "Simpanan pagu dari pengajuan pinjaman ". $pengajuan->kode_pengajuan;
         $simpanan->id_akun_debet = null;

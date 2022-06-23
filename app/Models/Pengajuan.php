@@ -16,7 +16,7 @@ class Pengajuan extends Model implements Auditable
     protected $primaryKey = "kode_pengajuan";
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $dates = ['tgl_pengajuan', 'tgl_acc'];
+    protected $dates = ['tgl_pengajuan', 'tgl_acc', 'tgl_transaksi'];
 
     /**
      * The accessors to append to the model's array form.

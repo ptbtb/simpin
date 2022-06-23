@@ -8,6 +8,7 @@ use App\Events\Pinjaman\PengajuanApproved;
 use App\Imports\PinjamanBaruImport;
 use Illuminate\Http\Request;
 use App\Events\Pinjaman\PengajuanCreated;
+use App\Events\Pinjaman\PengajuanPaid;
 use App\Events\Pinjaman\PengajuanUpdated;
 use App\Exports\PinjamanExport;
 use App\Exports\LaporanPinjamanExcelExport;
@@ -824,6 +825,8 @@ class PinjamanController extends Controller
                         if ($pengajuan->transfer_simpanan_pagu) {
                             SimpananManager::createSimpananPagu($pengajuan);
                         }
+
+                        event(new PengajuanPaid($pengajuan));
                     }
 
                     if ($pengajuan->ditolak()) {

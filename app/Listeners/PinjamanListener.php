@@ -14,4 +14,9 @@ class PinjamanListener
     {
         PinjamanManager::createPinjaman($event->pengajuan);
     }
+
+    public function onPengajuanPaid($event)
+    {
+        PinjamanManager::updateTglPinjaman($event->pengajuan);
+    }
 }
