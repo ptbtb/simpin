@@ -178,7 +178,7 @@ class PinjamanManager
     public static function updateTglPinjaman(Pengajuan $pengajuan)
     {
         $pinjaman = $pengajuan->pinjaman;
-        $pinjaman->tgl_entry = $pengajuan->tgl_transaksi;
+        $pinjaman->tgl_entri = $pengajuan->tgl_transaksi;
         $pinjaman->tgl_tempo = $pengajuan->tgl_transaksi->addMonths($pengajuan->tenor);
         $pinjaman->save();
     }
