@@ -1235,6 +1235,8 @@ class PinjamanController extends Controller
                 } else {
                     $angsuran->besar_pembayaran = $pembayaran;
                 }
+                $angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $angsuran->u_entry = Auth::user()->name;
                 $angsuran->save();
 
                 // create JKM angsuran
