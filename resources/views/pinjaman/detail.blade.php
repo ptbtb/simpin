@@ -590,7 +590,7 @@ use Carbon\Carbon;
         var baseURL = {!! json_encode(url('/')) !!};
         var saldo = collect(@json($tabungan))
         var listSumberDana = collect(@json($listSumberDana));
-        $(document.).on('click', '.btn-bayarAngsuran', function() {
+        $(document).on('click', '.btn-bayarAngsuran', function() {
             $('#my-modal').modal({
                 backdrop: false
             });
