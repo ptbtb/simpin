@@ -931,23 +931,17 @@ use Carbon\Carbon;
                     '<label>Jenis Pembayaran</label>' +
                     '<select name="jenis_pembayaran[]" class="form-control jenisPembayaran1">' +
                     '<option value="0">KAS/BANK</option>' +
-                    '@foreach ($tabungan as $value)
-                ' +
+                    '@foreach ($tabungan as $value)' +
                 '<option value="{{ $value->kode_trans }}">{{ $value->jenisSimpanan->nama_simpanan }} (Rp {{ number_format($value->besar_tabungan, 0, ',', '.') }})</option>' +
-                '
-            @endforeach
-            ' +
+                '@endforeach' +
             '</select>' +
             '</div>' +
             '<div class="form-group col-md-6 jenisAkun1Cover">' +
             '<label>Jenis Akun</label>' +
             '<select name="jenis_akun[]" id="jenisAkun1" class="form-control select2 jenisAkun" required>' +
-            '@foreach ($listSumberDana as $sumberDana)
-            ' +
+            '@foreach ($listSumberDana as $sumberDana)' +
             '<option value="{{ $sumberDana->id }}">{{ $sumberDana->name }}</option>' +
-            '
-        @endforeach
-        ' +
+            '@endforeach' +
         '</select>' +
         '</div>' +
         '<div class="form-group col-md-12 akun1Cover">' +
