@@ -1259,6 +1259,7 @@ class PinjamanController extends Controller
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {
             // dd($e);
+            \Log::error($e);
             $message = $e->getMessage();
             DB::rollback();
             return redirect()->back()->withError($e->getMessage());
