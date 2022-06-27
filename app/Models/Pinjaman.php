@@ -162,10 +162,10 @@ class Pinjaman extends Model implements Auditable
 
     public function canPercepatPelunasan()
     {
-        return true;
-        /* $minimalAngsuranLunas = $this->minimal_angsur_pelunasan;
+        // return true;
+        $minimalAngsuranLunas = $this->minimal_angsur_pelunasan;
         $angsuranLunas = $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)->count();
-        return $angsuranLunas >= $minimalAngsuranLunas; */
+        return $angsuranLunas >= $minimalAngsuranLunas;
     }
 
     public function getSerialNumberViewAttribute()
