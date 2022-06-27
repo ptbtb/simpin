@@ -1,5 +1,4 @@
 @extends('adminlte::page')
-use Carbon\Carbon;
 
 @section('title')
     {{ $title }}
