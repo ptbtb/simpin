@@ -590,7 +590,7 @@ use Carbon\Carbon;
         var baseURL = {!! json_encode(url('/')) !!};
         var saldo = collect(@json($tabungan))
         var listSumberDana = collect(@json($listSumberDana));
-        $('.btn-bayarAngsuran').on('click', function() {
+        $(document.).on('click', '.btn-bayarAngsuran', function() {
             $('#my-modal').modal({
                 backdrop: false
             });
@@ -598,7 +598,7 @@ use Carbon\Carbon;
             $('.jenisAkun').trigger("change");
         });
 
-        $('.btn-pelunasanDipercepat').on('click', function() {
+        $(document).on('click', '.btn-pelunasanDipercepat', function() {
             $('#my-modal1').modal({
                 backdrop: false
             });
