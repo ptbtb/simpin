@@ -51,6 +51,8 @@ class AnggotaController extends Controller {
             $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
         }
 
+        $anggotas = $anggotas->orderBy('created_at', 'desc');
+
         // $anggotas = $anggotas->get();
         // if($request->filter)
 		// {
