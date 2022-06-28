@@ -116,8 +116,8 @@
         },
         aoColumns: [
             {
-                mData: 'null ', sType: "string",
-                className: "dt-body-center", "name": "index",
+                mData: 'kode_anggota ', sType: "string",
+                className: "dt-body-center", "name": "kode_anggota",
             },
             {
                 mData: 'kode_anggota_prefix', sType: "string",
