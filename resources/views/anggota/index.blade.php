@@ -72,7 +72,7 @@
         <table id="table_anggota" class="table table-striped table-condensed">
             <thead>
                 <tr class="info">
-                    {{-- <th><a href="#">No</a></th> --}}
+                    <th><a href="#">No</a></th>
                     <th><a href="#">No Anggota</a></th>
                     <th><a href="#">NIPP</a></th>
                     <th><a href="#">Nama Anggota</a></th>
@@ -115,10 +115,10 @@
             }
         },
         aoColumns: [
-            // {
-            //     mData: 'kode_anggota ', sType: "string",
-            //     className: "dt-body-center", "name": "kode_anggota",
-            // },
+            {
+                mData: 'kode_anggota ', sType: "string",
+                className: "dt-body-center", "name": "kode_anggota",
+            },
             {
                 mData: 'kode_anggota_prefix', sType: "string",
                 className: "dt-body-center", "name": "kodeAnggotaPrefix"
