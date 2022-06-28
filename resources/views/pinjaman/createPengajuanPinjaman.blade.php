@@ -141,7 +141,7 @@
                         <input type="text" name="lama_angsuran" class="form-control" placeholder="Lama Angsuran" readonly
                             id="lamaAngsuran">
                     </div>
-                    @if (\Auth::user()->isAdmin())
+                    @if (!\Auth::user()->isAnggota())
                         <div class="col-md-6 form-group">
                             <label>Biaya Administrasi</label>
                             <input type="text" name="biaya_administrasi" id="biaya_administrasi"
