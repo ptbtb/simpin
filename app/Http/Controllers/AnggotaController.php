@@ -25,6 +25,7 @@ use PDF;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 class AnggotaController extends Controller {
 
@@ -50,9 +51,13 @@ class AnggotaController extends Controller {
             $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
         }
 
-        $anggotas = $anggotas->get();
-
-        return $anggotas;
+        // $anggotas = $anggotas->get();
+        // if($request->filter)
+		// {
+			return DataTables::eloquent($anggotas)->make(true);
+		// }
+        // return DataTables::eloquent(Anggota::limit(0))->make(true);
+        // return $anggotas;
     }
 
     public function create()

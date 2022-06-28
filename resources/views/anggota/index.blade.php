@@ -100,14 +100,18 @@
 @section('js')
 <script>
     $.fn.dataTable.ext.errMode = 'none';
-    var table = $('.table').DataTable({
-        "processing": true,
+    var table = $('.table').on('xhr.dt', function(e, settings, json, xhr) {}).DataTable({
+        // "processing": true,
+        bProcessing: true,
+        bServerSide: true,
+        responsive: true,
         ajax: {
             url: '{{ route('anggota-list-ajax') }}',
             dataSrc: '',
             data: function(data){
                 @if(isset($request->status)) data.status = '{{ $request->status }}'; @endif
                 @if(isset($request->id_jenis_anggota)) data.id_jenis_anggota = '{{ $request->id_jenis_anggota }}'; @endif
+                @if(isset($request->filter)) data.filter = '{{ $request->filter }}'; @endif
             }
         },
         aoColumns: [
@@ -192,7 +196,27 @@
                     return markup;
                 }
             },
-        ]
+        ],
+        fnInitComplete: function(oSettings, json) {
+
+            var _that = this;
+
+            this.each(function(i) {
+                $.fn.dataTableExt.iApiIndex = i;
+                var $this = this;
+                var anControl = $('input', _that.fnSettings().aanFeatures.f);
+                anControl
+                    .unbind('keyup search input')
+                    .bind('keypress', function(e) {
+                        if (e.which == 13) {
+                            $.fn.dataTableExt.iApiIndex = i;
+                            _that.fnFilter(anControl.val());
+                        }
+                    });
+                return this;
+            });
+            return this;
+        }
     });
 
     // add index column
