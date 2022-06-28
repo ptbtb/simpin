@@ -100,24 +100,20 @@
 @section('js')
 <script>
     $.fn.dataTable.ext.errMode = 'none';
-    var table = $('.table').on('xhr.dt', function(e, settings, json, xhr) {}).DataTable({
-        // "processing": true,
-        bProcessing: true,
-        bServerSide: true,
-        responsive: true,
+    var table = $('.table').DataTable({
+        "processing": true,
         ajax: {
             url: '{{ route('anggota-list-ajax') }}',
             dataSrc: '',
             data: function(data){
                 @if(isset($request->status)) data.status = '{{ $request->status }}'; @endif
                 @if(isset($request->id_jenis_anggota)) data.id_jenis_anggota = '{{ $request->id_jenis_anggota }}'; @endif
-                @if(isset($request->filter)) data.filter = '{{ $request->filter }}'; @endif
             }
         },
         aoColumns: [
             {
-                mData: 'kode_anggota ', sType: "string",
-                className: "dt-body-center", "name": "kode_anggota",
+                mData: 'null ', sType: "string",
+                className: "dt-body-center", "name": "index",
             },
             {
                 mData: 'kode_anggota_prefix', sType: "string",
@@ -196,34 +192,14 @@
                     return markup;
                 }
             },
-        ],
-        fnInitComplete: function(oSettings, json) {
-
-            var _that = this;
-
-            this.each(function(i) {
-                $.fn.dataTableExt.iApiIndex = i;
-                var $this = this;
-                var anControl = $('input', _that.fnSettings().aanFeatures.f);
-                anControl
-                    .unbind('keyup search input')
-                    .bind('keypress', function(e) {
-                        if (e.which == 13) {
-                            $.fn.dataTableExt.iApiIndex = i;
-                            _that.fnFilter(anControl.val());
-                        }
-                    });
-                return this;
-            });
-            return this;
-        }
+        ]
     });
 
     // add index column
-    // table.on( 'order.dt search.dt', function () {
-    //     table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-    //         cell.innerHTML = i+1;
-    //     } );
-    // } ).draw();
+    table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 </script>
 @stop
