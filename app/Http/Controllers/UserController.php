@@ -45,6 +45,7 @@ class UserController extends Controller
 		}
 		$data['title'] = 'List User';
 		$data['request'] = $request;
+		// dd($request);
 		return view('user.index', $data);
 	}
 
@@ -68,6 +69,10 @@ class UserController extends Controller
 			});
 		}
 		$users = $users->orderBy('created_at','asc');
+		if($request->filter)
+		{
+			return DataTables::eloquent($users)->make(true);
+		}
 		// $users = $users->get();
 		// $users->map(function ($user, $key)
 		// {
@@ -75,7 +80,7 @@ class UserController extends Controller
 		// 	return $user;
 		// });
 		// return $users;
-		return DataTables::eloquent($users)->make(true);
+		return DataTables::eloquent(User::limit(0))->make(true);
 	}
 
 	public function create()
