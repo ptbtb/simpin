@@ -144,13 +144,13 @@
                 <br>
                 NIPP : 272076315
             </td>
-            {{-- <td style="text-align: center">
-                <i style="color: transparent">.</i> BENDAHARA <br><br><br><br><br>
-                <u>ARDIANSYAH</u>
+            <td style="text-align: center">
+                <i style="color: transparent">.</i> PLT BENDAHARA <br><br><br><br><br>
+                <u>M. FAJAR SUHARDIMAN</u>
                 <br>
-                NIPP : 276076919
-            </td> --}}
-            <td></td>
+                NIPP : 
+            </td>
+            {{-- <td></td> --}}
             <td style="text-align: center">
                 <i style="color: transparent">.</i> Yang Menerima, <br><br><br><br><br>
                 (............................)
