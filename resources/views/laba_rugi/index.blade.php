@@ -85,8 +85,58 @@
                                 <td></td>
                                 <td class="text-right">{{ substr($item['code']->CODE, 7, 3) }}</td>
                                 <td><a href="{{ route('jurnal-list',['code'=>$item['code']->CODE,'from'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->startOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('m-Y', $request->period)->endOfMonth()->format('d-m-Y')]) }}" target="_blank">{{ $item['code']->NAMA_TRANSAKSI }}</a></td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    @if ($budgets->where('code', $item['code']->CODE)->count())
+                                        {{ number_format($budgets->where('code', $item['code']->CODE)->sum('numeric_amount'), '0', ',', '.') }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($budgets->where('code', $item['code']->CODE)->count())    
+                                        @php
+                                            if($budgetPeriod->month >= 1 && $budgetPeriod->month <= 3)
+                                            {
+                                                $startDate = \Carbon\Carbon::createFromFormat('m Y', "1 ".$budgetPeriod->year)->startOfMonth();
+                                                $endDate = \Carbon\Carbon::createFromFormat('m Y', "3 ".$budgetPeriod->year)->endOfMonth();
+                                                $budgetRange = $budgets->where('date', '>=', $startDate)
+                                                                        ->where('date', '<=' ,$endDate)
+                                                                        ->where('code', $item['code']->CODE);
+                                                $amount = number_format($budgetRange->sum('numeric_amount'), 0, ',', '.');
+                                            }
+                                            elseif($budgetPeriod->month >= 4 && $budgetPeriod->month <= 6)
+                                            {
+                                                $startDate = \Carbon\Carbon::createFromFormat('m Y', "4 ".$budgetPeriod->year)->startOfMonth();
+                                                $endDate = \Carbon\Carbon::createFromFormat('m Y', "6 ".$budgetPeriod->year)->endOfMonth();
+                                                $budgetRange = $budgets->where('date', '>=', $startDate)
+                                                                        ->where('date', '<=' ,$endDate)
+                                                                        ->where('code', $item['code']->CODE);
+                                                $amount = number_format($budgetRange->sum('numeric_amount'), 0, ',', '.');
+                                            }
+                                            elseif($budgetPeriod->month >= 7 && $budgetPeriod->month <= 9)
+                                            {
+                                                $startDate = \Carbon\Carbon::createFromFormat('m Y', "7 ".$budgetPeriod->year)->startOfMonth();
+                                                $endDate = \Carbon\Carbon::createFromFormat('m Y', "9 ".$budgetPeriod->year)->endOfMonth();
+                                                $budgetRange = $budgets->where('date', '>=', $startDate)
+                                                                        ->where('date', '<=' ,$endDate)
+                                                                        ->where('code', $item['code']->CODE);
+                                                $amount = number_format($budgetRange->sum('numeric_amount'), 0, ',', '.');
+                                            }
+                                            elseif($budgetPeriod->month >= 10 && $budgetPeriod->month <= 12)
+                                            {
+                                                $startDate = \Carbon\Carbon::createFromFormat('m Y', "10 ".$budgetPeriod->year)->startOfMonth();
+                                                $endDate = \Carbon\Carbon::createFromFormat('m Y', "12 ".$budgetPeriod->year)->endOfMonth();
+                                                $budgetRange = $budgets->where('date', '>=', $startDate)
+                                                                        ->where('date', '<=' ,$endDate)
+                                                                        ->where('code', $item['code']->CODE);
+                                                $amount = number_format($budgetRange->sum('numeric_amount'), 0, ',', '.');
+                                            }
+                                        @endphp
+                                        {{ $amount }}
+                                    @else
+                                     -
+                                    @endif
+                                </td>
                                 <td class="text-right">{{ number_format($item['saldoUntilBeforeMonth'], 0, ',', '.') }}</td>
                                 <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
                                 <td class="text-right">{{ number_format($item['saldoUntilMonth'], 0, ',', '.') }}</td>

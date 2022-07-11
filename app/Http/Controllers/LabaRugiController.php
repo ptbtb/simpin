@@ -13,6 +13,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 use App\Exports\BukuBesarExport;
 use App\Exports\LabaRugiExportPDF;
+use App\Models\Budget;
 use Carbon\Carbon;
 use Excel;
 use DB;
@@ -220,10 +221,17 @@ class LabaRugiController extends Controller
                 $data['biayaadminum'] = $biayaadminum;
                 $data['biayapenyisihan'] = $biayapenyisihan;
             }
+
+            $budgetPeriod = Carbon::createFromFormat('m-Y', $request->period);
+            $budgets = Budget::whereYear('date', $budgetPeriod->year) 
+                            ->get();
+
+            $data['budgets'] = $budgets;
+            $data['budgetPeriod'] = $budgetPeriod;
+            $month = $budgetPeriod->month;
             
             $data['title'] = 'Laporan Laba Rugi';
             $data['request'] = $request;
-
             return view('laba_rugi.index', $data);
         }
         catch (\Throwable $e)

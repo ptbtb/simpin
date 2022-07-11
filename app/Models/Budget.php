@@ -11,7 +11,7 @@ class Budget extends Model
 
     protected $table = 'budget';
     protected $dates = ['date'];
-    protected $appends = ['date_view', 'created_by_view'];
+    protected $appends = ['date_view', 'created_by_view', 'numeric_amount'];
 
     public function createdBy()
     {
@@ -36,5 +36,21 @@ class Budget extends Model
     public function getCreatedByViewAttribute()
     {
         return $this->createdBy->name;
+    }
+    
+    /**
+     * Get the numericAmount
+     *
+     * @param  string  $value
+     * @return integer
+     */
+    public function getNumericAmountAttribute()
+    {
+        if(!is_null($this->amount))
+        {
+            $str = str_replace(',', '', $this->amount);
+            return (int) $str;
+        }
+        return null;
     }
 }
