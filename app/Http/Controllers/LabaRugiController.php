@@ -228,7 +228,6 @@ class LabaRugiController extends Controller
 
             $data['budgets'] = $budgets;
             $data['budgetPeriod'] = $budgetPeriod;
-            $month = $budgetPeriod->month;
             
             $data['title'] = 'Laporan Laba Rugi';
             $data['request'] = $request;
@@ -669,6 +668,16 @@ class LabaRugiController extends Controller
             $data['biayaadminum'] = $biayaadminum;
             $data['biayapenyisihan'] = $biayapenyisihan;
             $data['request'] = $request;
+
+            
+
+            $budgetPeriod = Carbon::createFromFormat('m-Y', $request->period);
+            $budgets = Budget::whereYear('date', $budgetPeriod->year) 
+                            ->get();
+
+            $data['budgets'] = $budgets;
+            $data['budgetPeriod'] = $budgetPeriod;
+
             //dd($labaRugis);
             $filename = 'export_labarugi_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
            return Excel::download(new LabaRugiExport($data), $filename);
@@ -881,6 +890,15 @@ class LabaRugiController extends Controller
             $data['biayaadminum'] = $biayaadminum;
             $data['biayapenyisihan'] = $biayapenyisihan;
             $data['request'] = $request;
+
+            
+
+            $budgetPeriod = Carbon::createFromFormat('m-Y', $request->period);
+            $budgets = Budget::whereYear('date', $budgetPeriod->year) 
+                            ->get();
+
+            $data['budgets'] = $budgets;
+            $data['budgetPeriod'] = $budgetPeriod;
             //dd($labaRugis);
             $filename = 'export_labarugi_excel_' . Carbon::now()->format('d M Y') . '.pdf';
            return Excel::download(new LabaRugiExportPDF($data), $filename);
