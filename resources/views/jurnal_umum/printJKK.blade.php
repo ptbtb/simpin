@@ -138,17 +138,17 @@
                 Asman Pembiayaan
             </td>
             <td style="border:1px solid black"></td>
-            <td style="text-align: center">
+            <td style="text-align: center" style="font-size: 12px">
                 <i style="color: transparent">.</i> KETUA <br><br><br><br><br>
                 <u>DJUSMAN HI UMAR</u>
                 <br>
                 NIPP : 272076315
             </td>
-            <td style="text-align: center">
+            <td style="text-align: center" style="font-size: 12px">
                 <i style="color: transparent">.</i> PLT BENDAHARA <br><br><br><br><br>
                 <u>M. FAJAR SUHARDIMAN</u>
                 <br>
-                NIPP : 
+                NIPP : 274026451
             </td>
             {{-- <td></td> --}}
             <td style="text-align: center">
