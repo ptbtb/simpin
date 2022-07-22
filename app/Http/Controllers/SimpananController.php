@@ -782,7 +782,7 @@ class SimpananController extends Controller
             // share data to view
             view()->share('data', $data);
             PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
-            $pdf = PDF::loadView('simpanan.card.export2', $data)->setPaper('a4', 'portrait');
+            $pdf = PDF::loadView('simpanan.card.detail', $data)->setPaper('a4', 'portrait');
 
             // download PDF file with download method
             $filename = 'export_kartu_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
