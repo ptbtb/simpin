@@ -906,7 +906,7 @@ class SimpananController extends Controller
             $filename = 'export_kartu_simpanan_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
             return Excel::download(new KartuSimpananExport($kodeAnggota), $filename);
         } catch (\Throwable $th) {
-            \Log::error($e);
+            \Log::error($th);
             return redirect()->back()->withError('Terjadi kesalahan sistem');
         }
     }
