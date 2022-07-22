@@ -142,7 +142,7 @@
                 <i style="color: transparent">.</i> KETUA <br><br><br><br><br>
                 <u style="font-size: 12px">DJUSMAN HI UMAR</u>
                 <br>
-                <span>
+                <span style="font-size: 12px">
                     NIPP : 272076315
                 </span>
             </td>
