@@ -900,11 +900,11 @@ class SimpananController extends Controller
         }
     }
 
-    public function downloadExcelCard($kodeAnggota)
+    public function downloadExcelCard($kodeAnggota, Request $request)
     {
         try {
             $filename = 'export_kartu_simpanan_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
-            return Excel::download(new KartuSimpananExport($kodeAnggota), $filename);
+            return Excel::download(new KartuSimpananExport($kodeAnggota, $request), $filename);
         } catch (\Throwable $th) {
             \Log::error($th);
             return redirect()->back()->withError('Terjadi kesalahan sistem');

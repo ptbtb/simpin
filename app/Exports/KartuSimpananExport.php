@@ -8,14 +8,16 @@ use App\Models\Penarikan;
 use App\Models\Simpanan;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class KartuSimpananExport implements FromView, ShouldAutoSize
 {
-    public function __construct($kodeAnggota)
+    public function __construct($kodeAnggota, Request $request)
     {
         $this->kodeAnggota = $kodeAnggota;
+        $this->request = $request;
     }
 
     public function view(): View
@@ -24,12 +26,12 @@ class KartuSimpananExport implements FromView, ShouldAutoSize
        $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($this->kodeAnggota);
 
        // get this year
-      if(!$request->year){
+      if(!$this->request->year){
                     $year= Carbon::today()->subYear()->endOfYear();
                     $thisYear = Carbon::now()->year;
                 }else{
-                    $year= Carbon::createFromFormat('Y',$request->year)->subYear()->endOfYear();
-                    $thisYear = Carbon::createFromFormat('Y',$request->year)->year;
+                    $year= Carbon::createFromFormat('Y',$$this->request->year)->subYear()->endOfYear();
+                    $thisYear = Carbon::createFromFormat('Y',$$this->request->year)->year;
                 }
 
        // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
