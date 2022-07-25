@@ -104,8 +104,6 @@
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
     <script>
-        var number = 6718842517;
-        console.log(toRupiah(number));
         $(document).ready(function ()
         {
             initiateDatatables();
