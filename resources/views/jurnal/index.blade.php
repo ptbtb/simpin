@@ -104,6 +104,8 @@
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
     <script>
+        var number = 6718842517;
+        console.log(toRupiah(number));
         $(document).ready(function ()
         {
             initiateDatatables();
@@ -228,17 +230,23 @@
 
         function toRupiah(number)
         {
+            number = number.toFixed(2);
             var stringNumber = number.toString();
-            var length = stringNumber.length;
+            var splitStringNumber = stringNumber.split('.');
+            var length = splitStringNumber[0].length;
             var temp = length;
             var res = "";
             for (let i = 0; i < length; i++) {
-                res = res + stringNumber.charAt(i);
+                res = res + splitStringNumber[0].charAt(i);
                 temp--;
                 if (temp%3 == 0 && temp > 0)
                 {
                     res = res + ".";
                 }
+            }
+            if(splitStringNumber[1] !== 'undefined')
+            {
+                res = res + ','+splitStringNumber[1];
             }
             return res;
         }
