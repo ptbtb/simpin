@@ -230,9 +230,9 @@
 
         function toRupiah(number)
         {
-            number = number.toFixed(2);
+            number = toFixed(2);
             var stringNumber = number.toString();
-            var splitStringNumber = stringNumber.split('.');
+            var splitStringNumber = stringNumber.split(',');
             var length = splitStringNumber[0].length;
             var temp = length;
             var res = "";
