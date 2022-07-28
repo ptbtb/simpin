@@ -1386,12 +1386,13 @@ class PinjamanController extends Controller
         // dd($request);
         try {
             $rule['besar_pembayaran'] = 'required';
-
+            
             $validator = Validator::make($request->toArray(), $rule);
             if ($validator->fails()) {
                 $errors = $validator->errors();
                 return redirect()->back()->withErrors($errors);
             }
+            dd($request);
 
             $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
@@ -1421,6 +1422,8 @@ class PinjamanController extends Controller
             $pinjaman->save();
 
             $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
+            \Log::info($pembayaran);
+            \Log::info($request);
 
             if ($pembayaran < $request->total_bayar || $pembayaran > $request->total_bayar) {
                 return redirect()->back()->withError('Besar pembayaran harus sama dengan total bayar');

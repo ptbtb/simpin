@@ -127,7 +127,7 @@ return [
         Watchers\DumpWatcher::class => env('TELESCOPE_DUMP_WATCHER', false),
 
         Watchers\EventWatcher::class => [
-            'enabled' => env('TELESCOPE_EVENT_WATCHER', false),
+            'enabled' => env('TELESCOPE_EVENT_WATCHER', true),
             'ignore' => [],
         ],
 
@@ -153,7 +153,7 @@ return [
         Watchers\RedisWatcher::class => env('TELESCOPE_REDIS_WATCHER', false),
 
         Watchers\RequestWatcher::class => [
-            'enabled' => env('TELESCOPE_REQUEST_WATCHER', false),
+            'enabled' => env('TELESCOPE_REQUEST_WATCHER', true),
             'size_limit' => env('TELESCOPE_RESPONSE_SIZE_LIMIT', 64),
         ],
 
@@ -163,7 +163,7 @@ return [
             'ignore_packages' => true,
         ],
 
-        Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
+        Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', false),
 
         Watchers\ViewWatcher::class => env('TELESCOPE_VIEW_WATCHER', false),
     ],
