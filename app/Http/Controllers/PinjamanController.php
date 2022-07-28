@@ -1397,9 +1397,12 @@ class PinjamanController extends Controller
             $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
 
-            $totalDiskon = $request->discount / 100 * $pinjaman->jasaPelunasanDipercepat;
-            $pinjaman->diskon = $request->discount;
-            $pinjaman->total_diskon = $totalDiskon;
+            if($request->discount)
+            {
+                $totalDiskon = $request->discount / 100 * $pinjaman->jasaPelunasanDipercepat;
+                $pinjaman->diskon = $request->discount;
+                $pinjaman->total_diskon = $totalDiskon;
+            }
             $pinjaman->keterangan = $request->keterangan;
 
             $pinjamanId = $pinjaman->id;
@@ -1427,10 +1430,14 @@ class PinjamanController extends Controller
                 $val = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
                 $pembayaran = $pembayaran + $val;
             }
-            \Log::info($pembayaran);
-            \Log::info($request);
 
-            if ($pembayaran < $request->total_bayar || $pembayaran > $request->total_bayar) {
+            $totalBayar = $request->total_bayar;
+            if($request->service_fee)
+            {
+                $totalBayar = $totalBayar + $request->service_fee;
+            }
+
+            if ($pembayaran < $totalBayar || $pembayaran > $totalBayar) {
                 return redirect()->back()->withError('Besar pembayaran harus sama dengan total bayar');
             }
 
@@ -1532,6 +1539,7 @@ class PinjamanController extends Controller
             }
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {
+            dd($e);
             \Log::error($e);
             $message = $e->getMessage();
             return redirect()->back()->withError('gagal melakukan pembayaran');

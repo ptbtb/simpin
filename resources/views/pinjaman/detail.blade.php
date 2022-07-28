@@ -338,13 +338,14 @@
                                             <th>Lama Angsuran</th>
                                             <th>:</th>
                                             <td>{{ $pinjaman->LamaAngsuranBelumLunas }} Bulan</td>
-                                            <th>Jasa</th>
+                                            {{-- <th>Jasa</th>
                                             <th>:</th>
                                             <td id="jasaDiscount">Rp.
-                                                {{ number_format($pinjaman->jasaPelunasanDipercepat, 0, ',', '.') }}</td>
+                                                {{ number_format($pinjaman->jasaPelunasanDipercepat, 0, ',', '.') }}</td> --}}
                                             <th>Pembayaran Angs Sebagian</th>
                                             <th>:</th>
                                             <td>Rp. {{ number_format($pinjaman->tunggakan, 0, ',', '.') }}</td>
+                                            <td colspan="3"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="6"></td>
@@ -370,10 +371,15 @@
                                 <input type="text" name="saldo" id="saldo" class="form-control" readonly>
                             </div> --}}
 
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Discount (%)</label>
                                     <input type="number" name="discount" id="discount" class="form-control"
                                         placeholder="Ex: 15 (15%)" min="0" max="100">
+                                </div> --}}
+                                <div class="form-group">
+                                    <label>Jasa Yang Dibayarkan</label>
+                                    <input type="number" name="service_fee" id="service_fee" class="form-control"
+                                        placeholder="Angka" min="0">
                                 </div>
                                 <div class="form-group">
                                     <label>Dokumen Konfirmasi</label>
