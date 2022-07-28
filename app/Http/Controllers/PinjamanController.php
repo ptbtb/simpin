@@ -1437,7 +1437,7 @@ class PinjamanController extends Controller
             if ($request->discount && !$request->confirmation_document) {
                 return redirect()->back()->withError('Dokumen konfirmasi harus disertakan');
             }
-dd('accepted');
+
             for ($i = 0; $i < count($request->besar_pembayaran); $i++) {
                 $pembayaran = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
                 $payment = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
