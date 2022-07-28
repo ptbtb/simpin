@@ -1421,7 +1421,12 @@ class PinjamanController extends Controller
 
             $pinjaman->save();
 
-            $pembayaran = filter_var($request->besar_pembayaran, FILTER_SANITIZE_NUMBER_INT);
+            $pembayaran = 0;
+            foreach ($request->besar_pembayaran as $value)
+            {
+                $val = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+                $pembayaran = $pembayaran + $val;
+            }
             \Log::info($pembayaran);
             \Log::info($request);
 
