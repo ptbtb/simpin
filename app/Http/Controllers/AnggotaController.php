@@ -420,7 +420,7 @@ class AnggotaController extends Controller {
     // Generate PDF
     public function createPDF(Request $request) {
         ini_set('max_execution_time', 120);
-        $anggotas = Anggota::with('jenisAnggota');
+        $anggotas = DB::table('anggota_v');
         if ($request->status)
         {
             $anggotas = $anggotas->where('status', $request->status);
@@ -448,7 +448,23 @@ class AnggotaController extends Controller {
     public function createExcel(Request $request)
     {
         // ini_set('max_execution_time', 300);
-        $anggotas = Anggota::with('jenisAnggota');
+         $anggotas = DB::table('anggota_v')
+                    ->select('kode_anggota',
+                            'unit',
+                            'nama_jenis_anggota',
+                            'nama_anggota',
+                            'alamat_anggota',
+                            'jenis_kelamin',
+                            'tgl_masuk',
+                            'telp',
+                            'tempat_lahir',
+                            'tgl_lahir',
+                            'status',
+                            'no_rek',
+                            'nipp',
+                            'ktp',
+                            'email',
+                            'emergency_kontak');
         if ($request->status)
         {
             $anggotas = $anggotas->where('status', $request->status);
@@ -463,7 +479,7 @@ class AnggotaController extends Controller {
         }
 
         $anggotas = $anggotas->get();
-        $filename = 'export_anggota_excel_'.Carbon::now()->format('d M Y').'.xlsx';
+        $filename = 'export_anggota_excel_'.$request->company_id.'_'.$request->id_jenis_anggota.'_'.$request->status.'_'.Carbon::now()->format('d M Y his').'.xlsx';
         return (new FastExcel($anggotas))->download($filename,);
         // return Excel::download(new AnggotaExport($request), $filename);
     }

@@ -20,7 +20,6 @@
             <tr>
                 <th>No</th>
                 <th>Kode Anggota</th>
-                <th>Kode Tabungan</th>
                 <th>Jenis Anggota</th>
                 <th>NIPP</th>
                 <th>Nama Anggota</th>
@@ -44,19 +43,9 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $anggota->kode_anggota }}</td>
                     <td>
-                        @if ($anggota->tabungan->count())
-                            {{ $anggota->tabungan->first()->kode_tabungan }}
-                        @else
-                            -
-                        @endif
+                        {{ $anggota->nama_jenis_anggota }}
                     </td>
-                    <td>
-                        @if ($anggota->jenisAnggota && $anggota->jenisAnggota->nama_jenis_anggota)
-                            {{ $anggota->jenisAnggota->nama_jenis_anggota }}
-                        @else
-                            -
-                        @endif
-                    </td>
+                    <td>{{ $anggota->unit }}</td>
                     <td>{{ $anggota->nipp }}</td>
                     <td>{{ $anggota->nama_anggota }}</td>
                     <td>{{ $anggota->tempat_lahir }}</td>
@@ -64,7 +53,7 @@
                     <td>{{ $anggota->jenis_kelamin }}</td>
                     <td>{{ $anggota->alamat_anggota }}</td>
                     <td>{{ $anggota->ktp."" }}</td>
-                    <td>{{ $anggota->unit_kerja }}</td>
+                    
                     <td>{{ $anggota->tgl_masuk }}</td>
                     <td>{{ $anggota->email }}</td>
                     <td>{{ $anggota->telp }}</td>
