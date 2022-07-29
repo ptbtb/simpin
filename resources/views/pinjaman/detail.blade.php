@@ -352,10 +352,10 @@
                                             <th>Total Bayar</th>
                                             <th>:</th>
                                             <td id="totalBayarDiscount1"><b>Rp.
-                                                    {{ number_format($pinjaman->totalbayarPelunasanDipercepat, 0, ',', '.') }}</b>
+                                                    {{ number_format($pinjaman->sisa_pinjaman, 0, ',', '.') }}</b>
                                             </td>
                                             <input type="hidden" name="total_bayar" id="totalBayarHidden1"
-                                                value="{{ $pinjaman->totalbayarPelunasanDipercepat }}">
+                                                value="{{ $pinjaman->sisa_pinjaman }}">
                                         </tr>
                                     </table>
                                 </div>
