@@ -20,6 +20,7 @@
 
 @section('plugins.Datatables', true)
 @section('plugins.SweetAlert2', true)
+@section('plugins.Select2', true)
 
 @section('css')
     <style>
@@ -53,6 +54,15 @@
                         <option value="">Pilih Semua</option>
                         @foreach ($jenisAnggotas as $jenisAnggota)
                             <option value="{{ $jenisAnggota->id_jenis_anggota }}" {{ ($request->id_jenis_anggota && $request->id_jenis_anggota == $jenisAnggota->id_jenis_anggota)? 'selected':'' }}>{{ $jenisAnggota->nama_jenis_anggota }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Unit</label>
+                    <select name="company_id" class="form-control" id="company_id">
+                        <option value="">Pilih Semua</option>
+                        @foreach ($units as $unit)
+                            <option value="{{ $unit->id }}" {{ ($request->company_id && $request->company_id == $unit->id)? 'selected':'' }}>{{ $unit->nama }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -117,6 +127,7 @@
                 dataSrc: 'data',
                 data: function(data) {
                     @if(isset($request->status)) data.status = '{{ $request->status }}'; @endif
+                     @if(isset($request->company_id)) data.company_id = '{{ $request->company_id }}'; @endif
                 @if(isset($request->id_jenis_anggota)) data.id_jenis_anggota = '{{ $request->id_jenis_anggota }}'; @endif
                     @if (isset($request->filter))
                         data.filter = '{{ $request->filter }}';
@@ -196,5 +207,6 @@
                 return this;
             },
         });
+        $('#company_id').select2();
     </script>
 @endsection

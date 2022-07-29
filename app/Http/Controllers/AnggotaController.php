@@ -34,6 +34,7 @@ class AnggotaController extends Controller {
         $this->authorize('view anggota', Auth::user());
         $data['companies'] = Company::all();
         $data['jenisAnggotas'] = JenisAnggota::all();
+        $data['units'] = Company::all();
         $data['request'] = $request;
         $data['title'] = 'List Anggota';
         return view('anggota.index', $data);
@@ -49,6 +50,10 @@ class AnggotaController extends Controller {
         if ($request->id_jenis_anggota)
         {
             $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
+        }
+        if ($request->company_id)
+        {
+            $anggotas = $anggotas->where('company_id', $request->company_id);
         }
         // $anggotas = $anggotas->orderBy('kode_anggota','asc');
         
@@ -424,6 +429,10 @@ class AnggotaController extends Controller {
         {
             $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
         }
+        if ($request->company_id)
+        {
+            $anggotas = $anggotas->where('company_id', $request->company_id);
+        }
 
         $anggotas = $anggotas->get();
 
@@ -447,6 +456,10 @@ class AnggotaController extends Controller {
         if ($request->id_jenis_anggota)
         {
             $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
+        }
+        if ($request->company_id)
+        {
+            $anggotas = $anggotas->where('company_id', $request->company_id);
         }
 
         $anggotas = $anggotas->get();
