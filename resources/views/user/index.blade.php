@@ -129,32 +129,18 @@
                     className: "dt-body-center", "name": "created_at"
                 },
                 {
-                    mData: 'creator.name', sType: "string",
-                    className: "dt-body-center", "name": "creator.name"
+                    mData: 'create_by', sType: "string",
+                    className: "dt-body-center", "name": "create_by"
                 },
                 {
-                    mData: 'roles', sType: "string",
-                    className: "dt-body-center", "name": "roles.name"	,
-                    mRender: function(data, type, full)
-                    {
-                        if(data[0])
-                        {
-                            return data[0].name;
-                        }
-                        return '-';
-                    }
+                    mData: 'role_name', sType: "string",
+                    className: "dt-body-center", "name": "role_name"	,
+                    
                 },
                 {
-                    mData: 'anggota', sType: "string",
-                    className: "dt-body-center", "name": "anggota.kode_anggota"	,
-                    mRender: function(data, type, full)
-                    {
-                        if(data)
-                        {
-                            return data.kode_anggota;
-                        }
-                        return '-';
-                    }
+                    mData: 'kode_anggota', sType: "string",
+                    className: "dt-body-center", "name": "kode_anggota"	,
+                    
                 },
                 @if (auth()->user()->can('edit user') ||
     auth()->user()->can('delete user'))
@@ -224,34 +210,24 @@
                     "name": "created_at"
                 },
                 {
-                    mData: 'creator.name',
+                    mData: 'created_by',
                     sType: "string",
                     className: "dt-body-center",
-                    "name": "creator.name"
+                    "name": "created_by"
                 },
                 {
-                    mData: 'roles',
+                    mData: 'role_name',
                     sType: "string",
                     className: "dt-body-center",
-                    "name": "roles.name",
-                    mRender: function(data, type, full) {
-                        if (data[0]) {
-                            return data[0].name;
-                        }
-                        return '-';
-                    }
+                    "name": "role_name",
+                   
                 },
                 {
-                    mData: 'anggota',
+                    mData: 'kode_anggota',
                     sType: "string",
                     className: "dt-body-center",
-                    "name": "anggota.kode_anggota",
-                    mRender: function(data, type, full) {
-                        if (data) {
-                            return data.kode_anggota;
-                        }
-                        return '-';
-                    }
+                    "name": "kode_anggota",
+                    
                 },
                 @if (auth()->user()->can('edit user') ||
                     auth()->user()->can('delete user'))

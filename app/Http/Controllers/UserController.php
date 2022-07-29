@@ -52,27 +52,26 @@ class UserController extends Controller
 	public function indexAjax(Request $request)
 	{
 		$this->authorize('view user', Auth::user());
-		$users = User::with('roles','creator','anggota');
+		$users = DB::table('users_v');
 		$currentUser = Auth::user();
 		if(isset($request->role_id) && $request->role_id !== '')
         {
-            $users = $users->whereHas('roles', function ($query) use ($request)
-			{
-				return $query->where('id', $request->role_id);
-			});
+            $users = $users->where('role_id',$request->role_id);
 		}
 		if (!$currentUser->hasRole('Admin'))
 		{
-			$users = $users->whereHas('roles', function ($query)
-			{
-				return $query->where('id', ROLE_ANGGOTA);
-			});
+			$users = $users->where('role_id',ROLE_ANGGOTA);
 		}
 		$users = $users->orderBy('created_at','asc');
 		if($request->filter)
 		{
-			return Datatables::of($users)->make(true);
+			$keyword = strtoupper($request->get('search')['value']);
+			$users = $users
+						->whereraw("upper(name) LIKE '%$keyword%'")
+						->whereraw("upper(email) LIKE '%$keyword%'");
 		}
+		//dd($users->get());
+		
 		// $users = $users->get();
 		// $users->map(function ($user, $key)
 		// {
@@ -80,7 +79,7 @@ class UserController extends Controller
 		// 	return $user;
 		// });
 		// return $users;
-		return DataTables::eloquent(User::limit(0))->make(true);
+		return DataTables::of($users)->make(true);
 	}
 
 	public function create()
