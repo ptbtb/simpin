@@ -129,8 +129,8 @@
                     className: "dt-body-center", "name": "created_at"
                 },
                 {
-                    mData: 'create_by', sType: "string",
-                    className: "dt-body-center", "name": "create_by"
+                    mData: 'creator', sType: "string",
+                    className: "dt-body-center", "name": "creator"
                 },
                 {
                     mData: 'role_name', sType: "string",
@@ -210,10 +210,10 @@
                     "name": "created_at"
                 },
                 {
-                    mData: 'created_by',
+                    mData: 'creator',
                     sType: "string",
                     className: "dt-body-center",
-                    "name": "created_by"
+                    "name": "creator"
                 },
                 {
                     mData: 'role_name',
