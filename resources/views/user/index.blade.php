@@ -184,7 +184,7 @@
         $.fn.dataTable.ext.errMode = 'none';
         $('.table').on('xhr.dt', function(e, settings, json, xhr) {}).DataTable({
             bProcessing: true,
-            bServerSide: true,
+            bServerSide: false,
             responsive: true,
             ajax: {
                 url: '{{ route('user-list-ajax') }}',
