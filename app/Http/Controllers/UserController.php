@@ -71,7 +71,7 @@ class UserController extends Controller
 		$users = $users->orderBy('created_at','asc');
 		if($request->filter)
 		{
-			return DataTables::eloquent($users)->make(true);
+			return Datatables::of($users)->make(true);
 		}
 		// $users = $users->get();
 		// $users->map(function ($user, $key)
