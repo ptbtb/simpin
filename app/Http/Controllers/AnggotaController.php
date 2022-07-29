@@ -24,6 +24,7 @@ use Excel;
 use PDF;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
 use Storage;
 
 class AnggotaController extends Controller {
@@ -40,7 +41,7 @@ class AnggotaController extends Controller {
 
     public function indexAJax(Request $request)
     {
-        $anggotas = Anggota::with('jenisAnggota');
+        $anggotas = DB::table('anggota_v');
         if ($request->status)
         {
             $anggotas = $anggotas->where('status', $request->status);
@@ -49,10 +50,10 @@ class AnggotaController extends Controller {
         {
             $anggotas = $anggotas->where('id_jenis_anggota', $request->id_jenis_anggota);
         }
+        // $anggotas = $anggotas->orderBy('kode_anggota','asc');
+        
 
-        $anggotas = $anggotas->get();
-
-        return $anggotas;
+        return DataTables::of($anggotas)->make(true);
     }
 
     public function create()
