@@ -43,7 +43,7 @@ class GlobalTransaksiController extends Controller
         }
         catch (\Throwable $e)
         {
-            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            $message = $e->getMessage();
             Log::error($message);
 
             return redirect()->back()->withError('Terjadi Kesalahan : '.$message);

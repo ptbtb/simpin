@@ -232,6 +232,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+        $jurnal->trans_id = $angsuran->kode_angsur;
+        $jurnal->anggota = $angsuran->kode_anggota;
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
@@ -259,6 +261,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
          $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+         $jurnal->trans_id = $angsuran->kode_angsur;
+        $jurnal->anggota = $angsuran->kode_anggota;
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
@@ -288,6 +292,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
          $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+         $jurnal->trans_id = $angsuran->kode_angsur;
+        $jurnal->anggota = $angsuran->kode_anggota;
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
