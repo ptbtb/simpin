@@ -244,12 +244,12 @@
             @endif
             initialEvent();
 
-            // @if (\Auth::user()->isAdmin())
+            @if (!\Auth::user()->isAnggota())
                 $('#tanggal_pengajuan').datepicker({
                     uiLibrary: 'bootstrap4',
                     format: 'yyyy-mm-dd'
                 });
-            // @endif
+            @endif
         });
 
         function initialEvent() {
