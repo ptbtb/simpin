@@ -46,6 +46,8 @@ class JurnalManager
         $jurnal->updated_by = Auth::user()->id;
 
         // save as polymorphic
+        $jurnal->trans_id = $penarikan->kode_ambil;
+        $jurnal->anggota = $penarikan->kode_anggota;
         $penarikan->jurnals()->save($jurnal);
     }
 
@@ -66,6 +68,8 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
+            $jurnal->trans_id = $pinjaman->kode_pinjam;
+            $jurnal->anggota = $pinjaman->kode_anggota;
 
 
 
@@ -92,6 +96,8 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
+             $jurnal->trans_id = $pinjaman->kode_pinjam;
+            $jurnal->anggota = $pinjaman->kode_anggota;
 
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
@@ -108,6 +114,8 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
+             $jurnal->trans_id = $pinjaman->kode_pinjam;
+            $jurnal->anggota = $pinjaman->kode_anggota;
 
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
@@ -124,6 +132,8 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
+             $jurnal->trans_id = $pinjaman->kode_pinjam;
+            $jurnal->anggota = $pinjaman->kode_anggota;
 
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
@@ -140,6 +150,8 @@ class JurnalManager
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
+             $jurnal->trans_id = $pinjaman->kode_pinjam;
+            $jurnal->anggota = $pinjaman->kode_anggota;
 
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
@@ -167,6 +179,8 @@ class JurnalManager
                 $jurnal->updated_by = Auth::user()->id;
     
                 // save as polymorphic
+                 $jurnal->trans_id = $pinjaman->kode_pinjam;
+            $jurnal->anggota = $pinjaman->kode_anggota;
                 $pinjaman->jurnals()->save($jurnal);
             }
         }
@@ -192,6 +206,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
             $jurnal->tgl_transaksi =Carbon::now()->subYear()->endOfYear()->format('Ymd');
+             $jurnal->trans_id = $pinjaman->kode_pinjam;
+            $jurnal->anggota = $pinjaman->kode_anggota;
 
 
 
@@ -325,6 +341,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+         $jurnal->trans_id = $angsuran->kode_pinjam;
+            $jurnal->anggota = $angsuran->kode_anggota;
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
@@ -352,6 +370,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
          $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+         $jurnal->trans_id = $angsuran->kode_pinjam;
+            $jurnal->anggota = $angsuran->kode_anggota;
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
@@ -383,6 +403,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal->created_by = $angsuran->updated_by;
             $jurnal->updated_by = $angsuran->updated_by;
              $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+            $jurnal->trans_id = $angsuran->kode_pinjam;
+            $jurnal->anggota = $angsuran->kode_anggota;
     
             // save as polymorphic
             $angsuran->jurnals()->save($jurnal);
@@ -515,6 +537,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             }
             
              $jurnal->tgl_transaksi = $simpanan->tgl_transaksi;
+             $jurnal->trans_id = $simpanan->kode_simpan;
+            $jurnal->anggota = $simpanan->kode_anggota;
 
             // save as polymorphic
             $simpanan->jurnals()->save($jurnal);
@@ -539,6 +563,8 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
              $jurnal->tgl_transaksi = $simpanan->tgl_transaksi;
+             $jurnal->trans_id = $simpanan->kode_simpan;
+            $jurnal->anggota = $simpanan->kode_anggota;
             // save as polymorphic
             $simpanan->jurnals()->save($jurnal);
         }
@@ -714,6 +740,8 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
         $jurnal->tgl_transaksi =$pinjaman->tgl_transaksi;
+        $jurnal->trans_id = $pinjaman->kode_pinjam;
+        $jurnal->anggota = $pinjaman->kode_anggota;
 
         // save as polymorphic
         $pinjaman->jurnals()->save($jurnal);
@@ -737,6 +765,8 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
         $jurnal->tgl_transaksi =$pinjaman->tgl_transaksi;
+        $jurnal->trans_id = $pinjaman->kode_pinjam;
+        $jurnal->anggota = $pinjaman->kode_anggota;
 
         // save as polymorphic
         $pinjaman->jurnals()->save($jurnal);
@@ -762,6 +792,8 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
         $jurnal->tgl_transaksi =$pinjaman->tgl_transaksi;
+        $jurnal->trans_id = $pinjaman->kode_pinjam;
+        $jurnal->anggota = $pinjaman->kode_anggota;
 
         // save as polymorphic
         $pinjaman->jurnals()->save($jurnal);
