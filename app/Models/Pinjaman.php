@@ -115,7 +115,8 @@ class Pinjaman extends Model implements Auditable
 
     public function getJasaPelunasanDipercepatAttribute() {
         // return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;
-        return $this->sisa_pinjaman * $this->jenisPinjaman->jasa_pelunasan_dipercepat - $this->total_diskon;
+        return $this->service_fee;
+        // return $this->sisa_pinjaman * $this->jenisPinjaman->jasa_pelunasan_dipercepat - $this->total_diskon;
     }
     public function getJasaTopup() {
         // return $this->besar_pinjam * $this->jenisPinjaman->jasa_pelunasan_dipercepat;

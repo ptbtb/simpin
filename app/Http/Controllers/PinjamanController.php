@@ -1422,6 +1422,7 @@ class PinjamanController extends Controller
                 }
             }
 
+            $pinjaman->service_fee = $request->service_fee;
             $pinjaman->save();
 
             $pembayaran = 0;
