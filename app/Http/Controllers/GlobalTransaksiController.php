@@ -35,8 +35,8 @@ class GlobalTransaksiController extends Controller
                 // Excel::import(new TransaksiUserImport, $request->file);
                 $collection = (new FastExcel)->import($request->file);
                 foreach ($collection as $transaksi) {
-//                    TransaksiUserImport::generatetransaksi($transaksi);
-                    TransaksiUserImport::storeToTemp($transaksi);
+                    TransaksiUserImport::generatetransaksi($transaksi);
+//                    TransaksiUserImport::storeToTemp($transaksi);
                 }
             });
 
