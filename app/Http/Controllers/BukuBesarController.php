@@ -328,7 +328,7 @@ class BukuBesarController extends Controller
                             'code' => $code->CODE,
                             'name' => $code->NAMA_TRANSAKSI,
                             'type' => $code->codeType->name,
-                            'saldo' => -1*$saldo,
+                            'saldo' => $saldo,
                         ]);
                     }
                     else if($code->codeCategory->name=='AKTIVA TETAP' &&  $code->codeType->name=='Activa')
@@ -502,7 +502,7 @@ class BukuBesarController extends Controller
                             'code' => $code->CODE,
                             'name' => $code->NAMA_TRANSAKSI,
                             'type' => $code->codeType->name,
-                            'saldo' => -1*$saldo,
+                            'saldo' => $saldo,
                         ]);
                     }
                     else if($code->codeCategory->name=='AKTIVA TETAP' &&  $code->codeType->name=='Activa')
