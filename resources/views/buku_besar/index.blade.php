@@ -48,28 +48,38 @@
         </div>
 
         @if ($request->search)
+            @php
+                $sumaktiva=0;
+                $sumpasiva=0;
+                $sumpendapatan=0;
+                $sumbeban=0;
+            @endphp
             <div class="card-body row">
                 <div class="col-md-6 table-responsive">
                     <h5 class="text-center">Aktiva</h5>
                     <table class="table table-striped table-aktiva">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Code</th>
-                                <th>Nama</th>
-                                <th style="width: 35%">Saldo</th>
-                            </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Nama</th>
+                            <th style="width: 35%">Saldo</th>
+                        </tr>
                         </thead>
                         <tbody>
 
-                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_ACTIVA) as $item)
+                        @foreach($codes->where('code_type_id',CODE_TYPE_ACTIVA)->sortBy('CODE') as $item)
+
                             <tr>
                                 <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
-                                <td>{{$item['name']}}</td>
-                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
+                                <td>{{$item->NAMA_TRANSAKSI}}</td>
+                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
                             </tr>
-                            @endforeach
+                            @php
+                                $sumaktiva += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                            @endphp
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -77,23 +87,27 @@
                     <h5 class="text-center">Passiva</h5>
                     <table class="table table-striped table-passiva">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Code</th>
-                                <th>Nama</th>
-                                <th style="width: 40%">Saldo</th>
-                            </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Nama</th>
+                            <th style="width: 40%">Saldo</th>
+                        </tr>
                         </thead>
                         <tbody>
 
-                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_PASSIVA) as $item)
+                        @foreach($codes->where('code_type_id',CODE_TYPE_PASSIVA)->sortBy('CODE') as $item)
+
                             <tr>
                                 <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
-                                <td>{{$item['name']}}</td>
-                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
+                                <td>{{$item->NAMA_TRANSAKSI}}</td>
+                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
                             </tr>
-                            @endforeach
+                            @php
+                                $sumpasiva += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                            @endphp
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -110,14 +124,19 @@
                         </thead>
                         <tbody>
 
-                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_LABA) as $item)
+                        @foreach($codes->where('code_type_id',CODE_TYPE_LABA)->sortBy('CODE') as $item)
+
                             <tr>
                                 <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
-                                <td>{{$item['name']}}</td>
-                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
+                                <td>{{$item->NAMA_TRANSAKSI}}</td>
+                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
                             </tr>
-                            @endforeach
+                            @php
+                                $sumpendapatan += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                            @endphp
+                        @endforeach
+
                         </tbody>
                     </table>
                 </div>
@@ -125,28 +144,37 @@
                     <h5 class="text-center">Beban</h5>
                     <table class="table table-striped table-rugi">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Code</th>
-                                <th>Nama</th>
-                                <th style="width: 40%">Saldo</th>
-                            </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Nama</th>
+                            <th style="width: 40%">Saldo</th>
+                        </tr>
                         </thead>
                         <tbody>
 
-                            @foreach($bukuBesars->where('code_type_id',CODE_TYPE_RUGI) as $item)
+
+                        @foreach($codes->where('code_type_id',CODE_TYPE_RUGI)->sortBy('CODE') as $item)
+
                             <tr>
                                 <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item['code'] ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item['code']}}</a></td>
-                                <td>{{$item['name']}}</td>
-                                <td class="text-right">{{ number_format($item['saldo'], 0, ',', '.') }}</td>
+                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
+                                <td>{{$item->NAMA_TRANSAKSI}}</td>
+                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
                             </tr>
-                            @endforeach
+                            @php
+                                $sumbeban += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                            @endphp
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
 
+
+
+
             </div>
+            <div class="col-md-12 table-responsive"> <h5 class="text-center">Selisih : Aktiva-(Pasiva+Pendaptan-Beban)<br>{{number_format($sumaktiva-($sumpasiva+($sumpendapatan-$sumbeban)), 0, ',', '.')}}</h5></div>
         @endif
     </div>
 @endsection

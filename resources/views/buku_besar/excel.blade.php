@@ -11,7 +11,7 @@
     <table class="table table-bordered">
         <thead>
           <tr>
-            <th colspan="5" style="text-align: center; font-weight: bold;"> Buku Besar Periode {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->period)->format('d M Y')}}</th>
+            <th colspan="5" style="text-align: center; font-weight: bold;"> Buku Besar Tanggal {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->period)->format('d M Y')}}</th>
           </tr>
             <tr>
                 <th>No</th>
@@ -22,23 +22,74 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($bukuBesars as $bukuBesar)
+        @php
+            $sumaktiva=0;
+            $sumpasiva=0;
+            $sumpendapatan=0;
+            $sumbeban=0;
+        @endphp
+            @foreach ($codes->sortBy('CODE') as $bukuBesar)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        {{ $bukuBesar['code'] }}
+                        {{ $bukuBesar->CODE }}
                     </td>
                     <td>
-                        {{ $bukuBesar['name'] }}
+                        {{ $bukuBesar->NAMA_TRANSAKSI }}
                     </td>
                     <td>
-                        {{ $bukuBesar['type'] }}
+                        {{ $bukuBesar->codeType->name }}
                     </td>
                     <td>
-                        {{ $bukuBesar['saldo'] }}
+                        {{ $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')) }}
                     </td>
                 </tr>
+                @php
+                    if($bukuBesar->code_type_id==CODE_TYPE_ACTIVA){
+                        $sumaktiva += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                    }
+                    if($bukuBesar->code_type_id==CODE_TYPE_PASSIVA){
+                        $sumpasiva += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                    }
+                    if($bukuBesar->code_type_id==CODE_TYPE_LABA){
+                        $sumpendapatan += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                    }
+                    if($bukuBesar->code_type_id==CODE_TYPE_RUGI){
+                        $sumbeban += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                    }
+
+                @endphp
             @endforeach
+                <tr>
+                    <td></td>
+                    <td>
+
+                    </td>
+                    <td>
+                       <b>SELISIH</b>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        {{ $sumaktiva-($sumpasiva+($sumpendapatan-$sumbeban)) }}
+                    </td>
+                </tr>
+        <tr>
+            <td></td>
+            <td>
+
+            </td>
+            <td>
+                <b></b>
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+        </tr>
         </tbody>
         <tfoot>
           <tr>
