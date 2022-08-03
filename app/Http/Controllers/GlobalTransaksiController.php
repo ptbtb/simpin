@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\TransaksiUserImport;
-use App\Managers\TransaksiUserManager;
+//use App\Managers\TransaksiUserManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,10 +32,11 @@ class GlobalTransaksiController extends Controller
         {
             DB::transaction(function () use ($request)
             {
-                // Excel::import(new TransaksiUserImport, $request->file); 
+                // Excel::import(new TransaksiUserImport, $request->file);
                 $collection = (new FastExcel)->import($request->file);
                 foreach ($collection as $transaksi) {
-                    TransaksiUserImport::generatetransaksi($transaksi);
+//                    TransaksiUserImport::generatetransaksi($transaksi);
+                    TransaksiUserImport::storeToTemp($transaksi);
                 }
             });
 
@@ -43,7 +44,7 @@ class GlobalTransaksiController extends Controller
         }
         catch (\Throwable $e)
         {
-            $message = $e->getMessage();
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
             Log::error($message);
 
             return redirect()->back()->withError('Terjadi Kesalahan : '.$message);
