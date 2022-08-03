@@ -136,8 +136,8 @@ class BukuBesarController extends Controller
                                     ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                                     ->where('trans','K')
                                     ->sum('amount');
-                                $saldo += $saldoDebet;
-                                $saldo -= $saldoKredit;
+                                $saldo -= $saldoDebet;
+                                $saldo += $saldoKredit;
                                 $bukuBesars->push([
                                     'code' => $code->CODE,
                                     'name' => $code->NAMA_TRANSAKSI,
@@ -154,8 +154,8 @@ class BukuBesarController extends Controller
                                 $saldoKredit = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
 
 
-                                $saldo += $saldoDebet;
-                                $saldo -= $saldoKredit;
+                                $saldo -= $saldoDebet;
+                                $saldo += $saldoKredit;
 
                                 $bukuBesars->push([
                                     'code' => $code->CODE,
@@ -322,8 +322,8 @@ class BukuBesarController extends Controller
                             ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                             ->where('trans','K')
                             ->sum('amount');
-                        $saldo += $saldoDebet;
-                        $saldo -= $saldoKredit;
+                        $saldo -= $saldoDebet;
+                        $saldo += $saldoKredit;
                         $bukuBesars->push([
                             'code' => $code->CODE,
                             'name' => $code->NAMA_TRANSAKSI,
@@ -339,8 +339,8 @@ class BukuBesarController extends Controller
                         $saldoKredit = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
 
 
-                        $saldo += $saldoDebet;
-                        $saldo -= $saldoKredit;
+                        $saldo -= $saldoDebet;
+                        $saldo += $saldoKredit;
 
                         $bukuBesars->push([
                             'code' => $code->CODE,
@@ -496,8 +496,8 @@ class BukuBesarController extends Controller
                             ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                             ->where('trans','K')
                             ->sum('amount');
-                        $saldo += $saldoDebet;
-                        $saldo -= $saldoKredit;
+                        $saldo -= $saldoDebet;
+                        $saldo += $saldoKredit;
                         $bukuBesars->push([
                             'code' => $code->CODE,
                             'name' => $code->NAMA_TRANSAKSI,
@@ -513,8 +513,8 @@ class BukuBesarController extends Controller
                         $saldoKredit = $saldoKreditSaldoAwal + (-1 * $saldoKreditJurnalUmum);
 
 
-                        $saldo += $saldoDebet;
-                        $saldo -= $saldoKredit;
+                        $saldo -= $saldoDebet;
+                        $saldo += $saldoKredit;
 
                         $bukuBesars->push([
                             'code' => $code->CODE,
