@@ -133,7 +133,7 @@ class BukuBesarController extends Controller
 
                                 $saldoKredit =  DB::table('buku_besar_v')
                                     ->where('kode', $code->CODE)
-                                    ->whereBetween('tgl_transaksi', [$startOfLR,$today])
+                                    ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                                     ->where('trans','K')
                                     ->sum('amount');
                                 $saldo += $saldoDebet;
@@ -168,7 +168,7 @@ class BukuBesarController extends Controller
                             {
                                 $saldoKredit = DB::table('buku_besar_v')
                                     ->where('kode', $code->CODE)
-                                    ->whereBetween('tgl_transaksi', [$startOfLR,$today])
+                                    ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                                     ->where('trans','K')
                                     ->sum('amount');
                                 $saldo -= $saldoDebet;
@@ -319,7 +319,7 @@ class BukuBesarController extends Controller
 
                         $saldoKredit =  DB::table('buku_besar_v')
                             ->where('kode', $code->CODE)
-                            ->whereBetween('tgl_transaksi', [$startOfLR,$today])
+                            ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                             ->where('trans','K')
                             ->sum('amount');
                         $saldo += $saldoDebet;
@@ -353,7 +353,7 @@ class BukuBesarController extends Controller
                     {
                         $saldoKredit = DB::table('buku_besar_v')
                             ->where('kode', $code->CODE)
-                            ->whereBetween('tgl_transaksi', [$startOfLR,$today])
+                            ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                             ->where('trans','K')
                             ->sum('amount');
                         $saldo -= $saldoDebet;
@@ -493,7 +493,7 @@ class BukuBesarController extends Controller
 
                         $saldoKredit =  DB::table('buku_besar_v')
                             ->where('kode', $code->CODE)
-                            ->whereBetween('tgl_transaksi', [$startOfLR,$today])
+                            ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                             ->where('trans','K')
                             ->sum('amount');
                         $saldo += $saldoDebet;
@@ -527,7 +527,7 @@ class BukuBesarController extends Controller
                     {
                         $saldoKredit = DB::table('buku_besar_v')
                             ->where('kode', $code->CODE)
-                            ->whereBetween('tgl_transaksi', [$startOfLR,$today])
+                            ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                             ->where('trans','K')
                             ->sum('amount');
                         $saldo -= $saldoDebet;
