@@ -129,23 +129,24 @@ class BukuBesarController extends Controller
                                 ->whereBetween('tgl_transaksi', [$startOfNeraca,$today])
                                 ->where('trans','D')
                                 ->sum('amount');
-                            if($code->codeCategory->name=='KEWAJIBAN LANCAR' &&  $code->codeType->name=='Passiva'){
-
-                                $saldoKredit =  DB::table('buku_besar_v')
-                                    ->where('kode', $code->CODE)
-                                    ->whereBetween('tgl_transaksi', [$startOfLR,$today])
-                                    ->where('trans','K')
-                                    ->sum('amount');
-                                $saldo += $saldoDebet;
-                                $saldo -= $saldoKredit;
-                                $bukuBesars->push([
-                                    'code' => $code->CODE,
-                                    'name' => $code->NAMA_TRANSAKSI,
-                                    'code_type_id' => $code->code_type_id,
-                                    'saldo' => -1*$saldo,
-                                ]);
-                            }
-                            else if($code->codeCategory->name=='AKTIVA TETAP' &&  $code->codeType->name=='Activa')
+//                            if($code->codeCategory->name=='KEWAJIBAN LANCAR' &&  $code->codeType->name=='Passiva'){
+//
+//                                $saldoKredit =  DB::table('buku_besar_v')
+//                                    ->where('kode', $code->CODE)
+//                                    ->whereBetween('tgl_transaksi', [$startOfLR,$today])
+//                                    ->where('trans','K')
+//                                    ->sum('amount');
+//                                $saldo += $saldoDebet;
+//                                $saldo -= $saldoKredit;
+//                                $bukuBesars->push([
+//                                    'code' => $code->CODE,
+//                                    'name' => $code->NAMA_TRANSAKSI,
+//                                    'code_type_id' => $code->code_type_id,
+//                                    'saldo' => -1*$saldo,
+//                                ]);
+//                            }
+//                            else
+                                if($code->codeCategory->name=='AKTIVA TETAP' &&  $code->codeType->name=='Activa')
 
                             {
                                 $saldoKreditJurnalUmum = Jurnal::where('akun_kredit', $code->CODE)->whereIn('jurnalable_type', ['App\Models\JurnalUmum','App\Models\JurnalTemp'])->where('tgl_transaksi', '<=',$today)->sum('kredit');
