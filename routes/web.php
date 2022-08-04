@@ -555,6 +555,7 @@ Route::group(['prefix' => 'jkk-printed', 'middleware' => 'auth'], function () {
     Route::get('list/data', [App\Http\Controllers\JkkPrintedController::class, 'indexAjax'])->name('jkk-printed-data');
     Route::post('reprint/{id}', [App\Http\Controllers\JkkPrintedController::class, 'reprint'])->name('jkk-printed-reprint');
     Route::get('detail/{id}', [App\Http\Controllers\JkkPrintedController::class, 'show'])->name('jkk-printed-show');
+    Route::post('deletejkk/{id}', [App\Http\Controllers\JkkPrintedController::class, 'destroy'])->name('jkk-printed-delete');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
@@ -570,3 +571,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 });
 
 Route::resource('sumber-dana', SumberDanaController::class);
+//Route::get('test', [App\Http\Controllers\TestController::class, 'index'])->name('test');
