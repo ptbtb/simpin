@@ -649,9 +649,9 @@ class PinjamanController extends Controller
             if ($user->roles->first()->id == ROLE_ADMIN) {
                 $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA;
             }else{
-               $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI; 
+               $pengajuan->id_status_pengajuan = STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI;
             }
-            
+
             $pengajuan->sumber_dana = $request->sumber_dana;
             $pengajuan->tenor = $request->lama_angsuran;
             $pengajuan->biaya_administrasi = filter_var($request->biaya_administrasi, FILTER_SANITIZE_NUMBER_INT);
@@ -1167,6 +1167,7 @@ class PinjamanController extends Controller
     public function bayarAngsuran(Request $request, $id)
     {
         // dd($request);
+        return redirect()->back()->withError('Modul Dalam Perbaikan');
         DB::beginTransaction();
         try {
             $pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
@@ -1386,7 +1387,7 @@ class PinjamanController extends Controller
         // dd($request);
         try {
             $rule['besar_pembayaran'] = 'required';
-            
+
             $validator = Validator::make($request->toArray(), $rule);
             if ($validator->fails()) {
                 $errors = $validator->errors();
