@@ -69,7 +69,7 @@ class KodeTransaksi extends Model implements Auditable
             $saldo += $saldoKredit;
         }
 
-        if($this->code_type_id==1 && $this->code_category_id==1 ){
+        if($this->code_type_id==1 && $this->code_category_id==28 ){
             return round(-$saldo);
         }
 
