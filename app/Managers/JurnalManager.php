@@ -325,7 +325,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
 
         // make balance
         // $jasa = ($angsuran->besar_pembayaran>$angsuran->jasa)?$angsuran->jasa:$angsuran->besar_pembayaran;
-        $angsur = ($angsuran->besar_pembayaran-$angsuran->jasa+2>$angsuran->besar_angsuran)?$angsuran->besar_angsuran:($angsuran->besar_pembayaran-$angsuran->jasa);
+        // $angsur = ($angsuran->besar_pembayaran-$angsuran->jasa+2>$angsuran->besar_angsuran)?$angsuran->besar_angsuran:($angsuran->besar_pembayaran-$angsuran->jasa);
+        $angsur = $angsuran->besar_pembayaran;
 
         //end balancing
 
@@ -341,8 +342,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
-         $jurnal->trans_id = $angsuran->kode_pinjam;
-            $jurnal->anggota = $angsuran->kode_anggota;
+        $jurnal->trans_id = $angsuran->kode_pinjam;
+        $jurnal->anggota = $angsuran->kode_anggota;
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);
@@ -361,7 +362,8 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         {
             $jurnal->akun_kredit = COA_BANK_MANDIRI;
         }
-        $jurnal->kredit = $angsuran->besar_pembayaran - $angsuran->besar_pembayaran_jasa;
+        // $jurnal->kredit = $angsuran->besar_pembayaran - $angsuran->besar_pembayaran_jasa;
+        $jurnal->kredit = $angsur;
        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         }else{
@@ -369,9 +371,9 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         }
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
-         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
-         $jurnal->trans_id = $angsuran->kode_pinjam;
-            $jurnal->anggota = $angsuran->kode_anggota;
+        $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
+        $jurnal->trans_id = $angsuran->kode_pinjam;
+        $jurnal->anggota = $angsuran->kode_anggota;
 
         // save as polymorphic
         $angsuran->jurnals()->save($jurnal);

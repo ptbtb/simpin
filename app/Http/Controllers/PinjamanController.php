@@ -1204,18 +1204,19 @@ class PinjamanController extends Controller
                     $angsuran->id_akun_kredit = ($request->id_akun_kredit[$i]) ? $request->id_akun_kredit[$i] : null;
                 }
 				$pembayaranJasa =  filter_var($request->besar_pembayaran_jasa[$i], FILTER_SANITIZE_NUMBER_INT);
-				$angsuran->besar_angsuran = $pembayaran + $pembayaranJasa;
+				$angsuran->besar_angsuran = $pembayaran;
 				$angsuran->besar_pembayaran = $pembayaran;
+				$angsuran->jasa = $pembayaranJasa;
 				$angsuran->besar_pembayaran_jasa = $pembayaranJasa;
 				$angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
 				$angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->u_entry = Auth::user()->name;
+				$angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->save();
 
 				// create JKM angsuran
                 JurnalManager::createJurnalAngsuranBaru($angsuran, $request->besar_pembayaran_jasa[$i]);
 
-				$angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                 $angsuran->serial_number = $serialNumber;
                 $angsuran->save();
 
@@ -1233,6 +1234,7 @@ class PinjamanController extends Controller
 		} 
 		catch (\Throwable $th) 
 		{
+            dd($th);
 			$message = $th->getMessage() . ' || ' . $th->getFile() . ' || ' . $th->getLine();
 			Log::error($message);
 			DB::rollBack();

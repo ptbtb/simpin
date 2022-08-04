@@ -124,4 +124,15 @@ class Angsuran extends Model implements Auditable
     {
         return $this->id_status_angsuran == STATUS_ANGSURAN_MENUNGGU_APPROVAL;
     }
+
+    /**
+     * Get the totalPembayaran
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalPembayaranAttribute()
+    {
+        return $this->besar_pembayaran + $this->besar_pembayaran_jasa;
+    }
 }
