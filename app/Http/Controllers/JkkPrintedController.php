@@ -47,7 +47,7 @@ class JkkPrintedController extends Controller
 
         $jkkPrinted = JkkPrinted::with('jkkPrintedType', 'jkkPengajuan', 'jkkPenarikan')
                                 ->orderBy('printed_at', 'desc');
-        
+
 
         if (isset($request->type_id) && $request->type_id == JKK_PRINTED_TYPE_PENGAJUAN_PINJAMAN)
         {
@@ -200,5 +200,56 @@ class JkkPrintedController extends Controller
             Log::error($message);
             return redirect()->back()->withErrors($message);
         }
+    }
+
+    public function destroy($id){
+        $user = Auth::user();
+        $this->authorize('print jkk', $user);
+
+        try{
+            $jkkPrinted = JkkPrinted::findOrFail($id);
+//        dd($jkkPrinted);
+            if ($jkkPrinted->isPenarikanSimpanan())
+            {
+                $listPenarikan = $jkkPrinted->jkkPenarikan;
+                foreach ($listPenarikan as $penarikan){
+                    if (!$penarikan->tgl_transaksi){
+                        $penarikan->no_jkk=null;
+                        $penarikan->status_jkk=0;
+                        $penarikan->save();
+                    }else{
+                        throw new \Exception('Transaksi Sudah Di konfirmasi, JKK Tidak bisa Dihapus');
+                    }
+
+
+                }
+
+            }
+            else
+            {
+                $listPengajuan = $jkkPrinted->jkkPengajuan;
+                foreach ($listPengajuan as $pengajuan){
+                    if (!$pengajuan->tgl_transaksi){
+                        $pengajuan->no_jkk=null;
+                        $pengajuan->status_jkk=0;
+                        $pengajuan->save();
+                    }else{
+                        throw new \Exception('Transaksi Sudah Di konfirmasi, JKK Tidak bisa Dihapus');
+                    }
+
+
+                }
+            }
+
+            $jkkPrinted->delete();
+            return redirect()->back()->withSuccess("Jkk Berhasil Di Hapus");
+
+        }catch (\Throwable $th)
+        {
+            $message = $th->getMessage();
+            Log::error($message);
+            return redirect()->back()->withErrors($message);
+        }
+
     }
 }

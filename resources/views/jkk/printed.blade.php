@@ -113,6 +113,29 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="deletejkkModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="" method="POST" enctype="multipart/form-data" id="deletejkkForm">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus JKK</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Anda Yakin Menghapus Jkk ini?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -190,6 +213,9 @@
                     link = link + '<button data-toggle="modal" data-target="#paymentConfirmationModal" class="btn btn-sm btn-info btn-reprint mt-1" data-url="{{ route("jkk-printed-reprint", [""]) }}/' + data + '"/>' +
                         '<i class="fa fa-print"></i> Reprint' +
                         '</button>';
+                    link = link + '<button data-toggle="modal" data-target="#deletejkkModal" class="btn btn-sm btn-danger btn-deletejkk mt-1 ml-1" data-url="{{ route("jkk-printed-delete", [""]) }}/' + data + '"/>' +
+                        '<i class="fa fa-print"></i> Hapus' +
+                        '</button>';
                     return link;
                 }
             },
@@ -200,8 +226,17 @@
         var dataUrl = $(this).data('url');
         $('#paymentConfirmationForm').attr('action', dataUrl);
     });
+    $(document).on('click', '.btn-deletejkk', function() {
+        var dataUrl = $(this).data('url');
+        $('#deletejkkForm').attr('action', dataUrl);
+    });
 
     $('#paymentConfirmationForm').on('submit', function() {
+        setTimeout(function() {
+            window.location.reload(1);
+        }, 3000);
+    });
+    $('#deletejkkForm').on('submit', function() {
         setTimeout(function() {
             window.location.reload(1);
         }, 3000);
