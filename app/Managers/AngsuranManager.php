@@ -6,6 +6,7 @@ use App\Models\Pinjaman;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AngsuranManager
 {
@@ -98,7 +99,12 @@ class AngsuranManager
     {
         $angsuran = new Angsuran();
         $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
-        $angsuran->angsuran_ke = $pinjaman->angsuran_sekarang;
+        // $angsuran->angsuran_ke = $pinjaman->angsuran_sekarang;
+        $angsuranmaxKe  = DB::table('t_angsur')
+                        ->selectraw("max(angsuran_ke) as maxke ")
+                        ->where('kode_pinjam', $pinjaman->kode_pinjam)->get();
+        $angsuranKe = $angsuranmaxKe[0]->maxke + 1;
+        $angsuran->angsuran_ke = $angsuranKe;
         $angsuran->besar_angsuran = $pinjaman->besar_angsuran_pokok;
         $angsuran->u_entry = Auth::user()->name;
         $angsuran->tgl_entri = Carbon::now();
