@@ -203,7 +203,7 @@ class TransaksiUserImport
                             $pinjaman1->save();
                         }
                     }
-                    JurnalManager::createJurnalAngsuran($angsuran1);
+                    JurnalManager::createJurnalAngsuran($angsuran2);
 
                 }
             }
