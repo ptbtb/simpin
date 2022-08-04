@@ -682,7 +682,7 @@
             });
             $('.code1').html(pattern);
             $('.code2').html(pattern);
-            /* 
+            /*
             if(jenisAkun == 2)
             {
                 // loop through code bank
@@ -912,7 +912,7 @@
 
         $('#discount').on('keyup', function() {
             var discount = $(this).val();
-            var jasaPelunasanDipercepat = {{ $pinjaman->jasaPelunasanDipercepat }};
+            var jasaPelunasanDipercepat = 0;
             // console.log(jasaPelunasanDipercepat);
             var totalAngsuran = {{ $pinjaman->sisa_pinjaman }};
             // console.log(totalAngsuran);
