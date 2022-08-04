@@ -363,7 +363,14 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal->akun_kredit = COA_BANK_MANDIRI;
         }
         // $jurnal->kredit = $angsuran->besar_pembayaran - $angsuran->besar_pembayaran_jasa;
-        $jurnal->kredit = $angsur;
+        if($jasa)
+        {
+            $jurnal->kredit = $angsur + $jasa;
+        }
+        else
+        {
+            $jurnal->kredit = $angsur;
+        }
        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         }else{
