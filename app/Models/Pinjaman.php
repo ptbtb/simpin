@@ -224,7 +224,7 @@ class Pinjaman extends Model implements Auditable
 
     public function isPaidOff()
     {
-        if($this->besar_angsuran <= $this->listAngsuran->count('besar_angsuran'))
+        if($this->besar_angsuran <= $this->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)->count('besar_angsuran'))
         {
             return true;
         }
