@@ -221,4 +221,13 @@ class Pinjaman extends Model implements Auditable
     {
         return $this->lama_angsuran - $this->sisa_angsuran + 1;
     }
+
+    public function isPaidOff()
+    {
+        if($this->besar_angsuran <= $this->listAngsuran->count('besar_angsuran'))
+        {
+            return true;
+        }
+        return false;
+    }
 }

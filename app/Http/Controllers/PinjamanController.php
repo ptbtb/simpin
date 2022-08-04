@@ -1164,7 +1164,84 @@ class PinjamanController extends Controller
         return view('pinjaman.detailPembayaran', $data);
     }
 
-    public function bayarAngsuran(Request $request, $id)
+	public function bayarAngsuran(Request $request, $id)
+	{
+		DB::beginTransaction();
+		try 
+		{
+			// get loan
+			$pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
+			for ($i = 0; $i < count($request->besar_pembayaran); $i++) 
+			{
+				// convert payment amount to integer
+				$pembayaran = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
+
+				// check balance from payment method
+				if ($request->jenis_pembayaran[$i])
+                {
+                    $kode = $request->jenis_pembayaran[$i];
+                    $tabungan = Tabungan::where('kode_trans', $kode)
+                                        ->where('kode_anggota', $pinjaman->kode_anggota)
+                                        ->first();
+
+                    if ($tabungan->besar_tabungan < $pembayaran) {
+                        return redirect()->back()->withError('Sisa tabungan tidak mencukupi untuk melakukan pembayaran');
+                    }
+                }
+
+				// generate serial number
+				$serialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
+				// create bill
+				$angsuran = AngsuranManager::createAngsuran($pinjaman, $request);
+				if ($request->jenis_pembayaran[$i]) 
+				{
+                    $codeCoa = Code::where('CODE', $tabungan->kode_trans)->first();
+                    $angsuran->id_akun_kredit = $codeCoa->id;
+                } 
+				else 
+				{
+                    $angsuran->id_akun_kredit = ($request->id_akun_kredit[$i]) ? $request->id_akun_kredit[$i] : null;
+                }
+				$pembayaranJasa =  filter_var($request->besar_pembayaran_jasa[$i], FILTER_SANITIZE_NUMBER_INT);
+				$angsuran->besar_angsuran = $pembayaran + $pembayaranJasa;
+				$angsuran->besar_pembayaran = $pembayaran;
+				$angsuran->besar_pembayaran_jasa = $pembayaranJasa;
+				$angsuran->id_status_angsuran = STATUS_ANGSURAN_LUNAS;
+				$angsuran->paid_at = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $angsuran->u_entry = Auth::user()->name;
+                $angsuran->save();
+
+				// create JKM angsuran
+                JurnalManager::createJurnalAngsuranBaru($angsuran, $request->besar_pembayaran_jasa[$i]);
+
+				$angsuran->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $angsuran->serial_number = $serialNumber;
+                $angsuran->save();
+
+				// update sisa angsuran di pinjaman
+				/* $pinjaman->sisa_angsuran = $pinjaman->sisa_angsuran - 1;
+                $pinjaman->save(); */
+				if($pinjaman->isPaidOff())
+				{
+					$pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
+                    $pinjaman->save();
+				}
+			}
+			DB::commit();
+			return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
+		} 
+		catch (\Throwable $th) 
+		{
+			$message = $th->getMessage() . ' || ' . $th->getFile() . ' || ' . $th->getLine();
+			Log::error($message);
+			DB::rollBack();
+			return redirect()->back()->withErrors($message);
+			// return response()->json(['message' => $message], 500);
+		}
+	}
+
+    public function bayarAngsuran1(Request $request, $id)
     {
         // dd($request);
         return redirect()->back()->withError('Modul Dalam Perbaikan');
@@ -1268,6 +1345,7 @@ class PinjamanController extends Controller
             return redirect()->back()->withError($e->getMessage());
         }
     }
+    
     public function bayarAngsuranOld(Request $request, $id)
     {
         DB::beginTransaction();
@@ -1541,7 +1619,6 @@ class PinjamanController extends Controller
             }
             return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
         } catch (\Throwable $e) {
-            dd($e);
             \Log::error($e);
             $message = $e->getMessage();
             return redirect()->back()->withError('gagal melakukan pembayaran');
