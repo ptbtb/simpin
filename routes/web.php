@@ -419,6 +419,7 @@ Route::group(['prefix' => 'jurnal-umum'], function () {
         Route::post('update-status', [App\Http\Controllers\JurnalUmumController::class, 'updateStatusJurnalumum'])->name('jurnal-umum-update-status');
         Route::get('print-jkk', [App\Http\Controllers\JurnalUmumController::class, 'indexJkk'])->name('jurnal-umum-index-jkk');
         Route::post('print-jkk', [App\Http\Controllers\JurnalUmumController::class, 'printJkk'])->name('jurnal-umum-print-jkk');
+        Route::get('print-jkk-pdf', [App\Http\Controllers\JurnalUmumController::class, 'printJkk'])->name('jurnal-umum-print-jkk-pdf');
     });
 });
 

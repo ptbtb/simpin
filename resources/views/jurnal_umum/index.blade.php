@@ -43,9 +43,6 @@
 @section('content')
 <div class="card">
     <div class="card-header text-right">
-        @can('print jkk')
-        <a href="{{ route('jurnal-umum-index-jkk') }}" class="btn mt-1 btn-sm btn-info"><i class="fas fa-print"></i> Print JU</a>
-        @endcan
         <form action="{{ route('jurnal-umum-list') }}" method="post">
             @csrf
             <div class="row">
@@ -272,13 +269,30 @@
                         if (full.status_jkk == 1) {
                             markup += '<a data-id="' + data +
                                 '" data-old-status="{{ STATUS_JURNAL_UMUM_MENUNGGU_PEMBAYARAN }}" data-status="{{ STATUS_JURNAL_UMUM_DITERIMA}}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                        } else {
-                            markup += 'JKK Belum di Print';
-
+                        }
+                        else 
+                        {
+                            // markup += 'JKK Belum di Print';
+                            @can('print jkk')
+                                var url = '{{ route("jurnal-umum-print-jkk-pdf") }}?kode_jurnal_umum='+data;
+                                markup += '<a href="'+url+'" class="btn mt-1 btn-sm btn-primary btn-jkk">' +
+                                    '<i class="fas fa-print"></i> Print JU' +
+                                '</a>';
+                            @endcan
                         }
                         @endcan
-                    } @endcan
-                        @endif
+                    }
+                    else if(full.status_jurnal_umum_id == {!!STATUS_JURNAL_UMUM_DITERIMA!!})
+                    {
+                        @can('print jkk')
+                            var url = '{{ route("jurnal-umum-print-jkk-pdf") }}?kode_jurnal_umum='+data;
+                            markup += '<a href="'+url+'" class="btn mt-1 btn-sm btn-primary btn-jkk">' +
+                                '<i class="fas fa-print"></i> Reprint Print JU' +
+                            '</a>';
+                        @endcan
+                    }
+                    @endcan    
+                    @endif
 
                         return markup;
                 }
@@ -364,6 +378,14 @@
             return this;
         },
     });
+
+    $(document).on('click', '.btn-jkk', function ()
+    {
+        setTimeout(function () 
+        {
+            location.reload(true);
+        }, 3000);
+    })
 
     $(document).on('click', '.btn-approval', function() {
         var id = $(this).data('id');
