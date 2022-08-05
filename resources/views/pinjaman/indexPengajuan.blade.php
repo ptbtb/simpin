@@ -5,16 +5,18 @@
 @endsection
 
 @section('content_header')
-<div class="row">
-	<div class="col-6"><h4>{{ $title }}</h4></div>
-	<div class="col-6">
-		<ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="">Pinjaman</a></li>
-			<li class="breadcrumb-item active">List Pinjaman</li>
-		</ol>
-	</div>
-</div>
+    <div class="row">
+        <div class="col-6">
+            <h4>{{ $title }}</h4>
+        </div>
+        <div class="col-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="">Pinjaman</a></li>
+                <li class="breadcrumb-item active">List Pinjaman</li>
+            </ol>
+        </div>
+    </div>
 @endsection
 
 @section('plugins.Datatables', true)
@@ -25,11 +27,11 @@
     <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" rel="stylesheet" />
     <style>
-        .btn-sm{
+        .btn-sm {
             font-size: .8rem;
         }
 
-        .box-custom{
+        .box-custom {
             border: 1px solid black;
             border-radius: 0;
         }
@@ -54,8 +56,12 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>Tgl. Pengajuan</label>
-                    <input type="text" name="start_tgl_pengajuan" id="start_input_tgl_pengajuan" value="{{ ($request->start_tgl_pengajuan)?$request->start_tgl_pengajuan:old('start_tgl_pengajuan') }}" class="form-control" placeholder="Start date" autocomplete="off">
-                    <input type="text" name="end_tgl_pengajuan" id="end_input_tgl_pengajuan" value="{{ ($request->end_tgl_pengajuan)?$request->end_tgl_pengajuan:old('end_tgl_pengajuan') }}" class="form-control" placeholder="End Date" autocomplete="off">
+                    <input type="text" name="start_tgl_pengajuan" id="start_input_tgl_pengajuan"
+                        value="{{ $request->start_tgl_pengajuan ? $request->start_tgl_pengajuan : old('start_tgl_pengajuan') }}"
+                        class="form-control" placeholder="Start date" autocomplete="off">
+                    <input type="text" name="end_tgl_pengajuan" id="end_input_tgl_pengajuan"
+                        value="{{ $request->end_tgl_pengajuan ? $request->end_tgl_pengajuan : old('end_tgl_pengajuan') }}"
+                        class="form-control" placeholder="End Date" autocomplete="off">
                 </div>
                 <div class="form-group col-md-4">
                     <label>Anggota</label>
@@ -67,7 +73,8 @@
                     </select>
                 </div>
                 <div class="col-md-1 form-group" style="margin-top: 26px">
-                    <a class="btn btn-sm btn-success form-control" id="btnFiterSubmitSearch" style="color:white; padding-top:8px"><i class="fa fa-filter"></i> Filter</a>
+                    <a class="btn btn-sm btn-success form-control" id="btnFiterSubmitSearch"
+                        style="color:white; padding-top:8px"><i class="fa fa-filter"></i> Filter</a>
                 </div>
             </div>
         </div>
@@ -76,13 +83,16 @@
         <div class="card-header text-right">
             {{-- <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from, 'to' => $request->to, 'status' => 'belum lunas']) }}" class="btn mt-1 btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a> --}}
             @can('print jkk')
-                <a href="{{ route('pengajuan-pinjaman-print-jkk') }}" class="btn mt-1 btn-sm btn-info"><i class="fas fa-print"></i> Print JKK</a>
+                <a href="{{ route('pengajuan-pinjaman-print-jkk') }}" class="btn mt-1 btn-sm btn-info"><i
+                        class="fas fa-print"></i> Print JKK</a>
                 {{-- <a href="{{ route('download-pengajuan-pinjaman-excel', $request->toArray()) }}" class="btn mt-1 btn-sm btn-warning"><i class="fa fa-download"></i> Download Excel</a> --}}
             @endcan
             @can('download pengajuan pinjaman')
-                <a href="#" class="btn mt-1 btn-sm btn-warning btn-download-excel"><i class="fa fa-download"></i> Download Excel</a>
+                <a href="#" class="btn mt-1 btn-sm btn-warning btn-download-excel"><i class="fa fa-download"></i> Download
+                    Excel</a>
             @endcan
-            <a href="{{ route('pengajuan-pinjaman-add') }}" class="btn mt-1 btn-sm btn-success"><i class="fas fa-plus"></i> Buat Pengajuan Pinjaman</a>
+            <a href="{{ route('pengajuan-pinjaman-add') }}" class="btn mt-1 btn-sm btn-success"><i class="fas fa-plus"></i>
+                Buat Pengajuan Pinjaman</a>
         </div>
         <div class="card-body table-responsive">
             <table class="table table-striped" id="pengajuan-table">
@@ -148,7 +158,7 @@
                 </div>
                 <div class="modal-footer">
 
-                        <a data-id=""class="text-white btn mt-1 btn-sm btn-success btn-editcoa">update</a>
+                    <a data-id=""class="text-white btn mt-1 btn-sm btn-success btn-editcoa">update</a>
 
                     <button type="button" class="btn mt-1 btn-danger" data-dismiss="modal">Close</button>
                 </div>
@@ -170,7 +180,9 @@
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>Tanggal Pembayaran</label>
-                                <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control" placeholder="yyyy-mm-dd" required value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
+                                <input id="tgl_transaksi" type="date" name="tgl_transaksi" class="form-control"
+                                    placeholder="yyyy-mm-dd" required
+                                    value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Jenis Akun</label>
@@ -199,7 +211,8 @@
                 </div>
                 <div class="modal-footer">
 
-                        <a data-id="" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}"class="text-white btn mt-1 btn-sm btn-success btn-approval">Bayar</a>
+                    <a data-id="" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}"
+                        data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}"class="text-white btn mt-1 btn-sm btn-success btn-approval">Bayar</a>
 
                     <button type="button" class="btn mt-1 btn-danger" data-dismiss="modal">Close</button>
                 </div>
@@ -207,7 +220,8 @@
         </div>
     </div>
 
-    <div id="loading" style="position: absolute; top: 0; left: 0; z-index: 100; height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.5)">
+    <div id="loading"
+        style="position: absolute; top: 0; left: 0; z-index: 100; height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.5)">
         <div class="d-flex w-100 h-100">
             <img src="{{ asset('img/load.gif') }}" class="m-auto">
         </div>
@@ -223,61 +237,69 @@
         var baseURL = {!! json_encode(url('/')) !!};
         $.fn.dataTable.ext.errMode = 'none';
 
-        var table = $('#pengajuan-table').on('xhr.dt', function ( e, settings, json, xhr ) {
-            }).DataTable({
+        var table = $('#pengajuan-table').on('xhr.dt', function(e, settings, json, xhr) {}).DataTable({
             bProcessing: true,
             bServerSide: true,
             responsive: true,
             searching: false,
-            ajax:
-            {
-                url : baseURL+'/pinjaman/pengajuan/list/data',
+            ajax: {
+                url: baseURL + '/pinjaman/pengajuan/list/data',
                 dataSrc: 'data',
-                data: function(data){
+                data: function(data) {
                     data.status_pengajuan = $('#select_status_pengajuan').val();
                     data.start_tgl_pengajuan = $('#start_input_tgl_pengajuan').val();
                     data.end_tgl_pengajuan = $('#end_input_tgl_pengajuan').val();
                     data.anggota = $('#select_anggota').val();
                 },
             },
-            aoColumns:
-            [
-                {
-                    mData: 'id', visible: false,
+            aoColumns: [{
+                    mData: 'id',
+                    visible: false,
                 },
                 {
-                    data: null, orderable: false,
-                    className: 'select-checkbox', defaultContent: "",
+                    data: null,
+                    orderable: false,
+                    className: 'select-checkbox',
+                    defaultContent: "",
                 },
                 {
                     mData: 'DT_RowIndex',
-                    className: "dt-body-center", 'name': 'DT_RowIndex',
+                    className: "dt-body-center",
+                    'name': 'DT_RowIndex',
                 },
                 {
-                    mData: 'no_jkk', sType: "string",
-                    className: "dt-body-center", "name": "no_jkk"
+                    mData: 'no_jkk',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "no_jkk"
                 },
                 {
-                    mData: 'kode_pinj_lama', sType: "string",
-                    className: "dt-body-center", "name": "kode_pinj_lama"
+                    mData: 'kode_pinj_lama',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "kode_pinj_lama"
                 },
                 {
-                    mData: 'tgl_pengajuan', sType: "string",
-                    className: "dt-body-center", "name": "tgl_pengajuan"
+                    mData: 'tgl_pengajuan',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "tgl_pengajuan"
                 },
                 {
-                    mData: 'kode_anggota', sType: "string",
-                    className: "dt-body-center", "name": "kode_anggota"
+                    mData: 'kode_anggota',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "kode_anggota"
                 },
                 {
-                    mData: 'anggota.nama_anggota', sType: "string",
-                    className: "dt-body-center", "name": "anggota.nama_anggota",
-                    mRender : function(data, type, full)
-                    {
+                    mData: 'anggota.nama_anggota',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "anggota.nama_anggota",
+                    mRender: function(data, type, full) {
                         var markup = '';
 
-                        if (full.anggota)
-                        {
+                        if (full.anggota) {
                             markup += full.anggota.nama_anggota;
                         }
 
@@ -285,49 +307,56 @@
                     },
                 },
                 {
-                    mData: 'nama_pinjaman', sType: "string",
-                    className: "dt-body-center", "name": "nama_pinjaman"
+                    mData: 'nama_pinjaman',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "nama_pinjaman"
                 },
                 {
-                    mData: 'besar_pinjam', sType: "string",
-                    className: "dt-body-center", "name": "besar_pinjam"
+                    mData: 'besar_pinjam',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "besar_pinjam"
                 },
                 {
-                    mData: 'form_persetujuan', sType: "string",
-                    className: "dt-body-center", "name": "form_persetujuan",
-                    mRender : function(data, type, full)
-                    {
+                    mData: 'form_persetujuan',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "form_persetujuan",
+                    mRender: function(data, type, full) {
                         var markup = '';
 
-                        if (full.form_persetujuan)
-                        {
-                            markup += '<a class="btn btn-warning btn-sm" href="'+baseURL+'/'+full.form_persetujuan+'" target="_blank"><i class="fa fa-file"></i></a>';
+                        if (full.form_persetujuan) {
+                            markup += '<a class="btn btn-warning btn-sm" href="' + baseURL + '/' + full
+                                .form_persetujuan + '" target="_blank"><i class="fa fa-file"></i></a>';
                         }
 
                         return markup;
                     },
                 },
                 {
-                    mData: 'status_pengajuan', sType: "string",
-                    className: "dt-body-center", "name": "status_pengajuan"
+                    mData: 'status_pengajuan',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "status_pengajuan"
                 },
                 {
-                    mData: 'tgl_acc', sType: "string",
-                    className: "dt-body-center", "name": "tgl_acc"
+                    mData: 'tgl_acc',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "tgl_acc"
                 },
                 {
-                    mData: 'created_by', sType: "string",
-                    className: "dt-body-center", "name": "created_by",
-                    mRender : function(data, type, full)
-                    {
+                    mData: 'created_by',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "created_by",
+                    mRender: function(data, type, full) {
                         var markup = '';
 
-                        if (full.created_by)
-                        {
+                        if (full.created_by) {
                             markup += full.created_by.name;
-                        }
-                        else
-                        {
+                        } else {
                             markup += '-';
                         }
 
@@ -335,18 +364,16 @@
                     },
                 },
                 {
-                    mData: 'approved_by', sType: "string",
-                    className: "dt-body-center", "name": "approved_by",
-                    mRender : function(data, type, full)
-                    {
+                    mData: 'approved_by',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "approved_by",
+                    mRender: function(data, type, full) {
                         var markup = '';
 
-                        if (full.approved_by)
-                        {
+                        if (full.approved_by) {
                             markup += full.approved_by.name;
-                        }
-                        else
-                        {
+                        } else {
                             markup += '-';
                         }
 
@@ -354,22 +381,22 @@
                     },
                 },
                 {
-                    mData: 'keterangan', sType: "string",
-                    className: "dt-body-center", "name": "keterangan"
+                    mData: 'keterangan',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "keterangan"
                 },
                 {
-                    mData: 'paid_by_cashier', sType: "string",
-                    className: "dt-body-center", "name": "paid_by_cashier",
-                    mRender : function(data, type, full)
-                    {
+                    mData: 'paid_by_cashier',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "paid_by_cashier",
+                    mRender: function(data, type, full) {
                         var markup = '';
 
-                        if (full.paid_by_cashier)
-                        {
+                        if (full.paid_by_cashier) {
                             markup += full.paid_by_cashier.name;
-                        }
-                        else
-                        {
+                        } else {
                             markup += '-';
                         }
 
@@ -377,119 +404,181 @@
                     },
                 },
                 {
-                    mData: 'id', sType: "string",
-                    className: "dt-body-center", "name": "id",
-                    mRender : function(data, type, full)
-                    {
+                    mData: 'id',
+                    sType: "string",
+                    className: "dt-body-center",
+                    "name": "id",
+                    mRender: function(data, type, full) {
                         var markup = '';
 
                         @if (Auth::user()->isAnggota())
-                            if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }})
-                            {
-                                markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Cancel</a>';
-                            }
-                            else
-                            {
+                            if (full.id_status_pengajuan ==
+                                {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}) {
+                                markup += '<a data-id="' + data +
+                                    '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Cancel</a>';
+                            } else {
                                 markup += '-';
                             }
                         @else
                             @can('approve pengajuan pinjaman')
-                                if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }})
-                                {
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
-                                }
-                                else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }})
-                                {
+                                if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}) {
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Terima</a>';
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_KONFIRMASI }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                } else if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}) {
                                     @can('approve pengajuan pinjaman spv')
-                                        markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                        markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                        markup += '<a data-id="' + data +
+                                            '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                        markup += '<a data-id="' + data +
+                                            '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_SPV }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
                                     @endcan
-                                }
-                                else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }})
-                                {
+                                } else if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}) {
                                     // temporary skip manager, bendahara, ketua
                                     // markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
-                                }
-                                else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }})
-                                {
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
-                                }
-                                else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }})
-                                {
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA}}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
-                                }
-                                else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }})
-                                {
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN}}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
-                                    markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
-                                }
-                                else if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }})
-                                {
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_ASMAN }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                } else if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}) {
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_MANAGER }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                } else if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}) {
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_BENDAHARA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                } else if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }}) {
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-approval"><i class="fas fa-check"></i> Setuju</a>';
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_APPROVAL_KETUA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITOLAK }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> Tolak</a>';
+                                } else if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}) {
                                     @can('bayar pengajuan pinjaman')
-                                        if (full.status_jkk == 1)
-                                        {
-                                            markup += '<a data-id="'+full.kode_pengajuan+'" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm mt-1 btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
-                                        }
-                                        else
-                                        {
+                                        if (full.status_jkk == 1) {
+                                            markup += '<a data-id="' + full.kode_pengajuan +
+                                                '" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm mt-1 btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
+                                        } else {
                                             markup += 'JKK Belum di Print';
 
                                         }
                                     @endcan
                                 }
 
-                                markup += '<a data-id="'+full.kode_pengajuan+'" data-code="'+full.kode_jenis_pinjam+'" data-nominal="'+full.besar_ambil+'"  class="text-white btn btn-sm mt-1 btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>';
-                                markup += '<a class="btn mt-1 btn-sm btn-warning btn-detail" data-id="'+full.kode_pengajuan+'" style="cursor: pointer"><i class="fa fa-info"></i> Info</a>';
-                                markup += '<a class="btn mt-1 btn-dark btn-sm btn-lampiran text-white" data-id="'+full.kode_pengajuan+'"><i class="fa fa-file"></i> Lampiran</a>';
-
+                                markup += '<a data-id="' + full.kode_pengajuan + '" data-code="' + full
+                                    .kode_jenis_pinjam + '" data-nominal="' + full.besar_ambil +
+                                    '"  class="text-white btn btn-sm mt-1 btn-info btn-jurnal"><i class="fas fa-eye"></i> Jurnal</a>';
+                                markup += '<a class="btn mt-1 btn-sm btn-warning btn-detail" data-id="' +
+                                    full.kode_pengajuan +
+                                    '" style="cursor: pointer"><i class="fa fa-info"></i> Info</a>';
+                                markup +=
+                                    '<a class="btn mt-1 btn-dark btn-sm btn-lampiran text-white" data-id="' +
+                                    full.kode_pengajuan + '"><i class="fa fa-file"></i> Lampiran</a>';
                             @endcan
                             @can('bayar pengajuan pinjaman')
-                            if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}){
-                                        if (full.status_jkk == 1)
-                                        {
-                                            markup += '<a data-id="'+full.kode_pengajuan+'" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
-                                        }
-                                        else
-                                        {
-                                            markup += 'JKK Belum di Print';
+                                if (full.id_status_pengajuan ==
+                                    {{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}) {
+                                    if (full.status_jkk == 1) {
+                                        markup += '<a data-id="' + full.kode_pengajuan +
+                                            '" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_MENUNGGU_PEMBAYARAN }}" class="text-white btn btn-sm mt-1 btn-success btn-konfirmasi">Konfirmasi Pembayaran</a>';
+                                    } else {
+                                        markup += 'JKK Belum di Print';
 
-                                        }
-                                        markup += '<a data-id="'+data+'" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> BATALKAN</a>';
                                     }
-                                    @endcan
-                            @can('edit coa after payment')
-                              if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}){
-
-                                      markup += '<a data-id="'+full.kode_pengajuan+'" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm mt-1 btn-danger btn-editcoa1">Edit Coa</a>';
-                                    }
-
+                                    markup += '<a data-id="' + data +
+                                        '" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DIBATALKAN }}" class="text-white btn btn-sm mt-1 btn-danger btn-approval"><i class="fas fa-times"></i> BATALKAN</a>';
+                                }
                             @endcan
+                            @can('edit coa after payment')
+                                if (full.id_status_pengajuan == {{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}) {
 
+                                    markup += '<a data-id="' + full.kode_pengajuan +
+                                        '" data-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" data-old-status="{{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }}" class="text-white btn btn-sm mt-1 btn-danger btn-editcoa1">Edit Coa</a>';
+                                }
+                            @endcan
                         @endif
 
                         return markup;
                     },
                 },
             ],
-            columnDefs: [
-                { "targets": 0,"searchable": false, "orderable": false, 'checkboxes' : { 'selectRow': true } },
-                { "targets": 1,"searchable": false, "orderable": false },
-                { "targets": 2,"searchable": false, "orderable": false },
-                { "targets": 3,"searchable": true, "orderable": true },
-                { "targets": 4,"searchable": false, "orderable": true },
-                { "targets": 5,"searchable": false, "orderable": false },
-                { "targets": 6,"searchable": false, "orderable": false },
-                { "targets": 7,"searchable": false, "orderable": false },
-                { "targets": 8,"searchable": false, "orderable": false },
-                { "targets": 9,"searchable": false, "orderable": false },
-                { "targets": 10,"searchable": false, "orderable": false },
-                { "targets": 11,"searchable": false, "orderable": false },
-                { "targets": 12,"searchable": false, "orderable": true },
+            columnDefs: [{
+                    "targets": 0,
+                    "searchable": false,
+                    "orderable": false,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                },
+                {
+                    "targets": 1,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 2,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 3,
+                    "searchable": true,
+                    "orderable": true
+                },
+                {
+                    "targets": 4,
+                    "searchable": false,
+                    "orderable": true
+                },
+                {
+                    "targets": 5,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 6,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 7,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 8,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 9,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 10,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 11,
+                    "searchable": false,
+                    "orderable": false
+                },
+                {
+                    "targets": 12,
+                    "searchable": false,
+                    "orderable": true
+                },
             ],
             dom: 'lBrtip',
             buttons: [
@@ -500,17 +589,17 @@
                 style: 'multi',
                 selector: 'td:first-child'
             },
-            fnInitComplete: function (oSettings, json) {
+            fnInitComplete: function(oSettings, json) {
 
                 var _that = this;
 
-                this.each(function (i) {
+                this.each(function(i) {
                     $.fn.dataTableExt.iApiIndex = i;
                     var $this = this;
                     var anControl = $('input', _that.fnSettings().aanFeatures.f);
                     anControl
                         .unbind('keyup search input')
-                        .bind('keypress', function (e) {
+                        .bind('keypress', function(e) {
                             if (e.which == 13) {
                                 $.fn.dataTableExt.iApiIndex = i;
                                 _that.fnFilter(anControl.val());
@@ -523,9 +612,9 @@
             },
         });
 
-        $('#btnFiterSubmitSearch').click(function(){
-			$('#pengajuan-table').DataTable().draw(true);
-		});
+        $('#btnFiterSubmitSearch').click(function() {
+            $('#pengajuan-table').DataTable().draw(true);
+        });
 
         $.fn.modal.Constructor.prototype._enforceFocus = function() {};
         $('#start_input_tgl_pengajuan').datepicker({
@@ -537,28 +626,24 @@
             format: 'dd-mm-yyyy'
         });
 
-        $(document).on('click', '.btn-approval', function ()
-        {
+        $(document).on('click', '.btn-approval', function() {
             var id = $(this).data('id');
             var status = $(this).data('status');
             var old_status = $(this).data('old-status');
             var tgl_transaksi = $('#tgl_transaksi').val();
-            var url = '{{ route("pengajuan-pinjaman-update-status") }}';
+            var url = '{{ route('pengajuan-pinjaman-update-status') }}';
 
             var files = $('#buktiPembayaran')[0].files;
             var id_akun_debet = $('#code').val();
 
             // files is mandatory when status pengajuan pinjaman diterima
-            if(status == {{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }} && files[0] == undefined)
-            {
+            if (status == {{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }} && files[0] == undefined) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Wajib upload bukti pembayaran!',
                 });
-            }
-            else
-            {
+            } else {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -569,11 +654,11 @@
                         name: 'password',
                         placeholder: 'Password',
                         required: 'required',
-                        validationMessage:'Password required',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes',
+                        validationMessage: 'Password required',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes',
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -592,18 +677,17 @@
                         formData.append('keterangan', keterangan);
                         // getting selected checkboxes kode ambil(s)
                         var ids_array = table
-                                        .rows({ selected: true })
-                                        .data()
-                                        .pluck('id')
-                                        .toArray();
-                        if (ids_array.length != 0)
-                        {
+                            .rows({
+                                selected: true
+                            })
+                            .data()
+                            .pluck('id')
+                            .toArray();
+                        if (ids_array.length != 0) {
                             // append ids array into form
                             formData.append('ids', JSON.stringify(ids_array));
-                        }
-                        else
-                        {
-                            formData.append('ids', '['+id+']');
+                        } else {
+                            formData.append('ids', '[' + id + ']');
                         }
                         $.ajax({
                             type: 'post',
@@ -611,43 +695,42 @@
                             data: formData,
                             contentType: false,
                             processData: false,
-                        success: function(data) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Your has been changed',
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        },
-                        error: function(error){
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: error.responseJSON.message,
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                        }
+                            success: function(data) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Your has been changed',
+                                    showConfirmButton: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            },
+                            error: function(error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: error.responseJSON.message,
+                                    showConfirmButton: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            }
                         })
                     }
                 })
             }
         });
 
-        $(document).on('click', '.btn-konfirmasi', function ()
-        {
+        $(document).on('click', '.btn-konfirmasi', function() {
             var id = $(this).data('id');
             var action = $(this).data('action');
-            var url = baseURL + '/pinjaman/detail-pembayaran/'+id;
+            var url = baseURL + '/pinjaman/detail-pembayaran/' + id;
 
-            $.get(url, function( data ) {
+            $.get(url, function(data) {
                 $('#my-modal .form-detail').html(data);
                 $('.btn-approval').data('id', id);
                 $('#my-modal').modal({
@@ -656,65 +739,63 @@
                 $('#my-modal').modal('show');
             });
 
-            $('#jenisAkun').trigger( "change" );
+            $('#jenisAkun').trigger("change");
         });
 
-        $(document).on('click', '.btn-editcoa', function ()
-        {
+        $(document).on('click', '.btn-editcoa', function() {
             var id = $(this).data('id');
-            var url = baseURL + '/pinjaman/pengajuan/update/data-coa/'+id;
+            var url = baseURL + '/pinjaman/pengajuan/update/data-coa/' + id;
 
             var id_akun_debet = $('#code').val();
             var id_jurnal = $('#id_jurnal').val();
 
             // files is mandatory when status pengajuan pinjaman diterima
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    input: 'password',
-                    inputAttributes: {
-                        name: 'password',
-                        placeholder: 'Password',
-                        required: 'required',
-                        validationMessage:'Password required',
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                input: 'password',
+                inputAttributes: {
+                    name: 'password',
+                    placeholder: 'Password',
+                    required: 'required',
+                    validationMessage: 'Password required',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var password = result.value;
+                    var formData = new FormData();
+                    var token = "{{ csrf_token() }}";
+                    // var keterangan = $('#keterangan').val();
+                    formData.append('_token', token);
+                    formData.append('password', password);
+                    formData.append('id_akun_debet', id_akun_debet);
+                    formData.append('id_jurnal', id_jurnal);
+                    // getting selected checkboxes kode ambil(s)
+                    var ids_array = table
+                        .rows({
+                            selected: true
+                        })
+                        .data()
+                        .pluck('id')
+                        .toArray();
+                    if (ids_array.length != 0) {
+                        // append ids array into form
+                        formData.append('ids', JSON.stringify(ids_array));
+                    } else {
+                        formData.append('ids', '[' + id + ']');
                     }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var password = result.value;
-                        var formData = new FormData();
-                        var token = "{{ csrf_token() }}";
-                        // var keterangan = $('#keterangan').val();
-                        formData.append('_token', token);
-                        formData.append('password', password);
-                        formData.append('id_akun_debet', id_akun_debet);
-                        formData.append('id_jurnal', id_jurnal);
-                        // getting selected checkboxes kode ambil(s)
-                        var ids_array = table
-                                        .rows({ selected: true })
-                                        .data()
-                                        .pluck('id')
-                                        .toArray();
-                        if (ids_array.length != 0)
-                        {
-                            // append ids array into form
-                            formData.append('ids', JSON.stringify(ids_array));
-                        }
-                        else
-                        {
-                            formData.append('ids', '['+id+']');
-                        }
-                        $.ajax({
-                            type: 'post',
-                            url: url,
-                            data: formData,
-                            contentType: false,
-                            processData: false,
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
                         success: function(data) {
                             Swal.fire({
                                 icon: 'success',
@@ -727,7 +808,7 @@
                                 }
                             });
                         },
-                        error: function(error){
+                        error: function(error) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
@@ -739,18 +820,17 @@
                                 }
                             });
                         }
-                        })
-                    }
-                })
+                    })
+                }
+            })
 
         });
-        $(document).on('click', '.btn-editcoa1', function ()
-        {
+        $(document).on('click', '.btn-editcoa1', function() {
             var id = $(this).data('id');
             var action = $(this).data('action');
-            var url = baseURL + '/pinjaman/pengajuan/data-coa/'+id;
+            var url = baseURL + '/pinjaman/pengajuan/data-coa/' + id;
 
-            $.get(url, function( data ) {
+            $.get(url, function(data) {
                 $('#edit-coa-modal .form-detail').html(data);
                 $('.btn-editcoa').data('id', id);
                 $('#coa_lama').val(data.akun_kredit);
@@ -761,16 +841,15 @@
                 $('#edit-coa-modal').modal('show');
             });
 
-            $('#jenisAkun2').trigger( "change" );
+            $('#jenisAkun2').trigger("change");
         });
 
-        $(document).on('click', '.btn-jurnal',function ()
-        {
+        $(document).on('click', '.btn-jurnal', function() {
             htmlText = '';
             var id = $(this).data('id');
             $.ajax({
                 url: baseURL + '/pinjaman/pengajuan/data-jurnal/' + id,
-                success : function (data, status, xhr) {
+                success: function(data, status, xhr) {
                     htmlText = data;
                     Swal.fire({
                         title: 'Jurnal Pengajuan',
@@ -779,38 +858,35 @@
                         confirmButtonText: "Tutup",
                         confirmButtonColor: "#00ff00",
                     }).then((result) => {
-                        if (result.value) {
-                        }
+                        if (result.value) {}
                     });
                 },
-                error : function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     Swal.fire({
-                      title: 'Error',
-                      html: 'Terjadi Kesalahan',
-                      icon: "error",
-                      showCancelButton: false,
-                      confirmButtonText: "Tutup",
-                      confirmButtonColor: "#00ff00",
+                        title: 'Error',
+                        html: 'Terjadi Kesalahan',
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Tutup",
+                        confirmButtonColor: "#00ff00",
                     }).then((result) => {
-                        if (result.value) {
-                        }
+                        if (result.value) {}
                     });
                 }
             });
         });
 
-        $(document).on('click', '.btn-detail', function ()
-        {
+        $(document).on('click', '.btn-detail', function() {
             var id = $(this).data('id');
             var pengajuan = collect(@json($listPengajuanPinjaman)).where('kode_pengajuan', id).first();
             var htmlText = '<div class="container-fluid">' +
-                                '<div class="row">' +
-                                    '<div class="col-md-6 mx-0 my-2">Created At <br> ' + pengajuan['created_at_view'] + '</div>' +
-                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['created_by_view'] + '</div>' +
-                                    '<div class="col-md-6 mx-0 my-2">Updated At <br> ' + pengajuan['updated_at_view'] + '</div>' +
-                                    '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['updated_by_view'] + '</div>' +
-                                '</div>' +
-                            '</div>';
+                '<div class="row">' +
+                '<div class="col-md-6 mx-0 my-2">Created At <br> ' + pengajuan['created_at_view'] + '</div>' +
+                '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['created_by_view'] + '</div>' +
+                '<div class="col-md-6 mx-0 my-2">Updated At <br> ' + pengajuan['updated_at_view'] + '</div>' +
+                '<div class="col-md-6 mx-0 my-2">Created By <br> ' + pengajuan['updated_by_view'] + '</div>' +
+                '</div>' +
+                '</div>';
 
             Swal.fire({
                 title: 'Info',
@@ -819,13 +895,11 @@
                 confirmButtonText: "Ok",
                 confirmButtonColor: "#00a65a",
             }).then((result) => {
-                if (result.value) {
-                }
+                if (result.value) {}
             });
         });
 
-        $(document).on('click', '.btn-lampiran', function ()
-        {
+        $(document).on('click', '.btn-lampiran', function() {
             var id = $(this).data('id');
             var pengajuan = collect(@json($listPengajuanPinjaman)).where('kode_pengajuan', id).first();
 
@@ -833,52 +907,46 @@
             var bukti_pembayaran = pengajuan.bukti_pembayaran;
             var slip_gaji = [];
 
-            if(pengajuan.anggota.list_penghasilan != undefined)
-            {
-                slip_gaji = $.grep(pengajuan.anggota.list_penghasilan, function( n, i ) {
-                                return n.id_jenis_penghasilan == 4;
-                            });
+            if (pengajuan.anggota.list_penghasilan != undefined) {
+                slip_gaji = $.grep(pengajuan.anggota.list_penghasilan, function(n, i) {
+                    return n.id_jenis_penghasilan == 4;
+                });
             }
 
             var htmlText = '<div class="container-fluid">' +
-                                '<div class="row">' +
-                                    '<div class="col-md-6 mx-0 my-2 text-left">Form Pengajuan</div>';
+                '<div class="row">' +
+                '<div class="col-md-6 mx-0 my-2 text-left">Form Pengajuan</div>';
 
-                                    if(bukti_pembayaran != '' && bukti_pembayaran != null)
-                                    {
-                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class="mt-1" href="'+baseURL + '/' +bukti_pembayaran+'" download><i class="fa fa-download"></i></a></div>' ;
-                                    }
-                                    else
-                                    {
-                                        htmlText += '<div class="col-md-6"></div>';
-                                    }
+            if (bukti_pembayaran != '' && bukti_pembayaran != null) {
+                htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class="mt-1" href="' + baseURL + '/' +
+                    bukti_pembayaran + '" download><i class="fa fa-download"></i></a></div>';
+            } else {
+                htmlText += '<div class="col-md-6"></div>';
+            }
 
-                                    htmlText += '<div class="col-md-6 mx-0 my-2 text-left">KTP</div>' ;
+            htmlText += '<div class="col-md-6 mx-0 my-2 text-left">KTP</div>';
 
-                                    if(foto_ktp != '' && foto_ktp != null)
-                                    {
-                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="'+baseURL + '/' +foto_ktp+'" target="_blank"><i class="fa fa-eye"></i></a></div>' +
-                                        '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="'+baseURL + '/' +foto_ktp+'" download><i class="fa fa-download"></i></a></div>';
-                                    }
-                                    else
-                                    {
-                                        htmlText += '<div class="col-md-6"></div>';
-                                    }
+            if (foto_ktp != '' && foto_ktp != null) {
+                htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="' + baseURL + '/' +
+                    foto_ktp + '" target="_blank"><i class="fa fa-eye"></i></a></div>' +
+                    '<div class="col-md-1 mx-0 my-2 text-left"><a class= "mt-1" href="' + baseURL + '/' + foto_ktp +
+                    '" download><i class="fa fa-download"></i></a></div>';
+            } else {
+                htmlText += '<div class="col-md-6"></div>';
+            }
 
-                                    htmlText += '<div class="col-md-6 mx-0 my-2 text-left">Slip Gaji</div>' ;
+            htmlText += '<div class="col-md-6 mx-0 my-2 text-left">Slip Gaji</div>';
 
-                                    if(slip_gaji.length != 0)
-                                    {
-                                        var slip_gaji_url = slip_gaji[0].file_path;
-                                        htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class="mt-1" href="'+baseURL + '/' + slip_gaji_url+'" download><i class="fa fa-download"></i></a></div>';
-                                    }
-                                    else
-                                    {
-                                        htmlText += '<div class="col-md-6"></div>';
-                                    }
+            if (slip_gaji.length != 0) {
+                var slip_gaji_url = slip_gaji[0].file_path;
+                htmlText += '<div class="col-md-1 mx-0 my-2 text-left"><a class="mt-1" href="' + baseURL + '/' +
+                    slip_gaji_url + '" download><i class="fa fa-download"></i></a></div>';
+            } else {
+                htmlText += '<div class="col-md-6"></div>';
+            }
 
-                    htmlText += '</div>' +
-                            '</div>';
+            htmlText += '</div>' +
+                '</div>';
 
             Swal.fire({
                 title: 'Lampiran',
@@ -887,8 +955,7 @@
                 confirmButtonText: "Ok",
                 confirmButtonColor: "#00a65a",
             }).then((result) => {
-                if (result.value) {
-                }
+                if (result.value) {}
             });
         });
 
@@ -900,14 +967,17 @@
         var bankAccountArray = [];
 
         // get bank account number from php
-        @foreach($bankAccounts as $key => $bankAccount)
-            bankAccountArray[{{ $loop->index }}]={ id : {{ $bankAccount->id }}, code: '{{ $bankAccount->CODE }}', name: '{{ $bankAccount->NAMA_TRANSAKSI }}' };
+        @foreach ($bankAccounts as $key => $bankAccount)
+            bankAccountArray[{{ $loop->index }}] = {
+                id: {{ $bankAccount->id }},
+                code: '{{ $bankAccount->CODE }}',
+                name: '{{ $bankAccount->NAMA_TRANSAKSI }}'
+            };
         @endforeach
 
         // trigger to get kas or bank select option
         var listSumberDana = collect(@json($listSumberDana));
-        $(document).on('change', '#jenisAkun', function ()
-        {
+        $(document).on('change', '#jenisAkun', function() {
             // remove all option in code
             $('#code').empty();
 
@@ -916,15 +986,13 @@
             selectedSumberDana = listSumberDana.where('id', parseInt(jenisAkun)).first();
             currentCodes = collect(selectedSumberDana.codes);
             var pattern = "";
-            currentCodes.each(function (code)
-            {
-                if(code.id == 22)
-                {
-                    pattern = pattern + '<option value="'+ code.id +'" selected>'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
-                }
-                else
-                {
-                    pattern = pattern + '<option value="'+ code.id +'">'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+            currentCodes.each(function(code) {
+                if (code.id == 22) {
+                    pattern = pattern + '<option value="' + code.id + '" selected>' + code.CODE + ' ' + code
+                        .NAMA_TRANSAKSI + '</option>';
+                } else {
+                    pattern = pattern + '<option value="' + code.id + '">' + code.CODE + ' ' + code
+                        .NAMA_TRANSAKSI + '</option>';
                 }
             });
             $('#code').html(pattern);
@@ -958,11 +1026,10 @@
                 $('#code').append('<option value="133">402.01.000 R/K KOPEGMAR</option>');
             } */
 
-            $('#code').trigger( "change" );
+            $('#code').trigger("change");
         });
 
-        $(document).on('change', '#jenisAkun2', function ()
-        {
+        $(document).on('change', '#jenisAkun2', function() {
             // remove all option in code
             $('#code2').empty();
 
@@ -971,15 +1038,13 @@
             selectedSumberDana = listSumberDana.where('id', parseInt(jenisAkun)).first();
             currentCodes = collect(selectedSumberDana.codes);
             var pattern = "";
-            currentCodes.each(function (code)
-            {
-                if(code.id == 22)
-                {
-                    pattern = pattern + '<option value="'+ code.id +'" selected>'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
-                }
-                else
-                {
-                    pattern = pattern + '<option value="'+ code.id +'">'+ code.CODE +' '+ code.NAMA_TRANSAKSI +'</option>';
+            currentCodes.each(function(code) {
+                if (code.id == 22) {
+                    pattern = pattern + '<option value="' + code.id + '" selected>' + code.CODE + ' ' + code
+                        .NAMA_TRANSAKSI + '</option>';
+                } else {
+                    pattern = pattern + '<option value="' + code.id + '">' + code.CODE + ' ' + code
+                        .NAMA_TRANSAKSI + '</option>';
                 }
             });
             $('#code2').html(pattern);
@@ -1013,30 +1078,30 @@
                 $('#code2').append('<option value="133">402.01.000 R/K KOPEGMAR</option>');
             } */
 
-            $('#code2').trigger( "change" );
+            $('#code2').trigger("change");
         });
 
         var $loading = $('#loading').hide();
         $(document)
-        .ajaxStart(function () {
-            $loading.show();
-        })
-        .ajaxStop(function () {
-            $loading.hide();
-        });
+            .ajaxStart(function() {
+                $loading.show();
+            })
+            .ajaxStop(function() {
+                $loading.hide();
+            });
         $("#select_anggota").select2({
             ajax: {
                 url: '{{ route('anggota-ajax-search') }}',
                 dataType: 'json',
                 delay: 250,
-                data: function (params) {
+                data: function(params) {
                     var query = {
                         search: params.term,
                         type: 'public'
                     }
                     return query;
                 },
-                processResults: function (data) {
+                processResults: function(data) {
                     return {
                         results: data
                     };
@@ -1044,15 +1109,15 @@
             }
         });
 
-        $(document).on('click', '.btn-download-excel', function ()
-        {
+        $(document).on('click', '.btn-download-excel', function() {
             var statusPengajuan = $('#select_status_pengajuan option:selected').val();
             var startTglPengajuan = $('#start_input_tgl_pengajuan').val();
             var endTglPengajuan = $('#end_input_tgl_pengajuan').val();
             var anggota = $('#select_anggota option:selected').val();
-            var url = '{{ route("download-pengajuan-pinjaman-excel") }}' + '?status_pengajuan='+statusPengajuan+'&start_tgl_pengajuan='+startTglPengajuan+'&end_tgl_pengajuan='+endTglPengajuan+'&anggota='+anggota;
+            var url = '{{ route('download-pengajuan-pinjaman-excel') }}' + '?status_pengajuan=' + statusPengajuan +
+                '&start_tgl_pengajuan=' + startTglPengajuan + '&end_tgl_pengajuan=' + endTglPengajuan +
+                '&anggota=' + anggota;
             window.location.replace(url);
         })
-
     </script>
 @endsection

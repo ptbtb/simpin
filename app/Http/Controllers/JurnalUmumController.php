@@ -14,7 +14,7 @@ use App\Models\StatusJurnalUmum;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
 use App\Managers\JurnalUmumManager;
-
+use App\Models\SumberDana;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
@@ -44,11 +44,15 @@ class JurnalUmumController extends Controller
         if (!$request->to) {
             $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
         }
+        $listSumberDana = SumberDana::with('codes')
+            ->whereIn('id', [1, 2, 3])
+            ->get();
         $statusJUs = StatusJurnalUmum::get();
         $data['title'] = "List Jurnal Umum";
         $data['request'] = $request;
         $data['statusJUs'] = $statusJUs;
         $data['listJurnalUmum'] = $listJurnalUmum;
+        $data['listSumberDana'] = $listSumberDana;
 
         return view('jurnal_umum.index', $data);
     }
@@ -585,5 +589,24 @@ class JurnalUmumController extends Controller
             $hasil = trim(self::penyebut($nilai));
         }
         return $hasil;
+    }
+
+    public function showPayment($id)
+    {
+        $user = Auth::user();
+        $this->authorize('view jurnal umum', $user);
+
+        $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans', 'createdBy', 'updatedBy')
+                        ->find($id);
+
+        $itemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);
+        $itemCredits = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_KREDIT);
+
+        $data['jurnalUmum'] = $jurnalUmum;
+        $data['itemDebets'] = $itemDebets;
+        $data['itemCredits'] = $itemCredits;
+        $data['title'] = 'Detail Jurnal Umum';
+
+        return view('jurnal_umum.detail-payment', $data);
     }
 }
