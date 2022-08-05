@@ -272,7 +272,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <label>Besar Pembayaran</label>
+                                            <label>Besar Pembayaran Pokok</label>
                                             <input type="text" name="besar_pembayaran[]" class="form-control"
                                                 placeholder="Besar Pembayaran">
                                         </div>
