@@ -109,7 +109,7 @@
         <table id="tableSimpanan" class="table table-striped">
             <thead>
                 <tr class="info">
-                    <th>No</th>
+                    {{-- <th>No</th> --}}
                     <th style="width: 10%">Kode Simpan</th>
                     <th>Nama Anggota</th>
                     <th>No Anggota</th>
@@ -257,8 +257,8 @@ $.fn.dataTable.ext.errMode = 'none';
 
         var table = $('#tableSimpanan').on('xhr.dt', function ( e, settings, json, xhr ) {
             }).DataTable({
-            processing: true,
-            serverside: true,
+            bProcessing: true,
+            bServerSide: true,
             responsive: true,
             // order: [[ 7, "desc" ]],
             ajax: {
@@ -274,9 +274,9 @@ $.fn.dataTable.ext.errMode = 'none';
                 }
             },
             aoColumns: [
-                {
-                    mData: null
-                },
+                // {
+                //     mData: null
+                // },
                 {
                     mData: 'kode_simpan', sType: "string",
                     className: "dt-body-center", "name": "kode_simpan"
@@ -285,6 +285,7 @@ $.fn.dataTable.ext.errMode = 'none';
                     mData: 'anggota.nama_anggota', sType: "string",
                     className: "dt-body-center", "name": "anggota.nama_anggota"	,
                     mRender: function (data, type, full) {
+                        console.log(data);
                         if (data == null || data == '') {
                             return '-';
                         }
@@ -416,11 +417,11 @@ $.fn.dataTable.ext.errMode = 'none';
             ]
         });
 
-        table.on( 'order.dt search.dt', function () {
-            table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                cell.innerHTML = i+1;
-            } );
-        } ).draw();
+        // table.on( 'order.dt search.dt', function () {
+        //     table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        //         cell.innerHTML = i+1;
+        //     } );
+        // } ).draw();
 
 
     function initiateSelect2() {
