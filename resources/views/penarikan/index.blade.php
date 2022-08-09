@@ -70,12 +70,17 @@
                             value="{{ $request->to ? $request->to : old('to') }}" class="form-control"
                             placeholder="dd-mm-yyyy" autocomplete="off">
                     </div>
-                    {{-- <div class="form-group col-md-4">
+                    <div class="form-group col-md-4">
                         <label>Anggota</label>
-                        <select name="anggota" id="select_anggota" class="form-control"
+                        {{-- <select name="anggota" id="select_anggota" class="form-control"
                             value="{{ $request->anggota ? $request->tgl_ambil : old('tgl_ambil') }}">
+                        </select> --}}
+                        <select name="anggota" id="select_anggota" class="form-control">
+                            @if (Auth::user()->isAnggota())
+                                <option value="{{ Auth::user()->anggota->id }}" selected> {{ uth::user()->anggota->nama_anggota }}</option>
+                            @endif
                         </select>
-                    </div> --}}
+                    </div>
                     <div class="col-md-1 form-group" style="margin-top: 26px">
                         <button type="submit" class="btn btn-sm btn-success form-control"><i class="fa fa-filter"></i>
                             Filter</button>
@@ -999,7 +1004,9 @@
                         results: data
                     };
                 }
-            }
+            },
+            allowClear: true,
+            placeholder: "Select Anggota"
         });
         updateSelect2();
 
