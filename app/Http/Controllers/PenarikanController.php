@@ -424,7 +424,7 @@ class PenarikanController extends Controller
     {
         try {
             $user = Auth::user();
-            if ($user->isAnggota()) {
+            /* if ($user->isAnggota()) {
                 $anggota = $user->anggota;
                 if (is_null($anggota)) {
                     return redirect()->back()->withError('Your account has no members');
@@ -434,13 +434,12 @@ class PenarikanController extends Controller
                     ->get();
             } else {
                 $listPenarikan = Penarikan::with('anggota')->orderBy('tgl_ambil','desc')->get();
-            }
+            } */
 
             $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
             $statusPenarikans = StatusPenarikan::get();
-
-            $anggotas = Anggota::get();
+            // $anggotas = Anggota::get();
             if(!$request->from){
               $request->from = Carbon::now()->startOfDay()->format('Y-m-d');
             }
@@ -452,11 +451,11 @@ class PenarikanController extends Controller
                                         ->get();
 
             $data['title'] = "List Penarikan Simpanan";
-            $data['listPenarikan'] = $listPenarikan;
+            // $data['listPenarikan'] = $listPenarikan;
             $data['request'] = $request;
             $data['bankAccounts'] = $bankAccounts;
             $data['statusPenarikans'] = $statusPenarikans;
-            $data['anggotas'] = $anggotas;
+            // $data['anggotas'] = $anggotas;
             $data['listSumberDana'] = $listSumberDana;
             return view('penarikan.index', $data);
         } catch (\Throwable $e) {
@@ -506,7 +505,7 @@ class PenarikanController extends Controller
             }
             $listPenarikan= $listPenarikan->wherebetween('tgl_ambil', [$request->from,$request->to]);
 
-            $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
+            // $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
             $jenisSimpanan = JenisSimpanan::all();
 
