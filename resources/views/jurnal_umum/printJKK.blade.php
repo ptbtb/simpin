@@ -163,11 +163,11 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" style="text-align: left;">No Posting : {{ $jurnalUmum->serial_number_view }}</td>
+            <td colspan="2" style="text-align: left;">No Posting : </td>
             <td colspan="3" style="text-align: center; border-top:1px solid black">Paraf Petugas Posting : </td>
         </tr>
         <tr>
-            <td colspan="2" style="text-align: left;">Tgl Posting : {{ $jurnalUmum->view_tgl_transaksi }}</td>
+            <td colspan="2" style="text-align: left;">Tgl Posting : </td>
             <td colspan="3" style="text-align: center"></td>
         </tr>
     </table>
