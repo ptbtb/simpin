@@ -478,12 +478,13 @@ class PenarikanController extends Controller
             $listPenarikan = Penarikan::with('anggota', 'tabungan', 'statusPenarikan', 'createdBy', 'approvedBy', 'paidByCashier', 'jurnals', 'akunDebet');
                                         // ->where('is_pelunasan_dipercepat', 0);
 
-            if($request->status_penarikan != "")
+            if($request->status_penarikan)
             {
                 $listPenarikan->where('status_pengambilan', $request->status_penarikan);
-            }else{
-                $listPenarikan->where('status_pengambilan', $request->status_penarikan);
             }
+            /* else{
+                $listPenarikan->where('status_pengambilan', $request->status_penarikan);
+            } */
 
             // if($request->tgl_ambil != "")
             // {
@@ -492,12 +493,11 @@ class PenarikanController extends Controller
             //     $listPenarikan->where('tgl_ambil', $tgl_ambil);
             // }
 
-            if($request->anggota != "")
+            if($request->anggota)
             {
                 $listPenarikan->where('kode_anggota', $request->anggota);
             }
-
-            if ($user->isAnggota())
+            elseif ($user->isAnggota())
             {
                 $anggota = $user->anggota;
 
