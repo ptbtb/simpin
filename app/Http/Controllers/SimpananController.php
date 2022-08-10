@@ -170,66 +170,29 @@ class SimpananController extends Controller
                     }
                 }
                 if ($jenisSimpanan->nama_simpanan === 'SIMPANAN POKOK') {
-                    $checkSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
+                    $checkSimpanan = DB::table('t_simpan')
+                                        ->where('kode_anggota', '=', $anggotaId)
+                                        ->where('kode_jenis_simpan', '=', '411.01.000')
+                                        ->sum('besar_simpanan');
 
-                    if ($checkSimpanan) {
-                        $simpananOldValue = $checkSimpanan->besar_simpanan;
-                        $simpananCurrentValue = $simpananOldValue + $besarSimpanan;
-
-                        Simpanan::where('kode_anggota', $anggotaId)
-                            ->where('kode_jenis_simpan', '411.01.000')
-                            ->where('kode_simpan', (int)$checkSimpanan->kode_simpan)
-                            ->update([
-                                'besar_simpanan' => $simpananCurrentValue,
-                                'updated_at' => Carbon::now()
-                            ]);
-
-                        $indexAngsuran = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $checkSimpanan->kode_simpan)->count();
-
-                        $angsurSimpanan = new AngsuranSimpanan();
-                        $angsurSimpanan->kode_simpan = $checkSimpanan->kode_simpan;
-                        $angsurSimpanan->angsuran_ke = $indexAngsuran + 1;
-                        $angsurSimpanan->besar_angsuran = $besarSimpanan;
-                        $angsurSimpanan->kode_anggota = $request->kode_anggota;
-                        $angsurSimpanan->u_entry = Auth::user()->name;
-                        $angsurSimpanan->tgl_entri = Carbon::now();
-                        $angsurSimpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                        $angsurSimpanan->created_at = Carbon::now();
-                        $angsurSimpanan->updated_at = Carbon::now();
-                        $angsurSimpanan->save();
-                    } else {
-                        $simpanan = new Simpanan();
-                        $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
-                        $simpanan->besar_simpanan = $besarSimpanan;
-                        $simpanan->kode_anggota = $anggotaId;
-                        $simpanan->u_entry = Auth::user()->name;
-                        $simpanan->tgl_entri = Carbon::now();
-                        $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                        $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                        $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
-                        $simpanan->keterangan = ($request->keterangan[$key]) ? $request->keterangan[$key] : '';
-                        $simpanan->id_akun_debet = ($request->id_akun_debet[$key]) ? $request->id_akun_debet[$key] : null;
-                        $simpanan->serial_number = $nextSerialNumber;
-                        $simpanan->save();
-
-                        if ($besarSimpanan < 499999) {
-                            $existingSimpanan = DB::table('t_simpan')->where('kode_anggota', '=', $anggotaId)->where('kode_jenis_simpan', '=', '411.01.000')->first();
-
-                            $indexAngsuran = DB::table('t_angsur_simpan')->where('kode_simpan', '=', $existingSimpanan->kode_simpan)->count();
-
-                            $angsurSimpanan = new AngsuranSimpanan();
-                            $angsurSimpanan->kode_simpan = $existingSimpanan->kode_simpan;
-                            $angsurSimpanan->angsuran_ke = $indexAngsuran + 1;
-                            $angsurSimpanan->besar_angsuran = $besarSimpanan;
-                            $angsurSimpanan->kode_anggota = $request->kode_anggota;
-                            $angsurSimpanan->u_entry = Auth::user()->name;
-                            $angsurSimpanan->tgl_entri = Carbon::now();
-                            $angsurSimpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
-                            $angsurSimpanan->created_at = Carbon::now();
-                            $angsurSimpanan->updated_at = Carbon::now();
-                            $angsurSimpanan->save();
-                        }
+                    if($checkSimpanan + $besarSimpanan > 500000)
+                    {
+                        return redirect()->back()->withError('Simpanan pokok tidak bisa melebihi 500.000. Process penyimpanan dihentikan. Simpanan pokok yang tersimpan adalah '.number_format($checkSimpanan, 0));
                     }
+
+                    $simpanan = new Simpanan();
+                    $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
+                    $simpanan->besar_simpanan = $besarSimpanan;
+                    $simpanan->kode_anggota = $anggotaId;
+                    $simpanan->u_entry = Auth::user()->name;
+                    $simpanan->tgl_entri = Carbon::now();
+                    $simpanan->tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                    $simpanan->periode = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$key]);
+                    $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
+                    $simpanan->keterangan = ($request->keterangan[$key]) ? $request->keterangan[$key] : '';
+                    $simpanan->id_akun_debet = ($request->id_akun_debet[$key]) ? $request->id_akun_debet[$key] : null;
+                    $simpanan->serial_number = $nextSerialNumber;
+                    $simpanan->save();
                 } else {
                     $periodeTime = strtotime($request->periode[$key]);
 
