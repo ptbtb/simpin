@@ -1167,11 +1167,11 @@ class PinjamanController extends Controller
 	public function bayarAngsuran(Request $request, $id)
 	{
 		DB::beginTransaction();
-		try 
+		try
 		{
 			// get loan
 			$pinjaman = Pinjaman::where('kode_pinjam', $id)->first();
-			for ($i = 0; $i < count($request->besar_pembayaran); $i++) 
+			for ($i = 0; $i < count($request->besar_pembayaran); $i++)
 			{
 				// convert payment amount to integer
 				$pembayaran = filter_var($request->besar_pembayaran[$i], FILTER_SANITIZE_NUMBER_INT);
@@ -1194,12 +1194,12 @@ class PinjamanController extends Controller
 
 				// create bill
 				$angsuran = AngsuranManager::createAngsuran($pinjaman, $request);
-				if ($request->jenis_pembayaran[$i]) 
+				if ($request->jenis_pembayaran[$i])
 				{
                     $codeCoa = Code::where('CODE', $tabungan->kode_trans)->first();
                     $angsuran->id_akun_kredit = $codeCoa->id;
-                } 
-				else 
+                }
+				else
 				{
                     $angsuran->id_akun_kredit = ($request->id_akun_kredit[$i]) ? $request->id_akun_kredit[$i] : null;
                 }
@@ -1231,8 +1231,8 @@ class PinjamanController extends Controller
 			}
 			DB::commit();
 			return redirect()->back()->withSuccess('berhasil melakukan pembayaran');
-		} 
-		catch (\Throwable $th) 
+		}
+		catch (\Throwable $th)
 		{
             dd($th);
 			$message = $th->getMessage() . ' || ' . $th->getFile() . ' || ' . $th->getLine();
@@ -1347,7 +1347,7 @@ class PinjamanController extends Controller
             return redirect()->back()->withError($e->getMessage());
         }
     }
-    
+
     public function bayarAngsuranOld(Request $request, $id)
     {
         DB::beginTransaction();
@@ -1809,7 +1809,7 @@ class PinjamanController extends Controller
             return redirect()->back()->withSuccess('Import data berhasil');
         } catch (\Throwable $e) {
             Log::error($e);
-            return redirect()->back()->withError('Gagal import data');
+            return redirect()->back()->withError($e->getMessage());
         }
     }
     public function storeImportDataPinjaman(Request $request)
