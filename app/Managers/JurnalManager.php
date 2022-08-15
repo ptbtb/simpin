@@ -41,7 +41,7 @@ class JurnalManager
         }else{
              $jurnal->keterangan = 'Penarikan '.strtolower($penarikan->jenisSimpanan->nama_simpanan) . ' anggota '. ucwords(strtolower($penarikan->anggota->nama_anggota));
         }
-        
+
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
 
@@ -156,7 +156,7 @@ class JurnalManager
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
 
-            
+
             // jurnal untuk topup
             if($pinjaman->pengajuan->pengajuanTopup->count())
             {
@@ -177,7 +177,7 @@ class JurnalManager
                 $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
                 $jurnal->created_by = Auth::user()->id;
                 $jurnal->updated_by = Auth::user()->id;
-    
+
                 // save as polymorphic
                  $jurnal->trans_id = $pinjaman->kode_pinjam;
             $jurnal->anggota = $pinjaman->kode_anggota;
@@ -205,7 +205,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal->keterangan = 'Pinjaman '.strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota '. ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            $jurnal->tgl_transaksi =Carbon::now()->subYear()->endOfYear()->format('Ymd');
+            $jurnal->tgl_transaksi =Carbon::createFromFormat('Y-m-d','2020-12-31');
              $jurnal->trans_id = $pinjaman->kode_pinjam;
             $jurnal->anggota = $pinjaman->kode_anggota;
 
@@ -244,7 +244,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         }else{
              $jurnal->keterangan = $angsuran->keterangan;
         }
-       
+
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
@@ -338,7 +338,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         }else{
              $jurnal->keterangan = $angsuran->keterangan;
         }
-       
+
         $jurnal->created_by = $angsuran->updated_by;
         $jurnal->updated_by = $angsuran->updated_by;
         $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
@@ -414,12 +414,12 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
              $jurnal->tgl_transaksi = $angsuran->tgl_transaksi;
             $jurnal->trans_id = $angsuran->kode_pinjam;
             $jurnal->anggota = $angsuran->kode_anggota;
-    
+
             // save as polymorphic
             $angsuran->jurnals()->save($jurnal);
         }
     }
-    
+
     public static function createJurnalAngsuranPartial(AngsuranPartial $angs)
     {
         // kredit
@@ -439,7 +439,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         }else{
              $jurnal->keterangan = $angs->angsuran->keterangan;
         }
-       
+
         $jurnal->created_by = $angs->created_by;
         $jurnal->updated_by = $angs->updated_by;
         $jurnal->tgl_transaksi = $angs->tgl_transaksi;
@@ -447,7 +447,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         // save as polymorphic
         $angs->jurnals()->save($jurnal);
         }
-        
+
 
         // debet
         if ($angs->besar_pembayaran>0){
@@ -477,7 +477,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         // save as polymorphic
         $angs->jurnals()->save($jurnal);
         }
-        
+
 
         // jurnal untuk JASA
         if ($angs->jasa>0){
@@ -509,7 +509,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         // save as polymorphic
         $angs->jurnals()->save($jurnal);
         }
-        
+
          DB::commit();
         }
     catch(\Exception $e)
@@ -517,7 +517,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
          DB::rollback();
         \Log::info($e->getMessage());
         throw new \Exception($e->getMessage());
-        
+
     }
     }
 
@@ -544,7 +544,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             if($jurnal->updated_by){
                 $jurnal->updated_by = $simpanan->updated_by;
             }
-            
+
              $jurnal->tgl_transaksi = $simpanan->tgl_transaksi;
              $jurnal->trans_id = $simpanan->kode_simpan;
             $jurnal->anggota = $simpanan->kode_anggota;
