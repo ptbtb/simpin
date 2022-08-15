@@ -20,7 +20,7 @@ use App\Models\Code;
 use Illuminate\Support\Facades\Log;
 
 
-class TransaksiUserImport
+class TransaksiUserImportOld
 {
 	static function generatetransaksi($transaksi)
 	{
