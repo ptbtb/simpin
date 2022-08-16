@@ -290,15 +290,36 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal->akun_kredit = 0;
         $jurnal->kredit = 0;
         // japen
-        if($angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
-        {
-            $jurnal->akun_debet = '701.02.003';
+        switch ($angsuran->pinjaman->kode_jenis_pinjam){
+            case('105.01.001'):
+                $jurnal->akun_debet = '701.02.003';
+                break;
+            case('106.09.002'):
+                $jurnal->akun_debet = '701.02.005';
+                break;
+            case('106.09.003'):
+                $jurnal->akun_debet = '701.02.006';
+                break;
+            case('106.10.001'):
+                $jurnal->akun_debet = '701.02.008';
+                break;
+            case('106.10.002'):
+                $jurnal->akun_debet = '701.02.008';
+                break;
+            case('106.10.003'):
+                $jurnal->akun_debet = '701.02.008';
+                break;
+            case('106.09.001'):
+                $jurnal->akun_debet = '701.02.007';
+                break;
+            case('106.09.004'):
+                $jurnal->akun_debet = '701.02.012';
+                break;
+
+            default:
+                $jurnal->akun_debet = '701.02.001';
         }
-        // japan and others
-        else
-        {
-            $jurnal->akun_debet = '701.02.001';
-        }
+
         $jurnal->debet = $jasa;
         if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
@@ -394,14 +415,34 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal->akun_kredit = 0;
             $jurnal->kredit = 0;
             // japen
-            if($angsuran->pinjaman->kode_jenis_pinjam == '105.01.001')
-            {
-                $jurnal->akun_debet = '701.02.003';
-            }
-            // japan and others
-            else
-            {
-                $jurnal->akun_debet = '701.02.001';
+            switch ($angsuran->pinjaman->kode_jenis_pinjam){
+                case('105.01.001'):
+                    $jurnal->akun_debet = '701.02.003';
+                    break;
+                case('106.09.002'):
+                    $jurnal->akun_debet = '701.02.005';
+                    break;
+                case('106.09.003'):
+                    $jurnal->akun_debet = '701.02.006';
+                    break;
+                case('106.10.001'):
+                    $jurnal->akun_debet = '701.02.008';
+                    break;
+                case('106.10.002'):
+                    $jurnal->akun_debet = '701.02.008';
+                    break;
+                case('106.10.003'):
+                    $jurnal->akun_debet = '701.02.008';
+                    break;
+                case('106.09.001'):
+                    $jurnal->akun_debet = '701.02.007';
+                    break;
+                case('106.09.004'):
+                    $jurnal->akun_debet = '701.02.012';
+                    break;
+
+                default:
+                    $jurnal->akun_debet = '701.02.001';
             }
             $jurnal->debet = $jasa;
             if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
