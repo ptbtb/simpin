@@ -25,7 +25,7 @@ class TransaksiUserImport
     static function generatetransaksi($transaksi)
     {
         try {
-            Log::info($transaksi['NIPP']);
+//            Log::info($transaksi['NIPP']);
 
             if ($transaksi['THN']) {
                 $period_raw = $transaksi['THN'] . '-' . sprintf('%02d', $transaksi['BLN']) . '-01';
