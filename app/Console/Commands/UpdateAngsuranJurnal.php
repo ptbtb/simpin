@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 Use App\Models\Angsuran;
+use App\Managers\JurnalManager;
 Use App\Models\Jurnal;
 use App\Managers\AngsuranPartialManager;
 use Illuminate\Console\Command;
@@ -41,34 +42,23 @@ class UpdateAngsuranJurnal extends Command
      */
     public function handle()
     {
-        $listAngsuran = DB::table('t_jurnal')
-                        ->where('jurnalable_type','App\\Models\\Angsuran')
-                        ->wherenull('deleted_at')
-                        ->where('akun_debet','like','106%')
+        $listangs = Angsuran::
+                        whereDoesntHave('jurnals')
+                        ->where('id_akun_kredit','>',0)
+                        ->where('id_status_angsuran',2)
                         ->get();
-//        dd($listAngsuran);
-        foreach($listAngsuran as $angs){
-
+//        dd($listangs);
+        foreach($listangs as $angsuran){
+            echo $angsuran->kode_angsur."\n";
         DB::beginTransaction();
         try
         {
-            $rawjurnal = Jurnal::
-                        where('jurnalable_type','App\\Models\\Angsuran')
-                        ->where('jurnalable_id',$angs->jurnalable_id)
-                        ->wherenull('deleted_at')
-                        ->get();
-//            dd($rawjurnal);
-            foreach ($rawjurnal as $jurnal){
-                echo $jurnal->jurnalable_id."\n";
-                $jurnal->akun_debet = $jurnal->akun_kredit;
-                $jurnal->debet = $jurnal->kredit;
-                $jurnal->akun_kredit = $jurnal->akun_debet;
-                $jurnal->kredit = $jurnal->debet;
-                $jurnal->save();
-                DB::commit();
-            }
+
+            JurnalManager::createJurnalAngsuran($angsuran);
+            DB::commit();
 
         }
+
         catch(\Exception $e)
         {
         DB::rollback();
