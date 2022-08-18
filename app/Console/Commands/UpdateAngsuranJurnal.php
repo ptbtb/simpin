@@ -52,8 +52,8 @@ class UpdateAngsuranJurnal extends Command
         DB::beginTransaction();
         try
         {
-            $rawjurnal = DB::table('t_jurnal')
-                        ->where('jurnalable_type','App\\Models\\Angsuran')
+            $rawjurnal = Jurnal::
+                        where('jurnalable_type','App\\Models\\Angsuran')
                         ->where('jurnalable_id',$angs->jurnalable_id)
                         ->wherenull('deleted_at')
                         ->get();
