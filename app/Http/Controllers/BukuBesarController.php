@@ -156,7 +156,7 @@ class BukuBesarController extends Controller
     public function resumeajax(Request $request)
     {
         $this->authorize('view jurnal', Auth::user());
-
+        ini_set('memory_limit', '64M');
 //            dd($request);
             $selisih = 0;
             if(!$request->from)
