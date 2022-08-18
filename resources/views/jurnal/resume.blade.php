@@ -110,7 +110,7 @@
     <script>
         $(document).ready(function ()
         {
-            initiateDatatables();
+
             $("#from").change(function(){
                 console.log($('#from').val());
                 console.log({{ $request->from }});
