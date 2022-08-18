@@ -44,11 +44,12 @@ class UpdateAngsuranJurnal extends Command
         $listAngsuran = DB::table('t_jurnal_backup_060121')
                         ->where('jurnalable_type','App\\Models\\Angsuran')
                         ->wherenull('deleted_at')
+                        ->where('akun_debet','like','106%')
                         ->get();
 
         foreach($listAngsuran as $angs){
 
-        DB::beginTransaction();  
+        DB::beginTransaction();
         try
         {
              echo $angs->id."\n";
@@ -66,10 +67,10 @@ class UpdateAngsuranJurnal extends Command
         \Log::info($e->getMessage());
         throw new \Exception($e->getMessage());
         }
-            
-            
+
+
         }
-         
-    
+
+
     }
 }
