@@ -853,19 +853,19 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
     public static function jurnalTotalDr($from,$to)
     {
 
-        $saldoDr = BukuBesarJurnal::
+        $saldoDr = Jurnal::
             whereBetween('tgl_transaksi', [$from,$to])
-            ->where('trans','D')
-            ->sum('amount');
+//            ->where('trans','D')
+            ->sum('debet');
 
         return $saldoDr;
     }
     public static function jurnalTotalCr($from,$to)
     {
-        $saldoCr = BukuBesarJurnal::
+        $saldoCr = Jurnal::
         whereBetween('tgl_transaksi', [$from,$to])
-            ->where('trans','K')
-            ->sum('amount');
+//            ->where('trans','K')
+            ->sum('kredit');
 
         return $saldoCr;
     }
