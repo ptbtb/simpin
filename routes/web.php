@@ -404,6 +404,7 @@ Route::group(['prefix' => 'jurnal'], function () {
         Route::post('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
 //        Route::get('resume', [App\Http\Controllers\JurnalController::class, 'resumeIndex'])->name('jurnal-resume');
         Route::get('resume', [App\Http\Controllers\JurnalController::class, 'resumeData'])->name('jurnal-resume');
+        Route::get('resumeexcel', [App\Http\Controllers\JurnalController::class, 'resumeExcel'])->name('jurnal-resume-excel');
     });
 });
 
@@ -449,6 +450,9 @@ Route::group(['prefix' => 'buku-besar'], function () {
         Route::post('', [App\Http\Controllers\BukuBesarController::class, 'index'])->name('buku-besar-list');
         Route::get('download/excel', [App\Http\Controllers\BukuBesarController::class, 'createExcel'])->name('buku-besar-download-excel');
         Route::get('download/pdf', [App\Http\Controllers\BukuBesarController::class, 'createPdf'])->name('buku-besar-download-pdf');
+        Route::get('resume', [App\Http\Controllers\BukuBesarController::class, 'resume'])->name('buku-besar-resume');
+        Route::get('resumeexcel', [App\Http\Controllers\BukuBesarController::class, 'resumeexcel'])->name('buku-besar-resume-excel');
+        Route::post('resume', [App\Http\Controllers\BukuBesarController::class, 'resume'])->name('buku-besar-resume');
     });
 });
 
