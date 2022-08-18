@@ -14,6 +14,7 @@ use App\Models\Simpanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use \App\Models\BukuBesarJurnal;
 
 use Illuminate\Support\Facades\Log;
 
@@ -848,4 +849,26 @@ public static function createJurnalSaldoSimpanan(Simpanan $simpanan)
         // save as polymorphic
         $pinjaman->jurnals()->save($jurnal);
     }
+
+    public static function jurnalTotalDr($from,$to)
+    {
+
+        $saldoDr = Jurnal::
+            whereBetween('tgl_transaksi', [$from,$to])
+//            ->where('trans','D')
+            ->sum('debet');
+
+        return $saldoDr;
+    }
+    public static function jurnalTotalCr($from,$to)
+    {
+        $saldoCr = Jurnal::
+        whereBetween('tgl_transaksi', [$from,$to])
+//            ->where('trans','K')
+            ->sum('kredit');
+
+        return $saldoCr;
+    }
+
+
 }

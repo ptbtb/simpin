@@ -402,6 +402,8 @@ Route::group(['prefix' => 'jurnal'], function () {
         Route::get('excel', [App\Http\Controllers\JurnalController::class, 'createExcel'])->name('jurnal-export-excel');
         Route::get('pdf', [App\Http\Controllers\JurnalController::class, 'createPdf'])->name('jurnal-export-pdf');
         Route::post('', [App\Http\Controllers\JurnalController::class, 'index'])->name('jurnal-list');
+//        Route::get('resume', [App\Http\Controllers\JurnalController::class, 'resumeIndex'])->name('jurnal-resume');
+        Route::get('resume', [App\Http\Controllers\JurnalController::class, 'resumeData'])->name('jurnal-resume');
     });
 });
 

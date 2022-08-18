@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Managers\JurnalManager;
 use App\Models\Jurnal;
 use App\Models\TipeJurnal;
 use App\Models\JurnalUmum;
@@ -459,5 +460,38 @@ class JurnalController extends Controller
             Log::error($message);
             abort(500);
         }
+    }
+
+    public function resumeData(Request $request){
+        if (!$request->from) {
+            $request->from = Carbon::today()->startOfMonth()->format('d-m-Y');
+        }
+        if (!$request->to) {
+            $request->to = Carbon::today()->endOfMonth()->format('d-m-Y');
+        }
+        $month = strtotime($request->from);
+        $end = strtotime($request->to);
+        $rawdata=array();
+        $i=0;
+        while($month < $end)
+        {
+            $from = Carbon::createFromFormat('Y-m-d',date('Y-m-d',$month))->startOfMonth()->format('Y-m-d');
+            $to = Carbon::createFromFormat('Y-m-d',date('Y-m-d',$month))->endOfMonth()->format('Y-m-d');
+//            dd($from);
+            $rawdata[$i]['bulan']=date('Y-m',$month) ;
+            $dr= JurnalManager::jurnalTotalDr($from,$to);
+            $cr= JurnalManager::jurnalTotalCr($from,$to);
+            $rawdata[$i]['Dr']=$dr ;
+            $rawdata[$i]['Cr']=$cr ;
+            $rawdata[$i]['Selisih']=$dr-$cr ;
+            $month = strtotime("+1 month", $month);
+            $i++;
+        }
+//        dd($rawdata);
+        $data['title'] = 'Resume Jurnal';
+        $data['data'] = $rawdata;
+        $data['request'] = $request;
+        $data['tipeJurnal'] = TipeJurnal::get()->pluck('name', 'id');
+        return view('jurnal.resume', $data);
     }
 }

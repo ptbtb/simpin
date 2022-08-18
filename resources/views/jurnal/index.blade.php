@@ -64,6 +64,8 @@
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
                         <a href="{{ route('jurnal-export-excel',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'from'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'),'to'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-success"><i class="fa fa-download"></i> export Excel</a>
                         <a href="{{ route('jurnal-export-pdf',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'from'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'),'to'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-info"><i class="fa fa-download"></i> export PDF</a>
+                        <a href="{{ route('jurnal-resume',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'from'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'),'to'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-info"><i class="fa fa-file"></i> Resume</a>
+
                     </div>
                 </div>
             </form>
@@ -84,7 +86,7 @@
                         <th style="width: 10%">Kredit</th>
                         <th>Keterangan</th>
                         <th>Tanggal</th>
-                        
+
                     </tr>
                 </thead>
                 <tfoot>
@@ -135,14 +137,14 @@
                     dataSrc: 'data',
                     data: function(data){
                         @if(isset($request->id_tipe_jurnal)) data.id_tipe_jurnal = '{{ $request->id_tipe_jurnal }}'; @endif
-                        
+
                         var serial_number = '{{ $request->serial_number }}';
                         data.serial_number = serial_number;
                         var code = '{{ $request->code }}';
                         data.code = code;
 
                         var keterangan = '{{ $request->keterangan }}';
-                        data.keterangan = keterangan; 
+                        data.keterangan = keterangan;
                         var from = '{{ $request->from }}';
                         data.from = from;
                         var to = '{{ $request->to }}';
@@ -172,7 +174,7 @@
                     {
                         mData: 'kode_anggota_view', sType: "string",
                         className: "dt-body-center", "name": "kode_anggota_view",
-                       
+
                     },
                     {
                         mData: 'tipe_jurnal.name', sType: "string",
@@ -212,7 +214,7 @@
       $('#totaldebet').html(toRupiah(settings.json.totaldebet));
       $('#totalkredit').html(toRupiah(settings.json.totalkredit));
     }
-                
+
             });
 
             // add index column
@@ -221,7 +223,7 @@
                     cell.innerHTML = i+1;
                 } );
             }).draw();
-            
+
 
         }
 
