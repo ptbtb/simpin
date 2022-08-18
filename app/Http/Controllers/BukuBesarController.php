@@ -34,7 +34,9 @@ class BukuBesarController extends Controller
 
             if ($request->search)
             {
-                $jurnalCode = KodeTransaksi::where('is_parent',0)->get();
+                $jurnalCode = KodeTransaksi::where('is_parent',0)
+                                ->wherenotin('CODE',['606.01.000' , '606.01.101', '607.01.101'])
+                                ->get();
             }
 
             $data['title'] = 'List Buku Besar';

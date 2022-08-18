@@ -16,9 +16,13 @@ class KodeTransaksi extends Model implements Auditable
     protected $primaryKey = "CODE";
     protected $keyType = 'string';
 
-    public function jurnalItems()
+    public function jurnalItemsCr()
     {
-        return $this->hasMany(BukuBesarJurnal::class,'kode','CODE');
+        return $this->hasMany(Jurnal::class,'akun_kredit','CODE');
+    }
+    public function jurnalItemsDr()
+    {
+        return $this->hasMany(Jurnal::class,'akun_debet','CODE');
     }
     public function codeCategory()
     {
@@ -50,14 +54,14 @@ class KodeTransaksi extends Model implements Auditable
         }
 
 
-        $saldoDebet = $this->jurnalItems
+        $saldoDebet = $this->jurnalItemsDr
             ->whereBetween('tgl_transaksi', [$startOf,$today])
-            ->where('trans','D')
-            ->sum('amount');
-        $saldoKredit = $this->jurnalItems
+//            ->where('trans','D')
+            ->sum('debet');
+        $saldoKredit = $this->jurnalItemsCr
             ->whereBetween('tgl_transaksi', [$startOf,$today])
-            ->where('trans','K')
-            ->sum('amount');
+//            ->where('trans','K')
+            ->sum('kredit');
 
         if($this->normal_balance_id == NORMAL_BALANCE_DEBET){
 
