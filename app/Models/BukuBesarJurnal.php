@@ -10,6 +10,6 @@ class BukuBesarJurnal extends Model
     use HasFactory;
 //    use \OwenIt\Auditing\Auditable;
 
-    protected $table = "buku_besar_v";
+    protected $table = "jurnal_buku_besar_v";
 
 }

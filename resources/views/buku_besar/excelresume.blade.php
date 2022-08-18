@@ -11,16 +11,25 @@
 <table class="table table-bordered">
     <thead>
     <tr>
-        <th colspan="5" style="text-align: center; font-weight: bold;"> Buku Besar Tanggal {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->period)->format('d M Y')}}</th>
+        <th colspan="5" style="text-align: center; font-weight: bold;"> Buku Besar Tanggal {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->from)->format('d M Y')}} sampai {{ \Carbon\Carbon::createFromFormat('Y-m-d',$request->to)->format('d M Y')}}</th>
     </tr>
     <tr>
-        <th>No</th>
-        <th>Code</th>
-        <th>Nama Transaksi</th>
-        <th>Tipe</th>
-        <th>Saldo Awal</th>
-        <th>Trx</th>
-        <th>Saldo Akhir</th>
+        <th rowspan="2">No</th>
+        <th rowspan="2">Jenis</th>
+        <th rowspan="2">Code</th>
+        <th rowspan="2">Nama</th>
+        <th style="width: 20%" colspan="2">Saldo Awal</th>
+        <th style="width: 20%" colspan="2">Trx</th>
+        <th style="width: 20%" colspan="2">Saldo Akhir</th>
+    </tr>
+    <tr>
+        <th class="text-right">dr</th>
+        <th class="text-right">cr</th>
+        <th class="text-right">dr</th>
+        <th class="text-right">cr</th>
+        <th class="text-right">dr</th>
+        <th class="text-right">cr</th>
+
     </tr>
     </thead>
     <tbody>
@@ -34,22 +43,32 @@
         <tr>
             <td>{{ $loop->iteration }}</td>
             <td>
+                {{ $bukuBesar->codeType->name }}
+            </td>
+            <td>
                 {{ $bukuBesar->CODE }}
             </td>
             <td>
                 {{ $bukuBesar->NAMA_TRANSAKSI }}
             </td>
+
             <td>
-                {{ $bukuBesar->codeType->name }}
+                {{ $bukuBesar->awaldr }}
             </td>
             <td>
-                {{ $bukuBesar->awal }}
+                {{ $bukuBesar->awalcr }}
             </td>
             <td>
-                {{ $bukuBesar->trx }}
+                {{ $bukuBesar->trxdr }}
             </td>
             <td>
-                {{ $bukuBesar->akhir }}
+                {{ $bukuBesar->trxcr }}
+            </td>
+            <td>
+                {{ $bukuBesar->akhirdr }}
+            </td>
+            <td>
+                {{ $bukuBesar->akhircr }}
             </td>
         </tr>
 
@@ -60,7 +79,7 @@
 
         </td>
         <td>
-            <b>SELISIH</b>
+
         </td>
         <td>
 

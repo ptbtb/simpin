@@ -20,14 +20,14 @@ class KodeTransaksi extends Model implements Auditable
     {
         return $this->hasMany(BukuBesarJurnal::class,'kode','CODE');
     }
-    public function jurnalItemDr()
-    {
-        return $this->hasMany(Jurnal::class,'akun_debet','CODE');
-    }
-    public function jurnalItemCr()
-    {
-        return $this->hasMany(Jurnal::class,'akun_kredit','CODE');
-    }
+//    public function jurnalItemDr()
+//    {
+//        return $this->hasMany(Jurnal::class,'akun_debet','CODE');
+//    }
+//    public function jurnalItemCr()
+//    {
+//        return $this->hasMany(Jurnal::class,'akun_kredit','CODE');
+//    }
     public function codeCategory()
     {
         return $this->belongsTo(CodeCategory::class, 'code_category_id');
@@ -54,10 +54,10 @@ class KodeTransaksi extends Model implements Auditable
             $startOf = $todays->startOfYear()->format('Y-m-d');
 
         }else{
-            $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-31')->format('Y-m-d');
+            $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
         }
 
-
+//        dd($startOf);
         $saldoDebet = $this->jurnalItems
             ->whereBetween('tgl_transaksi', [$startOf,$today])
             ->where('trans','D')
@@ -85,7 +85,7 @@ class KodeTransaksi extends Model implements Auditable
 //        }
 
 
-        return round($saldo);
+        return array('dr'=>round($saldoDebet),'cr'=>round($saldoKredit),'saldo'=>round($saldo));
     }
     public function jurnalAmountTransaksi($from,$to)
     {
@@ -103,25 +103,9 @@ class KodeTransaksi extends Model implements Auditable
             ->whereBetween('tgl_transaksi', [$startOf,$today])
             ->where('trans','K')
             ->sum('amount');
-//        dd($saldoKredit);
-//        if($this->normal_balance_id == NORMAL_BALANCE_DEBET){
-//
-//            $saldo += $saldoDebet-$saldoKredit;
-//        }
-//        if($this->normal_balance_id == NORMAL_BALANCE_KREDIT){
+
         $saldo = $saldoDebet-$saldoKredit;
-//        }
-//        dd($saldo);
-
-//        if($this->code_type_id==1 && $this->code_category_id==28 ) {
-//            return round(-$saldo);
-//        }
-
-//        if($this->code_type_id==2 && $this->code_type_id==4 ){
-//            return round(-$saldo);
-//        }
-
-
-        return round($saldo);
+//
+        return array('dr'=>round($saldoDebet),'cr'=>round($saldoKredit),'saldo'=>round($saldo));
     }
 }

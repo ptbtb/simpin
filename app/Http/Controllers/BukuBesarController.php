@@ -121,22 +121,26 @@ class BukuBesarController extends Controller
                 $request->to = Carbon::today()->format('Y-m-d');
             }
 
-            if ($request->search)
-            {
-                $jurnalCode = KodeTransaksi::where('is_parent',0)
-                    ->wherenotin('CODE',['606.01.000' , '606.01.101', '607.01.101'])
-                    ->get();
-                $tglawal =  Carbon::createFromFormat('Y-m-d',$request->from)->subDays(1)->format('Y-m-d');
+//            if ($request->search)
+//            {
+//                $jurnalCode = KodeTransaksi::where('is_parent',0)
+//                    ->wherenotin('CODE',['606.01.000' , '606.01.101', '607.01.101'])
+//                    ->where('CODE','411.12.000' )
+//                    ->get();
+//                $tglawal =  Carbon::createFromFormat('Y-m-d',$request->from)->subDays(1)->format('Y-m-d');
+////                dd($tglawal);
+//                foreach ($jurnalCode as $key=>$jk){
+//                    $jurnalCode[$key]->awaldr=$jk->jurnalAmount($tglawal)['dr'];
+//                    $jurnalCode[$key]->awalcr=$jk->jurnalAmount($tglawal)['cr'];
+//                    $jurnalCode[$key]->trxdr=$jk->jurnalAmountTransaksi($request->from,$request->to)['dr'];
+//                    $jurnalCode[$key]->trxcr=$jk->jurnalAmountTransaksi($request->from,$request->to)['cr'];
+//                    $jurnalCode[$key]->akhirdr=$jk->jurnalAmount($request->to)['dr'];
+//                    $jurnalCode[$key]->akhircr=$jk->jurnalAmount($request->to)['cr'];
+//                }
+////                dd($jurnalCode);
+//            }
 
-                foreach ($jurnalCode as $key=>$jk){
-                    $jurnalCode[$key]->awal=$jk->jurnalAmount($tglawal);
-                    $jurnalCode[$key]->trx=$jk->jurnalAmountTransaksi($tglawal,$request->to);
-                    $jurnalCode[$key]->akhir=$jk->jurnalAmount($request->to);
-                }
-//                dd($request);
-            }
-
-            $data['title'] = 'List Buku Besar';
+            $data['title'] = 'Resume Buku Besar';
             $data['codes'] = $jurnalCode;
             $data['request'] = $request;
             return view('buku_besar.resume', $data);
@@ -147,6 +151,46 @@ class BukuBesarController extends Controller
             Log::error($message);
             return redirect()->back()->withErrors($message);
         }
+    }
+
+    public function resumeajax(Request $request)
+    {
+        $this->authorize('view jurnal', Auth::user());
+
+//            dd($request);
+            $selisih = 0;
+            if(!$request->from)
+            {
+                $request->from = Carbon::today()->startOfMonth()->format('Y-m-d');
+            }
+            if(!$request->to)
+            {
+                $request->to = Carbon::today()->format('Y-m-d');
+            }
+
+            if ($request->search)
+            {
+//                dd($request);
+                $jurnalCode = KodeTransaksi::where('is_parent',0)
+                    ->wherenotin('CODE',['606.01.000' , '606.01.101', '607.01.101'])
+                    ->where('code_type_id',$request->code_type_id )
+                    ->get();
+                $tglawal =  Carbon::createFromFormat('Y-m-d',$request->from)->subDays(1)->format('Y-m-d');
+//                dd($tglawal);
+                foreach ($jurnalCode as $key=>$jk){
+                    $jurnalCode[$key]->awaldr=number_format($jk->jurnalAmount($tglawal)['dr'],0,',','.');
+                    $jurnalCode[$key]->awalcr=number_format($jk->jurnalAmount($tglawal)['cr'],0,',','.');
+                    $jurnalCode[$key]->trxdr=number_format($jk->jurnalAmountTransaksi($request->from,$request->to)['dr'],0,',','.');
+                    $jurnalCode[$key]->trxcr=number_format($jk->jurnalAmountTransaksi($request->from,$request->to)['cr'],0,',','.');
+                    $jurnalCode[$key]->akhirdr=number_format($jk->jurnalAmount($request->to)['dr'],0,',','.');
+                    $jurnalCode[$key]->akhircr=number_format($jk->jurnalAmount($request->to)['cr'],0,',','.');
+                }
+//                dd($jurnalCode);
+            }
+
+            return DataTables::of($jurnalCode)
+                ->make(true);
+
     }
 
     public function resumeexcel(Request $request) {
@@ -167,11 +211,14 @@ class BukuBesarController extends Controller
                 ->get();
             $tglawal =  Carbon::createFromFormat('Y-m-d',$request->from)->subDays(1)->format('Y-m-d');
 
-            foreach ($jurnalCode as $key=>$jk){
-                $jurnalCode[$key]->awal=$jk->jurnalAmount($tglawal);
-                $jurnalCode[$key]->trx=$jk->jurnalAmountTransaksi($tglawal,$request->to);
-                $jurnalCode[$key]->akhir=$jk->jurnalAmount($request->to);
-            }
+        foreach ($jurnalCode as $key=>$jk){
+            $jurnalCode[$key]->awaldr=$jk->jurnalAmount($tglawal)['dr'];
+            $jurnalCode[$key]->awalcr=$jk->jurnalAmount($tglawal)['cr'];
+            $jurnalCode[$key]->trxdr=$jk->jurnalAmountTransaksi($request->from,$request->to)['dr'];
+            $jurnalCode[$key]->trxcr=$jk->jurnalAmountTransaksi($request->from,$request->to)['cr'];
+            $jurnalCode[$key]->akhirdr=$jk->jurnalAmount($request->to)['dr'];
+            $jurnalCode[$key]->akhircr=$jk->jurnalAmount($request->to)['cr'];
+        }
 //                dd($request);
 
 

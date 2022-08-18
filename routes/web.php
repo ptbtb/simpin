@@ -453,6 +453,7 @@ Route::group(['prefix' => 'buku-besar'], function () {
         Route::get('resume', [App\Http\Controllers\BukuBesarController::class, 'resume'])->name('buku-besar-resume');
         Route::get('resumeexcel', [App\Http\Controllers\BukuBesarController::class, 'resumeexcel'])->name('buku-besar-resume-excel');
         Route::post('resume', [App\Http\Controllers\BukuBesarController::class, 'resume'])->name('buku-besar-resume');
+        Route::get('resume/data', [App\Http\Controllers\BukuBesarController::class, 'resumeajax'])->name('buku-besar-resume-ajax');
     });
 });
 

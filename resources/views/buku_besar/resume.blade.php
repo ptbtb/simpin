@@ -65,125 +65,107 @@
                 $sumbeban=0;
             @endphp
             <div class="card-body row">
-                <div class="col-md-6 table-responsive">
+                <div class="col-md-12 table-responsive">
                     <h5 class="text-center">Aktiva</h5>
                     <table class="table table-striped table-aktiva">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 20%">Saldo Awal</th>
-                            <th style="width: 20%">Trx</th>
-                            <th style="width: 20%">Saldo Akhir</th>
+                            <th rowspan="2">Code</th>
+                            <th rowspan="2">Nama</th>
+                            <th style="width: 20%" colspan="2">Saldo Awal</th>
+                            <th style="width: 20%" colspan="2">Trx</th>
+                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
+                        </tr>
+                        <tr>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+
                         </tr>
                         </thead>
                         <tbody>
 
-                        @foreach($codes->where('code_type_id',CODE_TYPE_ACTIVA)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> $request->from,'to'=> $request->to]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->awal, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->trx, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->akhir, 0, ',', '.') }}</td>
-                            </tr>
-
-                        @endforeach
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6 table-responsive">
-                    <h5 class="text-center">Passiva</h5>
+                <div class="col-md-12 table-responsive">
+                    <h5 class="text-center">PASIVA</h5>
                     <table class="table table-striped table-passiva">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 20%">Saldo Awal</th>
-                            <th style="width: 20%">Trx</th>
-                            <th style="width: 20%">Saldo Akhir</th>
+                            <th rowspan="2">Code</th>
+                            <th rowspan="2">Nama</th>
+                            <th style="width: 20%" colspan="2">Saldo Awal</th>
+                            <th style="width: 20%" colspan="2">Trx</th>
+                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
+                        </tr>
+                        <tr>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+
                         </tr>
                         </thead>
                         <tbody>
 
-                        @foreach($codes->where('code_type_id',CODE_TYPE_PASSIVA)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> $request->from,'to'=> $request->to]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->awal, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->trx, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->akhir, 0, ',', '.') }}</td>
-                            </tr>
-
-                        @endforeach
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6 table-responsive">
-                    <h5 class="text-center">Pendapatan</h5>
-                    <table class="table table-striped table-laba">
+                <div class="col-md-12 table-responsive">
+                    <h5 class="text-center">Pendapapan</h5>
+                    <table class="table table-striped table-pendapatan">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 20%">Saldo Awal</th>
-                            <th style="width: 20%">Trx</th>
-                            <th style="width: 20%">Saldo Akhir</th>
+                            <th rowspan="2">Code</th>
+                            <th rowspan="2">Nama</th>
+                            <th style="width: 20%" colspan="2">Saldo Awal</th>
+                            <th style="width: 20%" colspan="2">Trx</th>
+                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
+                        </tr>
+                        <tr>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+
                         </tr>
                         </thead>
                         <tbody>
 
-                        @foreach($codes->where('code_type_id',CODE_TYPE_LABA)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> $request->from,'to'=> $request->to]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->awal, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->trx, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->akhir, 0, ',', '.') }}</td>
-                            </tr>
-
-                        @endforeach
-
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6 table-responsive">
+                <div class="col-md-12 table-responsive">
                     <h5 class="text-center">Beban</h5>
-                    <table class="table table-striped table-rugi">
+                    <table class="table table-striped table-beban">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 20%">Saldo Awal</th>
-                            <th style="width: 20%">Trx</th>
-                            <th style="width: 20%">Saldo Akhir</th>
+                            <th rowspan="2">Code</th>
+                            <th rowspan="2">Nama</th>
+                            <th style="width: 20%" colspan="2">Saldo Awal</th>
+                            <th style="width: 20%" colspan="2">Trx</th>
+                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
+                        </tr>
+                        <tr>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+                            <th class="text-right">dr</th>
+                            <th class="text-right">cr</th>
+
                         </tr>
                         </thead>
                         <tbody>
 
-
-                        @foreach($codes->where('code_type_id',CODE_TYPE_RUGI)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> $request->from,'to'=> $request->to]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->awal, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->trx, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($item->akhir, 0, ',', '.') }}</td>
-                            </tr>
-
-                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -202,6 +184,7 @@
     <script>
         $(document).ready(function ()
         {
+            initiateDatatables();
             $("#period").change(function(){
                 console.log($('#period').val());
                 console.log({{ $request->period }});
@@ -219,56 +202,363 @@
         function initiateDatatables()
         {
             $.fn.dataTable.ext.errMode = 'none';
+            var tableaktiva = $('.table-aktiva').DataTable({
+                bProcessing: true,
+                bServerSide: true,
+                bPaginate: false,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                ajax: {
+                    url: '{{ route('buku-besar-resume-ajax') }}',
+                    dataSrc: 'data',
+                    data: function(data){
+                        @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
+                        @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
+                        @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+                        @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+
+                        data.code_type_id = '{{ CODE_TYPE_ACTIVA}}';
+                    }
+                },
+                aoColumns: [
+
+                    {
+                        mData: 'CODE', sType: "string",
+                        className: "dt-body-center", "name": "CODE",
+
+                    },
+                    {
+                        mData: 'NAMA_TRANSAKSI', sType: "string",
+                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
+
+                    },
+                    {
+                        mData: 'awaldr', sType: "string",
+                        className: "dt-body-right", "name": "awaldr"
+                    },
+                    {
+                        mData: 'awalcr', sType: "string",
+                        className: "dt-body-right", "name": "awalcr",
+                    },
+                    {
+                        mData: 'trxdr', sType: "string",
+                        className: "dt-body-right", "name": "trxdr"
+                    },
+                    {
+                        mData: 'trxcr', sType: "string",
+                        className: "dt-body-right", "name": "trxcr"
+                    },
+                    {
+                        mData: 'akhirdr', sType: "string",
+                        className: "dt-body-right", "name": "akhirdr"
+                    },
+                    {
+                        mData: 'akhircr', sType: "string",
+                        className: "dt-body-right", "name": "akhircr",
+                    },
+
+                    /*{
+                        mData: 'created_by.name', sType: "string",
+                        className: "dt-body-center", "name": "created_by.name",
+                    },*/
+                ],fnInitComplete: function(oSettings, json) {
+
+                    var _that = this;
+
+                    this.each(function(i) {
+                        $.fn.dataTableExt.iApiIndex = i;
+                        var $this = this;
+                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
+                        anControl
+                            .unbind('keyup search input')
+                            .bind('keypress', function(e) {
+                                if (e.which == 13) {
+                                    $.fn.dataTableExt.iApiIndex = i;
+                                    _that.fnFilter(anControl.val());
+                                }
+                            });
+                        return this;
+                    });
+                    return this;
+                },
+                // drawCallback:function(settings)
+                // {
+                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
+                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
+                // }
+
+            });
+            var tablepassiva = $('.table-passiva').DataTable({
+                bProcessing: true,
+                bServerSide: true,
+                bPaginate: false,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                ajax: {
+                    url: '{{ route('buku-besar-resume-ajax') }}',
+                    dataSrc: 'data',
+                    data: function(data){
+                        @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
+                            @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
+                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+
+                            data.code_type_id = '{{ CODE_TYPE_PASSIVA}}';
+                    }
+                },
+                aoColumns: [
+
+                    {
+                        mData: 'CODE', sType: "string",
+                        className: "dt-body-center", "name": "CODE",
+
+                    },
+                    {
+                        mData: 'NAMA_TRANSAKSI', sType: "string",
+                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
+
+                    },
+                    {
+                        mData: 'awaldr', sType: "string",
+                        className: "dt-body-right", "name": "awaldr"
+                    },
+                    {
+                        mData: 'awalcr', sType: "string",
+                        className: "dt-body-right", "name": "awalcr",
+                    },
+                    {
+                        mData: 'trxdr', sType: "string",
+                        className: "dt-body-right", "name": "trxdr"
+                    },
+                    {
+                        mData: 'trxcr', sType: "string",
+                        className: "dt-body-right", "name": "trxcr"
+                    },
+                    {
+                        mData: 'akhirdr', sType: "string",
+                        className: "dt-body-right", "name": "akhirdr"
+                    },
+                    {
+                        mData: 'akhircr', sType: "string",
+                        className: "dt-body-right", "name": "akhircr",
+                    },
+
+                    /*{
+                        mData: 'created_by.name', sType: "string",
+                        className: "dt-body-center", "name": "created_by.name",
+                    },*/
+                ],fnInitComplete: function(oSettings, json) {
+
+                    var _that = this;
+
+                    this.each(function(i) {
+                        $.fn.dataTableExt.iApiIndex = i;
+                        var $this = this;
+                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
+                        anControl
+                            .unbind('keyup search input')
+                            .bind('keypress', function(e) {
+                                if (e.which == 13) {
+                                    $.fn.dataTableExt.iApiIndex = i;
+                                    _that.fnFilter(anControl.val());
+                                }
+                            });
+                        return this;
+                    });
+                    return this;
+                },
+                // drawCallback:function(settings)
+                // {
+                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
+                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
+                // }
+
+            });
+            var tablependapatan = $('.table-pendapatan').DataTable({
+                bProcessing: true,
+                bServerSide: true,
+                bPaginate: false,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                ajax: {
+                    url: '{{ route('buku-besar-resume-ajax') }}',
+                    dataSrc: 'data',
+                    data: function(data){
+                        @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
+                            @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
+                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+
+                            data.code_type_id = '{{ CODE_TYPE_LABA}}';
+                    }
+                },
+                aoColumns: [
+
+                    {
+                        mData: 'CODE', sType: "string",
+                        className: "dt-body-center", "name": "CODE",
+
+                    },
+                    {
+                        mData: 'NAMA_TRANSAKSI', sType: "string",
+                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
+
+                    },
+                    {
+                        mData: 'awaldr', sType: "string",
+                        className: "dt-body-right", "name": "awaldr"
+                    },
+                    {
+                        mData: 'awalcr', sType: "string",
+                        className: "dt-body-right", "name": "awalcr",
+                    },
+                    {
+                        mData: 'trxdr', sType: "string",
+                        className: "dt-body-right", "name": "trxdr"
+                    },
+                    {
+                        mData: 'trxcr', sType: "string",
+                        className: "dt-body-right", "name": "trxcr"
+                    },
+                    {
+                        mData: 'akhirdr', sType: "string",
+                        className: "dt-body-right", "name": "akhirdr"
+                    },
+                    {
+                        mData: 'akhircr', sType: "string",
+                        className: "dt-body-right", "name": "akhircr",
+                    },
+
+                    /*{
+                        mData: 'created_by.name', sType: "string",
+                        className: "dt-body-center", "name": "created_by.name",
+                    },*/
+                ],fnInitComplete: function(oSettings, json) {
+
+                    var _that = this;
+
+                    this.each(function(i) {
+                        $.fn.dataTableExt.iApiIndex = i;
+                        var $this = this;
+                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
+                        anControl
+                            .unbind('keyup search input')
+                            .bind('keypress', function(e) {
+                                if (e.which == 13) {
+                                    $.fn.dataTableExt.iApiIndex = i;
+                                    _that.fnFilter(anControl.val());
+                                }
+                            });
+                        return this;
+                    });
+                    return this;
+                },
+                // drawCallback:function(settings)
+                // {
+                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
+                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
+                // }
+
+            });
+            var tablebeban = $('.table-beban').DataTable({
+                bProcessing: true,
+                bServerSide: true,
+                bPaginate: false,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                ajax: {
+                    url: '{{ route('buku-besar-resume-ajax') }}',
+                    dataSrc: 'data',
+                    data: function(data){
+                        @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
+                            @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
+                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+
+                            data.code_type_id = '{{ CODE_TYPE_RUGI}}';
+                    }
+                },
+                aoColumns: [
+
+                    {
+                        mData: 'CODE', sType: "string",
+                        className: "dt-body-center", "name": "CODE",
+
+                    },
+                    {
+                        mData: 'NAMA_TRANSAKSI', sType: "string",
+                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
+
+                    },
+                    {
+                        mData: 'awaldr', sType: "string",
+                        className: "dt-body-right", "name": "awaldr"
+                    },
+                    {
+                        mData: 'awalcr', sType: "string",
+                        className: "dt-body-right", "name": "awalcr",
+                    },
+                    {
+                        mData: 'trxdr', sType: "string",
+                        className: "dt-body-right", "name": "trxdr"
+                    },
+                    {
+                        mData: 'trxcr', sType: "string",
+                        className: "dt-body-right", "name": "trxcr"
+                    },
+                    {
+                        mData: 'akhirdr', sType: "string",
+                        className: "dt-body-right", "name": "akhirdr"
+                    },
+                    {
+                        mData: 'akhircr', sType: "string",
+                        className: "dt-body-right", "name": "akhircr",
+                    },
+
+                    /*{
+                        mData: 'created_by.name', sType: "string",
+                        className: "dt-body-center", "name": "created_by.name",
+                    },*/
+                ],fnInitComplete: function(oSettings, json) {
+
+                    var _that = this;
+
+                    this.each(function(i) {
+                        $.fn.dataTableExt.iApiIndex = i;
+                        var $this = this;
+                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
+                        anControl
+                            .unbind('keyup search input')
+                            .bind('keypress', function(e) {
+                                if (e.which == 13) {
+                                    $.fn.dataTableExt.iApiIndex = i;
+                                    _that.fnFilter(anControl.val());
+                                }
+                            });
+                        return this;
+                    });
+                    return this;
+                },
+                // drawCallback:function(settings)
+                // {
+                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
+                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
+                // }
+
+            });
 
 
 
-
-
-
-            // add index column
-            tableAktiva.on( 'xhr.dt', function () {
-                tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
-
-            // add index column
-            tableAktiva.on( 'xhr.dt', function () {
-                tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
-
-            // add index column
-            tableRugi.on( 'xhr.dt', function () {
-                tableRugi.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
-
-            // add index column
-            tableLaba.on( 'xhr.dt', function () {
-                tableLaba.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
         }
 
-        function toRupiah(number)
-        {
-            var stringNumber = number.toString();
-            var length = stringNumber.length;
-            var temp = length;
-            var res = "Rp ";
-            for (let i = 0; i < length; i++) {
-                res = res + stringNumber.charAt(i);
-                temp--;
-                if (temp%3 == 0 && temp > 0)
-                {
-                    res = res + ".";
-                }
-            }
-            return res;
-        }
+        
     </script>
 @endsection
