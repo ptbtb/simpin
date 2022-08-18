@@ -41,21 +41,21 @@
                         {{ $bukuBesar->codeType->name }}
                     </td>
                     <td>
-                        {{ $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')) }}
+                        {{ $bukuBesar->amountnya }}
                     </td>
                 </tr>
                 @php
                     if($bukuBesar->code_type_id==CODE_TYPE_ACTIVA){
-                        $sumaktiva += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                        $sumaktiva += $bukuBesar->amountnya;
                     }
                     if($bukuBesar->code_type_id==CODE_TYPE_PASSIVA){
-                        $sumpasiva += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                        $sumpasiva += $bukuBesar->amountnya;
                     }
                     if($bukuBesar->code_type_id==CODE_TYPE_LABA){
-                        $sumpendapatan += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                        $sumpendapatan += $bukuBesar->amountnya;
                     }
                     if($bukuBesar->code_type_id==CODE_TYPE_RUGI){
-                        $sumbeban += $bukuBesar->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                        $sumbeban += $bukuBesar->amountnya;
                     }
 
                 @endphp
