@@ -41,25 +41,34 @@ class UpdateAngsuranJurnal extends Command
      */
     public function handle()
     {
-        $listAngsuran = DB::table('t_jurnal_backup_060121')
+        $listAngsuran = DB::table('t_jurnal')
                         ->where('jurnalable_type','App\\Models\\Angsuran')
                         ->wherenull('deleted_at')
                         ->where('akun_debet','like','106%')
                         ->get();
-
+//        dd($listAngsuran);
         foreach($listAngsuran as $angs){
 
         DB::beginTransaction();
         try
         {
-             echo $angs->id."\n";
-            $jurnal = Jurnal::find($angs->id);
-            $jurnal->akun_debet = $angs->akun_kredit;
-            $jurnal->debet = $angs->kredit;
-            $jurnal->akun_kredit = $angs->akun_debet;
-            $jurnal->kredit = $angs->debet;
-            $jurnal->save();
-            DB::commit();
+            $rawjurnal = DB::table('t_jurnal')
+                        ->where('jurnalable_type','App\\Models\\Angsuran')
+                        ->where('jurnalable_id',$angs->jurnalable_id)
+                        ->wherenull('deleted_at')
+                        ->get();
+//            dd($rawjurnal);
+            foreach ($rawjurnal as $jurnal){
+                echo $jurnal->jurnalable_id."\n";
+                $jurnal = Jurnal::find($angs->id);
+                $jurnal->akun_debet = $angs->akun_kredit;
+                $jurnal->debet = $angs->kredit;
+                $jurnal->akun_kredit = $angs->akun_debet;
+                $jurnal->kredit = $angs->debet;
+                $jurnal->save();
+                DB::commit();
+            }
+
         }
         catch(\Exception $e)
         {
