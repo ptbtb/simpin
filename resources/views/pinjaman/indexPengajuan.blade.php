@@ -634,7 +634,7 @@
             var url = '{{ route('pengajuan-pinjaman-update-status') }}';
 
             var files = $('#buktiPembayaran')[0].files;
-            var id_akun_debet = $('#code').val();
+            var id_akun_debet = $('#code2').val();
 
             // files is mandatory when status pengajuan pinjaman diterima
             if (status == {{ STATUS_PENGAJUAN_PINJAMAN_DITERIMA }} && files[0] == undefined) {
