@@ -228,7 +228,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
+        $jurnal->akun_kredit = $angsuran->pinjaman->kode_jenis_pinjam;
 
         // make balance
         $jasa = ($angsuran->besar_pembayaran>$angsuran->jasa)?$angsuran->jasa:$angsuran->besar_pembayaran;
@@ -236,9 +236,9 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
 
         //end balancing
 
-        $jurnal->debet = ($angsur>0)?$angsur:0;
-        $jurnal->akun_kredit = 0;
-        $jurnal->kredit = 0;
+        $jurnal->kredit = ($angsur>0)?$angsur:0;
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
         if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         }else{
@@ -258,17 +258,17 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_debet = 0;
-        $jurnal->debet = 0;
+        $jurnal->akun_kredit = 0;
+        $jurnal->kredit = 0;
         if($angsuran->akunKredit)
         {
-            $jurnal->akun_kredit = $angsuran->akunKredit->CODE;
+            $jurnal->akun_debet = $angsuran->akunKredit->CODE;
         }
         else
         {
-            $jurnal->akun_kredit = COA_BANK_MANDIRI;
+            $jurnal->akun_debet = COA_BANK_MANDIRI;
         }
-        $jurnal->kredit = $angsuran->besar_pembayaran;
+        $jurnal->debet = $angsuran->besar_pembayaran;
        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         }else{
@@ -287,40 +287,40 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_kredit = 0;
-        $jurnal->kredit = 0;
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
         // japen
         switch ($angsuran->pinjaman->kode_jenis_pinjam){
             case('105.01.001'):
-                $jurnal->akun_debet = '701.02.003';
+                $jurnal->akun_kredit = '701.02.003';
                 break;
             case('106.09.002'):
-                $jurnal->akun_debet = '701.02.005';
+                $jurnal->akun_kredit = '701.02.005';
                 break;
             case('106.09.003'):
-                $jurnal->akun_debet = '701.02.006';
+                $jurnal->akun_kredit = '701.02.006';
                 break;
             case('106.10.001'):
-                $jurnal->akun_debet = '701.02.008';
+                $jurnal->akun_kredit = '701.02.008';
                 break;
             case('106.10.002'):
-                $jurnal->akun_debet = '701.02.008';
+                $jurnal->akun_kredit = '701.02.008';
                 break;
             case('106.10.003'):
-                $jurnal->akun_debet = '701.02.008';
+                $jurnal->akun_kredit = '701.02.008';
                 break;
             case('106.09.001'):
-                $jurnal->akun_debet = '701.02.007';
+                $jurnal->akun_kredit = '701.02.007';
                 break;
             case('106.09.004'):
-                $jurnal->akun_debet = '701.02.012';
+                $jurnal->akun_kredit = '701.02.012';
                 break;
 
             default:
-                $jurnal->akun_debet = '701.02.001';
+                $jurnal->akun_kredit = '701.02.001';
         }
 
-        $jurnal->debet = $jasa;
+        $jurnal->kredit = $jasa;
         if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         }else{
@@ -342,7 +342,7 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::createFromFormat('Y-m-d H:i:s', $angsuran->paid_at)->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_debet = $angsuran->pinjaman->kode_jenis_pinjam;
+        $jurnal->akun_kredit = $angsuran->pinjaman->kode_jenis_pinjam;
 
         // make balance
         // $jasa = ($angsuran->besar_pembayaran>$angsuran->jasa)?$angsuran->jasa:$angsuran->besar_pembayaran;
@@ -351,9 +351,9 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
 
         //end balancing
 
-        $jurnal->debet = ($angsur>0)?$angsur:0;
-        $jurnal->akun_kredit = 0;
-        $jurnal->kredit = 0;
+        $jurnal->kredit = ($angsur>0)?$angsur:0;
+        $jurnal->akun_debet = 0;
+        $jurnal->debet = 0;
         if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
         }else{
@@ -373,24 +373,24 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
         $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-        $jurnal->akun_debet = 0;
-        $jurnal->debet = 0;
+        $jurnal->akun_kredit = 0;
+        $jurnal->kredit = 0;
         if($angsuran->akunKredit)
         {
-            $jurnal->akun_kredit = $angsuran->akunKredit->CODE;
+            $jurnal->akun_debet = $angsuran->akunKredit->CODE;
         }
         else
         {
-            $jurnal->akun_kredit = COA_BANK_MANDIRI;
+            $jurnal->akun_debet = COA_BANK_MANDIRI;
         }
         // $jurnal->kredit = $angsuran->besar_pembayaran - $angsuran->besar_pembayaran_jasa;
         if($jasa)
         {
-            $jurnal->kredit = $angsur + $jasa;
+            $jurnal->debet = $angsur + $jasa;
         }
         else
         {
-            $jurnal->kredit = $angsur;
+            $jurnal->debet = $angsur;
         }
        if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
             $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
@@ -412,39 +412,39 @@ public static function createJurnalSaldoPinjaman(Pinjaman $pinjaman)
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
             $jurnal->nomer = Carbon::now()->format('Ymd').(Jurnal::count()+1);
-            $jurnal->akun_kredit = 0;
-            $jurnal->kredit = 0;
+            $jurnal->akun_debet = 0;
+            $jurnal->debet = 0;
             // japen
             switch ($angsuran->pinjaman->kode_jenis_pinjam){
                 case('105.01.001'):
-                    $jurnal->akun_debet = '701.02.003';
+                    $jurnal->akun_kredit = '701.02.003';
                     break;
                 case('106.09.002'):
-                    $jurnal->akun_debet = '701.02.005';
+                    $jurnal->akun_kredit = '701.02.005';
                     break;
                 case('106.09.003'):
-                    $jurnal->akun_debet = '701.02.006';
+                    $jurnal->akun_kredit = '701.02.006';
                     break;
                 case('106.10.001'):
-                    $jurnal->akun_debet = '701.02.008';
+                    $jurnal->akun_kredit = '701.02.008';
                     break;
                 case('106.10.002'):
-                    $jurnal->akun_debet = '701.02.008';
+                    $jurnal->akun_kredit = '701.02.008';
                     break;
                 case('106.10.003'):
-                    $jurnal->akun_debet = '701.02.008';
+                    $jurnal->akun_kredit = '701.02.008';
                     break;
                 case('106.09.001'):
-                    $jurnal->akun_debet = '701.02.007';
+                    $jurnal->akun_kredit = '701.02.007';
                     break;
                 case('106.09.004'):
-                    $jurnal->akun_debet = '701.02.012';
+                    $jurnal->akun_kredit = '701.02.012';
                     break;
 
                 default:
-                    $jurnal->akun_debet = '701.02.001';
+                    $jurnal->akun_kredit = '701.02.001';
             }
-            $jurnal->debet = $jasa;
+            $jurnal->kredit = $jasa;
             if (is_null($angsuran->keterangan) || $angsuran->keterangan==''){
                 $jurnal->keterangan = 'Pembayaran angsuran ke  '. strtolower($angsuran->angsuran_ke) .' anggota '. ucwords(strtolower($angsuran->pinjaman->anggota->nama_anggota));
             }else{
