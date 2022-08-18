@@ -107,5 +107,22 @@
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function ()
+        {
+            initiateDatatables();
+            $("#from").change(function(){
+                console.log($('#from').val());
+                console.log({{ $request->from }});
+            });
 
+            $('.datepicker').datepicker({
+                format: "dd-mm-yyyy"
+            });
+
+            $('input.datepicker').bind('keyup keydown keypress', function (evt) {
+                return true;
+            });
+        });
+    </script>
 @endsection
