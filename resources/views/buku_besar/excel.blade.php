@@ -72,7 +72,7 @@
 
                     </td>
                     <td>
-                        {{ $sumaktiva-($sumpasiva+($sumpendapatan-$sumbeban)) }}
+                        {{ $sumaktiva+$sumpasiva+$sumpendapatan+$sumbeban }}
                     </td>
                 </tr>
         <tr>
