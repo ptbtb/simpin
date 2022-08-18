@@ -20,6 +20,14 @@ class KodeTransaksi extends Model implements Auditable
     {
         return $this->hasMany(BukuBesarJurnal::class,'kode','CODE');
     }
+    public function jurnalItemDr()
+    {
+        return $this->hasMany(Jurnal::class,'akun_debet','CODE');
+    }
+    public function jurnalItemCr()
+    {
+        return $this->hasMany(Jurnal::class,'akun_kredit','CODE');
+    }
     public function codeCategory()
     {
         return $this->belongsTo(CodeCategory::class, 'code_category_id');
@@ -58,18 +66,21 @@ class KodeTransaksi extends Model implements Auditable
             ->whereBetween('tgl_transaksi', [$startOf,$today])
             ->where('trans','K')
             ->sum('amount');
-
-        if($this->normal_balance_id == NORMAL_BALANCE_DEBET){
-
-            $saldo += $saldoDebet;
-            $saldo -= $saldoKredit;
-        }
-        if($this->normal_balance_id == NORMAL_BALANCE_KREDIT){
-            $saldo -= $saldoDebet;
-            $saldo += $saldoKredit;
-        }
+//        dd($saldoKredit);
+//        if($this->normal_balance_id == NORMAL_BALANCE_DEBET){
+//
+//            $saldo += $saldoDebet-$saldoKredit;
+//        }
+//        if($this->normal_balance_id == NORMAL_BALANCE_KREDIT){
+            $saldo = $saldoDebet-$saldoKredit;
+//        }
+//        dd($saldo);
 
 //        if($this->code_type_id==1 && $this->code_category_id==28 ) {
+//            return round(-$saldo);
+//        }
+
+//        if($this->code_type_id==2 && $this->code_type_id==4 ){
 //            return round(-$saldo);
 //        }
 

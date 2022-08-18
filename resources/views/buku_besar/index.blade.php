@@ -74,10 +74,10 @@
                                 <td></td>
                                 <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
                                 <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
+                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
                             </tr>
                             @php
-                                $sumaktiva += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                                $sumaktiva += $item->amountnya;
                             @endphp
                         @endforeach
                         </tbody>
@@ -102,10 +102,10 @@
                                 <td></td>
                                 <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
                                 <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
+                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
                             </tr>
                             @php
-                                $sumpasiva += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                                $sumpasiva += $item->amountnya;
                             @endphp
                         @endforeach
                         </tbody>
@@ -130,10 +130,10 @@
                                 <td></td>
                                 <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
                                 <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
+                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
                             </tr>
                             @php
-                                $sumpendapatan += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                                $sumpendapatan += $item->amountnya;
                             @endphp
                         @endforeach
 
@@ -160,10 +160,10 @@
                                 <td></td>
                                 <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
                                 <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d')), 0, ',', '.') }}</td>
+                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
                             </tr>
                             @php
-                                $sumbeban += $item->jurnalAmount(Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d'));
+                                $sumbeban += $item->amountnya;
                             @endphp
                         @endforeach
                         </tbody>
@@ -174,7 +174,7 @@
 
 
             </div>
-            <div class="col-md-12 table-responsive"> <h5 class="text-center">Selisih : Aktiva-(Pasiva+Pendaptan-Beban)<br>{{number_format($sumaktiva-($sumpasiva+($sumpendapatan-$sumbeban)), 0, ',', '.')}}</h5></div>
+            <div class="col-md-12 table-responsive"> <h5 class="text-center">Selisih : Aktiva-(Pasiva+Pendaptan-Beban)<br>{{number_format($sumaktiva+$sumpasiva+$sumpendapatan+$sumbeban, 0, ',', '.')}}</h5></div>
         @endif
     </div>
 @endsection

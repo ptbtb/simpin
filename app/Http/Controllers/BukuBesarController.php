@@ -37,8 +37,12 @@ class BukuBesarController extends Controller
                 $jurnalCode = KodeTransaksi::where('is_parent',0)
                                 ->wherenotin('CODE',['606.01.000' , '606.01.101', '607.01.101'])
                                 ->get();
-            }
+                foreach ($jurnalCode as $key=>$jk){
+                    $jurnalCode[$key]->amountnya=$jk->jurnalAmount($request->period);
+                }
 
+            }
+//            dd($jurnalCode);
             $data['title'] = 'List Buku Besar';
             $data['codes'] = $jurnalCode;
             $data['request'] = $request;
