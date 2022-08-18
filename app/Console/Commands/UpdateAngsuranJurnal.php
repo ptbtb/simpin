@@ -60,11 +60,10 @@ class UpdateAngsuranJurnal extends Command
 //            dd($rawjurnal);
             foreach ($rawjurnal as $jurnal){
                 echo $jurnal->jurnalable_id."\n";
-                $jurnal = Jurnal::find($angs->id);
-                $jurnal->akun_debet = $angs->akun_kredit;
-                $jurnal->debet = $angs->kredit;
-                $jurnal->akun_kredit = $angs->akun_debet;
-                $jurnal->kredit = $angs->debet;
+                $jurnal->akun_debet = $jurnal->akun_kredit;
+                $jurnal->debet = $jurnal->kredit;
+                $jurnal->akun_kredit = $jurnal->akun_debet;
+                $jurnal->kredit = $jurnal->debet;
                 $jurnal->save();
                 DB::commit();
             }
