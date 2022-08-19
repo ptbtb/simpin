@@ -171,10 +171,10 @@ class BukuBesarController extends Controller
                     return [
                         'CODE'=>$code->CODE,
                         'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                        'awal'=>$code->jurnalAmount($tglawal),
-                        'trxdr'=>$code->saldoDr($request->from, $request->to),
-                        'trxcr'=>$code->saldoCr($request->from, $request->to),
-                        'akhir'=>$code->jurnalAmount($request->to),
+                        'awal'=>number_format($code->jurnalAmount($tglawal),0,',','.'),
+                        'trxdr'=>number_format($code->saldoDr($request->from, $request->to),0,',','.'),
+                        'trxcr'=>number_format($code->saldoCr($request->from, $request->to),0,',','.'),
+                        'akhir'=>number_format($code->jurnalAmount($request->to),0,',','.'),
                     ];
                 });
 //                dd($result);
