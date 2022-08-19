@@ -72,17 +72,15 @@
                         <tr>
                             <th rowspan="2">Code</th>
                             <th rowspan="2">Nama</th>
-                            <th style="width: 20%" colspan="2">Saldo Awal</th>
+                            <th rowspan="2">Saldo Awal</th>
                             <th style="width: 20%" colspan="2">Trx</th>
-                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
+                            <th rowspan="2">Saldo Akhir</th>
                         </tr>
                         <tr>
+
                             <th class="text-right">dr</th>
                             <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
+
 
                         </tr>
                         </thead>
@@ -91,87 +89,6 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-12 table-responsive">
-                    <h5 class="text-center">PASIVA</h5>
-                    <table class="table table-striped table-passiva">
-                        <thead>
-                        <tr>
-                            <th rowspan="2">Code</th>
-                            <th rowspan="2">Nama</th>
-                            <th style="width: 20%" colspan="2">Saldo Awal</th>
-                            <th style="width: 20%" colspan="2">Trx</th>
-                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
-                        </tr>
-                        <tr>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-12 table-responsive">
-                    <h5 class="text-center">Pendapapan</h5>
-                    <table class="table table-striped table-pendapatan">
-                        <thead>
-                        <tr>
-                            <th rowspan="2">Code</th>
-                            <th rowspan="2">Nama</th>
-                            <th style="width: 20%" colspan="2">Saldo Awal</th>
-                            <th style="width: 20%" colspan="2">Trx</th>
-                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
-                        </tr>
-                        <tr>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-12 table-responsive">
-                    <h5 class="text-center">Beban</h5>
-                    <table class="table table-striped table-beban">
-                        <thead>
-                        <tr>
-                            <th rowspan="2">Code</th>
-                            <th rowspan="2">Nama</th>
-                            <th style="width: 20%" colspan="2">Saldo Awal</th>
-                            <th style="width: 20%" colspan="2">Trx</th>
-                            <th style="width: 20%" colspan="2">Saldo Akhir</th>
-                        </tr>
-                        <tr>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-                            <th class="text-right">dr</th>
-                            <th class="text-right">cr</th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </div>
-
-
-
 
             </div>
             <div class="col-md-12 table-responsive"> <h5 class="text-center"></h5></div>
@@ -218,8 +135,6 @@
                         @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
                         @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
                         @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
-
-                        data.code_type_id = '{{ CODE_TYPE_ACTIVA}}';
                     }
                 },
                 aoColumns: [
@@ -235,13 +150,10 @@
 
                     },
                     {
-                        mData: 'awaldr', sType: "string",
-                        className: "dt-body-right", "name": "awaldr"
+                        mData: 'awal', sType: "string",
+                        className: "dt-body-right", "name": "awal"
                     },
-                    {
-                        mData: 'awalcr', sType: "string",
-                        className: "dt-body-right", "name": "awalcr",
-                    },
+
                     {
                         mData: 'trxdr', sType: "string",
                         className: "dt-body-right", "name": "trxdr"
@@ -251,13 +163,10 @@
                         className: "dt-body-right", "name": "trxcr"
                     },
                     {
-                        mData: 'akhirdr', sType: "string",
-                        className: "dt-body-right", "name": "akhirdr"
+                        mData: 'akhir', sType: "string",
+                        className: "dt-body-right", "name": "akhir"
                     },
-                    {
-                        mData: 'akhircr', sType: "string",
-                        className: "dt-body-right", "name": "akhircr",
-                    },
+
 
                     /*{
                         mData: 'created_by.name', sType: "string",
@@ -290,275 +199,9 @@
                 // }
 
             });
-            var tablepassiva = $('.table-passiva').DataTable({
-                bProcessing: true,
-                bServerSide: true,
-                bPaginate: false,
-                bSortClasses: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                ajax: {
-                    url: '{{ route('buku-besar-resume-ajax') }}',
-                    dataSrc: 'data',
-                    data: function(data){
-                        @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
-                            @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
-                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
-                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
-
-                            data.code_type_id = '{{ CODE_TYPE_PASSIVA}}';
-                    }
-                },
-                aoColumns: [
-
-                    {
-                        mData: 'CODE', sType: "string",
-                        className: "dt-body-center", "name": "CODE",
-
-                    },
-                    {
-                        mData: 'NAMA_TRANSAKSI', sType: "string",
-                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
-
-                    },
-                    {
-                        mData: 'awaldr', sType: "string",
-                        className: "dt-body-right", "name": "awaldr"
-                    },
-                    {
-                        mData: 'awalcr', sType: "string",
-                        className: "dt-body-right", "name": "awalcr",
-                    },
-                    {
-                        mData: 'trxdr', sType: "string",
-                        className: "dt-body-right", "name": "trxdr"
-                    },
-                    {
-                        mData: 'trxcr', sType: "string",
-                        className: "dt-body-right", "name": "trxcr"
-                    },
-                    {
-                        mData: 'akhirdr', sType: "string",
-                        className: "dt-body-right", "name": "akhirdr"
-                    },
-                    {
-                        mData: 'akhircr', sType: "string",
-                        className: "dt-body-right", "name": "akhircr",
-                    },
-
-                    /*{
-                        mData: 'created_by.name', sType: "string",
-                        className: "dt-body-center", "name": "created_by.name",
-                    },*/
-                ],fnInitComplete: function(oSettings, json) {
-
-                    var _that = this;
-
-                    this.each(function(i) {
-                        $.fn.dataTableExt.iApiIndex = i;
-                        var $this = this;
-                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
-                        anControl
-                            .unbind('keyup search input')
-                            .bind('keypress', function(e) {
-                                if (e.which == 13) {
-                                    $.fn.dataTableExt.iApiIndex = i;
-                                    _that.fnFilter(anControl.val());
-                                }
-                            });
-                        return this;
-                    });
-                    return this;
-                },
-                // drawCallback:function(settings)
-                // {
-                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
-                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
-                // }
-
-            });
-            var tablependapatan = $('.table-pendapatan').DataTable({
-                bProcessing: true,
-                bServerSide: true,
-                bPaginate: false,
-                bSortClasses: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                ajax: {
-                    url: '{{ route('buku-besar-resume-ajax') }}',
-                    dataSrc: 'data',
-                    data: function(data){
-                        @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
-                            @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
-                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
-                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
-
-                            data.code_type_id = '{{ CODE_TYPE_LABA}}';
-                    }
-                },
-                aoColumns: [
-
-                    {
-                        mData: 'CODE', sType: "string",
-                        className: "dt-body-center", "name": "CODE",
-
-                    },
-                    {
-                        mData: 'NAMA_TRANSAKSI', sType: "string",
-                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
-
-                    },
-                    {
-                        mData: 'awaldr', sType: "string",
-                        className: "dt-body-right", "name": "awaldr"
-                    },
-                    {
-                        mData: 'awalcr', sType: "string",
-                        className: "dt-body-right", "name": "awalcr",
-                    },
-                    {
-                        mData: 'trxdr', sType: "string",
-                        className: "dt-body-right", "name": "trxdr"
-                    },
-                    {
-                        mData: 'trxcr', sType: "string",
-                        className: "dt-body-right", "name": "trxcr"
-                    },
-                    {
-                        mData: 'akhirdr', sType: "string",
-                        className: "dt-body-right", "name": "akhirdr"
-                    },
-                    {
-                        mData: 'akhircr', sType: "string",
-                        className: "dt-body-right", "name": "akhircr",
-                    },
-
-                    /*{
-                        mData: 'created_by.name', sType: "string",
-                        className: "dt-body-center", "name": "created_by.name",
-                    },*/
-                ],fnInitComplete: function(oSettings, json) {
-
-                    var _that = this;
-
-                    this.each(function(i) {
-                        $.fn.dataTableExt.iApiIndex = i;
-                        var $this = this;
-                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
-                        anControl
-                            .unbind('keyup search input')
-                            .bind('keypress', function(e) {
-                                if (e.which == 13) {
-                                    $.fn.dataTableExt.iApiIndex = i;
-                                    _that.fnFilter(anControl.val());
-                                }
-                            });
-                        return this;
-                    });
-                    return this;
-                },
-                // drawCallback:function(settings)
-                // {
-                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
-                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
-                // }
-
-            });
-            var tablebeban = $('.table-beban').DataTable({
-                bProcessing: true,
-                bServerSide: true,
-                bPaginate: false,
-                bSortClasses: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                ajax: {
-                    url: '{{ route('buku-besar-resume-ajax') }}',
-                    dataSrc: 'data',
-                    data: function(data){
-                        @if(isset($request->from)) data.from = '{{ $request->from }}'; @endif
-                            @if(isset($request->to)) data.to = '{{ $request->to }}'; @endif
-                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
-                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
-
-                            data.code_type_id = '{{ CODE_TYPE_RUGI}}';
-                    }
-                },
-                aoColumns: [
-
-                    {
-                        mData: 'CODE', sType: "string",
-                        className: "dt-body-center", "name": "CODE",
-
-                    },
-                    {
-                        mData: 'NAMA_TRANSAKSI', sType: "string",
-                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
-
-                    },
-                    {
-                        mData: 'awaldr', sType: "string",
-                        className: "dt-body-right", "name": "awaldr"
-                    },
-                    {
-                        mData: 'awalcr', sType: "string",
-                        className: "dt-body-right", "name": "awalcr",
-                    },
-                    {
-                        mData: 'trxdr', sType: "string",
-                        className: "dt-body-right", "name": "trxdr"
-                    },
-                    {
-                        mData: 'trxcr', sType: "string",
-                        className: "dt-body-right", "name": "trxcr"
-                    },
-                    {
-                        mData: 'akhirdr', sType: "string",
-                        className: "dt-body-right", "name": "akhirdr"
-                    },
-                    {
-                        mData: 'akhircr', sType: "string",
-                        className: "dt-body-right", "name": "akhircr",
-                    },
-
-                    /*{
-                        mData: 'created_by.name', sType: "string",
-                        className: "dt-body-center", "name": "created_by.name",
-                    },*/
-                ],fnInitComplete: function(oSettings, json) {
-
-                    var _that = this;
-
-                    this.each(function(i) {
-                        $.fn.dataTableExt.iApiIndex = i;
-                        var $this = this;
-                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
-                        anControl
-                            .unbind('keyup search input')
-                            .bind('keypress', function(e) {
-                                if (e.which == 13) {
-                                    $.fn.dataTableExt.iApiIndex = i;
-                                    _that.fnFilter(anControl.val());
-                                }
-                            });
-                        return this;
-                    });
-                    return this;
-                },
-                // drawCallback:function(settings)
-                // {
-                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
-                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
-                // }
-
-            });
-
-
 
         }
 
-        
+
     </script>
 @endsection

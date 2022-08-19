@@ -57,55 +57,27 @@ class KodeTransaksi extends Model implements Auditable
             $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
         }
 
-//        dd($startOf);
-        $saldoDebet = $this->jurnalItems
-            ->whereBetween('tgl_transaksi', [$startOf,$today])
-            ->where('trans','D')
-            ->sum('amount');
-        $saldoKredit = $this->jurnalItems
-            ->whereBetween('tgl_transaksi', [$startOf,$today])
-            ->where('trans','K')
-            ->sum('amount');
-//        dd($saldoKredit);
-//        if($this->normal_balance_id == NORMAL_BALANCE_DEBET){
-//
-//            $saldo += $saldoDebet-$saldoKredit;
-//        }
-//        if($this->normal_balance_id == NORMAL_BALANCE_KREDIT){
-            $saldo = $saldoDebet-$saldoKredit;
-//        }
-//        dd($saldo);
-
-//        if($this->code_type_id==1 && $this->code_category_id==28 ) {
-//            return round(-$saldo);
-//        }
-
-//        if($this->code_type_id==2 && $this->code_type_id==4 ){
-//            return round(-$saldo);
-//        }
-
-
-        return array('dr'=>round($saldoDebet),'cr'=>round($saldoKredit),'saldo'=>round($saldo));
-    }
-    public function jurnalAmountTransaksi($from,$to)
-    {
-
-        $saldo = 0;
-        $today=Carbon::createFromFormat('Y-m-d', $to)->format('Y-m-d');
-        $startOf = Carbon::createFromFormat('Y-m-d', $from)->format('Y-m-d');
-
-
-        $saldoDebet = $this->jurnalItems
-            ->whereBetween('tgl_transaksi', [$startOf,$today])
-            ->where('trans','D')
-            ->sum('amount');
-        $saldoKredit = $this->jurnalItems
-            ->whereBetween('tgl_transaksi', [$startOf,$today])
-            ->where('trans','K')
-            ->sum('amount');
+        $saldoDebet = $this->saldoDr($startOf,$today);
+        $saldoKredit = $this->saldoCr($startOf,$today);
 
         $saldo = $saldoDebet-$saldoKredit;
-//
-        return array('dr'=>round($saldoDebet),'cr'=>round($saldoKredit),'saldo'=>round($saldo));
+
+        return round($saldo);
     }
+
+
+    public  function saldoDr($from,$to){
+        return $this->jurnalItems
+            ->whereBetween('tgl_transaksi', [$from,$to])
+            ->where('trans','D')
+            ->sum('amount');
+    }
+
+    public  function saldoCr($from,$to){
+        return $this->jurnalItems
+            ->whereBetween('tgl_transaksi', [$from,$to])
+            ->where('trans','K')
+            ->sum('amount');
+    }
+
 }

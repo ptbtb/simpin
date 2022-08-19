@@ -18,17 +18,15 @@
         <th rowspan="2">Jenis</th>
         <th rowspan="2">Code</th>
         <th rowspan="2">Nama</th>
-        <th style="width: 20%" colspan="2">Saldo Awal</th>
+        <th style="width: 20%" rowspan="2">Saldo Awal</th>
         <th style="width: 20%" colspan="2">Trx</th>
-        <th style="width: 20%" colspan="2">Saldo Akhir</th>
+        <th style="width: 20%" rowspan="2">Saldo Akhir</th>
     </tr>
     <tr>
+
         <th class="text-right">dr</th>
         <th class="text-right">cr</th>
-        <th class="text-right">dr</th>
-        <th class="text-right">cr</th>
-        <th class="text-right">dr</th>
-        <th class="text-right">cr</th>
+
 
     </tr>
     </thead>
@@ -53,11 +51,9 @@
             </td>
 
             <td>
-                {{ $bukuBesar->awaldr }}
+                {{ $bukuBesar->awal }}
             </td>
-            <td>
-                {{ $bukuBesar->awalcr }}
-            </td>
+
             <td>
                 {{ $bukuBesar->trxdr }}
             </td>
@@ -65,11 +61,9 @@
                 {{ $bukuBesar->trxcr }}
             </td>
             <td>
-                {{ $bukuBesar->akhirdr }}
+                {{ $bukuBesar->akhir }}
             </td>
-            <td>
-                {{ $bukuBesar->akhircr }}
-            </td>
+
         </tr>
 
     @endforeach
