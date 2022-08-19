@@ -66,7 +66,7 @@
             @endphp
             <div class="card-body row">
                 <div class="col-md-12 table-responsive">
-                    <h5 class="text-center">Aktiva</h5>
+                    <h5 class="text-center">List COA Buku Besar</h5>
                     <table class="table table-striped table-aktiva">
                         <thead>
                         <tr>
