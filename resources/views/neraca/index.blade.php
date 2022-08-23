@@ -119,9 +119,7 @@
             });
 
             $('.datepicker').datepicker({
-                format: "yyyy-mm-dd",
-                viewMode: "months",
-                minViewMode: "months"
+                format: "yyyy-mm-dd"
             });
 
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
