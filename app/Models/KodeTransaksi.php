@@ -93,7 +93,7 @@ class KodeTransaksi extends Model implements Auditable
             $saldo +=$saldoKredit;
 
         }
-        if ($this->CODE==210.00.000){
+        if ($this->CODE=='210.00.000'){
             $saldo =-$saldo;
 
         }
