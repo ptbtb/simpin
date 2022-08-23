@@ -66,7 +66,7 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th colspan="2"></th>
+                            <th colspan="2">TOTAL AKTIVA</th>
                             <th id="totalaktiva"></th>
                             <th id="totalaktivalalu"></th>
                         </tr>
@@ -92,7 +92,7 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th colspan="2"></th>
+                            <th colspan="2">TOTAL PASSIVA</th>
                             <th id="totalpassiva"></th>
                             <th id="totalpassivalalu"></th>
 
