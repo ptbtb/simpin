@@ -52,7 +52,7 @@ class NeracaController extends Controller
     {
         $this->authorize('view jurnal', Auth::user());
 
-            $bulanLalu = Carbon::createFromFormat('Y-m-d',$request->period)->subMonth(1)->endOfMonth()->format('Y-m-d');
+            $bulanLalu = Carbon::createFromFormat('Y-m-d',$request->period)->subMonth()->endOfMonth()->format('Y-m-d');
             if ($request->search) {
                 $jurnalCode = KodeTransaksi::where('is_parent',0)
                     ->where('code_type_id',$request->code_type_id)
