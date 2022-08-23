@@ -100,7 +100,7 @@ class NeracaController extends Controller
                     return $result->sum('saldo');
                 })
                 ->with('totallalu', function() use ($result) {
-                    return $result->sum('saldolalu');
+                    return $result->sum('saldoLalu');
                 })
 
                 ->make(true);
