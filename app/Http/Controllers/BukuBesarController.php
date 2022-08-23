@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Managers\LabaRugiManager;
 use App\Models\Jurnal;
 use App\Models\Code;
 use App\Models\KodeTransaksi;
@@ -56,13 +57,33 @@ class BukuBesarController extends Controller
             }
 
             if ($request->search) {
-                $jurnalCode = KodeTransaksi::where('is_parent', 0)
-                    ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
-                    ->orderby('code_type_id','asc')
-                    ->orderby('CODE','asc')
-                    ->get();
+                $y = Carbon::createFromFormat('Y-m-d',$request->period)->format('Y');
+                if($y=='2020'){
+                    $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                        ->wherenotin('CODE', [ '606.01.101'])
+                        ->orderby('code_type_id','asc')
+                        ->orderby('CODE','asc')
+                        ->get();
+                }else{
+                    $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                        ->wherenotin('CODE', [ '606.01.101', '607.01.101'])
+                        ->orderby('code_type_id','asc')
+                        ->orderby('CODE','asc')
+                        ->get();
+                }
+
 
                 $result = $jurnalCode->map(function($code,$key)use($request){
+                    if($code->CODE=='606.01.000'  ){
+                        return [
+                            'tipe'=>$code->codeType->name,
+                            'CODE'=>$code->CODE,
+                            'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                            'saldo'=>-(LabaRugiManager::getShuditahan($request->period)),
+//
+
+                        ];
+                    }
                     return [
                         'tipe'=>$code->codeType->name,
                         'CODE'=>$code->CODE,
@@ -90,13 +111,33 @@ class BukuBesarController extends Controller
         if (!$request->period) {
             $request->period = Carbon::today()->format('Y-m-d');
         }
+        $y = Carbon::createFromFormat('Y-m-d',$request->period)->format('Y');
+        if($y=='2020'){
+            $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                ->wherenotin('CODE', [ '606.01.101'])
+                ->orderby('code_type_id','asc')
+                ->orderby('CODE','asc')
+                ->get();
+        }else{
+            $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                ->wherenotin('CODE', [ '606.01.101', '607.01.101'])
+                ->orderby('code_type_id','asc')
+                ->orderby('CODE','asc')
+                ->get();
+        }
 
-        $jurnalCode = KodeTransaksi::where('is_parent', 0)
-            ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
-            ->orderby('code_type_id','asc')
-            ->orderby('CODE','asc')
-            ->get();
+
         $result = $jurnalCode->map(function($code,$key)use($request){
+            if($code->CODE=='606.01.000'  ){
+                return [
+                    'tipe'=>$code->codeType->name,
+                    'CODE'=>$code->CODE,
+                    'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                    'saldo'=>-(LabaRugiManager::getShuditahan($request->period)),
+//
+
+                ];
+            }
             return [
                 'tipe'=>$code->codeType->name,
                 'CODE'=>$code->CODE,
@@ -121,14 +162,31 @@ class BukuBesarController extends Controller
         if (!$request->period) {
             $request->period = Carbon::today()->format('Y-m-d');
         }
-
-
-        $jurnalCode = KodeTransaksi::where('is_parent', 0)
-            ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
-            ->orderby('code_type_id','asc')
-            ->orderby('CODE','asc')
-            ->get();
+        $y = Carbon::createFromFormat('Y-m-d',$request->period)->format('Y');
+        if($y=='2020'){
+            $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                ->wherenotin('CODE', [ '606.01.101'])
+                ->orderby('code_type_id','asc')
+                ->orderby('CODE','asc')
+                ->get();
+        }else{
+            $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                ->wherenotin('CODE', [ '606.01.101', '607.01.101'])
+                ->orderby('code_type_id','asc')
+                ->orderby('CODE','asc')
+                ->get();
+        }
         $result = $jurnalCode->map(function($code,$key)use($request){
+            if($code->CODE=='606.01.000'  ){
+                return [
+                    'tipe'=>$code->codeType->name,
+                    'CODE'=>$code->CODE,
+                    'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                    'saldo'=>-(LabaRugiManager::getShuditahan($request->period)),
+//
+
+                ];
+            }
             return [
                 'tipe'=>$code->codeType->name,
                 'CODE'=>$code->CODE,
@@ -206,14 +264,36 @@ class BukuBesarController extends Controller
 
             if ($request->search) {
 
-                $jurnalCode = KodeTransaksi::where('is_parent', 0)
-                    ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
-//                    ->where('CODE','106.02.020')
-//                    ->where('code_type_id',$request->code_type_id )
-                    ->get();
+
                 $tglawal = Carbon::createFromFormat('Y-m-d', $request->from)->subDays(1)->format('Y-m-d');
-//
+                $y = Carbon::createFromFormat('Y-m-d',$tglawal)->format('Y');
+                if($y=='2020'){
+                    $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                        ->wherenotin('CODE', [ '606.01.101'])
+                        ->orderby('code_type_id','asc')
+                        ->orderby('CODE','asc')
+                        ->get();
+                }else{
+                    $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                        ->wherenotin('CODE', [ '606.01.101', '607.01.101'])
+                        ->orderby('code_type_id','asc')
+                        ->orderby('CODE','asc')
+                        ->get();
+                }
+                //
                 $result = $jurnalCode->map(function($code,$key)use($tglawal,$request){
+                    if($code->CODE=='606.01.000'  ){
+                        return [
+                            'CODE'=>$code->CODE,
+                            'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                            'awal'=>-(LabaRugiManager::getShuditahan($request->period)),
+                            'trxdr'=>0,
+                            'trxcr'=>0,
+                            'akhir'=>-(LabaRugiManager::getShuditahan($request->period)),
+//
+
+                        ];
+                    }
                     return [
                         'CODE'=>$code->CODE,
                         'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
@@ -243,13 +323,35 @@ class BukuBesarController extends Controller
         }
 
 
-        $jurnalCode = KodeTransaksi::where('is_parent', 0)
-            ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
-//            ->where('CODE','102.00.000')
-            ->get();
-        $tglawal = Carbon::createFromFormat('Y-m-d', $request->from)->subDays(1)->format('Y-m-d');
 
+        $tglawal = Carbon::createFromFormat('Y-m-d', $request->from)->subDays(1)->format('Y-m-d');
+        $y = Carbon::createFromFormat('Y-m-d',$tglawal)->format('Y');
+        if($y=='2020'){
+            $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                ->wherenotin('CODE', [ '606.01.101'])
+                ->orderby('code_type_id','asc')
+                ->orderby('CODE','asc')
+                ->get();
+        }else{
+            $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                ->wherenotin('CODE', [ '606.01.101', '607.01.101'])
+                ->orderby('code_type_id','asc')
+                ->orderby('CODE','asc')
+                ->get();
+        }
         $result = $jurnalCode->map(function($code,$key)use($tglawal,$request){
+            if($code->CODE=='606.01.000'  ){
+                return [
+                    'CODE'=>$code->CODE,
+                    'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                    'awal'=>-(LabaRugiManager::getShuditahan($request->period)),
+                    'trxdr'=>0,
+                    'trxcr'=>0,
+                    'akhir'=>-(LabaRugiManager::getShuditahan($request->period)),
+//
+
+                ];
+            }
             return [
                 'tipe'=>$code->codeType->name,
                 'CODE'=>$code->CODE,

@@ -47,11 +47,16 @@ class KodeTransaksi extends Model implements Auditable
         {
             $tgl = Carbon::today()->format('Y-m-d');
         }
+        $y = Carbon::createFromFormat('Y-m-d', $tgl)->format('Y');
         $saldo = 0;
         $todays=Carbon::createFromFormat('Y-m-d', $tgl);
         $today=Carbon::createFromFormat('Y-m-d', $tgl)->format('Y-m-d');
         if ($this->code_type_id==3 ||$this->code_type_id==4){
-            $startOf = $todays->startOfYear()->format('Y-m-d');
+            if ($y=='2020'){
+                $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
+            }else{
+                $startOf = $todays->startOfYear()->format('Y-m-d');
+            }
 
         }else{
             $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
@@ -70,11 +75,17 @@ class KodeTransaksi extends Model implements Auditable
         {
             $tgl = Carbon::today()->format('Y-m-d');
         }
+        $y = Carbon::createFromFormat('Y-m-d', $tgl)->format('Y');
         $saldo = 0;
         $todays=Carbon::createFromFormat('Y-m-d', $tgl);
         $today=Carbon::createFromFormat('Y-m-d', $tgl)->format('Y-m-d');
         if ($this->code_type_id==3 ||$this->code_type_id==4){
-            $startOf = $todays->startOfYear()->format('Y-m-d');
+            if ($y=='2020'){
+                $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
+            }else{
+                $startOf = $todays->startOfYear()->format('Y-m-d');
+            }
+
 
         }else{
             $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
