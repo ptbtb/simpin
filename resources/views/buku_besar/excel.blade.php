@@ -15,48 +15,36 @@
           </tr>
             <tr>
                 <th>No</th>
+                <th>Tipe</th>
                 <th>Code</th>
                 <th>Nama Transaksi</th>
-                <th>Tipe</th>
                 <th>Saldo</th>
             </tr>
         </thead>
         <tbody>
         @php
-            $sumaktiva=0;
-            $sumpasiva=0;
-            $sumpendapatan=0;
-            $sumbeban=0;
+            $sum=0;
         @endphp
             @foreach ($codes->sortBy('CODE') as $bukuBesar)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        {{ $bukuBesar->CODE }}
+                        {{ $bukuBesar['tipe'] }}
                     </td>
                     <td>
-                        {{ $bukuBesar->NAMA_TRANSAKSI }}
+                        {{ $bukuBesar['CODE'] }}
                     </td>
                     <td>
-                        {{ $bukuBesar->codeType->name }}
+                        {{ $bukuBesar['NAMA_TRANSAKSI'] }}
                     </td>
+
                     <td>
-                        {{ $bukuBesar->amountnya }}
+                        {{ $bukuBesar['saldo'] }}
                     </td>
                 </tr>
                 @php
-                    if($bukuBesar->code_type_id==CODE_TYPE_ACTIVA){
-                        $sumaktiva += $bukuBesar->amountnya;
-                    }
-                    if($bukuBesar->code_type_id==CODE_TYPE_PASSIVA){
-                        $sumpasiva += $bukuBesar->amountnya;
-                    }
-                    if($bukuBesar->code_type_id==CODE_TYPE_LABA){
-                        $sumpendapatan += $bukuBesar->amountnya;
-                    }
-                    if($bukuBesar->code_type_id==CODE_TYPE_RUGI){
-                        $sumbeban += $bukuBesar->amountnya;
-                    }
+                    $sum +=$bukuBesar['saldo'];
+
 
                 @endphp
             @endforeach
@@ -72,7 +60,7 @@
 
                     </td>
                     <td>
-                        {{ $sumaktiva+$sumpasiva+$sumpendapatan+$sumbeban }}
+                        {{ $sum }}
                     </td>
                 </tr>
         <tr>

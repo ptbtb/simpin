@@ -32,15 +32,7 @@ class BukuBesarController extends Controller
                 $request->period = Carbon::today()->format('Y-m-d');
             }
 
-            if ($request->search) {
-                $jurnalCode = KodeTransaksi::where('is_parent', 0)
-                    ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
-                    ->get();
-                foreach ($jurnalCode as $key => $jk) {
-                    $jurnalCode[$key]->amountnya = $jk->jurnalAmount($request->period);
-                }
 
-            }
 //            dd($jurnalCode);
             $data['title'] = 'List Buku Besar';
             $data['codes'] = $jurnalCode;
@@ -53,6 +45,44 @@ class BukuBesarController extends Controller
         }
     }
 
+    public function indexAjax(Request $request)
+    {
+        $this->authorize('view jurnal', Auth::user());
+
+            $jurnalCode = collect();
+            $selisih = 0;
+            if (!$request->period) {
+                $request->period = Carbon::today()->format('Y-m-d');
+            }
+
+            if ($request->search) {
+                $jurnalCode = KodeTransaksi::where('is_parent', 0)
+                    ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
+                    ->orderby('code_type_id','asc')
+                    ->orderby('CODE','asc')
+                    ->get();
+
+                $result = $jurnalCode->map(function($code,$key)use($request){
+                    return [
+                        'tipe'=>$code->codeType->name,
+                        'CODE'=>$code->CODE,
+                        'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                        'saldo'=>$code->jurnalAmount($request->period),
+
+                    ];
+                });
+
+            }
+
+//            dd($jurnalCode);
+            return DataTables::of($result)
+                ->with('diffamount', function() use ($result) {
+                    return $result->sum('saldo');
+                })
+                ->make(true);
+
+    }
+
     public function createExcel(Request $request)
     {
         $user = Auth::user();
@@ -63,13 +93,21 @@ class BukuBesarController extends Controller
 
         $jurnalCode = KodeTransaksi::where('is_parent', 0)
             ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
+            ->orderby('code_type_id','asc')
+            ->orderby('CODE','asc')
             ->get();
-        foreach ($jurnalCode as $key => $jk) {
-            $jurnalCode[$key]->amountnya = $jk->jurnalAmount($request->period);
-        }
+        $result = $jurnalCode->map(function($code,$key)use($request){
+            return [
+                'tipe'=>$code->codeType->name,
+                'CODE'=>$code->CODE,
+                'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                'saldo'=>$code->jurnalAmount($request->period),
+
+            ];
+        });
 
         $data['title'] = 'List Buku Besar';
-        $data['codes'] = $jurnalCode;
+        $data['codes'] = $result;
         $data['request'] = $request;
         $filename = 'export_buku_besar_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
         // return (new FastExcel($bukuBesars))->download($filename);
@@ -87,14 +125,22 @@ class BukuBesarController extends Controller
 
         $jurnalCode = KodeTransaksi::where('is_parent', 0)
             ->wherenotin('CODE', ['606.01.000', '606.01.101', '607.01.101'])
+            ->orderby('code_type_id','asc')
+            ->orderby('CODE','asc')
             ->get();
-        foreach ($jurnalCode as $key => $jk) {
-            $jurnalCode[$key]->amountnya = $jk->jurnalAmount($request->period);
-        }
+        $result = $jurnalCode->map(function($code,$key)use($request){
+            return [
+                'tipe'=>$code->codeType->name,
+                'CODE'=>$code->CODE,
+                'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
+                'saldo'=>$code->jurnalAmount($request->period),
+
+            ];
+        });
 
 
         $data['title'] = 'List Buku Besar';
-        $data['codes'] = $jurnalCode;
+        $data['codes'] = $result;
         $data['request'] = $request;
         $filename = 'export_buku_besar_excel_' . Carbon::now()->format('d M Y') . '.pdf';
         // return (new FastExcel($bukuBesars))->download($filename);
@@ -205,6 +251,7 @@ class BukuBesarController extends Controller
 
         $result = $jurnalCode->map(function($code,$key)use($tglawal,$request){
             return [
+                'tipe'=>$code->codeType->name,
                 'CODE'=>$code->CODE,
                 'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
                 'awal'=>$code->jurnalAmount($tglawal),

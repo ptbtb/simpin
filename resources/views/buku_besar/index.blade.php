@@ -56,12 +56,12 @@
                 $sumbeban=0;
             @endphp
             <div class="card-body row">
-                <div class="col-md-6 table-responsive">
-                    <h5 class="text-center">Aktiva</h5>
+                <div class="col-md-12 table-responsive">
+                    <h5 class="text-center">List Coa Buku Besar</h5>
                     <table class="table table-striped table-aktiva">
                         <thead>
                         <tr>
-                            <th>#</th>
+                            <th>Type</th>
                             <th>Code</th>
                             <th>Nama</th>
                             <th style="width: 35%">Saldo</th>
@@ -69,113 +69,18 @@
                         </thead>
                         <tbody>
 
-                        @foreach($codes->where('code_type_id',CODE_TYPE_ACTIVA)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
-                            </tr>
-                            @php
-                                $sumaktiva += $item->amountnya;
-                            @endphp
-                        @endforeach
                         </tbody>
-                    </table>
-                </div>
-                <div class="col-md-6 table-responsive">
-                    <h5 class="text-center">Passiva</h5>
-                    <table class="table table-striped table-passiva">
-                        <thead>
+                        <tfoot>
                         <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 40%">Saldo</th>
+                            <th colspan="3" >Selisih</th>
+                            <th id="selisih" ></th>
                         </tr>
-                        </thead>
-                        <tbody>
-
-                        @foreach($codes->where('code_type_id',CODE_TYPE_PASSIVA)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
-                            </tr>
-                            @php
-                                $sumpasiva += $item->amountnya;
-                            @endphp
-                        @endforeach
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
-                <div class="col-md-6 table-responsive">
-                    <h5 class="text-center">Pendapatan</h5>
-                    <table class="table table-striped table-laba">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 40%">Saldo</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        @foreach($codes->where('code_type_id',CODE_TYPE_LABA)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
-                            </tr>
-                            @php
-                                $sumpendapatan += $item->amountnya;
-                            @endphp
-                        @endforeach
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-6 table-responsive">
-                    <h5 class="text-center">Beban</h5>
-                    <table class="table table-striped table-rugi">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Code</th>
-                            <th>Nama</th>
-                            <th style="width: 40%">Saldo</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-
-                        @foreach($codes->where('code_type_id',CODE_TYPE_RUGI)->sortBy('CODE') as $item)
-
-                            <tr>
-                                <td></td>
-                                <td><a href="{{ route('jurnal-list',['code'=>$item->CODE ,'from'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->subYear()->endOfYear()->format('d-m-Y'),'to'=> Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')]) }}" target="_blank">{{ $item->CODE}}</a></td>
-                                <td>{{$item->NAMA_TRANSAKSI}}</td>
-                                <td class="text-right">{{ number_format($item->amountnya, 0, ',', '.') }}</td>
-                            </tr>
-                            @php
-                                $sumbeban += $item->amountnya;
-                            @endphp
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-
-
 
             </div>
-            <div class="col-md-12 table-responsive"> <h5 class="text-center">Selisih : Aktiva-(Pasiva+Pendaptan-Beban)<br>{{number_format($sumaktiva+$sumpasiva+$sumpendapatan+$sumbeban, 0, ',', '.')}}</h5></div>
+
         @endif
     </div>
 @endsection
@@ -197,59 +102,121 @@
             $('input.datepicker').bind('keyup keydown keypress', function (evt) {
                 return true;
             });
-            // initiateDatatables();
+            initiateDatatables();
         });
         function initiateDatatables()
         {
             $.fn.dataTable.ext.errMode = 'none';
+            var tableaktiva = $('.table-aktiva').DataTable({
+                bProcessing: true,
+                bServerSide: true,
+                bPaginate: false,
+                bSortClasses: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                ajax: {
+                    url: '{{ route('buku-besar-list-ajax') }}',
+                    dataSrc: 'data',
+                    data: function(data){
+                        @if(isset($request->period)) data.period = '{{ $request->period }}'; @endif
+                            @if(isset($request->search)) data.search = '{{ $request->search }}'; @endif
+                    }
+                },
+                aoColumns: [
+                    {
+                        mData: 'tipe', sType: "string",
+                        className: "dt-body-center", "name": "tipe",
+
+                    },
+
+                    {
+                        mData: 'CODE', sType: "string",
+                        className: "dt-body-center", "name": "CODE",
+
+                    },
+                    {
+                        mData: 'NAMA_TRANSAKSI', sType: "string",
+                        className: "dt-body-left", "name": "NAMA_TRANSAKSI",
+
+                    },
+                    {
+                        mData: 'saldo', sType: "string",
+                        className: "dt-body-right", "name": "saldo",
+                        mRender: function(data, type, full)
+                        {
+
+                            if(data)
+                            {
+                                return toRupiah(data);
+                            }else{
+                                return toRupiah('0');
+                            }
+                        }
+                    },
 
 
 
 
+                    /*{
+                        mData: 'created_by.name', sType: "string",
+                        className: "dt-body-center", "name": "created_by.name",
+                    },*/
+                ],
+                drawCallback:function(settings)
+                {
+                    $('#selisih').html(toRupiah(settings.json.diffamount));
+                },
+                fnInitComplete: function(oSettings, json) {
 
+                    var _that = this;
 
-            // add index column
-            tableAktiva.on( 'xhr.dt', function () {
-                tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
+                    this.each(function(i) {
+                        $.fn.dataTableExt.iApiIndex = i;
+                        var $this = this;
+                        var anControl = $('input', _that.fnSettings().aanFeatures.f);
+                        anControl
+                            .unbind('keyup search input')
+                            .bind('keypress', function(e) {
+                                if (e.which == 13) {
+                                    $.fn.dataTableExt.iApiIndex = i;
+                                    _that.fnFilter(anControl.val());
+                                }
+                            });
+                        return this;
+                    });
+                    return this;
+                },
+                // drawCallback:function(settings)
+                // {
+                //     $('#totaldebet').html(toRupiah(settings.json.totaldebet));
+                //     $('#totalkredit').html(toRupiah(settings.json.totalkredit));
+                // }
 
-            // add index column
-            tableAktiva.on( 'xhr.dt', function () {
-                tableAktiva.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
+            });
 
-            // add index column
-            tableRugi.on( 'xhr.dt', function () {
-                tableRugi.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
-
-            // add index column
-            tableLaba.on( 'xhr.dt', function () {
-                tableLaba.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            }).draw();
         }
 
         function toRupiah(number)
         {
+            number = parseFloat(number);
+            number = number.toFixed(2);
             var stringNumber = number.toString();
-            var length = stringNumber.length;
+            var splitStringNumber = stringNumber.split('.');
+            var length = splitStringNumber[0].length;
             var temp = length;
-            var res = "Rp ";
+            var res = "";
             for (let i = 0; i < length; i++) {
-                res = res + stringNumber.charAt(i);
+                res = res + splitStringNumber[0].charAt(i);
                 temp--;
                 if (temp%3 == 0 && temp > 0)
                 {
                     res = res + ".";
                 }
+            }
+            if(splitStringNumber[1] !== 'undefined')
+            {
+                res = res + ','+splitStringNumber[1];
             }
             return res;
         }
