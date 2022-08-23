@@ -64,6 +64,38 @@ class KodeTransaksi extends Model implements Auditable
 
         return round($saldo);
     }
+    public function neracaAmount($tgl)
+    {
+        if(!$tgl)
+        {
+            $tgl = Carbon::today()->format('Y-m-d');
+        }
+        $saldo = 0;
+        $todays=Carbon::createFromFormat('Y-m-d', $tgl);
+        $today=Carbon::createFromFormat('Y-m-d', $tgl)->format('Y-m-d');
+        if ($this->code_type_id==3 ||$this->code_type_id==4){
+            $startOf = $todays->startOfYear()->format('Y-m-d');
+
+        }else{
+            $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
+        }
+
+        $saldoDebet = $this->saldoDr($startOf,$today);
+        $saldoKredit = $this->saldoCr($startOf,$today);
+
+        if ($this->normal_balance_id==NORMAL_BALANCE_DEBET){
+            $saldo +=$saldoDebet;
+            $saldo -=$saldoKredit;
+
+        }
+        if ($this->normal_balance_id==NORMAL_BALANCE_KREDIT){
+            $saldo -=$saldoDebet;
+            $saldo +=$saldoKredit;
+
+        }
+
+        return round($saldo);
+    }
 
 
     public  function saldoDr($from,$to){

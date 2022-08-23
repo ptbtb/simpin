@@ -461,6 +461,7 @@ Route::group(['prefix' => 'buku-besar'], function () {
 Route::group(['prefix' => 'neraca'], function () {
     Route::group(['middleware' => ['auth']], function () {
         Route::get('', [App\Http\Controllers\NeracaController::class, 'index'])->name('neraca-list');
+        Route::get('data', [App\Http\Controllers\NeracaController::class, 'indexAjax'])->name('neraca-list-ajax');
         Route::post('', [App\Http\Controllers\NeracaController::class, 'index'])->name('neraca-list');
         Route::get('download/excel/{period}', [App\Http\Controllers\NeracaController::class, 'createExcel'])->name('neraca-download-excel');
         Route::get('download/pdf/{period}', [App\Http\Controllers\NeracaController::class, 'createPdf'])->name('neraca-download-pdf');
@@ -471,6 +472,7 @@ Route::group(['prefix' => 'neraca'], function () {
 Route::group(['prefix' => 'laba-rugi'], function () {
     Route::group(['middleware' => ['auth']], function () {
         Route::get('', [App\Http\Controllers\LabaRugiController::class, 'index'])->name('laba-rugi-list');
+        Route::get('data', [App\Http\Controllers\LabaRugiController::class, 'indexAjax'])->name('laba-rugi-list-ajax');
         Route::get('getshu', [App\Http\Controllers\LabaRugiController::class, 'getSHU'])->name('laba-rugi-shu');
         Route::post('', [App\Http\Controllers\LabaRugiController::class, 'index'])->name('laba-rugi-list');
         Route::get('download/excel', [App\Http\Controllers\LabaRugiController::class, 'createExcel'])->name('laba-rugi-download-excel');
