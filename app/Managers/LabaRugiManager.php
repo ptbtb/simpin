@@ -33,8 +33,8 @@ class LabaRugiManager
 //        dd($result);
 
         $data['list'] = $result;
-        $data['pendapatan'] = $result->where('code_type_id',3)->sum('saldo');
-        $data['beban'] = $result->where('code_type_id',4)->sum('saldo');
+        $data['pendapatan'] = $result->where('code_type_id',4)->sum('saldo');
+        $data['beban'] = $result->where('code_type_id',3)->sum('saldo');
 
 
 //        dd($data);
@@ -45,9 +45,16 @@ class LabaRugiManager
     }
 
     public static function getShuBerjalan($date){
-        $shu = static::getLabaRugi($date);
+        $year = Carbon::createFromFormat('Y-m-d',$date)->format('Y');
+        if ($year>'2020'){
+            $shu = static::getLabaRugi($date);
+            $shutahunberjalan= $shu['pendapatan']-$shu['beban'];
+        }else{
+            $shutahunberjalan = static::getShuBerjalanSaldoAwal();
+        }
+
 //        dd($shu);
-        return $shu['pendapatan']-$shu['beban'];
+        return $shutahunberjalan;
     }
 
     public static function getShuBerjalanSaldoAwal(){
@@ -55,25 +62,35 @@ class LabaRugiManager
             ->where('akun_debet','607.01.101')
             ->orWhere('akun_kredit', '607.01.101')
             ->first();
-        $saldo = $shu->kredit - $shu->debit;
+        $saldo = $shu->kredit - $shu->debet;
         return $saldo;
     }
 
     public static function getShuditahan($date){
 
             $year = Carbon::createFromFormat('Y-m-d',$date)->format('Y');
-            $yearawal='2021';
+            $yearawal='2020';
             $saldoawal=static::getShuBerjalanSaldoAwal();
             $saldoTahunJalan=0;
             $result = 0;
-            foreach(range($yearawal, date($year) - 1) as $y) {
-                $tgl = Carbon::createFromFormat('Y',$y)->endOfYear()->format('Y-m-d');
+            if ($year>$yearawal){
+                foreach(range($yearawal, date($year) - 1) as $y) {
+                    if ($y=='2020'){
+                        $saldoTahunJalan += $saldoawal;
+                    }else{
+                        $tgl = Carbon::createFromFormat('Y',$y)->endOfYear()->format('Y-m-d');
 //                dd($tgl);
-                $saldoTahunJalan += static::getShuBerjalan($tgl);
+                        $saldoTahunJalan += static::getShuBerjalan($tgl);
 //                dd($saldoTahunJalan);
+                    }
+
+                }
+            }else{
+                $saldoTahunJalan =0;
             }
 
-            return $saldoawal+$saldoTahunJalan;
+
+            return $saldoTahunJalan;
 
 
     }

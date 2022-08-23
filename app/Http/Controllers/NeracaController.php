@@ -60,7 +60,7 @@ class NeracaController extends Controller
                     ->orderby('CODE','asc')
                     ->get();
                 $result = $jurnalCode->map(function($code,$key)use($bulanLalu,$request){
-                    if($code->CODE=='606.01.000'){
+                    if($code->CODE=='606.01.000'  ){
                         return [
                             'CODE'=>$code->CODE,
                             'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
