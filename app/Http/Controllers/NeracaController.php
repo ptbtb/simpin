@@ -161,7 +161,8 @@ class NeracaController extends Controller
 
 
             $filename = 'export_neraca_excel_' .$request->period. '_printed_'. Carbon::now()->format('d M Y his') . '.xlsx';
-            return Excel::download(new NeracaExport($data), $filename);
+//            return Excel::download(new NeracaExport($data), $filename);
+            return (new FastExcel($result))->download($filename);
         } catch (\Throwable $e) {
             Log::error($e);
             return redirect()->back()->withError('Terjadi Kesalahan');
