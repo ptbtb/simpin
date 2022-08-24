@@ -67,7 +67,7 @@ class KodeTransaksi extends Model implements Auditable
 
         $saldo = $saldoDebet-$saldoKredit;
 
-        return round($saldo);
+        return $saldo;
     }
     public function neracaAmount($tgl)
     {
@@ -109,7 +109,7 @@ class KodeTransaksi extends Model implements Auditable
 
         }
 
-        return round($saldo);
+        return $saldo;
     }
 
 
