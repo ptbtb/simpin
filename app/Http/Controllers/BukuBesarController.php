@@ -79,7 +79,7 @@ class BukuBesarController extends Controller
                             'tipe'=>$code->codeType->name,
                             'CODE'=>$code->CODE,
                             'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                            'saldo'=>-(LabaRugiManager::getShuditahan($request->period)),
+                            'saldo'=>-(LabaRugiManager::getShuditahan($request->period) +$code->jurnalAmount($request->period) ),
 //
 
                         ];
@@ -133,7 +133,7 @@ class BukuBesarController extends Controller
                     'tipe'=>$code->codeType->name,
                     'CODE'=>$code->CODE,
                     'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                    'saldo'=>-(LabaRugiManager::getShuditahan($request->period)),
+                    'saldo'=>-(LabaRugiManager::getShuditahan($request->period) +$code->jurnalAmount($request->period) ),
 //
 
                 ];
@@ -182,7 +182,7 @@ class BukuBesarController extends Controller
                     'tipe'=>$code->codeType->name,
                     'CODE'=>$code->CODE,
                     'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                    'saldo'=>-(LabaRugiManager::getShuditahan($request->period)),
+                    'saldo'=>-(LabaRugiManager::getShuditahan($request->period) +$code->jurnalAmount($request->period) ),
 //
 
                 ];
@@ -286,10 +286,10 @@ class BukuBesarController extends Controller
                         return [
                             'CODE'=>$code->CODE,
                             'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                            'awal'=>-(LabaRugiManager::getShuditahan($request->period)),
+                            'awal'=>number_format(-(LabaRugiManager::getShuditahan($tglawal)+$code->jurnalAmount($tglawal)),0,',','.'),
                             'trxdr'=>0,
                             'trxcr'=>0,
-                            'akhir'=>-(LabaRugiManager::getShuditahan($request->period)),
+                            'akhir'=>number_format(-(LabaRugiManager::getShuditahan($request->to)+$code->jurnalAmount($request->to)),0,',','.'),
 //
 
                         ];
@@ -344,10 +344,10 @@ class BukuBesarController extends Controller
                 return [
                     'CODE'=>$code->CODE,
                     'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                    'awal'=>-(LabaRugiManager::getShuditahan($request->period)),
+                    'awal'=>-(LabaRugiManager::getShuditahan($tglawal)+$code->jurnalAmount($tglawal)),
                     'trxdr'=>0,
                     'trxcr'=>0,
-                    'akhir'=>-(LabaRugiManager::getShuditahan($request->period)),
+                    'akhir'=>-(LabaRugiManager::getShuditahan($request->to)+$code->jurnalAmount($request->to)),
 //
 
                 ];
