@@ -22,6 +22,7 @@ class LabaRugiManager
 
         $jurnalCode = KodeTransaksi::where('is_parent',0)
                         ->wherein('code_type_id',[3,4])
+                        ->wherenotin('code_type_id',['606.01.000', '607.01.101','606.01.101'])
                         ->get();
         $result = $jurnalCode->map(function($code,$key)use($date){
             return [
