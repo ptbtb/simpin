@@ -289,7 +289,7 @@ class BukuBesarController extends Controller
                             'awal'=>-(LabaRugiManager::getShuditahan($tglawal)+$code->jurnalAmount($tglawal)),
                             'trxdr'=>0,
                             'trxcr'=>0,
-                            'akhir'=>-(LabaRugiManager::getShuditahan($request->to)),
+                            'akhir'=>-(LabaRugiManager::getShuditahan($request->to)+$code->jurnalAmount($request->to)),
 //
 
                         ];
@@ -347,7 +347,7 @@ class BukuBesarController extends Controller
                     'awal'=>-(LabaRugiManager::getShuditahan($tglawal)+$code->jurnalAmount($tglawal)),
                     'trxdr'=>0,
                     'trxcr'=>0,
-                    'akhir'=>-(LabaRugiManager::getShuditahan($request->to)),
+                    'akhir'=>-(LabaRugiManager::getShuditahan($request->to)+$code->jurnalAmount($request->to)),
 //
 
                 ];
