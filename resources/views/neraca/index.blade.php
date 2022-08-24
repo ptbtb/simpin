@@ -157,6 +157,14 @@
                     {
                         mData: 'CODE', sType: "string",
                         className: "dt-body-center", "name": "CODE",
+                        mRender: function(data, type, full)
+                        {
+                            if(type === 'display'){
+                                data = '<a href="{{ route('jurnal-list') }}?code='+data+'&from={{Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->startOfMonth()->format('d-m-Y')}}&to={{Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')}}" target="_blank">' + data + '</a>';
+                            }
+                            return data;
+
+                        }
 
                     },
                     {
@@ -261,6 +269,14 @@
                     {
                         mData: 'CODE', sType: "string",
                         className: "dt-body-center", "name": "CODE",
+                        mRender: function(data, type, full)
+                        {
+                            if(type === 'display'){
+                                data = '<a href="{{ route('jurnal-list') }}?code='+data+'&from={{Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->startOfMonth()->format('d-m-Y')}}&to={{Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('d-m-Y')}}" target="_blank">' + data + '</a>';
+                            }
+                            return data;
+
+                        }
 
                     },
                     {
