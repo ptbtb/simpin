@@ -66,7 +66,7 @@ class NeracaController extends Controller
                             'CODE'=>$code->CODE,
                             'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
                             'saldo'=>LabaRugiManager::getShuditahan($request->period) + $code->neracaAmount($request->period),
-                            'saldoLalu'=>LabaRugiManager::getShuBerjalan($bulanLalu) + $code->neracaAmount($bulanLalu),
+                            'saldoLalu'=>LabaRugiManager::getShuditahan($bulanLalu) + $code->neracaAmount($bulanLalu),
 //                            'saldoLalu'=>$code->neracaAmount($request->period),
                             'code_type_id'=>$code->code_type_id,
                             'Kategori'=>$code->codeCategory->name,
