@@ -65,8 +65,9 @@ class NeracaController extends Controller
                         return [
                             'CODE'=>$code->CODE,
                             'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                            'saldo'=>LabaRugiManager::getShuBerjalan($request->period) +$code->neracaAmount($request->period),
+                            'saldo'=>LabaRugiManager::getShuditahan($request->period) + $code->neracaAmount($request->period),
                             'saldoLalu'=>LabaRugiManager::getShuBerjalan($bulanLalu) + $code->neracaAmount($bulanLalu),
+//                            'saldoLalu'=>$code->neracaAmount($request->period),
                             'code_type_id'=>$code->code_type_id,
                             'Kategori'=>$code->codeCategory->name,
 
@@ -125,8 +126,8 @@ class NeracaController extends Controller
                     return [
                         'CODE'=>$code->CODE,
                         'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                        'saldo'=>LabaRugiManager::getShuBerjalan($request->period) +$code->neracaAmount($request->period),
-                        'saldoLalu'=>LabaRugiManager::getShuBerjalan($bulanLalu) + $code->neracaAmount($bulanLalu),
+                        'saldo'=>LabaRugiManager::getShuditahan($request->period) + $code->neracaAmount($request->period),
+                        'saldoLalu'=>LabaRugiManager::getShuditahan($bulanLalu) + $code->neracaAmount($bulanLalu),
                         'code_type_id'=>$code->code_type_id,
                         'Kategori'=>$code->codeType->name,
 
@@ -186,8 +187,8 @@ class NeracaController extends Controller
                     return [
                         'CODE'=>$code->CODE,
                         'NAMA_TRANSAKSI'=>$code->NAMA_TRANSAKSI,
-                        'saldo'=>LabaRugiManager::getShuBerjalan($request->period) +$code->neracaAmount($request->period),
-                        'saldoLalu'=>LabaRugiManager::getShuBerjalan($bulanLalu) + $code->neracaAmount($bulanLalu),
+                        'saldo'=>LabaRugiManager::getShuditahan($request->period) + $code->neracaAmount($request->period),
+                        'saldoLalu'=>LabaRugiManager::getShuditahan($bulanLalu) + $code->neracaAmount($bulanLalu),
                         'code_type_id'=>$code->code_type_id,
                         'Kategori'=>$code->codeType->name,
 
