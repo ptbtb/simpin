@@ -21,7 +21,7 @@ class Pinjaman extends Model implements Auditable
     protected $primaryKey = "id";
     // protected $keyType = 'string';
     // public $incrementing = false;
-    protected $dates = ['tgl_entri', 'tgl_tempo'];
+    protected $dates = ['tgl_entri', 'tgl_tempo','tgl_pelunasan'];
     protected $appends = ['serial_number_view','serial_number_kredit_view'];
     protected $fillable = ['kode_anggota','kode_jenis_pinjam','besar_pinjam','sisa_pinjaman','biaya_asuransi','biaya_provisi','biaya_administrasi','id_status_pinjaman'];
 
