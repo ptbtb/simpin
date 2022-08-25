@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class PinjamanManager 
+class PinjamanManager
 {
     static function createPinjaman(Pengajuan $pengajuan)
     {
@@ -39,7 +39,7 @@ class PinjamanManager
 
             $provisi = $jenisPinjaman->provisi;
             $provisi = round($pengajuan->besar_pinjam * $provisi,2);
-        
+
             // biaya administrasi
             $biayaAdministrasi = 0;
             $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
@@ -47,10 +47,10 @@ class PinjamanManager
             {
                 $biayaAdministrasi = $simpinRule->amount;
             }
-            
+
             // get next serial number
             $nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
-           
+
             $pinjaman = new Pinjaman();
             $kodeAnggota = $pengajuan->kode_anggota;
             $kodePinjaman = str_replace('.','',$jenisPinjaman->kode_jenis_pinjam).'-'.$kodeAnggota.'-'.Carbon::now()->format('dmYHis');
@@ -80,7 +80,7 @@ class PinjamanManager
             // dd($pinjaman);
             $pinjaman->save();
             event(new PinjamanCreated($pinjaman));
-            
+
             // changed, jurnal setelah pengajuan pinjaman di terima
             // JurnalManager::createJurnalPinjaman($pinjaman);
         }
@@ -107,6 +107,7 @@ class PinjamanManager
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 $pinjaman->save();
             }
+            JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
         }
         catch (\Throwable $e)
         {
@@ -121,13 +122,13 @@ class PinjamanManager
      * @return \Illuminate\Http\Response
      */
     public static function getSerialNumber($date)
-    {        
+    {
         try
         {
             $nextSerialNumber = 1;
 
             // get date
-           
+
             $year = $date->year;
 
             // get pinjaman data on this year
@@ -149,7 +150,7 @@ class PinjamanManager
     }
 
     public static function getSerialNumberKredit($date)
-    {        
+    {
         try
         {
             $nextSerialNumber = 1;
