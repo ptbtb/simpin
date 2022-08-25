@@ -826,7 +826,7 @@ class PinjamanController extends Controller
                         }
 
                         if ($pengajuan->transfer_simpanan_pagu) {
-                            SimpananManager::createSimpananPagu($pengajuan);
+                            SimpananManager::createSimpananPaguTanpaJurnal($pengajuan);
                         }
 
                         event(new PengajuanPaid($pengajuan));

@@ -164,6 +164,28 @@ class SimpananManager
 
         JurnalManager::createJurnalSimpanan($simpanan);
     }
+
+    public static function createSimpananPaguTanpaJurnal(Pengajuan $pengajuan)
+    {
+        $jenisSimpanan = JenisSimpanan::khususPagu()->first();
+        $nextSerialNumber = self::getSerialNumber(Carbon::now()->format('d-m-Y'));
+
+        $simpanan = new Simpanan();
+        $simpanan->jenis_simpan = strtoupper($jenisSimpanan->nama_simpanan);
+        $simpanan->besar_simpanan = $pengajuan->transfer_simpanan_pagu;
+        $simpanan->kode_anggota = $pengajuan->kode_anggota;
+        $simpanan->u_entry = Auth::user()->name;
+        $simpanan->tgl_entri = $pengajuan->tgl_transaksi;
+        $simpanan->tgl_transaksi = $pengajuan->tgl_transaksi;
+        $simpanan->periode = $pengajuan->tgl_transaksi;
+        $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
+        $simpanan->keterangan = "Simpanan pagu dari pengajuan pinjaman ". $pengajuan->kode_pengajuan;
+        $simpanan->id_akun_debet = $pengajuan->id_akun_debet;
+        $simpanan->serial_number = $nextSerialNumber;
+        $simpanan->save();
+
+//        JurnalManager::createJurnalSimpanan($simpanan);
+    }
 }
 
 ?>

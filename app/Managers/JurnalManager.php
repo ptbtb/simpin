@@ -128,6 +128,7 @@ class JurnalManager
             // save as polymorphic
             $pinjaman->jurnals()->save($jurnal);
 
+            $simpanan_pagu = 0;
             $jasa_topup = 0;
             $sisa_pinjaman = 0;
             // jurnal untuk topup
@@ -179,6 +180,27 @@ class JurnalManager
                 });
 
             }
+            //cek simpanan pagu
+            if ($pinjaman->pengajuan->transfer_simpanan_pagu){
+                $simpanan_pagu=$pinjaman->pengajuan->transfer_simpanan_pagu;
+                $jurnal = new Jurnal();
+                $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
+                $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd') . (Jurnal::count() + 1);
+                $jurnal->tgl_transaksi = Carbon::parse($pinjaman->tgl_transaksi);
+                $jurnal->akun_kredit = '409.03.000';
+                $jurnal->kredit = $simpanan_pagu;
+                $jurnal->akun_debet = 0;
+                $jurnal->debet = 0;
+                $jurnal->keterangan = 'Pinjaman ' . strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota ' . ucwords(strtolower($pinjaman->anggota->nama_anggota));
+                $jurnal->created_by = Auth::user()->id;
+                $jurnal->updated_by = Auth::user()->id;
+
+                // save as polymorphic
+                $jurnal->trans_id = $pinjaman->kode_pinjam;
+                $jurnal->anggota = $pinjaman->kode_anggota;
+                $pinjaman->jurnals()->save($jurnal);
+            }
+
             // jurnal untuk total credit bank
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKK;
@@ -191,7 +213,7 @@ class JurnalManager
             } else {
                 $jurnal->akun_kredit = '102.18.000';
             }
-            $jurnal->kredit = $pinjaman->besar_pinjam - $pinjaman->biaya_administrasi - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi - $jasa_topup - $sisa_pinjaman;
+            $jurnal->kredit = $pinjaman->besar_pinjam - $pinjaman->biaya_administrasi - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi - $jasa_topup - $sisa_pinjaman - $simpanan_pagu;
             $jurnal->keterangan = 'Pinjaman ' . strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota ' . ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
