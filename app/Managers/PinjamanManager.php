@@ -107,7 +107,7 @@ class PinjamanManager
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_LUNAS;
                 $pinjaman->save();
             }
-            JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
+//            JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
         }
         catch (\Throwable $e)
         {
