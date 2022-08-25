@@ -816,8 +816,11 @@ class PinjamanController extends Controller
                         JurnalManager::createJurnalPinjaman($pengajuan->pinjaman);
                         AngsuranManager::syncAngsuran($pengajuan->pinjaman);
                         if ($pengajuan->pengajuanTopup->count()) {
-                            $pengajuan->pengajuanTopup->each(function ($topup) {
+                            $pengajuan->pengajuanTopup->each(function ($topup)use($pengajuan) {
                                 $pinjamandata = $topup->pinjaman;
+                                $pinjamandata->id_akun_debet = $pengajuan->id_akun_debet;
+                                $pinjamandata->save();
+
                                 PinjamanManager::pembayaranPinjamanDipercepat($pinjamandata);
                             });
                         }

@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class SimpananManager 
+class SimpananManager
 {
     static function penarikanApproved(Penarikan $penarikan)
     {
@@ -21,7 +21,7 @@ class SimpananManager
                                     ->whereYear('tgl_entri', $thisYear)
                                     ->where('kode_jenis_simpan',$penarikan->code_trans)
                                     ->get();
-            
+
             $totalTarik = $penarikan->besar_ambil;
             foreach ($listSimpanan as $simpanan)
             {
@@ -65,7 +65,7 @@ class SimpananManager
      * @return \Illuminate\Http\Response
      */
     public static function getSerialNumber($date)
-    {        
+    {
         try
         {
             $nextSerialNumber = 1;
@@ -97,7 +97,7 @@ class SimpananManager
         $jenisSimpanan = JenisSimpanan::all();
         $anggotas = Anggota::doesntHave('simpanSaldoAwal')
                             ->get();
-                            
+
         foreach ($anggotas as $anggota)
         {
             $jenisSimpanan->each(function ($jenis) use ($anggota)
@@ -121,9 +121,9 @@ class SimpananManager
     public static function createSaldoAwal(Anggota $anggota)
     {
         $jenisSimpanan = JenisSimpanan::all();
-        
-                            
-        
+
+
+
             $jenisSimpanan->each(function ($jenis) use ($anggota)
             {
                 $simpanan = new Simpanan();
@@ -140,7 +140,7 @@ class SimpananManager
                 $simpanan->mutasi = 1;
                 $simpanan->save();
             });
-        
+
     }
 
     public static function createSimpananPagu(Pengajuan $pengajuan)
@@ -158,7 +158,7 @@ class SimpananManager
         $simpanan->periode = $pengajuan->tgl_transaksi;
         $simpanan->kode_jenis_simpan = $jenisSimpanan->kode_jenis_simpan;
         $simpanan->keterangan = "Simpanan pagu dari pengajuan pinjaman ". $pengajuan->kode_pengajuan;
-        $simpanan->id_akun_debet = null;
+        $simpanan->id_akun_debet = $pengajuan->id_akun_debet;
         $simpanan->serial_number = $nextSerialNumber;
         $simpanan->save();
 
