@@ -144,9 +144,7 @@ class JurnalController extends Controller
                             $query->whereYear('tgl_pelunasan', '=', $year)->whereMonth('tgl_pelunasan', '=', $month)->where('serial_number', $serialNumber);
                         });
                     } else {
-                        $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class],function ($query) use ($year, $month, $serialNumber,$startUntilPeriod,$endUntilPeriod) {
-                            $query->whereBetween('tgl_pelunasan', [$startUntilPeriod, $endUntilPeriod]);
-                        });
+                        $jurnal = $jurnal->whereHasMorph('jurnalable', [Penarikan::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
                     }
 
                 } else if ($tipeJurnal == 'SIP') {
@@ -281,9 +279,7 @@ class JurnalController extends Controller
                             $query->whereYear('tgl_pelunasan', '=', $year)->whereMonth('tgl_pelunasan', '=', $month)->where('serial_number', $serialNumber);
                         });
                     } else {
-                        $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class],function ($query) use ($year, $month, $serialNumber,$startUntilPeriod,$endUntilPeriod) {
-                            $query->whereBetween('tgl_pelunasan', [$startUntilPeriod, $endUntilPeriod]);
-                        });
+                        $jurnal = $jurnal->whereHasMorph('jurnalable', [Penarikan::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
                     }
                 } else if ($tipeJurnal == 'SIP') {
                     $jurnalableType = 'App\Models\Simpanan';
