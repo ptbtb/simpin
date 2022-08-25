@@ -1123,6 +1123,7 @@ class SimpananController extends Controller
         $endUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
         $trans = Simpanan::where('mutasi', 0)
             ->wherenotin('u_entry', ['Admin BTB', 'System'])
+            ->wherenotin('kode_jenis_simpan', ['409.03.000'])
             ->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod])
             ->whereDoesntHave('jurnals')->limit(500)
             // ->toSql();
