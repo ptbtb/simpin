@@ -70,7 +70,7 @@ class JurnalController extends Controller
                     if ($year !== '' && $month !== '' && $serialNumber !== '') {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Angsuran::class], function ($query) use ($year, $month, $serialNumber, $startUntilPeriod, $endUntilPeriod) {
 
-                            $query->whereYear('tgl_entri', '=', $year)->whereMonth('tgl_entri', '=', $month)->where('serial_number', $serialNumber);
+                            $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
 
 
                         });
@@ -119,7 +119,7 @@ class JurnalController extends Controller
                     $jurnalableType = 'App\Models\Penarikan';
                     if ($year !== '' && $month !== '' && $serialNumber !== '') {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Penarikan::class], function ($query) use ($year, $month, $serialNumber) {
-                            $query->whereYear('tgl_ambil', '=', $year)->whereMonth('tgl_ambil', '=', $month)->where('serial_number', $serialNumber);
+                            $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
                         });
                     } else {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Penarikan::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
@@ -130,7 +130,7 @@ class JurnalController extends Controller
                     $jurnalableType = 'App\Models\Pinjaman';
                     if ($year !== '' && $month !== '' && $serialNumber !== '') {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function ($query) use ($year, $month, $serialNumber) {
-                            $query->whereYear('tgl_entri', '=', $year)->whereMonth('tgl_entri', '=', $month)->where('serial_number_kredit', $serialNumber);
+                            $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number_kredit', $serialNumber);
                         });
                     } else {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
@@ -141,7 +141,7 @@ class JurnalController extends Controller
                     $jurnalableType = 'App\Models\Pinjaman';
                     if ($year !== '' && $month !== '' && $serialNumber !== '') {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function ($query) use ($year, $month, $serialNumber) {
-                            $query->whereYear('tgl_entri', '=', $year)->whereMonth('tgl_entri', '=', $month)->where('serial_number', $serialNumber);
+                            $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
                         });
                     } else {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
@@ -151,7 +151,7 @@ class JurnalController extends Controller
                     $jurnalableType = 'App\Models\Simpanan';
                     if ($year !== '' && $month !== '' && $serialNumber !== '') {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Simpanan::class], function ($query) use ($year, $month, $serialNumber) {
-                            $query->whereYear('tgl_entri', '=', $year)->whereMonth('tgl_entri', '=', $month)->where('serial_number', $serialNumber);
+                            $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
                         });
                     } else {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Simpanan::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);

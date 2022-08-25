@@ -58,9 +58,11 @@ class AngsuranManager
             // get date
             $date = Carbon::createFromFormat('d-m-Y', $date);
             $year = $date->year;
+            $month = $date->month;
 
             // get angsuran data on this year
-            $lastAngsuran = Angsuran::whereYear('tgl_entri', '=', $year)
+            $lastAngsuran = Angsuran::whereYear('tgl_transaksi', '=', $year)
+                                        ->wheremonth('tgl_transaksi', '=', $month)
                                         ->orderBy('serial_number', 'desc')
                                         ->first();
             if($lastAngsuran)

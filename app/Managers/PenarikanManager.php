@@ -15,32 +15,30 @@ class PenarikanManager
     /**
      * get serial number on penarikan table.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public static function getSerialNumber($date)
-    {        
-        try
-        {
+    {
+        try {
             $nextSerialNumber = 1;
 
             // get date
             $date = Carbon::createFromFormat('d-m-Y', $date);
             $year = $date->year;
+            $month = $date->month;
 
             // get penarikan data on this year
-            $lastPenarikan = Penarikan::whereYear('tgl_ambil', '=', $year)
-                                                ->orderBy('serial_number', 'desc')
-                                                ->first();
-            if($lastPenarikan)
-            {
+            $lastPenarikan = Penarikan::whereYear('tgl_transaksi', '=', $year)
+                ->wheremonth('tgl_transaksi', '=', $month)
+                ->orderBy('serial_number', 'desc')
+                ->first();
+            if ($lastPenarikan) {
                 $nextSerialNumber = $lastPenarikan->serial_number + 1;
             }
 
             return $nextSerialNumber;
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             \Log::info($e->getMessage());
             return false;
         }

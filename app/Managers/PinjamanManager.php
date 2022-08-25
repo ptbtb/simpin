@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Managers;
 
 use App\Events\Pinjaman\PinjamanCreated;
@@ -15,36 +16,32 @@ class PinjamanManager
 {
     static function createPinjaman(Pengajuan $pengajuan)
     {
-        try
-        {
+        try {
             $jenisPinjaman = $pengajuan->jenisPinjaman;
             $lamaAngsuran = $pengajuan->tenor;
-            if(is_null($lamaAngsuran))
-            {
+            if (is_null($lamaAngsuran)) {
                 $lamaAngsuran = $jenisPinjaman->lama_angsuran;
             }
-            $angsuranPerbulan = round($pengajuan->besar_pinjam/$lamaAngsuran,2);
+            $angsuranPerbulan = round($pengajuan->besar_pinjam / $lamaAngsuran, 2);
             // $bungaPerbulan = $angsuranPerbulan*$jenisPinjaman->bunga/100;
-            $jasaPerbulan = $pengajuan->besar_pinjam*$jenisPinjaman->jasa;
-            if ($pengajuan->besar_pinjam > 100000000 && $lamaAngsuran > 3 && $jenisPinjaman->isJangkaPendek())
-            {
-                $jasaPerbulan = $pengajuan->besar_pinjam*0.03;
+            $jasaPerbulan = $pengajuan->besar_pinjam * $jenisPinjaman->jasa;
+            if ($pengajuan->besar_pinjam > 100000000 && $lamaAngsuran > 3 && $jenisPinjaman->isJangkaPendek()) {
+                $jasaPerbulan = $pengajuan->besar_pinjam * 0.03;
             }
-            $jasaPerbulan = round($jasaPerbulan,2);
+            $jasaPerbulan = round($jasaPerbulan, 2);
 
             $asuransi = $jenisPinjaman->asuransi;
             $asuransi = round($pengajuan->besar_pinjam * $asuransi, 2);
 
-            $totalAngsuranBulan = $angsuranPerbulan+$jasaPerbulan;
+            $totalAngsuranBulan = $angsuranPerbulan + $jasaPerbulan;
 
             $provisi = $jenisPinjaman->provisi;
-            $provisi = round($pengajuan->besar_pinjam * $provisi,2);
+            $provisi = round($pengajuan->besar_pinjam * $provisi, 2);
 
             // biaya administrasi
             $biayaAdministrasi = 0;
             $simpinRule = SimpinRule::find(SIMPIN_RULE_ADMINISTRASI);
-            if ($pengajuan->besar_pinjam >= $simpinRule->value)
-            {
+            if ($pengajuan->besar_pinjam >= $simpinRule->value) {
                 $biayaAdministrasi = $simpinRule->amount;
             }
 
@@ -53,7 +50,7 @@ class PinjamanManager
 
             $pinjaman = new Pinjaman();
             $kodeAnggota = $pengajuan->kode_anggota;
-            $kodePinjaman = str_replace('.','',$jenisPinjaman->kode_jenis_pinjam).'-'.$kodeAnggota.'-'.Carbon::now()->format('dmYHis');
+            $kodePinjaman = str_replace('.', '', $jenisPinjaman->kode_jenis_pinjam) . '-' . $kodeAnggota . '-' . Carbon::now()->format('dmYHis');
             $pinjaman->kode_pinjam = $kodePinjaman;
             $pinjaman->kode_pengajuan_pinjaman = $pengajuan->kode_pengajuan;
             $pinjaman->kode_anggota = $pengajuan->kode_anggota;
@@ -83,17 +80,14 @@ class PinjamanManager
 
             // changed, jurnal setelah pengajuan pinjaman di terima
             // JurnalManager::createJurnalPinjaman($pinjaman);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             \Log::error($e);
         }
     }
 
     static function pembayaranPinjamanDipercepat(Pinjaman $pinjaman)
     {
-        try
-        {
+        try {
             $listAngsuran = $pinjaman->listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->sortBy('angsuran_ke')->values();
             foreach ($listAngsuran as $angsuran) {
                 $angsuran->besar_pembayaran = $angsuran->totalAngsuran;
@@ -108,9 +102,7 @@ class PinjamanManager
                 $pinjaman->save();
             }
 //            JurnalManager::createJurnalPelunasanDipercepat($pinjaman);
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             Log::error($e);
         }
     }
@@ -118,32 +110,30 @@ class PinjamanManager
     /**
      * get serial number on pinjaman table.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public static function getSerialNumber($date)
     {
-        try
-        {
+        try {
             $nextSerialNumber = 1;
 
             // get date
-
+            $date = Carbon::createFromFormat('d-m-Y', $date);
             $year = $date->year;
+            $month = $date->month;
 
             // get pinjaman data on this year
-            $lastPinjaman = Pinjaman::whereYear('tgl_entri', '=', $year)
-                                        ->orderBy('serial_number', 'desc')
-                                        ->first();
-            if($lastPinjaman)
-            {
+            $lastPinjaman = Pinjaman::whereYear('tgl_transaksi', '=', $year)
+                ->wheremonth('tgl_transaksi', '=', $month)
+                ->orderBy('serial_number', 'desc')
+                ->first();
+            if ($lastPinjaman) {
                 $nextSerialNumber = $lastPinjaman->serial_number + 1;
             }
 
             return $nextSerialNumber;
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             \Log::info($e->getMessage());
             return false;
         }
@@ -151,26 +141,25 @@ class PinjamanManager
 
     public static function getSerialNumberKredit($date)
     {
-        try
-        {
+        try {
             $nextSerialNumber = 1;
 
             // get date
+            $date = Carbon::createFromFormat('d-m-Y', $date);
             $year = $date->year;
+            $month = $date->month;
 
             // get pinjaman data on this year
             $lastPinjaman = Pinjaman::whereYear('tgl_transaksi', '=', $year)
-                                        ->orderBy('serial_number_kredit', 'desc')
-                                        ->first();
-            if($lastPinjaman)
-            {
+                ->wheremonth('tgl_transaksi', '=', $month)
+                ->orderBy('serial_number_kredit', 'desc')
+                ->first();
+            if ($lastPinjaman) {
                 $nextSerialNumber = $lastPinjaman->serial_number_kredit + 1;
             }
 
             return $nextSerialNumber;
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             \Log::info($e->getMessage());
             return false;
         }

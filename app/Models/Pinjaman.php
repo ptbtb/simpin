@@ -173,7 +173,7 @@ class Pinjaman extends Model implements Auditable
     {
         if ($this->tgl_entri && $this->serial_number)
         {
-            return 'PCP' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+            return 'PCP' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
         }
         return '-';
     }
@@ -182,7 +182,7 @@ class Pinjaman extends Model implements Auditable
     {
         if ($this->tgl_entri && $this->serial_number_kredit)
         {
-            return 'PIJ' . $this->tgl_entri->format('Y') . $this->tgl_entri->format('m') . str_pad($this->serial_number_kredit, 4, "0", STR_PAD_LEFT);
+            return 'PIJ' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number_kredit, 4, "0", STR_PAD_LEFT);
         }
         return '-';
     }
