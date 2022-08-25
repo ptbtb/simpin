@@ -779,7 +779,7 @@ class JurnalManager
         $jurnal->keterangan = 'Pelunasan dipercepat Pinjaman anggota ' . ucwords(strtolower($pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->tgl_transaksi = $pinjaman->tgl_transaksi;
+        $jurnal->tgl_transaksi = $pinjaman->tgl_pelunasan;
         $jurnal->trans_id = $pinjaman->kode_pinjam;
         $jurnal->anggota = $pinjaman->kode_anggota;
 
@@ -789,7 +789,7 @@ class JurnalManager
         // debit
         $jurnal = new Jurnal();
         $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-        $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd') . (Jurnal::count() + 1);
+        $jurnal->nomer = Carbon::parse($pinjaman->tgl_pelunasan)->format('Ymd') . (Jurnal::count() + 1);
         $jurnal->akun_kredit = 0;
         $jurnal->kredit = 0;
         if ($pinjaman->akunDebet) {
@@ -801,7 +801,7 @@ class JurnalManager
         $jurnal->keterangan = 'Pelunasan dipercepat pinjaman   anggota ' . ucwords(strtolower($pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->tgl_transaksi = $pinjaman->tgl_transaksi;
+        $jurnal->tgl_transaksi = $pinjaman->tgl_pelunasan;
         $jurnal->trans_id = $pinjaman->kode_pinjam;
         $jurnal->anggota = $pinjaman->kode_anggota;
 
@@ -825,7 +825,7 @@ class JurnalManager
         $jurnal->keterangan = 'Pelunasan dipercepat pinjaman   anggota ' . ucwords(strtolower($pinjaman->anggota->nama_anggota));
         $jurnal->created_by = Auth::user()->id;
         $jurnal->updated_by = Auth::user()->id;
-        $jurnal->tgl_transaksi = $pinjaman->tgl_transaksi;
+        $jurnal->tgl_transaksi = $pinjaman->tgl_pelunasan;
         $jurnal->trans_id = $pinjaman->kode_pinjam;
         $jurnal->anggota = $pinjaman->kode_anggota;
 

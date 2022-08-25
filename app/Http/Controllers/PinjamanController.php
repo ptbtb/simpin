@@ -1571,7 +1571,7 @@ class PinjamanController extends Controller
                     // create JKM angsuran
                     // JurnalManager::createJurnalAngsuran($angsuran);
                 }
-                $pinjaman->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
+                $pinjaman->tgl_pelunasan = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
 
                 if ($request->jenis_pembayaran[$i]) {
                     $codeCoa = Code::where('CODE', $tabungan->kode_trans)->first();
@@ -1585,14 +1585,14 @@ class PinjamanController extends Controller
                 if ($request->jenis_pembayaran[$i]) {
                     $penarikan = new Penarikan();
                     // get next serial number
-                    $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
+                    $nextSerialNumber = PenarikanManager::getSerialNumber(Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi));
                     $kode = $request->jenis_pembayaran[$i];
                     $tabungan = Tabungan::where('kode_trans', $kode)->first();
                     $besarPenarikan = $request->besar_pembayaran[$i];
                     $anggota = $pinjaman->anggota;
                     $user = Auth::user();
 
-                    DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber, $pinjaman) {
+                    DB::transaction(function () use ($besarPenarikan, $anggota, $tabungan, &$penarikan, $user, $nextSerialNumber, $pinjaman,$request) {
                         $penarikan->kode_anggota = $anggota->kode_anggota;
                         $penarikan->kode_tabungan = $tabungan->kode_tabungan;
                         $penarikan->id_tabungan = $tabungan->id;
@@ -1604,7 +1604,7 @@ class PinjamanController extends Controller
                         $penarikan->status_pengambilan = STATUS_PENGAMBILAN_DITERIMA;
                         $penarikan->serial_number = $nextSerialNumber;
                         $penarikan->tgl_acc = Carbon::now();
-                        $penarikan->tgl_transaksi = Carbon::now()->format('Y-m-d');
+                        $penarikan->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
                         $penarikan->approved_by = $user->id;
                         $penarikan->is_pelunasan_dipercepat = 1;
                         $penarikan->paid_by_cashier = $user->id;

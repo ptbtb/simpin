@@ -141,10 +141,10 @@ class JurnalController extends Controller
                     $jurnalableType = 'App\Models\Pinjaman';
                     if ($year !== '' && $month !== '' && $serialNumber !== '') {
                         $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function ($query) use ($year, $month, $serialNumber) {
-                            $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
+                            $query->whereYear('tgl_pelunasan', '=', $year)->whereMonth('tgl_pelunasan', '=', $month)->where('serial_number', $serialNumber);
                         });
                     } else {
-                        $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                        $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class])->whereBetween('tgl_pelunasan', [$startUntilPeriod, $endUntilPeriod]);
                     }
 
                 } else if ($tipeJurnal == 'SIP') {
