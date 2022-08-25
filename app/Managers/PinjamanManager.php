@@ -164,7 +164,7 @@ class PinjamanManager
                                         ->first();
             if($lastPinjaman)
             {
-                $nextSerialNumber = $lastPinjaman->serial_number + 1;
+                $nextSerialNumber = $lastPinjaman->serial_number_kredit + 1;
             }
 
             return $nextSerialNumber;
