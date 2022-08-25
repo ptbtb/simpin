@@ -171,16 +171,16 @@ class Pinjaman extends Model implements Auditable
 
     public function getSerialNumberViewAttribute()
     {
-        if ($this->tgl_entri && $this->serial_number)
+        if ($this->tgl_pelunasan && $this->serial_number)
         {
-            return 'PCP' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+            return 'PCP' . Carbon::createFromFormat('Y-m-d',$this->tgl_pelunasan)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_pelunasan)->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
         }
         return '-';
     }
 
     public function getSerialNumberKreditViewAttribute()
     {
-        if ($this->tgl_entri && $this->serial_number_kredit)
+        if ($this->tgl_transaksi && $this->serial_number_kredit)
         {
             return 'PIJ' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number_kredit, 4, "0", STR_PAD_LEFT);
         }

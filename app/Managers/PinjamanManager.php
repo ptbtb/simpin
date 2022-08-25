@@ -124,8 +124,8 @@ class PinjamanManager
             $month = $date->month;
 
             // get pinjaman data on this year
-            $lastPinjaman = Pinjaman::whereYear('tgl_transaksi', '=', $year)
-                ->wheremonth('tgl_transaksi', '=', $month)
+            $lastPinjaman = Pinjaman::whereYear('tgl_pelunasan', '=', $year)
+                ->wheremonth('tgl_pelunasan', '=', $month)
                 ->orderBy('serial_number', 'desc')
                 ->first();
             if ($lastPinjaman) {
