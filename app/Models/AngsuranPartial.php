@@ -48,7 +48,7 @@ class AngsuranPartial extends Model implements Auditable
     public function getSerialNumberViewAttribute()
     {
         if ($this->tgl_transaksi){
-            return 'ANG' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+            return 'ANG' . $this->tgl_transaksi->format('Y') . $this->tgl_transaksi->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
         }
         return false;
 
