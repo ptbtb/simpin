@@ -19,7 +19,7 @@ class Angsuran extends Model implements Auditable
 
     protected $table = "t_angsur";
     protected $primaryKey = "kode_angsur";
-    protected $dates = ['tgl_entri','paid_at','jatuh_tempo','tgl_transaksi'];
+    protected $dates = ['tgl_entri','paid_at','jatuh_tempo'];
     protected $appends = ['serial_number_view', 'created_at_view', 'created_by_view', 'updated_at_view', 'updated_by_view'];
 
     public function statusAngsuran()
@@ -86,7 +86,11 @@ class Angsuran extends Model implements Auditable
 
     public function getSerialNumberViewAttribute()
     {
-        return 'ANG' . $this->tgl_transaksi->format('Y') . $this->tgl_transaksi->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        if ($this->tgl_transaksi){
+            return 'ANG' .  Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        }
+        return '-';
+
     }
 
     public function getCreatedAtViewAttribute()

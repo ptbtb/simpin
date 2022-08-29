@@ -17,7 +17,7 @@ class AngsuranPartial extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
      protected $table = "t_angsur_partial";
-    protected $dates = ['deleted_at','updated_at','created_at','tgl_transaksi'];
+    protected $dates = ['deleted_at','updated_at','created_at'];
     protected $appends = ['serial_number_view', 'created_at_view', 'created_by_view', 'updated_at_view', 'updated_by_view'];
 
     public function angsuran()
@@ -48,9 +48,9 @@ class AngsuranPartial extends Model implements Auditable
     public function getSerialNumberViewAttribute()
     {
         if ($this->tgl_transaksi){
-            return 'ANG' . $this->tgl_transaksi->format('Y') . $this->tgl_transaksi->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+            return 'ANG' .  Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m'). str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
         }
-        return false;
+        return '-';
 
     }
     public function getCreatedAtViewAttribute()

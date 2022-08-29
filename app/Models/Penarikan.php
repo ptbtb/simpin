@@ -18,7 +18,7 @@ class Penarikan extends Model implements Auditable
 
     protected $table = "t_pengambilan";
     protected $primaryKey = "kode_ambil";
-    protected $dates = ['tgl_ambil', 'tgl_acc','tgl_transaksi','deleted_at'];
+    protected $dates = ['tgl_ambil', 'tgl_acc','deleted_at'];
     protected $fillable = ['kode_anggota', 'kode_tabungan','besar_ambil','tgl_ambil','keterangan','code_trans','u_entry'];
     protected $appends = ['serial_number_view', 'created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view','tgl_transaksi_view'];
 
@@ -137,7 +137,10 @@ class Penarikan extends Model implements Auditable
 
     public function getSerialNumberViewAttribute()
     {
-        return 'TAR' . $this->tgl_transaksi->format('Y') . $this->tgl_transaksi->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        if ($this->tgl_transaksi){
+        return 'TAR' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        }
+        return '-';
     }
 
     /**
