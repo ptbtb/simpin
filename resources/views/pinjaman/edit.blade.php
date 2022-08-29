@@ -48,7 +48,7 @@
                         {!! Form::text('besar_pinjam',number_format($pinjaman->besar_pinjam,0,",","."), ['id' => 'besar_pinjam', 'class' => 'form-control toRupiah']) !!}
                     </div>
                 </div>
-            
+
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="sisa_pinjaman">Sisa Pinjaman</label>
@@ -64,7 +64,7 @@
                         {!! Form::text('biaya_asuransi',  number_format($pinjaman->biaya_asuransi,0,",","."), ['id' => 'biaya_asuransi', 'class' => 'form-control toRupiah']) !!}
                     </div>
                 </div>
-            
+
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="biaya_provisi">Biaya Provisi</label>
@@ -119,11 +119,11 @@
                                 <td><input type="date" name="edit_jatuh_tempo[]" value="{{ ($angsuran->jatuh_tempo)?$angsuran->jatuh_tempo->toDateString():'' }}"></td>
                                 <td><input type="text"  class="toRupiah"name="edit_besar_pembayaran[]" value="{{ number_format($angsuran->besar_pembayaran,0,',','.') }}"></td>
                                 <td>
-                                    <input type="date" name="edit_tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi->toDateString():'' }}">
+                                    <input type="date" name="edit_tanggal_pembayaran[]" value="{{($angsuran->tgl_transaksi)?  $angsuran->tgl_transaksi:'' }}">
                                 </td>
                                 <td ><input  type="text"  class=""name="edit_id_akun_kredit[]" value="{{ ($angsuran->akunKredit)?$angsuran->akunKredit->CODE:'' }}"></td>
                                 <td ><input type="text"  class=""name="edit_serial_number[]" value="{{ $angsuran->serial_number }}" readonly></td>
-                                
+
                                 <td style="width" > {!! Form::select('edit_id_status_angsuran[]', array(''=>'pilih status','1'=>'Belum Lunas','2'=>'Lunas'),$angsuran->id_status_angsuran, ['id' => 'id_status_angsuran', 'class' => 'form-control toRupiah']) !!}
                                 </td>
                                 <td>
@@ -137,12 +137,12 @@
             <div class="form-group">
                 <button class="btn btn-sm btn-success" id="btnSubmit"  name="sub" value="submit"><i class="fas fa-save"></i> Simpan</button>
                 <button class="btn btn-sm btn-primary" id="btnPost" name="sub" value="posting"><i class="fas fa-save"></i> Post Jurnal</button>
-                
+
             </div>
             <div class="row">
                 <label class="ml-1 form-group" style="color: red;">Keterangan Posting Jurnal: <br>* Agar Jurnal Bisa Di posting harap diisi nilai COA Kredit <br>* Untuk Delete Jurnal Cukup Hapus nilai COA Kredit</label>
             </div>
-            
+
         </form>
     </div>
 </div>
