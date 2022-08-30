@@ -1,4 +1,5 @@
 <style>
+use Carbon\Carbon;
     .table{
         border-collapse: collapse;
         width: 100%;
@@ -130,7 +131,7 @@
                     <td colspan="3" class="border-left-0 bordery-0"></td>
                 @endif
                 @if (isset($withdrawalList[$i]))
-                    <td colspan="2" class="border-right-0 bordery-0">{{ $withdrawalList[$i]->tgl_transaksi->format('d-m-Y') }}</td>
+                    <td colspan="2" class="border-right-0 bordery-0">{{ Carbon\Carbon::createFromFormat('Y-m-d',$withdrawalList[$i]->tgl_transaksi)->format('d-m-Y') }}</td>
                     <td colspan="2" class="border-left-0 bordery-0" style="text-align: right">{{ number_format($withdrawalList[$i]->besar_ambil,0) }}</td>
                 @else
                     <td colspan="2" class="border-right-0 bordery-0"></td>
