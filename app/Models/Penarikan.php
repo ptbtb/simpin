@@ -202,7 +202,7 @@ class Penarikan extends Model implements Auditable
     {
         if ($this->tgl_transaksi)
         {
-            return $this->tgl_transaksi->format('d M Y');
+            return Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('d M Y');
         }
         return $this->tgl_mulai;
     }
