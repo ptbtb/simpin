@@ -349,7 +349,11 @@ class PinjamanController extends Controller
             ->where('kode_trans', '!=', '411.01.000')
             ->get();
 
-        $listAngsuran = $pinjaman->listAngsuran->sortBy('angsuran_ke')->values();
+        $listAngsuran = $pinjaman->listAngsuran
+                        ->whereNotNull('tgl_transaki')
+                        ->where('tgl_transaki','>','2021-07-31')
+                        ->sortBy('angsuran_ke')
+                        ->values();
         // $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
         $bankAccounts = Code::where('CODE', 'like', '102%')->where('is_parent', 0)->get();
 
