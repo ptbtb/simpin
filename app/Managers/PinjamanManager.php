@@ -204,12 +204,16 @@ class PinjamanManager
             $pinjaman->biaya_asuransi = $asuransi;
             $pinjaman->biaya_provisi = $provisi;
             $pinjaman->biaya_administrasi = $biayaAdministrasi; */
-            $pinjaman->u_entry = Auth::user()->name;
+            $pinjaman->u_entry = 'System';
             $pinjaman->tgl_entri = Carbon::now();
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($pengajuan->sisa_angsuran);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
             // dd($pinjaman);
-            $pinjaman->save();
+            if($pinjaman->save()){
+                $pengajuan->sync=1;
+                $pengajuan->update();
+            }
+
 //            event(new PinjamanCreated($pinjaman));
 
             // changed, jurnal setelah pengajuan pinjaman di terima
