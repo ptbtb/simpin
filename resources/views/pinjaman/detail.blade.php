@@ -173,7 +173,7 @@
                                             @endif
                                         </td>
                                         <td>Rp. {{ number_format($angsuran->total_pembayaran, 0, ',', '.') }}</td>
-                                        <td>{{ $angsuran->tgl_transaksi ? $angsuran->tgl_transaksi->format('d M Y') : '-' }}
+                                        <td>{{ $angsuran->tgl_transaksi ? \Carbon\Carbon::createFromFormat('Y-m-d', $angsuran->tgl_transaksi)->format('d M Y'): '-' }}
                                         </td>
                                         <td>{{ $angsuran->statusAngsuran->name }}</td>
                                         <td>
