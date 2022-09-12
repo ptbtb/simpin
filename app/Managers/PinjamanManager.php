@@ -66,6 +66,7 @@ class PinjamanManager
             $pinjaman->biaya_provisi = $pengajuan->biaya_provisi;
             $pinjaman->biaya_administrasi = $pengajuan->biaya_administrasi;
             $pinjaman->biaya_jasa_topup = $pengajuan->biaya_jasa_topup;
+            $pinjaman->mutasi_juli = 0;
             /* $pinjaman->biaya_jasa = $jasaPerbulan;
             $pinjaman->biaya_asuransi = $asuransi;
             $pinjaman->biaya_provisi = $provisi;

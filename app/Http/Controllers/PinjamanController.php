@@ -120,7 +120,7 @@ class PinjamanController extends Controller
         }
         $data['unitKerja'] = Company::get()->pluck('nama', 'id');
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
-        $listPinjaman = $listPinjaman->get();
+        $listPinjaman = $listPinjaman->wherenotnull('mutasi_juli')->get();
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
         $data['request'] = $request;
@@ -167,7 +167,7 @@ class PinjamanController extends Controller
 
         // $data['unitKerja'] = Company::get()->pluck('nama', 'id');
         // $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
-        $listPinjaman = $listPinjaman->get();
+        $listPinjaman = $listPinjaman->wherenotnull('mutasi_juli')->get();
         // dd($listPinjaman->pluck('id'));
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
@@ -1760,33 +1760,11 @@ class PinjamanController extends Controller
                 $pinjaman->tgl_entri = Carbon::now();
                 $pinjaman->tgl_tempo = Carbon::now()->addMonths($request->sisa_angsuran[$key] - 1);
                 $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
-                $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
+//                $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
+                $pinjaman->mutasi_juli = 0;
                 $pinjaman->save();
                 //            dd($pinjaman);die;
 
-
-                for ($i = 0; $i <= $pinjaman->sisa_angsuran - 1; $i++) {
-
-                    // get next serial number
-                    $nextSerialNumber = AngsuranManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
-
-                    $jatuhTempo = $pinjaman->tgl_entri->addMonths($i)->endOfMonth();
-                    $sisaPinjaman = $pinjaman->sisa_pinjaman;
-                    $angsuran = new Angsuran();
-                    $angsuran->kode_pinjam = $pinjaman->kode_pinjam;
-                    $angsuran->angsuran_ke = $pinjaman->lama_angsuran - $pinjaman->sisa_angsuran + $i + 1;
-                    $angsuran->besar_angsuran = $pinjaman->besar_angsuran_pokok;
-                    $angsuran->denda = 0;
-                    $angsuran->jasa = $pinjaman->biaya_jasa;
-                    $angsuran->kode_anggota = $pinjaman->kode_anggota;
-                    $angsuran->sisa_pinjam = $sisaPinjaman;
-                    $angsuran->tgl_entri = Carbon::now();
-                    $angsuran->jatuh_tempo = $jatuhTempo;
-                    $angsuran->u_entry = Auth::user()->name;
-                    $angsuran->serial_number = $nextSerialNumber;
-                    //                 dd($angsuran);die;
-                    $angsuran->save();
-                }
             }
         }
         return redirect()->route('home', ['kw_kode_anggota' => $request->kode_anggota])->withSuccess("Saldo Tersimpan");

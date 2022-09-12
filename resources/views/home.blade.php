@@ -84,6 +84,20 @@
                         <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ number_format($sisaPinjaman,0,",",".") }}</h3>
+
+                            <p>Sisa Pinjaman </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-money-check-alt"></i>
+                        </div>
+                        <a href="pinjaman/list/{{$anggota->kode_anggota}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
             @else
                 <div class="col-lg-4 col-6">
                     <!-- small box -->
@@ -113,21 +127,22 @@
                         <a href="/simpanan/list" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-            @endif
-            <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{ number_format($sisaPinjaman,0,",",".") }}</h3>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ number_format($sisaPinjaman,0,",",".") }}</h3>
 
-                        <p>Sisa Pinjaman </p>
+                            <p>Sisa Pinjaman </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-money-check-alt"></i>
+                        </div>
+                        <a href="{{ route('pinjaman-list') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-money-check-alt"></i>
-                    </div>
-                    <a href="{{ route('pinjaman-list') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
-            </div>
+            @endif
+
         </div>
     </div>
 </div>

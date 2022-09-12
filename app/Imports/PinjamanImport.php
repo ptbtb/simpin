@@ -61,6 +61,7 @@ class PinjamanImport implements OnEachRow
                 $pinjaman->keterangan = 'Mutasi Saldo Awal Pinjaman';
                 $pinjaman->serial_number = $nextSerialNumber;
                 $pinjaman->saldo_mutasi =  $pinjaman->sisa_pinjaman;
+                $pinjaman->mutasi_juli =  0;
                 $pinjaman->save();
 
                 JurnalManager::createJurnalSaldoPinjaman($pinjaman);
