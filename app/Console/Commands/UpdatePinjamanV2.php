@@ -42,7 +42,7 @@ class UpdatePinjamanV2 extends Command
     {DB::beginTransaction();
         try
         {
-            $pinjaman = PinjamanV2::all();
+            $pinjaman = PinjamanV2::where('sync','<>',1);
 
             foreach($pinjaman as $pinj){
 
@@ -57,7 +57,10 @@ class UpdatePinjamanV2 extends Command
                     $cc->lama_angsuran = $pinj->lama_angsuran;
                     $cc->mutasi_juli = $pinj->saldo_akhir;
                     $cc->update();
+                    $pinj->sync=1;
+                    $pinj->update();
                 }
+
 
 //                var_dump($cc);
             }
