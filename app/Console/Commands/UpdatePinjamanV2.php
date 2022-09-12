@@ -42,7 +42,7 @@ class UpdatePinjamanV2 extends Command
     {DB::beginTransaction();
         try
         {
-            $pinjaman = PinjamanV2::where('sync','<>',1);
+            $pinjaman = PinjamanV2::wherenull('sync')->get();
 
             foreach($pinjaman as $pinj){
 
