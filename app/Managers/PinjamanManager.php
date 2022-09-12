@@ -205,7 +205,8 @@ class PinjamanManager
             $pinjaman->biaya_provisi = $provisi;
             $pinjaman->biaya_administrasi = $biayaAdministrasi; */
             $pinjaman->u_entry = 'System';
-            $pinjaman->tgl_entri = Carbon::now();
+            $pinjaman->tgl_entri = $pengajuan->tgl_posting;
+            $pinjaman->tgl_transaksi = $pengajuan->tgl_posting;
             $pinjaman->tgl_tempo = Carbon::now()->addMonths($pengajuan->sisa_angsuran);
             $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
             // dd($pinjaman);
