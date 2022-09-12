@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
+use App\Managers\PinjamanManager;
 use App\Models\Pinjaman;
 use App\Models\PinjamanV2;
 use Carbon\Carbon;
@@ -57,6 +58,10 @@ class UpdatePinjamanV2 extends Command
                     $cc->lama_angsuran = $pinj->lama_angsuran;
                     $cc->mutasi_juli = $pinj->saldo_akhir;
                     $cc->update();
+                    $pinj->sync=1;
+                    $pinj->update();
+                }else{
+                    PinjamanManager::createPinjamanMutasiJuli($pinj);
                     $pinj->sync=1;
                     $pinj->update();
                 }

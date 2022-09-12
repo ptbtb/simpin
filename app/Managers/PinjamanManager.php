@@ -7,6 +7,7 @@ use App\Managers\JurnalManager;
 use App\Models\AsuransiPinjaman;
 use App\Models\Pinjaman;
 use App\Models\Pengajuan;
+use App\Models\PinjamanV2;
 use App\Models\SimpinRule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -172,5 +173,49 @@ class PinjamanManager
         $pinjaman->tgl_entri = $pengajuan->tgl_transaksi;
         $pinjaman->tgl_tempo = $pengajuan->tgl_transaksi->addMonths($pengajuan->tenor);
         $pinjaman->save();
+    }
+
+    static function createPinjamanMutasiJuli(PinjamanV2 $pengajuan)
+    {
+        try {
+
+            $totalAngsuranBulan = 0;
+            $angsuranPerbulan=0;
+            $pinjaman = new Pinjaman();
+            $kodeAnggota = $pengajuan->kode_anggota;
+            $kodePinjaman = str_replace('.', '', $pengajuan->kode_jenis_pinjam) . '-' . $kodeAnggota . '-' . $pengajuan->tgl_posting->format('dmYHis');
+            $pinjaman->kode_pinjam = $kodePinjaman;
+            $pinjaman->kode_pengajuan_pinjaman = $pengajuan->kode_pengajuan;
+            $pinjaman->kode_anggota = $pengajuan->kode_anggota;
+            $pinjaman->kode_jenis_pinjam = $pengajuan->kode_jenis_pinjam;
+            $pinjaman->besar_pinjam = $pengajuan->besar_pinjam;
+            $pinjaman->besar_angsuran = $totalAngsuranBulan;
+            $pinjaman->besar_angsuran_pokok = $angsuranPerbulan;
+            $pinjaman->lama_angsuran = $pengajuan->lama_angsuran;
+            $pinjaman->sisa_angsuran =  $pengajuan->sisa_angsuran;
+            $pinjaman->sisa_pinjaman = $pengajuan->saldo_akhir;
+            $pinjaman->biaya_jasa = 0;
+            $pinjaman->biaya_asuransi = 0;
+            $pinjaman->biaya_provisi = 0;
+            $pinjaman->biaya_administrasi = 0;
+            $pinjaman->biaya_jasa_topup = 0;
+            $pinjaman->mutasi_juli =  $pengajuan->saldo_akhir;
+            /* $pinjaman->biaya_jasa = $jasaPerbulan;
+            $pinjaman->biaya_asuransi = $asuransi;
+            $pinjaman->biaya_provisi = $provisi;
+            $pinjaman->biaya_administrasi = $biayaAdministrasi; */
+            $pinjaman->u_entry = Auth::user()->name;
+            $pinjaman->tgl_entri = Carbon::now();
+            $pinjaman->tgl_tempo = Carbon::now()->addMonths($pengajuan->sisa_angsuran);
+            $pinjaman->id_status_pinjaman = STATUS_PINJAMAN_BELUM_LUNAS;
+            // dd($pinjaman);
+            $pinjaman->save();
+//            event(new PinjamanCreated($pinjaman));
+
+            // changed, jurnal setelah pengajuan pinjaman di terima
+            // JurnalManager::createJurnalPinjaman($pinjaman);
+        } catch (\Exception $e) {
+            \Log::error($e);
+        }
     }
 }
