@@ -62,8 +62,8 @@ class UpdatePinjamanV2 extends Command
                     $pinj->update();
                 }else{
                     PinjamanManager::createPinjamanMutasiJuli($pinj);
-                    $pinj->sync=1;
-                    $pinj->update();
+//                    $pinj->sync=1;
+//                    $pinj->update();
                 }
 
 
