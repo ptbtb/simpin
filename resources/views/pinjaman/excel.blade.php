@@ -73,8 +73,8 @@
                             -
                         @endif
                     </td>
-                    <td>Rp. {{ number_format($pinjaman->besar_pinjam,0,",",".") }}</td>
-                    <td>Rp. {{ number_format($pinjaman->sisa_pinjaman,0,",",".") }}</td>
+                    <td>{{ $pinjaman->besar_pinjam }}</td>
+                    <td>{{ $pinjaman->sisa_pinjaman }}</td>
                     <td>{{ $pinjaman->sisa_angsuran }}</td>
                     <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
                     <td>{{ ucwords($pinjaman->status) }}</td>
