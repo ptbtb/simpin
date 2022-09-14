@@ -23,11 +23,11 @@ class PinjamanExport implements FromView
             $listPinjaman = $listPinjaman->where('kode_anggota', $this->request->anggota->kode_anggota);
         }
         if (!$this->request->from) {
-            $request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
+            $this->request->from = Carbon::today()->firstOfMonth()->format('Y-m-d');
 
         }
         if (!$this->request->to) {
-            $request->to = Carbon::today()->format('Y-m-d');
+            $this->request->to = Carbon::today()->format('Y-m-d');
         }
         if ($this->request->status)
         {
@@ -55,7 +55,7 @@ class PinjamanExport implements FromView
             $listPinjaman = $listPinjaman->where('lama_angsuran',$request->tenor);
         }
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$this->request->from,$this->request->to]);
-        $listPinjaman = $listPinjaman->get();
+        $listPinjaman = $listPinjaman->wherenotnull('mutasi_juli')->get();
         return view('pinjaman.excel', [
             'listPinjaman' => $listPinjaman
         ]);

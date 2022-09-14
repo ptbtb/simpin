@@ -32,7 +32,17 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $pinjaman->kode_pinjam }}</td>
-                    <td>{{ $pinjaman->anggota->company->nama }}</td>
+                    <td> @if ($pinjaman->anggota)
+                            @if ($pinjaman->anggota->company)
+                                {{ $pinjaman->anggota->company->nama }}
+                            @else
+                                -
+                            @endif
+
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>
                         @if ($pinjaman->pengajuan)
                             {{ $pinjaman->pengajuan->no_jkk }}

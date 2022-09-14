@@ -480,7 +480,7 @@ class PinjamanController extends Controller
             $listPinjaman = $listPinjaman->where('lama_angsuran', $request->tenor);
         }
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
-        $listPinjaman = $listPinjaman->get();
+        $listPinjaman = $listPinjaman->wherenotnull('mutasi_juli')->get();
 
         // share data to view
         view()->share('listPinjaman', $listPinjaman);
