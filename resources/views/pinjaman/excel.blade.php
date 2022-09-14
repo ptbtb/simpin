@@ -23,6 +23,7 @@
                 <th>Besar Pinjaman</th>
                 <th>Sisa Pinjaman</th>
                 <th>Sisa Angsuran</th>
+                <th>Mutasi Juli</th>
                 <th>Jatuh Tempo</th>
                 <th>Status</th>
             </tr>
@@ -76,6 +77,7 @@
                     <td>{{ $pinjaman->besar_pinjam }}</td>
                     <td>{{ $pinjaman->sisa_pinjaman }}</td>
                     <td>{{ $pinjaman->sisa_angsuran }}</td>
+                    <td>{{ $pinjaman->mutasi_juli }}</td>
                     <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
                     <td>{{ ucwords($pinjaman->status) }}</td>
                 </tr>
