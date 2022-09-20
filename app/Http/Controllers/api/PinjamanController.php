@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -13,24 +14,28 @@ class PinjamanController extends Controller
         try
         {
             // $trans = DB::table('company_setting')
-            //         ->where('name','saldo_pinjaman') 
+            //         ->where('name','saldo_pinjaman')
             //         ->first();
             //         if ($trans && $trans->value==1){
             //             $user = $request->user('api');
             // $anggota = $user->anggota;
             // $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
-            
+
             // $response['message'] = null;
             // $response['data'] = $data;
             // return response()->json($response, 200);
             //         }
             //  $response['message'] = 'Akan Segera Hadir';
             // return response()->json($response, 200);
-            
+
             $user = $request->user('api');
             $anggota = $user->anggota;
-            // $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
-            $data['saldo'] = 0;
+            $tgl = Carbon::now()->format('Y-m-d');
+            $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)
+                ->wherenotnull('mutasi_juli')
+                ->sum('sisa_pinjaman');
+//            $data['saldo'] = \App\Models\PinjamanV2::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
+//            $data['saldo'] = 0;
 
             $response['message'] = null;
             $response['data'] = $data;
