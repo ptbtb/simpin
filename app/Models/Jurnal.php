@@ -48,6 +48,11 @@ class Jurnal extends Model implements Auditable
         return $this->belongsTo(TipeJurnal::class, 'id_tipe_jurnal');
     }
 
+    public function anggotaData()
+    {
+        return $this->belongsTo(Anggota::class, 'anggota');
+    }
+
     /**
      * Get the parent jurnalable model.
      */

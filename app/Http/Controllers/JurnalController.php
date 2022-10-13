@@ -13,6 +13,7 @@ use App\Models\Penarikan;
 use App\Models\Pinjaman;
 use App\Models\Simpanan;
 use App\Exports\JurnalExport;
+use App\Models\Code;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -499,5 +500,166 @@ class JurnalController extends Controller
         $data['request'] = $request;
         $data['tipeJurnal'] = TipeJurnal::get()->pluck('name', 'id');
         return view('jurnal.resume', $data);
+    }
+
+    public function destroy($id)
+    {
+        $jurnal = Jurnal::findOrFail($id);
+        $jurnalable = $jurnal->jurnalable;
+        $jurnalable->delete();
+        $jurnal->delete();
+        return redirect()->route('jurnal-list');
+    }
+
+    public function edit($id, Request $request)
+    {
+        $this->authorize('edit jurnal', Auth::user());
+        // jika ada serial number, maka get jurnal by serial number
+        if($request->serial_number)
+        {
+            $startUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->from)->startOfDay()->format('Y-m-d');
+            $endUntilPeriod = Carbon::createFromFormat('d-m-Y', $request->to)->endOfDay()->format('Y-m-d');
+            $jurnal = Jurnal::query();
+            $tipeJurnal = substr($request->serial_number, 0, 3);
+            $year = substr($request->serial_number, 3, 4);
+            $month = substr($request->serial_number, 7, 2);
+            $serialNumber = (substr($request->serial_number, 9)) ? (int)substr($request->serial_number, 9) : '';
+            if ($tipeJurnal == 'ANG') {
+
+                $jurnalableType = 'App\Models\Angsuran';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Angsuran::class], function ($query) use ($year, $month, $serialNumber, $startUntilPeriod, $endUntilPeriod) {
+
+                        $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
+
+
+                    });
+
+                } else {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Angsuran::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                }
+
+
+                $jurnalableType = 'App\Models\AngsuranPartial';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+                    $jurnal = $jurnal->orwhereHasMorph('jurnalable', [AngsuranPartial::class], function ($query) use ($year, $month, $serialNumber, $startUntilPeriod, $endUntilPeriod) {
+
+                        $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
+
+                    });
+                } else {
+                    $jurnal = $jurnal->orwhereHasMorph('jurnalable', [AngsuranPartial::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                }
+
+
+            } else if ($tipeJurnal == 'MTS') {
+                $jurnalableType = 'App\Models\JurnalTemp';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [JurnalTemp::class], function ($query) use ($year, $month, $serialNumber) {
+                        $query->whereYear('tgl_posting', '=', $year)->whereMonth('tgl_posting', '=', $month)->where('serial_number', $serialNumber);
+                    });
+                } else {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [JurnalTemp::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                }
+
+            } else if ($tipeJurnal == 'TRU') {
+                $jurnalableType = 'App\Models\JurnalUmum';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+
+
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [JurnalUmum::class], function ($query) use ($year, $month, $serialNumber) {
+                        $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
+                    });
+                } else {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [JurnalUmum::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                }
+
+
+            } else if ($tipeJurnal == 'TAR') {
+                $jurnalableType = 'App\Models\Penarikan';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Penarikan::class], function ($query) use ($year, $month, $serialNumber) {
+                        $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
+                    });
+                } else {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Penarikan::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                }
+
+
+            } else if ($tipeJurnal == 'PIJ') {
+                $jurnalableType = 'App\Models\Pinjaman';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function ($query) use ($year, $month, $serialNumber) {
+                        $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number_kredit', $serialNumber);
+                    });
+                } else {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                }
+
+
+            } else if ($tipeJurnal == 'PCP') {
+                $jurnalableType = 'App\Models\Pinjaman';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function ($query) use ($year, $month, $serialNumber) {
+                        $query->whereYear('tgl_pelunasan', '=', $year)->whereMonth('tgl_pelunasan', '=', $month)->where('serial_number', $serialNumber);
+                    });
+                } else {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Pinjaman::class], function ($query) use ($year, $month, $serialNumber,$startUntilPeriod, $endUntilPeriod) {
+                        $query->whereBetween('tgl_pelunasan', [$startUntilPeriod, $endUntilPeriod]);
+                    });
+                }
+
+            } else if ($tipeJurnal == 'SIP') {
+                $jurnalableType = 'App\Models\Simpanan';
+                if ($year !== '' && $month !== '' && $serialNumber !== '') {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Simpanan::class], function ($query) use ($year, $month, $serialNumber) {
+                        $query->whereYear('tgl_transaksi', '=', $year)->whereMonth('tgl_transaksi', '=', $month)->where('serial_number', $serialNumber);
+                    });
+                } else {
+                    $jurnal = $jurnal->whereHasMorph('jurnalable', [Simpanan::class])->whereBetween('tgl_transaksi', [$startUntilPeriod, $endUntilPeriod]);
+                }
+            }
+
+            $jurnal = $jurnal->get();
+        }
+        // berarti kalau tidak ada, kita tetap pakai ->get() biar jurnal nya dalam bentuk array
+        else
+        {
+            $jurnal = Jurnal::where('id', $id)->get();
+        }
+        $data['title'] = 'Edit Jurnal';
+        $data['jurnals'] = $jurnal;
+        $data['request'] = $request;
+        $data['coas'] = Code::select('CODE', 'NAMA_TRANSAKSI')->get();
+        return view('jurnal.edit', $data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        foreach ($request->nomer as $key => $value) 
+        {
+            $id = $key;
+            $update = Jurnal::where('id',$id)->first();
+            $tgl_transaksi = Carbon::createFromFormat('d-m-Y', $request->tgl_transaksi[$id]);
+            // $update->jurnalable->besar_simpanan = $request->debet[$id];
+            
+            if ($update->jurnalable_type == 'App\Models\Simpanan') {
+                $update->jurnalable->besar_simpanan = $request->jumlah[$id];
+                $update->jurnalable->tgl_transaksi = $tgl_transaksi;
+            } elseif ($update->jurnalable_type == 'App\Models\Simpanan') {
+                # code...
+            }
+            $update->jurnalable->save();
+    
+            $update->tgl_transaksi = $tgl_transaksi;
+            $update->akun_kredit = $request->akun_kredit[$id];
+            $update->akun_debet = $request->akun_debet[$id];
+            $update->debet = $request->jumlah[$id];
+            $update->kredit = $request->jumlah[$id];
+            // $update->debet = $request->debet[$id];
+            // $update->kredit = $request->kredit[$id];
+            $update->save();
+        }
+        return redirect()->route('jurnal-list');
     }
 }

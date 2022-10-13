@@ -5,23 +5,27 @@
 @endsection
 
 @section('content_header')
-<div class="row">
-	<div class="col-6"><h4>{{ $title }}</h4></div>
-	<div class="col-6">
-		<ol class="breadcrumb float-sm-right">
-			<li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-			<li class="breadcrumb-item active">Jurnal</li>
-		</ol>
-	</div>
-</div>
+    <div class="row">
+        <div class="col-6">
+            <h4>{{ $title }}</h4>
+        </div>
+        <div class="col-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item active">Jurnal</li>
+            </ol>
+        </div>
+    </div>
 @endsection
 
 @section('plugins.Datatables', true)
 
 @section('css')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+        integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous" />
     <style>
-        .btn-sm{
+        .btn-sm {
             font-size: .8rem;
         }
     </style>
@@ -38,33 +42,48 @@
                 <div class="row">
                     <div class="col-md-3 form-group">
                         <label>Tipe Jurnal</label>
-                        {!! Form::select('id_tipe_jurnal', $tipeJurnal, $request->id_tipe_jurnal, ['class' => 'form-control', 'placeholder' => 'All']) !!}
+                        {!! Form::select('id_tipe_jurnal', $tipeJurnal, $request->id_tipe_jurnal, [
+                            'class' => 'form-control',
+                            'placeholder' => 'All',
+                        ]) !!}
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Nomor</label>
-                        <input type="text" name="serial_number" id="serial_number" class="form-control" placeholder="Nomor Transaksi" autocomplete="off" value="{{ old('serial_number', $request->serial_number) }}">
+                        <input type="text" name="serial_number" id="serial_number" class="form-control"
+                            placeholder="Nomor Transaksi" autocomplete="off"
+                            value="{{ old('serial_number', $request->serial_number) }}">
                     </div>
                     <div class="col-md-3 form-group">
                         <label>AKUN</label>
-                        <input type="text" name="code" id="code" class="form-control" placeholder="COA" autocomplete="off" value="{{ old('code', $request->code) }}">
+                        <input type="text" name="code" id="code" class="form-control" placeholder="COA"
+                            autocomplete="off" value="{{ old('code', $request->code) }}">
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Keterangan</label>
-                        <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Keterangan" autocomplete="off" value="{{ old('keterangan', $request->keterangan) }}">
+                        <input type="text" name="keterangan" id="keterangan" class="form-control"
+                            placeholder="Keterangan" autocomplete="off"
+                            value="{{ old('keterangan', $request->keterangan) }}">
                     </div>
                     <div class="col-md-3">
                         <label>Dari</label>
-                        <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="from" name="from" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y') }}" autocomplete="off" />
+                        <input class="form-control datepicker" placeholder="dd-mm-yyyy" id="from" name="from"
+                            value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y') }}"
+                            autocomplete="off" />
                     </div>
                     <div class="col-md-3">
                         <label>Sampai</label>
-                        <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to" value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}" autocomplete="off" />
+                        <input class="form-control datepicker" placeholder="mm-yyyy" id="to" name="to"
+                            value="{{ Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y') }}"
+                            autocomplete="off" />
                     </div>
                     <div class="col-md-12 form-group text-center">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
-                        <a href="{{ route('jurnal-export-excel',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'from'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'),'to'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-success"><i class="fa fa-download"></i> export Excel</a>
-                        <a href="{{ route('jurnal-export-pdf',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'from'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'),'to'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-info"><i class="fa fa-download"></i> export PDF</a>
-                        <a href="{{ route('jurnal-resume',['id_tipe_jurnal'=>$request->id_tipe_jurnal,'serial_number'=>$request->serial_number,'code'=>$request->code,'from'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'),'to'=>Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'),'keterangan'=>$request->keterangan]) }}" class="btn btn-info"><i class="fa fa-file"></i> Resume</a>
+                        <a href="{{ route('jurnal-export-excel', ['id_tipe_jurnal' => $request->id_tipe_jurnal, 'serial_number' => $request->serial_number, 'code' => $request->code, 'from' => Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'), 'to' => Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'), 'keterangan' => $request->keterangan]) }}"
+                            class="btn btn-success"><i class="fa fa-download"></i> export Excel</a>
+                        <a href="{{ route('jurnal-export-pdf', ['id_tipe_jurnal' => $request->id_tipe_jurnal, 'serial_number' => $request->serial_number, 'code' => $request->code, 'from' => Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'), 'to' => Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'), 'keterangan' => $request->keterangan]) }}"
+                            class="btn btn-info"><i class="fa fa-download"></i> export PDF</a>
+                        <a href="{{ route('jurnal-resume', ['id_tipe_jurnal' => $request->id_tipe_jurnal, 'serial_number' => $request->serial_number, 'code' => $request->code, 'from' => Carbon\Carbon::createFromFormat('d-m-Y', $request->from)->format('d-m-Y'), 'to' => Carbon\Carbon::createFromFormat('d-m-Y', $request->to)->format('d-m-Y'), 'keterangan' => $request->keterangan]) }}"
+                            class="btn btn-info"><i class="fa fa-file"></i> Resume</a>
 
                     </div>
                 </div>
@@ -86,30 +105,38 @@
                         <th style="width: 10%">Kredit</th>
                         <th>Keterangan</th>
                         <th>Tanggal</th>
-
+                        @can('edit jurnal')
+                            <th>Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tfoot>
-                <tr>
-                <th colspan="5" style="text-align:right">Total:</th>
-                <th id="totaldebet" style="text-align:right"></th>
-                <th></th>
-                <th id="totalkredit" style="text-align:right"></th>
-                <th colspan="2"></th>
-            </tr>
-        </tfoot>
+                    <tr>
+                        <th colspan="5" style="text-align:right">Total:</th>
+                        <th id="totaldebet" style="text-align:right"></th>
+                        <th></th>
+                        <th id="totalkredit" style="text-align:right"></th>
+                        @if (Auth::user()->can('edit jurnal'))
+                            
+                        <th colspan="3"></th>
+                        @else
+                        <th colspan="2"></th>
+                            
+                        @endif
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
 @endsection
 
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+        integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
     <script>
-        $(document).ready(function ()
-        {
+        $(document).ready(function() {
             initiateDatatables();
-             $("#from").change(function(){
+            $("#from").change(function() {
                 console.log($('#from').val());
                 console.log({{ $request->from }});
             });
@@ -118,12 +145,12 @@
                 format: "dd-mm-yyyy"
             });
 
-            $('input.datepicker').bind('keyup keydown keypress', function (evt) {
+            $('input.datepicker').bind('keyup keydown keypress', function(evt) {
                 return true;
             });
         });
-        function initiateDatatables()
-        {
+
+        function initiateDatatables() {
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('.table').DataTable({
                 bProcessing: true,
@@ -135,8 +162,10 @@
                 ajax: {
                     url: '{{ route('jurnal-list-ajax') }}',
                     dataSrc: 'data',
-                    data: function(data){
-                        @if(isset($request->id_tipe_jurnal)) data.id_tipe_jurnal = '{{ $request->id_tipe_jurnal }}'; @endif
+                    data: function(data) {
+                        @if (isset($request->id_tipe_jurnal))
+                            data.id_tipe_jurnal = '{{ $request->id_tipe_jurnal }}';
+                        @endif
 
                         var serial_number = '{{ $request->serial_number }}';
                         data.serial_number = serial_number;
@@ -151,85 +180,133 @@
                         data.to = to;
                     }
                 },
-                aoColumns: [
-                    {
-                        mData: 'DT_RowIndex', sType: "string",
-                        className: "dt-body-center", "name": "DT_RowIndex"
+                aoColumns: [{
+                        mData: 'DT_RowIndex',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "DT_RowIndex"
                     },
                     {
-                        mData: 'jurnalable_view', sType: "string",
-                        className: "dt-body-center", "name": "jurnalable_view",
-                        mRender: function(data, type, full)
-                        {
+                        mData: 'jurnalable_view',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "jurnalable_view",
+                        mRender: function(data, type, full) {
 
-                            if(data)
-                            {
-                                if (full.id_tipe_jurnal==2 && full.jurnalable_type=="App\\Models\\Pinjaman"){
-                                     return data.serial_number_kredit_view;
+                            if (data) {
+                                if (full.id_tipe_jurnal == 2 && full.jurnalable_type ==
+                                    "App\\Models\\Pinjaman") {
+                                    return data.serial_number_kredit_view;
                                 }
                                 return data.serial_number_view;
                             }
                         }
                     },
                     {
-                        mData: 'kode_anggota_view', sType: "string",
-                        className: "dt-body-center", "name": "kode_anggota_view",
+                        mData: 'kode_anggota_view',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "kode_anggota_view",
 
                     },
                     {
-                        mData: 'tipe_jurnal.name', sType: "string",
-                        className: "dt-body-center", "name": "tipe_jurnal.name"
+                        mData: 'tipe_jurnal.name',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "tipe_jurnal.name"
                     },
                     {
-                        mData: 'akun_debet', sType: "string",
-                        className: "dt-body-center", "name": "akun_debet",
+                        mData: 'akun_debet',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "akun_debet",
                     },
                     {
-                        mData: 'nominal_rupiah_debet', sType: "string",
-                        className: "dt-body-center", "name": "debet"
+                        mData: 'nominal_rupiah_debet',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "debet"
                     },
                     {
-                        mData: 'akun_kredit', sType: "string",
-                        className: "dt-body-center", "name": "akun_kredit"
+                        mData: 'akun_kredit',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "akun_kredit"
                     },
                     {
-                        mData: 'nominal_rupiah_kredit', sType: "string",
-                        className: "dt-body-center", "name": "kredit"
+                        mData: 'nominal_rupiah_kredit',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "kredit"
                     },
                     {
-                        mData: 'keterangan', sType: "string",
-                        className: "dt-body-center", "name": "keterangan",
+                        mData: 'keterangan',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "keterangan",
                     },
                     {
-                        mData: 'tgl_transaksi', sType: "string",
-                        className: "dt-body-center", "name": "tgl_transaksi",
+                        mData: 'tgl_transaksi',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "tgl_transaksi",
                     },
+                    @can('edit jurnal')
+                        
+                    {
+                        mData: 'id',
+                        sType: "string",
+                        className: "dt-body-center",
+                        "name": "id",mRender: function(data, type, full)
+                        {
+                            var markup = '';
+                            var baseURL = {!! json_encode(url('/')) !!};
+                            // @can('edit jurnal')
+                            //     // default serial number = empty
+                            //     var serial_number = '';
+
+                            //     // jika ada serial number di filter, maka kirim param serial number ke route edit
+                            //     @if ($request->serial_number)
+                            //         serial_number = '{{ $request->serial_number }}';
+                            //     @endif
+                            //     markup += '<a href="' + baseURL + '/jurnal/edit/' + data + '?serial_number='+serial_number+'&from={{ $request->from }}&to={{ $request->to }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
+                            // @endcan
+                            @can('delete jurnal')
+                                var csrf = '@csrf';
+                                var method = '@method("delete")';
+                                markup += '<form action="' + baseURL + '/jurnal/delete/' + data + '" method="post" style="display: inline"><button  class="btn btn-sm btn-danger" type="submit" value="Delete"><i class="fa fa-trash"></i> Delete</button>@method("delete")@csrf</form>';
+                            @endcan
+                            return markup;
+                        }
+                    },
+                    @endcan
                     /*{
                         mData: 'created_by.name', sType: "string",
                         className: "dt-body-center", "name": "created_by.name",
                     },*/
                 ],
-                drawCallback:function(settings)
-    {
-      $('#totaldebet').html(toRupiah(settings.json.totaldebet));
-      $('#totalkredit').html(toRupiah(settings.json.totalkredit));
-    }
+                drawCallback: function(settings) {
+                    $('#totaldebet').html(toRupiah(settings.json.totaldebet));
+                    $('#totalkredit').html(toRupiah(settings.json.totalkredit));
+                }
 
             });
 
             // add index column
-            table.on( 'xhr.dt', function () {
-                table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
+            table.on('xhr.dt', function() {
+                table.column(0, {
+                    search: 'applied',
+                    order: 'applied'
+                }).nodes().each(function(cell, i) {
+                    cell.innerHTML = i + 1;
+                });
             }).draw();
 
 
         }
 
 
-        function toRupiah(number)
-        {
+        function toRupiah(number) {
             number = parseFloat(number);
             number = number.toFixed(2);
             var stringNumber = number.toString();
@@ -240,14 +317,12 @@
             for (let i = 0; i < length; i++) {
                 res = res + splitStringNumber[0].charAt(i);
                 temp--;
-                if (temp%3 == 0 && temp > 0)
-                {
+                if (temp % 3 == 0 && temp > 0) {
                     res = res + ".";
                 }
             }
-            if(splitStringNumber[1] !== 'undefined')
-            {
-                res = res + ','+splitStringNumber[1];
+            if (splitStringNumber[1] !== 'undefined') {
+                res = res + ',' + splitStringNumber[1];
             }
             return res;
         }

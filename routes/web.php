@@ -405,6 +405,9 @@ Route::group(['prefix' => 'jurnal'], function () {
 //        Route::get('resume', [App\Http\Controllers\JurnalController::class, 'resumeIndex'])->name('jurnal-resume');
         Route::get('resume', [App\Http\Controllers\JurnalController::class, 'resumeData'])->name('jurnal-resume');
         Route::get('resumeexcel', [App\Http\Controllers\JurnalController::class, 'resumeExcel'])->name('jurnal-resume-excel');
+        Route::get('edit/{id}', [App\Http\Controllers\JurnalController::class, 'edit'])->name('jurnal-edit');
+        Route::put('edit/{id}', [App\Http\Controllers\JurnalController::class, 'update'])->name('jurnal-update');
+        Route::delete('delete/{id}', [App\Http\Controllers\JurnalController::class, 'destroy'])->name('jurnal-delete');
     });
 });
 
