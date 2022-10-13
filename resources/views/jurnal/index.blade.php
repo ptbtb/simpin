@@ -133,6 +133,7 @@
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
         integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         $(document).ready(function() {
             initiateDatatables();
@@ -266,15 +267,17 @@
                             //     var serial_number = '';
 
                             //     // jika ada serial number di filter, maka kirim param serial number ke route edit
-                            //     @if ($request->serial_number)
-                            //         serial_number = '{{ $request->serial_number }}';
-                            //     @endif
+                                // @if ($request->serial_number)
+                                //     serial_number = '{{ $request->serial_number }}';
+                                // @endif
                             //     markup += '<a href="' + baseURL + '/jurnal/edit/' + data + '?serial_number='+serial_number+'&from={{ $request->from }}&to={{ $request->to }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
                             // @endcan
                             @can('delete jurnal')
-                                var csrf = '@csrf';
-                                var method = '@method("delete")';
-                                markup += '<form action="' + baseURL + '/jurnal/delete/' + data + '" method="post" style="display: inline"><button  class="btn btn-sm btn-danger" type="submit" value="Delete"><i class="fa fa-trash"></i> Delete</button>@method("delete")@csrf</form>';
+                            
+                            markup += '<a data-url="' + baseURL + '/jurnal/delete/' + data + '" class="btn btn-sm btn-danger btn-approval"><i class="fa fa-edit"></i>Delete</a> '
+                                // var csrf = '@csrf';
+                                // var method = '@method("delete")';
+                                // markup += '<form action="' + baseURL + '/jurnal/delete/' + data + '" method="post" style="display: inline"><button  class="btn btn-sm btn-danger" type="submit" value="Delete"><i class="fa fa-trash"></i> Delete</button>@method("delete")@csrf</form>';
                             @endcan
                             return markup;
                         }
@@ -291,6 +294,62 @@
                 }
 
             });
+
+            $(document).on('click', '.btn-approval', function() {
+            var url = $(this).data('url');
+
+            Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    html: '<div class="form-group text-left"><label>Keterangan</label><textarea placeholder="Keterangan" name="keterangan" id="keterangan" class="form-control"></textarea></div>',
+                    input: 'password',
+                    inputAttributes: {
+                        name: 'password',
+                        placeholder: 'Password',
+                        required: 'required',
+                        validationMessage: 'Password required',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var password = result.value;
+                        $.ajax({
+                            type: 'get',
+                            url: url+"?password="+password,
+                            contentType: false,
+                            processData: false,
+                            success: function(data) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Your has been changed',
+                                    showConfirmButton: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            },
+                            error: function(error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: error.responseJSON.message,
+                                    showConfirmButton: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        })
+                    }
+                })
+        });
 
             // add index column
             table.on('xhr.dt', function() {

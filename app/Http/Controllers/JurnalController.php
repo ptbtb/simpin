@@ -23,6 +23,7 @@ use Carbon\Carbon;
 // use Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use DB;
+use Illuminate\Support\Facades\Hash;
 use PDF;
 
 class JurnalController extends Controller
@@ -502,8 +503,16 @@ class JurnalController extends Controller
         return view('jurnal.resume', $data);
     }
 
-    public function destroy($id)
-    {
+    public function destroy(Request $request,$id)
+    { 
+        if (isset($request->password)) {
+            $user = Auth::user();
+            $check = Hash::check($request->password, $user->password);
+            if (!$check) {
+                Log::error('Wrong Password');
+                return response()->json(['message' => 'Wrong Password'], 412);
+            }
+        }
         $jurnal = Jurnal::findOrFail($id);
         $jurnalable = $jurnal->jurnalable;
         $jurnalable->delete();
