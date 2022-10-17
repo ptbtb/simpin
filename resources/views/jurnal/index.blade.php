@@ -262,16 +262,30 @@
                         {
                             var markup = '';
                             var baseURL = {!! json_encode(url('/')) !!};
-                            // @can('edit jurnal')
-                            //     // default serial number = empty
-                            //     var serial_number = '';
-
-                            //     // jika ada serial number di filter, maka kirim param serial number ke route edit
-                                // @if ($request->serial_number)
-                                //     serial_number = '{{ $request->serial_number }}';
-                                // @endif
-                            //     markup += '<a href="' + baseURL + '/jurnal/edit/' + data + '?serial_number='+serial_number+'&from={{ $request->from }}&to={{ $request->to }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
-                            // @endcan
+                            @can('edit jurnal')
+                                var serial_number = '';
+                                
+                                @if ($request->serial_number)
+                                    serial_number = '{{ $request->serial_number }}';
+                                @else
+                                    if (full.jurnalable_view) {
+                                        if (full.id_tipe_jurnal == 2 && full.jurnalable_type ==
+                                            "App\\Models\\Pinjaman") {
+                                            serial_number = full.jurnalable_view.serial_number_kredit_view;
+                                        }
+                                        else
+                                        {
+                                            serial_number =  full.jurnalable_view.serial_number_view;
+                                        }
+                                    }
+                                @endif
+                                var editableType = ['App\\Models\\Simpanan', 'App\\Models\\Penarikan', 'App\\Models\\Pinjaman', 'App\\Models\\Angsuran'];
+                                var editable = editableType.includes(full.jurnalable_type);
+                                if(editable)
+                                {
+                                    markup += '<a href="' + baseURL + '/jurnal/edit/' + data + '?serial_number='+serial_number+'&from={{ $request->from }}&to={{ $request->to }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a> '
+                                }
+                            @endcan
                             @can('delete jurnal')
                             
                             markup += '<a data-url="' + baseURL + '/jurnal/delete/' + data + '" class="btn btn-sm btn-danger btn-approval"><i class="fa fa-edit"></i>Delete</a> '

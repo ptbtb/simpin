@@ -66,10 +66,11 @@ class AppServiceProvider extends ServiceProvider
                  * saya update dengan code seperti ini
                  */
 
-                $allNotif = Notification::where('receiver', Auth::user()->id)
+                /* $allNotif = Notification::where('receiver', Auth::user()->id)
                                         ->where('role_id', $role->id)
                                         ->where('has_read', 0)
-                                        ->get();
+                                        ->get(); */
+                $allNotif = collect([]);
                 $notification['all_notification'] = $allNotif;
                 $notification['count'] = $allNotif->count();
                 $view->with('notification', $notification );
