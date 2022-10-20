@@ -350,8 +350,8 @@ class PinjamanController extends Controller
             ->get();
 
         $listAngsuran = $pinjaman->listAngsuran
-                        ->whereNotNull('tgl_transaki')
-                        ->where('tgl_transaki','>','2021-07-31')
+                        ->whereNotNull('tgl_transaksi')
+                        ->where('tgl_transaksi','>','2022-07-31')
                         ->sortBy('angsuran_ke')
                         ->values();
         // $tagihan = $listAngsuran->where('id_status_angsuran', STATUS_ANGSURAN_BELUM_LUNAS)->first();
