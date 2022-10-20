@@ -229,11 +229,11 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-6" style="display: none">
                                     <label>Bulan</label>
                                     {{-- <input type="text" name="bulan" class="form-control" value="{{ ($tagihan->jatuh_tempo)? $tagihan->jatuh_tempo->format('d-m-Y'):'' }}" readonly> --}}
                                     <input type="text" name="bulan" class="form-control"
-                                        value="{{ $pinjaman->tagihan_bulan->format('d-m-Y') }}" readonly>
+                                        value="{{ $pinjaman->tagihan_bulan->format('d-m-Y') }}">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Total Angsuran</label>
