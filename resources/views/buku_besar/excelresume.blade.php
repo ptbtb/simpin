@@ -38,6 +38,7 @@
         $sumbeban=0;
     @endphp
     @foreach ($codes->sortBy('CODE') as $bukuBesar)
+        {{ $bukuBesar }}
         <tr>
             <td>{{ $loop->iteration }}</td>
             <td>
