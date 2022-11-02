@@ -38,31 +38,30 @@
         $sumbeban=0;
     @endphp
     @foreach ($codes->sortBy('CODE') as $bukuBesar)
-        {{ $bukuBesar }}
         <tr>
             <td>{{ $loop->iteration }}</td>
             <td>
-                {{ $bukuBesar['tipe'] }}
+                {{ $bukuBesar['tipe'] ?? '' }}
             </td>
             <td>
-                {{ $bukuBesar['CODE'] }}
+                {{ $bukuBesar['CODE'] ?? '' }}
             </td>
             <td>
-                {{ $bukuBesar['NAMA_TRANSAKSI'] }}
-            </td>
-
-            <td>
-                {{ $bukuBesar['awal'] }}
+                {{ $bukuBesar['NAMA_TRANSAKSI'] ?? '' }}
             </td>
 
             <td>
-                {{ $bukuBesar['trxdr'] }}
+                {{ $bukuBesar['awal'] ?? '' }}
+            </td>
+
+            <td>
+                {{ $bukuBesar['trxdr'] ?? '' }}
             </td>
             <td>
-                {{ $bukuBesar['trxcr'] }}
+                {{ $bukuBesar['trxcr'] ?? '' }}
             </td>
             <td>
-                {{ $bukuBesar['akhir'] }}
+                {{ $bukuBesar['akhir'] ?? '' }}
             </td>
 
         </tr>
