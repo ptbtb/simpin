@@ -41,27 +41,27 @@
         <tr>
             <td>{{ $loop->iteration }}</td>
             <td>
-                @if(isset($bukubesar['tipe'])) {{ $bukubesar['tipe'] }} @endif
+                {{ $bukuBesar['tipe'] }}
             </td>
             <td>
-                @if(isset($bukubesar['CODE'])) {{ $bukubesar['CODE'] }} @endif
+                {{ $bukuBesar['CODE'] }}
             </td>
             <td>
-                @if(isset($bukubesar['NAMA_TRANSAKSI'])) {{ $bukubesar['NAMA_TRANSAKSI'] }} @endif
-            </td>
-
-            <td>
-                @if(isset($bukubesar['awal'])) {{ $bukubesar['awal'] }} @endif
+                {{ $bukuBesar['NAMA_TRANSAKSI'] }}
             </td>
 
             <td>
-                @if(isset($bukubesar['trxdr'])) {{ $bukubesar['trxdr'] }} @endif
+                {{ $bukuBesar['awal'] }}
+            </td>
+
+            <td>
+                {{ $bukuBesar['trxdr'] }}
             </td>
             <td>
-                @if(isset($bukubesar['trxcr'])) {{ $bukubesar['trxcr'] }} @endif
+                {{ $bukuBesar['trxcr'] }}
             </td>
             <td>
-                @if(isset($bukubesar['akhir'])) {{ $bukubesar['akhir'] }} @endif
+                {{ $bukuBesar['akhir'] }}
             </td>
 
         </tr>
