@@ -371,7 +371,7 @@ class BukuBesarController extends Controller
         // dd($data);
         $filename = 'export_buku_besar_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
         // return (new FastExcel($bukuBesars))->download($filename);
-        return view('buku_besar.excelresume', $data);
+        // return view('buku_besar.excelresume', $data);
         return Excel::download(new BukuBesarResumeExport($data), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 }
