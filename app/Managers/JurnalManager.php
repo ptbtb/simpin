@@ -144,6 +144,7 @@ class JurnalManager
                 $jurnal->tgl_transaksi = Carbon::parse($pinjaman->tgl_transaksi);
                 $jurnal->akun_kredit = $coa;
                 $jurnal->kredit = $pinjaman->biaya_jasa_topup;
+                $jasa_topup = $pinjaman->biaya_jasa_topup;
                 $jurnal->akun_debet = 0;
                 $jurnal->debet = 0;
                 $jurnal->keterangan = 'Pinjaman ' . strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota ' . ucwords(strtolower($pinjaman->anggota->nama_anggota));
