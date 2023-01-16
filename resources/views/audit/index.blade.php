@@ -47,6 +47,7 @@
         <div class="row">
         <div class="col-md-12 mt-1 form-group text-center">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
+                        {{-- <a href="{{ route('audit-download-excel') }}" class="btn btn-success" id="excelbtn"><i class="fa fa-download"></i> Download Excel</a>  --}}
                     </div>
                 </div>
     </form>
@@ -95,7 +96,14 @@
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script>
-    $('.table').DataTable();
+    $('.table').DataTable({
+            "targets": 0,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'excel', 'print'
+            ],
+            info: false
+        });
     $('.datepicker').datepicker({
         format: "dd-mm-yyyy"
     });
