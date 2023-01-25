@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Events\Anggota\AnggotaCreated;
 use App\Models\Anggota;
+use App\Models\Bank;
 use App\Models\JenisAnggota;
 use App\Models\KelasCompany;
 use App\Models\Company;
@@ -23,7 +24,7 @@ class AnggotaImport implements OnEachRow
         $rowIndex = $row->getIndex();
         $row      = $row->toArray();
         
-        if ($rowIndex == 1)
+        if ($rowIndex == 1 || is_null($row[0]))
         {
             return null;
         }
@@ -58,6 +59,7 @@ class AnggotaImport implements OnEachRow
         }else{
             $kelas_company_id=null;
         }
+        // $idbank = Bank::where('kode', trim($row[18]))->first();
         // dd($row[2]);
         $fields = [
             'kode_anggota' => $kode_anggota,
@@ -78,8 +80,11 @@ class AnggotaImport implements OnEachRow
             'emergency_kontak' => $row[15],
             'no_rek' => $row[16],
             'u_entry' => $user->id,
+            // 'id_bank' => $idbank->id,
             'status' => $status
         ];
+
+        // \Log::info(collect($fields));
         
         // if email or nipp is excist, next
         $anggota = Anggota::where('kode_anggota', $fields['kode_anggota'])
