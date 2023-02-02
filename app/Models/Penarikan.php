@@ -138,7 +138,7 @@ class Penarikan extends Model implements Auditable
     public function getSerialNumberViewAttribute()
     {
         if ($this->tgl_transaksi){
-        return 'TAR' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
+        return 'TAR' . $this->tgl_transaksi->format('Y') . $this->tgl_transaksi->format('m') . str_pad($this->serial_number, 4, "0", STR_PAD_LEFT);
         }
         return '-';
     }
@@ -202,7 +202,7 @@ class Penarikan extends Model implements Auditable
     {
         if ($this->tgl_transaksi)
         {
-            return Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('d M Y');
+            return $this->tgl_transaksi->format('d M Y');
         }
         return $this->tgl_mulai;
     }
