@@ -18,7 +18,7 @@ class Penarikan extends Model implements Auditable
 
     protected $table = "t_pengambilan";
     protected $primaryKey = "kode_ambil";
-    protected $dates = ['tgl_ambil', 'tgl_acc','deleted_at'];
+    protected $dates = ['tgl_ambil', 'tgl_acc','deleted_at', 'tgl_transaksi'];
     protected $fillable = ['kode_anggota', 'kode_tabungan','besar_ambil','tgl_ambil','keterangan','code_trans','u_entry'];
     protected $appends = ['serial_number_view', 'created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view','tgl_transaksi_view'];
 
