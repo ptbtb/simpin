@@ -41,10 +41,15 @@ Route::get('/clear-cache', function () {
 Route::get('generate-jkk', [MigrationController::class, 'generateJkkPrinted']);
 Route::get('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
 Route::post('audit', [App\Http\Controllers\AuditController::class, 'index'])->name('audit');
+// Route::get('audit/download/excel', [App\Http\Controllers\AuditController::class, 'createExcel'])->name('audit-download-excel');
+// Route::get('audit/download/pdf', [App\Http\Controllers\AuditController::class, 'createPdf'])->name('audit-download-pdf');
 Route::get('auditJurnal', [App\Http\Controllers\AuditJurnalController::class, 'index'])->name('auditJurnal');
 Route::get('auditJurnalAjax', [App\Http\Controllers\AuditJurnalController::class, 'auditJurnalAjax'])->name('audit-jurnal-ajax');
 Route::post('auditJurnal', [App\Http\Controllers\AuditJurnalController::class, 'index'])->name('auditJurnal');
 Route::post('auditJurnal/delete', [App\Http\Controllers\AuditJurnalController::class, 'destroy'])->name('auditJurnal-delete');
+
+Route::get('runScript', [App\Http\Controllers\RunScriptController::class, 'index'])->name('runScript');
+Route::post('runScript', [App\Http\Controllers\RunScriptController::class, 'runScript'])->name('script-submit');
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

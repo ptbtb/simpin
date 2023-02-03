@@ -165,3 +165,7 @@ define('DB_QUERY_CACHE_PERIOD_FAST', 1);  //in minutes
 define('DB_QUERY_CACHE_PERIOD_MEDIUM', 15);  //in minutes
 define('DB_QUERY_CACHE_PERIOD_SLOW', 60);  //in minutes
 define('DB_QUERY_CACHE_PERIOD_VERY_SLOW', 720);  //in minutes
+
+define('COMMAND_JURNAL_BALANCE_RESOLVER', '1');
+define('COMMAND_JURNAL_PENARIKAN_GENERATOR', '2');
+

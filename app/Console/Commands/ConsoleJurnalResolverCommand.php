@@ -6,6 +6,7 @@ use App\Models\Code;
 use App\Models\Jurnal;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ConsoleJurnalResolverCommand extends Command
 {
@@ -41,6 +42,7 @@ class ConsoleJurnalResolverCommand extends Command
      */
     public function handle()
     {
+        $log = "Resolving disbalanced journal..";
         $periode = $this->option('periode');
         if (empty($periode)){
             $this->error("Please add an argument '--periode='. It Must Be Input In Format YYYY-MM");
@@ -61,6 +63,7 @@ class ConsoleJurnalResolverCommand extends Command
 
         if ($totalDebet == $totalKredit){
             $this->info("Debet and Kredit are equal!");
+            $log = $log . "\nDebet and Kredit are equal!";
         } else {
             $this->info("Debet and Kredit are not equal, please wait for resolving...");
             $jurnal = $jurnal->groupBy('trans_id');
@@ -93,14 +96,17 @@ class ConsoleJurnalResolverCommand extends Command
                     $coaBank->audit_track = 'Resolved By Jurnal Resolver';
                     $coaBank->save();
                     $this->info("$key is Resolved By Jurnal Resolver");
+                    $log = $log . "\n$key is Resolved By Jurnal Resolver";
                 } else {
                     // if not balance, return kredit value before
                     $coaBank->kredit = $coaBankKreditBefore;
                     $coaBank->audit_track = 'Cannot Resolve By Jurnal Resolver';
                     $coaBank->save();
                     $this->info("$key Cannot Resolve By Jurnal Resolver");
+                    $log = $log . "\n$key Cannot Resolve By Jurnal Resolver";
                 }
             }
         }
+        Log::info($log);
     }
 }

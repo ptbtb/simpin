@@ -665,6 +665,12 @@ return [
             'icon' => 'fas fa-fw fa-list-alt',
              'can'  => ['view audit'],
         ],
+        [
+            'text' => 'Run Script',
+            'url' => 'runScript',
+            'icon' => 'fas fa-fw fa-list-alt',
+             'can'  => ['view audit'],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
