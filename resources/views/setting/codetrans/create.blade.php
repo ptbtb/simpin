@@ -44,6 +44,15 @@
                             @endforeach
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="induk">Induk</label>
+                            <br>
+                            <select name="induk" id="induk" class="form-control select2Akun" required>
+                            @foreach ($parents as $parent)
+                                <option value="{{ $parent->CODE }}">{{ $parent->NAMA_TRANSAKSI }}</option>
+                            @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">

@@ -50,10 +50,12 @@ class SettingCodeTransController extends Controller
         $codeTypes = CodeType::get();
         $codeCategories = CodeCategory::get();
         $normalBalances = NormalBalance::get();
+        $parents = Code::where('is_parent', 1)->get();
 
         $data['title'] = "Tambah Code Transaksi";
         $data['codeTypes'] = $codeTypes;
         $data['codeCategories'] = $codeCategories;
+        $data['parents'] = $parents;
         $data['normalBalances'] = $normalBalances;
 
         return view('setting.codetrans.create', $data);
@@ -77,6 +79,7 @@ class SettingCodeTransController extends Controller
             $code->code_type_id = $request->code_type;
             $code->normal_balance_id = $request->normal_balance;
             $code->code_category_id = $request->code_category;
+            $code->induk_id = $request->induk;
             $code->CODE = $request->code;
             $code->is_parent = $request->kode_summary;
             $code->NAMA_TRANSAKSI = $request->nama_transaksi;
@@ -113,12 +116,14 @@ class SettingCodeTransController extends Controller
         $codeTypes = CodeType::pluck('name', 'id')->all();
         $codeCategories = CodeCategory::pluck('name', 'id')->all();
         $normalBalances = NormalBalance::pluck('name', 'id')->all();
+        $parents = Code::where('is_parent', 1)->pluck('NAMA_TRANSAKSI', 'CODE')->all();
         $codes = Code::find($id);
 
         $data['title'] = "Edit Code Transaksi";
         $data['codeTypes'] = $codeTypes;
         $data['codeCategories'] = $codeCategories;
         $data['normalBalances'] = $normalBalances;
+        $data['parents'] = $parents;
         $data['codes'] = $codes;
         return view('setting.codetrans.edit', $data);
     }
@@ -136,16 +141,21 @@ class SettingCodeTransController extends Controller
         try {
             // get auth user
             $user = Auth::user();
-
             // save into kode transaksi
             $code = Code::find($id);
             $code->code_type_id = $request->code_type;
             $code->normal_balance_id = $request->normal_balance;
             $code->code_category_id = $request->code_category;
+            $code->induk_id = $request->induk;
             $code->CODE = $request->code;
             $code->is_parent = $request->kode_summary;
             $code->NAMA_TRANSAKSI = $request->nama_transaksi;
             $code->u_entry = $user->name;
+            if ($request->active){
+                $code->active = $request->active;
+            } else {
+                $code->active = 0;
+            }
             $code->save();
 
             return redirect()->route('kode-transaksi-list')->withSuccess('Berhasil Merubah kode transaksi');

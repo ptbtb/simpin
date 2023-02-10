@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Add Kode Transaksi')
+@section('title', 'Edit Kode Transaksi')
 @section('plugins.Datatables', true)
 @section('content_header')
     <h1>Edit Kode Transaksi</h1>
@@ -33,7 +33,17 @@
                                 <label for="codeCategory">Kategori</label>
                                 <br>
                                 {!! Form::select('code_category', $codeCategories,$codes->code_category_id,['id' => 'codeCategory', 'class' => 'form-control']) !!}
-
+                            </div>
+                            <div class="form-group">
+                                <label for="induk">Induk</label>
+                                <br>
+                                {!! Form::select('induk', $parents,$codes->induk_id,['id' => 'induk', 'class' => 'form-control', 'placeholder' => ' ']) !!}
+                                {{-- <select name="induk" id="induk" class="form-control select2Akun" required>
+                                    <option value=""></option>
+                                @foreach ($parents as $parent)
+                                    <option value="{{ $parent->CODE }}">{{ $parent->NAMA_TRANSAKSI }}</option>
+                                @endforeach
+                                </select> --}}
                             </div>
                         </div>
                     </div>
@@ -60,6 +70,16 @@
                                     <input class="form-check-input" type="radio" name="kode_summary" id="kode_summary_anak" value="0" @if($codes->is_parent==0) checked @endif>
                                     <label class="form-check-label" for="kode_summary_anak">
                                         Anak
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="active">Active</label>
+                                <br>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="active" id="active" value="1" @if($codes->active==1) checked @endif>
+                                    <label class="form-check-label" for="induk">
+                                        Active
                                     </label>
                                 </div>
                             </div>
