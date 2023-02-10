@@ -241,6 +241,10 @@ Route::group(['prefix' => 'pinjaman'], function () {
         Route::post('/pinjaman/editsaldo', [App\Http\Controllers\PinjamanController::class, 'updatesaldoawal'])->name('edit-saldo-awalpinjaman');
         Route::get('report/download/excel', [App\Http\Controllers\PinjamanController::class, 'createExcelReport'])->name('laporan-pinjaman-download-excel');
 
+        //list angsuran
+        Route::get('angsuran-list', [App\Http\Controllers\AngsuranController::class, 'index'])->name('angsuran-list');
+        Route::post('angsuran-list', [App\Http\Controllers\AngsuranController::class, 'index'])->name('angsuran-list');
+
         // import batch saldo pinjaman
         Route::get('import', [App\Http\Controllers\PinjamanController::class, 'importPinjaman'])->name('pinjaman-import');
         Route::get('importData', [App\Http\Controllers\PinjamanController::class, 'importDataPinjaman'])->name('pinjaman-importdata');

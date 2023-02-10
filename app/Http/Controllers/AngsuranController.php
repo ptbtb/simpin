@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Imports\AngsuranImport;
+use App\Models\Anggota;
 use App\Models\Angsuran;
 use App\Models\AngsuranPartial;
+use App\Models\Pinjaman;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Database\Eloquent\ModelNotfoundException;
+use Illuminate\Support\Facades\Auth;
 
 class AngsuranController extends Controller
 {
@@ -87,8 +91,60 @@ class AngsuranController extends Controller
       } catch (\Exception $e) {
 
       }
+    }
 
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->roles->first();
+        $this->authorize('view angsuran', $user);
+        $kodepinjam = Pinjaman::pluck('kode_pinjam')->all();
+        // check role user
+        if ($user->roles->first()->id == ROLE_ANGGOTA) {
+            $anggota = $user->anggota;
+            if (is_null($anggota)) {
+                return redirect()->back()->withError('Your account has no members');
+            }
 
+            $listAngsuran = Angsuran::where('kode_anggota', $anggota->kode_anggota)
+                ->wherenotnull('tgl_transaksi')
+                ->orderBy('tgl_entri', 'asc');
+        } else {
+            if ($request->id) {
+                $anggota = Anggota::find($request->id);
 
+                $listAngsuran = Angsuran::where('kode_anggota', $anggota->kode_anggota)
+                    ->wherenotnull('tgl_transaksi')
+                    ->orderBy('tgl_entri', 'asc');;
+            } else {
+                $listAngsuran = Angsuran::wherenotnull('tgl_transaksi')
+                    ->orderby('created_at', 'desc');
+            }
+        }
+
+        if (!$request->from) {
+            if ($request->id) {
+                $request->from = Carbon::createFromFormat('Y-m-d', '2021-01-01')->format('Y-m-d');
+            } else {
+                $request->from = Carbon::now()->startOfDay()->format('Y-m-d');
+            }
+        } else {
+            $request->from = Carbon::createFromFormat('Y-m-d', $request->from)->startOfDay()->format('Y-m-d');
+        }
+
+        if (!$request->to) {
+            $request->to = Carbon::now()->endOfDay()->format('Y-m-d');
+        } else {
+            $request->to = Carbon::createFromFormat('Y-m-d', $request->to)->endOfDay()->format('Y-m-d');
+        }
+        if ($request->kode_pinjam) {
+            $listAngsuran = $listAngsuran->where('kode_pinjam', $request->kode_pinjam);
+        }
+        $listAngsuran = $listAngsuran->whereBetween('tgl_entri', [$request->from, $request->to])->get();
+        $data['title'] = "List Angsuran";
+        $data['listAngsuran'] = $listAngsuran;
+        $data['request'] = $request;
+        $data['kodepinjam'] = $kodepinjam;
+        return view('pinjaman.indexAngsuran', $data);
     }
 }

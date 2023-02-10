@@ -392,6 +392,12 @@ return [
                     'can'  => ['view pinjaman'],
                 ],
                 [
+                    'text' => 'List Angsuran',
+                    'url' => '/pinjaman/angsuran-list',
+                    'icon' => 'fas fa-file-invoice-dollar nav-icon',
+                    'can'  => ['view angsuran'],
+                ],
+                [
                     'text' => 'History Pinjaman',
                     'url' => '/pinjaman/history',
                     'icon' => 'fas fa-history nav-icon',

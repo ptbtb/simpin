@@ -140,4 +140,8 @@ class Angsuran extends Model implements Auditable
     {
         return $this->besar_pembayaran + $this->besar_pembayaran_jasa;
     }
+
+    public function anggota() {
+        return $this->belongsTo(Anggota::class, 'kode_anggota');
+    }
 }
