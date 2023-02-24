@@ -15,18 +15,24 @@ class CreateJurnalTable extends Migration
     {
         Schema::create('t_jurnal', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis');
+            $table->integer('id_tipe_jurnal')->nullable();
+            $table->integer('jurnalable_id')->nullable();
+            $table->string('jurnalable_type', 100)->nullable();
             $table->unsignedBigInteger('nomer');
-            $table->string('akun_kredit');
-            $table->float('kredit');
-            $table->string('akun_debet');
-            $table->float('debet');
-            $table->string('Keterangan');
+            $table->string('akun_kredit', 190);
+            $table->double('kredit');
+            $table->string('akun_debet', 190);
+            $table->double('debet');
+            $table->string('Keterangan', 190);
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
+            $table->date('tgl_transaksi')->nullable();
+            $table->date('deleted_at')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');
-            
+            $table->integer('deleted_by')->nullable();
+            $table->string('trans_id', 190)->nullable();
+            $table->integer('anggota')->nullable();
         });
     }
 
