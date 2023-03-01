@@ -536,6 +536,11 @@ class JurnalUmumController extends Controller
             $ketua = Pengurus::where('jabatan', 1)->orderBy('expired', 'desc')->first();
             $bendahara = Pengurus::where('jabatan', 4)->orderBy('expired', 'desc')->first();
 
+            if(is_null($ketua) || is_null($bendahara))
+            {
+                return redirect()->back()->withErrors('Ketua atau bendahara masih belum disetup');
+            }
+
             $data['ketua'] = $ketua;
             $data['bendahara'] = $bendahara;
             $data['jurnalUmum'] = $jurnalUmum;
