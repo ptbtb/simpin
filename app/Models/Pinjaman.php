@@ -231,8 +231,9 @@ class Pinjaman extends Model implements Auditable
         return false;
     }
 
-    public function getJumlahAngsuran($tgl)
+    public function getSisaPinjaman($tgl)
     {
+        $sisa=0;
         $from = Carbon::createFromFormat('Y-m-d','2022-08-01')->format('Y-m-d');
         $to =Carbon::createFromFormat('Y-m-d',$tgl)->format('Y-m-d');
 //        $sisa_pinjaman_saldo_awal = $this->mutasi;
@@ -240,6 +241,11 @@ class Pinjaman extends Model implements Auditable
             ->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)
             ->wherebetween('tgl_transaksi',[$from,$to])
             ->sum('besar_angsuran');
-        return $jumlah_angsuran;
+        if ($this->mutasi_juli>0){
+            $sisa=$this->mutasi_juli-$jumlah_angsuran;
+        }else{
+            $sisa=$this->besar_pinjam-$jumlah_angsuran;
+        }
+        return $sisa;
     }
 }

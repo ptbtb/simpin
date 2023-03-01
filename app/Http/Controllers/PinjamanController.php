@@ -1966,27 +1966,27 @@ class PinjamanController extends Controller
         // period
         // check if period date has been selected
         if (!$request->period) {
-            $request->period = Carbon::today()->format('Y');
+            $request->period = Carbon::today()->format('Y-m-d');
         }
 
         // get start and end of year
-        $startOfYear = Carbon::createFromFormat('Y', $request->period)->startOfYear()->toDateTimeString();
-        $endOfYear   = Carbon::createFromFormat('Y', $request->period)->endOfYear()->toDateTimeString();
+        $startOfYear = Carbon::createFromFormat('Y-m-d', $request->period)->startOfYear()->toDateTimeString();
+        $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->period)->endOfYear()->toDateTimeString();
 
-        $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-            ->orderBy('tgl_entri')
+        $pinjamanJapens = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
+            ->orderBy('tgl_transaksi')
             ->japen()
             ->get()
             ->groupBy(function ($query) {
                 return Carbon::parse($query->tgl_entri)->format('m');
             });
 
-        $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-            ->orderBy('tgl_entri')
+        $pinjamanJapans = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
+            ->orderBy('tgl_transaksi')
             ->japan()
             ->get()
             ->groupBy(function ($query) {
-                return Carbon::parse($query->tgl_entri)->format('m');
+                return Carbon::parse($query->tgl_transaksi)->format('m');
             });
 
         $totalJapenDiterima = 0;

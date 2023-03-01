@@ -1,6 +1,7 @@
 <?php
 namespace App\Exports;
 
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -13,6 +14,10 @@ use Maatwebsite\Excel\Events\AfterSheet;
 
 class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, ShouldAutoSize, WithEvents, WithMapping
 {
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
     /**
      * @return Builder
      */
@@ -34,7 +39,8 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
                                     't_pinjam.besar_pinjam',
                                     't_pinjam.lama_angsuran',
                                     't_pinjam.sisa_pinjaman',
-                                    't_pinjam.sisa_angsuran' );
+                                    't_pinjam.sisa_angsuran' )
+                        ->limit(10);
     }
 
     /**
@@ -50,7 +56,7 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
             $pinjaman->nama_pinjaman,
             $pinjaman->besar_pinjam,
             $pinjaman->lama_angsuran,
-            $pinjaman->sisa_pinjaman,
+            $pinjaman->getSisaPinjaman($this->request->period),
             $pinjaman->sisa_angsuran
         ];
     }
@@ -60,17 +66,17 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
      */
     public function title(): string
     {
-        return 'Saldo Anggota Per '.Carbon::now()->format('d m Y');
+        return 'Saldo Anggota Per '.Carbon::createFromFormat('Y-m-d',$this->request->period)->format('d m Y');
     }
 
     public function headings(): array
     {
         return [
                 "kode anggota",
-                "Nama", 
-                "Unit Kerja", 
+                "Nama",
+                "Unit Kerja",
                 "Kode Jenis Pinjaman",
-                "Nama Pinjaman", 
+                "Nama Pinjaman",
                 "Jumlah Pinjaman",
                 "Tenor",
                 "Sisa Pinjaman",

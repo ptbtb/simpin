@@ -18,13 +18,13 @@ class LaporanPinjamanExcelExport implements WithMultipleSheets
         $this->data = $data;
     }
 
-    
+
     public function sheets(): array
     {
-       
+
        return [
             'Resume Tahun' => new PinjamanReportExport($this->data),
-            'Saldo Anggota' => new SaldoPinjamanAnggotaSheet(),
+            'Saldo Anggota' => new SaldoPinjamanAnggotaSheet($this->data),
         ];
     }
 }

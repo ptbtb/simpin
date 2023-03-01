@@ -25,30 +25,30 @@ class PinjamanReportExport implements FromView
         // period
         // check if period date has been selected
         if(!$this->request->period)
-        {          
-            $this->request->period = Carbon::today()->format('Y');
+        {
+            $this->request->period = Carbon::today()->format('Y-m-d');
         }
 
         // get start and end of year
-        $startOfYear = Carbon::createFromFormat('Y', $this->request->period)->startOfYear()->toDateTimeString();
-        $endOfYear   = Carbon::createFromFormat('Y', $this->request->period)->endOfYear()->toDateTimeString();
-        
-        $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                ->orderBy('tgl_entri')
+        $startOfYear = Carbon::createFromFormat('Y-m-d', $this->request->period)->startOfYear()->toDateTimeString();
+        $endOfYear   = Carbon::createFromFormat('Y-m-d', $this->request->period)->endOfYear()->toDateTimeString();
+
+        $pinjamanJapens = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_transaksi')
                                 ->japen()
                                 ->get()
                                 ->groupBy(function($query) {
                                     return Carbon::parse($query->tgl_entri)->format('m');
                                 });
 
-        $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                ->orderBy('tgl_entri')
+        $pinjamanJapans = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_transaksi')
                                 ->japan()
                                 ->get()
                                 ->groupBy(function($query) {
                                     return Carbon::parse($query->tgl_entri)->format('m');
                                 });
-        
+
         $totalJapenDiterima = 0;
         $totalJapenApproved = 0;
         $totalJapanDiterima = 0;
@@ -57,20 +57,20 @@ class PinjamanReportExport implements FromView
         $totalJapenTrx = 0;
 
         // loop for every month in year
-        for ($i=1; $i <=12 ; $i++) 
-        { 
+        for ($i=1; $i <=12 ; $i++)
+        {
             $japenDiterima = 0;
             $japenApproved = 0;
             $japanDiterima = 0;
             $japanApproved = 0;
             $japenTemp = [];
             $japanTemp = [];
-            
+
             if($i < 10)
             {
                 if(property_exists((object)$pinjamanJapens->toArray(), '0' . $i))
                 {
-                    
+
                     $japenTemp = $pinjamanJapens['0' . $i];
                 }
 
@@ -113,7 +113,7 @@ class PinjamanReportExport implements FromView
                     $japenDiterima += (int)$japen->besar_pinjam;
                 }
             }
-            
+
             foreach($japanTemp as $japan)
             {
                 if($japan->pengajuan)
@@ -133,14 +133,14 @@ class PinjamanReportExport implements FromView
                 }
             }
 
-            $reports->put($i, ['trxJapen' => $trxJapen, 
-                                    'trxJapan' => $trxJapan, 
-                                    'japenDiterima' => $japenDiterima, 
+            $reports->put($i, ['trxJapen' => $trxJapen,
+                                    'trxJapan' => $trxJapan,
+                                    'japenDiterima' => $japenDiterima,
                                     'japenApproved' => $japenApproved,
                                     'japanDiterima' => $japanDiterima,
                                     'japanApproved' => $japanApproved
                                 ]);
-            
+
             // total data
             $totalJapanTrx += $trxJapan;
             $totalJapenTrx += $trxJapen;

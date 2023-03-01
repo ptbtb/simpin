@@ -34,7 +34,7 @@
                 <form id="myForm" role="form" method="GET" enctype="multipart/form-data" action="{{ route('pinjaman-report') }}">
                     <div class="col-md-4">
                         <label>Periode</label>
-                        <input class="form-control datepicker" placeholder="yyyy" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('Y', $request->period)->format('Y') }}" autocomplete="off" />
+                        <input class="form-control datepicker" placeholder="yyyy-mm-dd" id="period" name="period" value="{{ Carbon\Carbon::createFromFormat('Y-m-d', $request->period)->format('Y-m-d') }}" autocomplete="off" />
                     </div>
                     <div class="col-md-12 text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
@@ -98,9 +98,7 @@
         {
 
             $('.datepicker').datepicker({
-                format: "yyyy",
-                viewMode: "years", 
-                minViewMode: "years",
+                format: "yyyy-mm-dd",
                 autoclose: true
             });
 
