@@ -68,7 +68,10 @@ class Pinjaman extends Model implements Auditable
         return $this->hasMany(PinjamanRestruktur::class, 'kode_pinjam');
     }
 
-    public function scopeNotPaid($query) {
+    public function scopeNotPaid($query,$tgl) {
+        if($tgl){
+            return $query->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)->orwherenull('tgl_pelunasan')->orwhere('tgl_pelunasan','>', $tgl);
+        }
         return $query->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS);
     }
 
