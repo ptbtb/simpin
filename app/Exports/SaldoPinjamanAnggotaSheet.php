@@ -58,7 +58,7 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
             $pinjaman->besar_pinjam,
             $pinjaman->lama_angsuran,
             $pinjaman->getSisaPinjaman($this->request->period),
-            $pinjaman->sisa_angsuran
+//            $pinjaman->sisa_angsuran
         ];
     }
 
@@ -81,7 +81,8 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
                 "Jumlah Pinjaman",
                 "Tenor",
                 "Sisa Pinjaman",
-                "Sisa Angsuran"];
+//                "Sisa Angsuran"
+    ];
     }
 
     /**
