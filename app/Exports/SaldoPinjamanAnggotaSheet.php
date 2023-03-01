@@ -33,6 +33,8 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
                         ->orderBy('t_pinjam.kode_jenis_pinjam','asc')
                         ->NotPaid()
                         ->select(
+                                    't_pinjam.kode_pinjam',
+                                    't_pinjam.mutasi_juli',
                                     't_anggota.kode_anggota',
                                     't_anggota.nama_anggota',
                                     't_company.nama',
@@ -41,8 +43,8 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
                                     't_pinjam.besar_pinjam',
                                     't_pinjam.lama_angsuran',
                                     't_pinjam.sisa_pinjaman',
-                                    't_pinjam.sisa_angsuran' );
-//                        ->limit(1);
+                                    't_pinjam.sisa_angsuran' )
+                        ->limit(1);
     }
 
     /**
