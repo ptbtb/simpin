@@ -140,18 +140,18 @@
             <td style="border:1px solid black"></td>
             <td style="text-align: center" style="font-size: 12px">
                 <i style="color: transparent">.</i> KETUA <br><br><br><br><br>
-                <u style="font-size: 12px">DJUSMAN HI UMAR</u>
+                <u style="font-size: 12px">{{ $ketua->nama }}</u>
                 <br>
                 <span style="font-size: 12px">
-                    NIPP : 272076315
+                    NIPP : {{ $ketua->nipp }}
                 </span>
             </td>
             <td style="text-align: center">
                 <i style="color: transparent">.</i> PLT BENDAHARA <br><br><br><br><br>
-                <u style="font-size: 12px">M. FAJAR SUHARDIMAN</u>
+                <u style="font-size: 12px">{{ $bendahara->nama }}</u>
                 <br>
                 <span style="font-size: 12px">
-                    NIPP : 274026451
+                    NIPP : {{ $bendahara->nipp }}
                 </span>
             </td>
             {{-- <td></td> --}}

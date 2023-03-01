@@ -14,6 +14,7 @@ use App\Models\StatusJurnalUmum;
 use Illuminate\Http\Request;
 use App\Managers\JurnalManager;
 use App\Managers\JurnalUmumManager;
+use App\Models\Pengurus;
 use App\Models\SumberDana;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -532,7 +533,11 @@ class JurnalUmumController extends Controller
             $jurnalUmum->status_jkk = 1;
             $jurnalUmum->save();
 
+            $ketua = Pengurus::where('jabatan', 1)->orderBy('expired', 'desc')->first();
+            $bendahara = Pengurus::where('jabatan', 4)->orderBy('expired', 'desc')->first();
 
+            $data['ketua'] = $ketua;
+            $data['bendahara'] = $bendahara;
             $data['jurnalUmum'] = $jurnalUmum;
             $data['tgl_print']= Carbon::now()->format('d-m-Y');
             $data['terbilang'] = self::terbilang($jurnalUmum->total_nominal_debet) . ' rupiah';
