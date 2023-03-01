@@ -262,4 +262,20 @@ class Pengajuan extends Model implements Auditable
     return '-';
 
     }
+
+    public function scopeJapan($query)
+    {
+        return $query->whereHas('jenisPinjaman', function ($q)
+        {
+            return $q->japan();
+        });
+    }
+
+    public function scopeJapen($query)
+    {
+        return $query->whereHas('jenisPinjaman', function ($q)
+        {
+            return $q->japen();
+        });
+    }
 }

@@ -1973,20 +1973,20 @@ class PinjamanController extends Controller
         $startOfYear = Carbon::createFromFormat('Y-m-d', $request->period)->startOfYear()->toDateTimeString();
         $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->period)->endOfYear()->toDateTimeString();
 
-        $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-            ->orderBy('tgl_entri')
+        $pinjamanJapens = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
+            ->orderBy('tgl_pengajuan')
             ->japen()
             ->get()
             ->groupBy(function ($query) {
-                return Carbon::parse($query->tgl_entri)->format('m');
+                return Carbon::parse($query->tgl_pengajuan)->format('m');
             });
 
-        $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-            ->orderBy('tgl_entri')
+        $pinjamanJapans = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
+            ->orderBy('tgl_pengajuan')
             ->japan()
             ->get()
             ->groupBy(function ($query) {
-                return Carbon::parse($query->tgl_entri)->format('m');
+                return Carbon::parse($query->tgl_pengajuan)->format('m');
             });
 
         $totalJapenDiterima = 0;
@@ -2027,8 +2027,8 @@ class PinjamanController extends Controller
             $trxJapan = count($japanTemp);
 
             foreach ($japenTemp as $japen) {
-                if ($japen->pengajuan) {
-                    if ($japen->pengajuan->bukti_pembayaran == null) {
+                if ($japen->pinjaman) {
+                    if ($japen->bukti_pembayaran == null) {
                         $japenApproved += (int)$japen->besar_pinjam;
                     } else {
                         $japenDiterima += (int)$japen->besar_pinjam;
@@ -2039,8 +2039,8 @@ class PinjamanController extends Controller
             }
 
             foreach ($japanTemp as $japan) {
-                if ($japan->pengajuan) {
-                    if ($japan->pengajuan->bukti_pembayaran == null) {
+                if ($japan->pinjaman) {
+                    if ($japan->bukti_pembayaran == null) {
                         $japanApproved += (int)$japan->besar_pinjam;
                     } else {
                         $japanDiterima += (int)$japan->besar_pinjam;
@@ -2103,20 +2103,20 @@ class PinjamanController extends Controller
                 $startOfYear = Carbon::createFromFormat('Y-m-d', $request->period)->startOfYear()->toDateTimeString();
                 $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->period)->endOfYear()->toDateTimeString();
 
-                $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                        ->orderBy('tgl_entri')
+                $pinjamanJapens = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
+                                        ->orderBy('tgl_pengajuan')
                                         ->japen()
                                         ->get()
                                         ->groupBy(function($query) {
-                                            return Carbon::parse($query->tgl_entri)->format('m');
+                                            return Carbon::parse($query->tgl_pengajuan)->format('m');
                                         });
 
-                $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                        ->orderBy('tgl_entri')
+                $pinjamanJapans = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
+                                        ->orderBy('tgl_pengajuan')
                                         ->japan()
                                         ->get()
                                         ->groupBy(function($query) {
-                                            return Carbon::parse($query->tgl_entri)->format('m');
+                                            return Carbon::parse($query->tgl_pengajuan)->format('m');
                                         });
 
                 $totalJapenDiterima = 0;
@@ -2167,9 +2167,9 @@ class PinjamanController extends Controller
 
                     foreach($japenTemp as $japen)
                     {
-                        if($japen->pengajuan)
+                        if($japen->pinjaman)
                         {
-                            if($japen->pengajuan->bukti_pembayaran == null)
+                            if($japen->bukti_pembayaran == null)
                             {
                                 $japenApproved += (int)$japen->besar_pinjam;
                             }
@@ -2186,9 +2186,9 @@ class PinjamanController extends Controller
 
                     foreach($japanTemp as $japan)
                     {
-                        if($japan->pengajuan)
+                        if($japan->pinjaman)
                         {
-                            if($japan->pengajuan->bukti_pembayaran == null)
+                            if($japan->bukti_pembayaran == null)
                             {
                                 $japanApproved += (int)$japan->besar_pinjam;
                             }

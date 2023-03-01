@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Pengajuan;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Http\Request;
@@ -33,20 +34,20 @@ class PinjamanReportExport implements FromView
         $startOfYear = Carbon::createFromFormat('Y-m-d', $this->request->period)->startOfYear()->toDateTimeString();
         $endOfYear   = Carbon::createFromFormat('Y-m-d', $this->request->period)->endOfYear()->toDateTimeString();
 
-        $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                ->orderBy('tgl_entri')
+        $pinjamanJapens = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_pengajuan')
                                 ->japen()
                                 ->get()
                                 ->groupBy(function($query) {
-                                    return Carbon::parse($query->tgl_entri)->format('m');
+                                    return Carbon::parse($query->tgl_pengajuan)->format('m');
                                 });
 
-        $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                ->orderBy('tgl_entri')
+        $pinjamanJapans = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_pengajuan')
                                 ->japan()
                                 ->get()
                                 ->groupBy(function($query) {
-                                    return Carbon::parse($query->tgl_entri)->format('m');
+                                    return Carbon::parse($query->tgl_pengajuan)->format('m');
                                 });
 
         $totalJapenDiterima = 0;
@@ -97,9 +98,9 @@ class PinjamanReportExport implements FromView
 
             foreach($japenTemp as $japen)
             {
-                if($japen->pengajuan)
+                if($japen->pinjaman)
                 {
-                    if($japen->pengajuan->bukti_pembayaran == null)
+                    if($japen->bukti_pembayaran == null)
                     {
                         $japenApproved += (int)$japen->besar_pinjam;
                     }
@@ -116,9 +117,9 @@ class PinjamanReportExport implements FromView
 
             foreach($japanTemp as $japan)
             {
-                if($japan->pengajuan)
+                if($japan->pinjaman)
                 {
-                    if($japan->pengajuan->bukti_pembayaran == null)
+                    if($japan->bukti_pembayaran == null)
                     {
                         $japanApproved += (int)$japan->besar_pinjam;
                     }
