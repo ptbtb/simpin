@@ -43,8 +43,8 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
                                     't_pinjam.besar_pinjam',
                                     't_pinjam.lama_angsuran',
                                     't_pinjam.sisa_pinjaman',
-                                    't_pinjam.sisa_angsuran' )
-                        ->limit(1);
+                                    't_pinjam.sisa_angsuran' );
+//                        ->limit(1);
     }
 
     /**
