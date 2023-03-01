@@ -33,16 +33,16 @@ class PinjamanReportExport implements FromView
         $startOfYear = Carbon::createFromFormat('Y-m-d', $this->request->period)->startOfYear()->toDateTimeString();
         $endOfYear   = Carbon::createFromFormat('Y-m-d', $this->request->period)->endOfYear()->toDateTimeString();
 
-        $pinjamanJapens = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
-                                ->orderBy('tgl_transaksi')
+        $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_entri')
                                 ->japen()
                                 ->get()
                                 ->groupBy(function($query) {
                                     return Carbon::parse($query->tgl_entri)->format('m');
                                 });
 
-        $pinjamanJapans = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
-                                ->orderBy('tgl_transaksi')
+        $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
+                                ->orderBy('tgl_entri')
                                 ->japan()
                                 ->get()
                                 ->groupBy(function($query) {
