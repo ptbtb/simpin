@@ -169,3 +169,9 @@ define('DB_QUERY_CACHE_PERIOD_VERY_SLOW', 720);  //in minutes
 define('COMMAND_JURNAL_BALANCE_RESOLVER', '1');
 define('COMMAND_JURNAL_PENARIKAN_GENERATOR', '2');
 
+const ARRAY_JABATAN_PENGURUS = [
+    1 => 'Ketua',
+    2 => 'Wakil Ketua',
+    3 => 'Sekretaris',
+    4 => 'Bendahara'
+];

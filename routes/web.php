@@ -7,6 +7,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JkkPrintedController;
 use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\PendapatanController;
+use App\Http\Controllers\PengurusController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\SHUController;
 use App\Http\Controllers\SumberDanaController;
@@ -595,4 +596,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 });
 
 Route::resource('sumber-dana', SumberDanaController::class);
+
+Route::resource('pengurus', PengurusController::class)->middleware('auth');
 //Route::get('test', [App\Http\Controllers\TestController::class, 'index'])->name('test');
