@@ -252,6 +252,13 @@ return [
                     'active' => ['/sumber-dana/create'],
                     'can'  => ['view sumber dana'],
                 ],
+                [
+                    'text' => 'pengurus',
+                    'route' => 'pengurus.index',
+                    'icon' => 'fa fa-list nav-icon',
+                    'active' => ['/pengurus/create'],
+                    'can'  => ['view pengurus'],
+                ],
             ],
         ],
         [

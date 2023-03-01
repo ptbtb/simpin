@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pengurus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,6 +18,8 @@ class PengurusController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        $this->authorize('view pengurus', $user);
         $listPengurus = Pengurus::orderBy('expired', 'desc')
                                 ->get();
         $data['title'] = 'List Pengurus';
@@ -31,6 +34,8 @@ class PengurusController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        $this->authorize('add pengurus', $user);
         $data['title'] = 'Tambah Pengurus';
         return view('pengurus.create', $data);
     }
@@ -45,9 +50,12 @@ class PengurusController extends Controller
     {
         try 
         {
+            $user = Auth::user();
+            $this->authorize('add pengurus', $user);
             $validator  = Validator::make($request->all(), [
                 'nama' => 'required',
                 'jabatan' => 'required',
+                'nipp' => 'required',
                 'start' => 'required',
                 'expired' => 'required',
             ]);
@@ -104,6 +112,8 @@ class PengurusController extends Controller
      */
     public function edit($id)
     {
+        $user = Auth::user();
+        $this->authorize('edit pengurus', $user);
         $pengurus = Pengurus::findOrFail($id);
         $data['title'] = 'Edit Pengurus';
         $data['pengurus'] = $pengurus;
@@ -121,11 +131,14 @@ class PengurusController extends Controller
     {
         try 
         {
+            $user = Auth::user();
+            $this->authorize('edit pengurus', $user);
             $pengurus = Pengurus::findOrFail($id);
             
             $validator  = Validator::make($request->all(), [
                 'nama' => 'required',
                 'jabatan' => 'required',
+                'nipp' => 'required',
                 'start' => 'required',
                 'expired' => 'required',
             ]);
@@ -179,6 +192,8 @@ class PengurusController extends Controller
          */
         try 
         {
+            $user = Auth::user();
+            $this->authorize('delete pengurus', $user);
             $pengurus = Pengurus::find($id);
             if(is_null($pengurus))
             {

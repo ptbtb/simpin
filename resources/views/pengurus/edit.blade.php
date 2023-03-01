@@ -46,6 +46,10 @@
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
+                        <label for="nipp">NIPP</label>
+                        <input type="text" name="nipp" id="nipp" class="form-control" required value="{{ $pengurus->nipp }}">
+                    </div>
+                    <div class="col-md-6 form-group">
                         <label for="start">Start</label>
                         <input type="text" name="start" id="start" class="form-control" required value="{{ $pengurus->start->format('d-m-Y') }}" autocomplete="off">
                     </div>

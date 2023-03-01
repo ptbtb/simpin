@@ -12,6 +12,13 @@ class PermissionGroup extends Model
 
     protected $table = "permissions_group";
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name'];
+
     public function permissions()
     {
         return $this->hasMany(Permission::class, 'permissions_group_id', 'id');

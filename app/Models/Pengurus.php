@@ -25,7 +25,8 @@ class Pengurus extends Model
         'nama', 
         'jabatan', 
         'start', 
-        'expired'
+        'expired',
+        'nipp'
     ];
 
     /**

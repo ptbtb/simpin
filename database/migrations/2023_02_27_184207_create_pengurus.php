@@ -17,6 +17,7 @@ class CreatePengurus extends Migration
             $table->id();
             $table->string('nama');
             $table->integer('jabatan');
+            $table->string('nipp');
             $table->date('start');
             $table->date('expired');
             $table->timestamps();

@@ -26,9 +26,11 @@
 @section('content')
     <div class="card">
         <div class="card-header text-right">
-            <a href="{{ route('pengurus.create') }}" class="btn btn-xs btn-success">
-                <i class="fa fa-plus"></i> Tambah Pengurus
-            </a>
+            @can('add pengurus')
+                <a href="{{ route('pengurus.create') }}" class="btn btn-xs btn-success">
+                    <i class="fa fa-plus"></i> Tambah Pengurus
+                </a>
+            @endcan
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -48,16 +50,20 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $pengurus->nama }}</td>
-                                <td>{{ $pengurus->jabatan }}</td>
+                                <td>{{ ARRAY_JABATAN_PENGURUS[$pengurus->jabatan] }}</td>
                                 <td>{{ $pengurus->start->format('d-M-Y') }}</td>
                                 <td>{{ $pengurus->expired->format('d-M-Y') }}</td>
                                 <td>
-                                    <a href="{{ route('pengurus.edit', [$pengurus->id]) }}"
-                                        class="btn btn-xs btn-warning"><i class="fa fa-edit"></i> Edit
-                                    </a>
-                                    <a class="btn btn-xs btn-danger btn-delete" data-id="{{ $pengurus->id }}">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </a>
+                                    @can('edit pengurus')
+                                        <a href="{{ route('pengurus.edit', [$pengurus->id]) }}"
+                                            class="btn btn-xs btn-warning"><i class="fa fa-edit"></i> Edit
+                                        </a>
+                                    @endcan
+                                    @can('delete pengurus')
+                                        <a class="btn btn-xs btn-danger btn-delete" data-id="{{ $pengurus->id }}">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach
