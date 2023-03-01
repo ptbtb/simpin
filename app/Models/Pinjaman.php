@@ -238,7 +238,7 @@ class Pinjaman extends Model implements Auditable
         $to =Carbon::createFromFormat('Y-m-d',$tgl)->format('Y-m-d');
 //        $sisa_pinjaman_saldo_awal = $this->mutasi;
         $jumlah_angsuran = $this->listAngsuran
-            ->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)
+//            ->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)
             ->wherebetween('tgl_transaksi',[$from,$to])
             ->sum('besar_angsuran');
         if ($this->mutasi_juli>0){

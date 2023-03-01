@@ -2096,27 +2096,27 @@ class PinjamanController extends Controller
                 // check if period date has been selected
                 if(!$request->period)
                 {
-                    $request->period = Carbon::today()->format('Y');
+                    $request->period = Carbon::today()->format('Y-m-d');
                 }
 
                 // get start and end of year
-                $startOfYear = Carbon::createFromFormat('Y', $request->period)->startOfYear()->toDateTimeString();
-                $endOfYear   = Carbon::createFromFormat('Y', $request->period)->endOfYear()->toDateTimeString();
+                $startOfYear = Carbon::createFromFormat('Y-m-d', $request->period)->startOfYear()->toDateTimeString();
+                $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->period)->endOfYear()->toDateTimeString();
 
-                $pinjamanJapens = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                        ->orderBy('tgl_entri')
+                $pinjamanJapens = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
+                                        ->orderBy('tgl_transaksi')
                                         ->japen()
                                         ->get()
                                         ->groupBy(function($query) {
-                                            return Carbon::parse($query->tgl_entri)->format('m');
+                                            return Carbon::parse($query->tgl_transaksi)->format('m');
                                         });
 
-                $pinjamanJapans = Pinjaman::whereBetween('tgl_entri', [$startOfYear, $endOfYear])
-                                        ->orderBy('tgl_entri')
+                $pinjamanJapans = Pinjaman::whereBetween('tgl_transaksi', [$startOfYear, $endOfYear])
+                                        ->orderBy('tgl_transaksi')
                                         ->japan()
                                         ->get()
                                         ->groupBy(function($query) {
-                                            return Carbon::parse($query->tgl_entri)->format('m');
+                                            return Carbon::parse($query->tgl_transaksi)->format('m');
                                         });
 
                 $totalJapenDiterima = 0;
@@ -2237,10 +2237,10 @@ class PinjamanController extends Controller
                 $pdf = PDF::loadView('pinjaman.reportExcel', $data)->setPaper('a4', 'landscape');
 
                 // download PDF file with download method
-                $filename = 'export_pinjaman_report_excel_' . Carbon::now()->format('d M Y') . '.pdf';
+                $filename = 'export_pinjaman_report_excel_' . Carbon::createFromFormat('Y-m-d', $request->period)->format('d M Y') . '.pdf';
                 return $pdf->download($filename);
             }
-            $filename = 'export_pinjaman_report_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
+            $filename = 'export_pinjaman_report_excel_' . Carbon::createFromFormat('Y-m-d', $request->period)->format('d M Y') . '.xlsx';
             return Excel::download(new LaporanPinjamanExcelExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $e) {
             Log::error($e);

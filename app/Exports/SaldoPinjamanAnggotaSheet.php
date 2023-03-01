@@ -23,11 +23,12 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
      */
     public function query()
     {
-        return Pinjaman::join('t_anggota', 't_anggota.kode_anggota', '=', 't_pinjam.kode_anggota')
+        return Pinjaman::
+                        join('t_anggota', 't_anggota.kode_anggota', '=', 't_pinjam.kode_anggota')
                         ->join('t_jenis_pinjam', 't_jenis_pinjam.kode_jenis_pinjam', '=', 't_pinjam.kode_jenis_pinjam')
                         ->join('t_company', 't_anggota.company_id', '=', 't_company.id')
                         ->wherenotin('t_pinjam.kode_anggota', [0])
-                        ->wherenotin('t_anggota.status', ['keluar'])
+//                        ->wherenotin('t_anggota.status', ['keluar'])
                         ->orderBy('t_pinjam.kode_anggota','asc')
                         ->orderBy('t_pinjam.kode_jenis_pinjam','asc')
                         ->select(
@@ -39,8 +40,8 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
                                     't_pinjam.besar_pinjam',
                                     't_pinjam.lama_angsuran',
                                     't_pinjam.sisa_pinjaman',
-                                    't_pinjam.sisa_angsuran' )
-                        ->limit(10);
+                                    't_pinjam.sisa_angsuran' );
+//                        ->limit(1);
     }
 
     /**
