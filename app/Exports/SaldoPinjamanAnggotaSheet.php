@@ -31,6 +31,7 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
 //                        ->wherenotin('t_anggota.status', ['keluar'])
                         ->orderBy('t_pinjam.kode_anggota','asc')
                         ->orderBy('t_pinjam.kode_jenis_pinjam','asc')
+                        ->NotPaid()
                         ->select(
                                     't_anggota.kode_anggota',
                                     't_anggota.nama_anggota',
