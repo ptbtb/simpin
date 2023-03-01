@@ -54,6 +54,7 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
     {
         return [
             $pinjaman->kode_anggota,
+            $pinjaman->kode_pinjam,
             $pinjaman->nama_anggota,
             $pinjaman->nama,
             $pinjaman->kode_jenis_pinjam,
@@ -77,6 +78,7 @@ class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, Sh
     {
         return [
                 "kode anggota",
+                "kode Pinjam",
                 "Nama",
                 "Unit Kerja",
                 "Kode Jenis Pinjaman",
