@@ -87,15 +87,16 @@ class JurnalUmumController extends Controller
         $codeSimPin = array_merge($codeSim, $codePin);
 
         $debetCodes = Code::where('is_parent', 0)
-                            ->whereNotIn('CODE', $codeSimPin)
+                            // ->whereNotIn('CODE', $codeSimPin)
                             ->get();
 
         $creditCodes = Code::where('is_parent', 0)
-                            ->whereNotIn('CODE', $codeSimPin)
+                            // ->whereNotIn('CODE', $codeSimPin)
                             ->get();
 
         $data['title'] = "Tambah Jurnal Umum";
         $data['request'] = $request;
+        $data['codeSimPin'] = $codeSimPin;
         $data['debetCodes'] = $debetCodes;
         $data['creditCodes'] = $creditCodes;
         return view('jurnal_umum.create', $data);
@@ -128,6 +129,7 @@ class JurnalUmumController extends Controller
             $jurnalUmum->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
             $jurnalUmum->deskripsi = $request->deskripsi;
             $jurnalUmum->serial_number = $nextSerialNumber;
+            $jurnalUmum->kode_anggota = $request->kode_anggota;
             $jurnalUmum->save();
 
             // loop every item
