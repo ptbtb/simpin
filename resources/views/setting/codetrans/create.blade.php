@@ -49,7 +49,7 @@
                             <br>
                             <select name="induk" id="induk" class="form-control select2Akun" required>
                             @foreach ($parents as $parent)
-                                <option value="{{ $parent->CODE }}">{{ $parent->NAMA_TRANSAKSI }}</option>
+                                <option value="{{ $parent->id }}">{{ $parent->NAMA_TRANSAKSI }}</option>
                             @endforeach
                             </select>
                         </div>
@@ -103,7 +103,7 @@
     $(document).ready(function () {
         initiateSelect2();
     });
-    
+
     function initiateSelect2()
     {
         $(".select2Akun").select2({
