@@ -83,7 +83,6 @@ class JurnalUmumController extends Controller
         $this->authorize('add jurnal umum', Auth::user());
         $codeSim = JenisSimpanan::pluck('kode_jenis_simpan')->toArray();
         $codePin = JenisPinjaman::pluck('kode_jenis_pinjam')->toArray();
-        // dd($codeSim);
         $codeSimPin = array_merge($codeSim, $codePin);
 
         $debetCodes = Code::where('is_parent', 0)
@@ -257,25 +256,24 @@ class JurnalUmumController extends Controller
     {
         $this->authorize('edit jurnal umum', Auth::user());
         $jurnalUmum = JurnalUmum::with('jurnalUmumItems', 'jurnalUmumLampirans', 'createdBy', 'updatedBy')->find($id);
+        $codeSim = JenisSimpanan::pluck('kode_jenis_simpan')->toArray();
+        $codePin = JenisPinjaman::pluck('kode_jenis_pinjam')->toArray();
+        $codeSimPin = array_merge($codeSim, $codePin);
+
         $debetCodes = Code::where('is_parent', 0)
-                        ->where('CODE', 'not like', "411%")
-                        ->where('CODE', 'not like', "106%")
-                        ->where('CODE', 'not like', "502%")
-                        ->where('CODE', 'not like', "105%")
-                        ->get();
+                            // ->whereNotIn('CODE', $codeSimPin)
+                            ->get();
 
         $creditCodes = Code::where('is_parent', 0)
-                        ->where('CODE', 'not like', "411%")
-                        ->where('CODE', 'not like', "106%")
-                        ->where('CODE', 'not like', "502%")
-                        ->where('CODE', 'not like', "105%")
-                        ->get();
+                            // ->whereNotIn('CODE', $codeSimPin)
+                            ->get();
 
         $itemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);
         $itemCredits = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_KREDIT);
 
         $data['title'] = "Edit Jurnal Umum";
         $data['jurnalUmum'] = $jurnalUmum;
+        $data['codeSimPin'] = $codeSimPin;
         $data['debetCodes'] = $debetCodes;
         $data['creditCodes'] = $creditCodes;
         $data['itemDebets'] = $itemDebets;
@@ -307,6 +305,7 @@ class JurnalUmumController extends Controller
             $jurnalUmum = JurnalUmum::find($id);
             $jurnalUmum->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $request->tgl_transaksi);
             $jurnalUmum->deskripsi = $request->deskripsi;
+            $jurnalUmum->kode_anggota = $request->kode_anggota;
             $jurnalUmum->save();
 
             $jurnalUmumItemDebets = $jurnalUmum->jurnalUmumItems->where('normal_balance_id', NORMAL_BALANCE_DEBET);

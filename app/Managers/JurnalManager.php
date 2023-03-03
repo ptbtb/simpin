@@ -742,7 +742,7 @@ class JurnalManager
         foreach ($jurnalUmumItems as $key => $jurnalUmumItem) {
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JU;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $jurnalUmum->tgl_transaksi)->format('Ymd') . (Jurnal::count() + 1);
+            $jurnal->nomer = $jurnalUmum->tgl_transaksi->format('Ymd') . (Jurnal::count() + 1);
 
             if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET) {
                 $jurnal->akun_debet = $jurnalUmumItem->code->CODE;

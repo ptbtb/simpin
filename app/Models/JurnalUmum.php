@@ -35,6 +35,11 @@ class JurnalUmum extends Model
         return $this->hasMany(JurnalUmumLampiran::class);
     }
 
+    public function anggota()
+    {
+        return $this->belongsTo(Anggota::class, 'kode_anggota');
+    }
+
     /**
      * Get all of the jurnal umum's jurnals.
      */

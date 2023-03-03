@@ -69,6 +69,19 @@
                 </div>
             </div>
             <hr>
+            <div class="row">
+                <div class="col-md-12 form-group {{ ($jurnalUmum->kode_anggota)? '':'d-none' }}" id="divanggota">
+                    <label for="kodeAnggota">Anggota</label>
+                    <select name="kode_anggota" id="kodeAnggota" class="form-control">
+                        @if ($jurnalUmum->kode_anggota)
+                            <option value="{{ $jurnalUmum->anggota->kode_anggota }}">{{ $jurnalUmum->anggota->nama_anggota }}</option>
+                        @else
+                            <option value="">Pilih salah satu</option>
+                        @endif
+                    </select>
+                    <div class="text-danger" id="warningTextAnggota"></div>
+                </div>
+            </div>
             <h5 class="mt-3"><b>Debit</b></h5>
             <div id="formDebetBody" data-form="{{ $itemDebets->count() }}">
                 @foreach ($itemDebets as $key => $itemDebet)
@@ -76,7 +89,7 @@
                         <div class="col-md-6 form-group">
                             <label for="kodeAkun">Kode Akun</label>
                             <br>
-                            <select name="code_debet_id[]" id="kodeAkunDebet{{ $loop->iteration }}" class="form-control select2Akun" required>
+                            <select name="code_debet_id[]" id="kodeAkunDebet{{ $loop->iteration }}" class="form-control select2Akun select2AkunDebet" required data-index="{{ $loop->iteration }}">
                             @foreach ($debetCodes as $code)
                                 <option value="{{ $code->id }}" @if($code->id == $itemDebet->code_id) selected @endif>{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>
                             @endforeach
@@ -102,7 +115,7 @@
                     <div class="col-md-6 form-group">
                         <label for="kodeAkunCredit{{ $loop->iteration }}">Kode Akun</label>
                         <br>
-                        <select name="code_credit_id[]" id="kodeAkunCredit{{ $loop->iteration }}" class="form-control select2Akun" required>
+                        <select name="code_credit_id[]" id="kodeAkunCredit{{ $loop->iteration }}" class="form-control select2Akun select2AkunKredit" required data-index="{{ $loop->iteration }}">
                         @foreach ($creditCodes as $code)
                             <option value="{{ $code->id }}" @if($code->id == $itemCredit->code_id) selected @endif>{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>
                         @endforeach
@@ -141,6 +154,105 @@
 <script src="{{ asset('js/collect.min.js') }}"></script>
 <script src="{{ asset('js/cleave.min.js') }}"></script>
 <script src="{{ asset('js/moment.js') }}"></script>
+<script>
+    var codeSimPin = collect(@json($codeSimPin));
+    var selectedItem = [];
+    @if ($jurnalUmum->anggota)
+        $("#kodeAnggota").select2({
+            ajax: {
+                placeholder: "Select a state",
+                url: '{{ route('anggota-ajax-search') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+        $("#kodeAnggota").prop('required',true);
+    @endif
+    $(document).ready(function(){
+        var index = 1;
+        @foreach ($itemDebets as $itemDebet)
+            var code = "{{ $itemDebet->code->CODE }}";
+            selectedItem[index] = code;
+            index++;
+        @endforeach
+    });
+    $(document).on('change','.select2AkunDebet',function () 
+    {
+        var selectedValue = $(this).find('option:selected').val();
+        var debetCodes = collect(@json($debetCodes));
+        var coa = debetCodes.where('id', parseInt(selectedValue)).first();
+        var indexData = $(this).data('index');
+        selectedItem[indexData] = coa.CODE;
+        // selectedItem[indexData] = selectedValue;
+        showAnggota(codeSimPin);
+    });
+    
+    $(document).on('change','.select2AkunKredit',function () 
+    {
+        var selectedValue = $(this).find('option:selected').val();
+        var codeSimPin = collect(@json($codeSimPin));
+        var creditCodes = collect(@json($creditCodes));
+        var coa = creditCodes.where('id', parseInt(selectedValue)).first();
+        var indexData = $(this).data('index');
+        selectedItem[indexData] = coa.CODE;
+        // selectedItem[indexData] = selectedValue;
+        showAnggota(codeSimPin);
+    });
+
+    function showAnggota(codeSimPin)
+    {
+        var iscodeSimPin = false;
+        for (let i = 1; i <= selectedItem.length; i++) {
+            if(codeSimPin.search(selectedItem[i]))
+            {
+                iscodeSimPin = true;
+                break;
+            }
+        }
+        console.log(iscodeSimPin);
+        console.log(selectedItem);
+        if (iscodeSimPin){
+            $('#divanggota').removeClass('d-none');
+            $("#kodeAnggota").select2({
+                ajax: {
+                    placeholder: "Select a state",
+                    url: '{{ route('anggota-ajax-search') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public'
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+            $("#kodeAnggota").prop('required',true);
+        } else {
+            $('#divanggota').addClass('d-none');
+            $("#kodeAnggota").prop('required',false);
+            // $("#kodeAnggota").html('')
+        }
+    }
+</script>
 <script>
 
     $(document).ready(function ()
@@ -190,7 +302,7 @@
         var element =   '<div class="row" id="formDebet'+formCounter+'">'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="kodeAkunDebet'+formCounter+'">Kode Akun</label>'+
-                                '<select name="code_debet_id[]" id="kodeAkunDebet'+formCounter+'" class="form-control select2Akun" required>'+
+                                '<select name="code_debet_id[]" id="kodeAkunDebet'+formCounter+'" class="form-control select2Akun select2AkunDebet" required data-index="'+formCounter+'">'+
                                 '@foreach ($debetCodes as $code)'+
                                     '<option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>'+
                                 '@endforeach'+
@@ -229,7 +341,7 @@
         var element =   '<div class="row" id="formCredit'+formCounter+'">'+
                             '<div class="col-md-6 form-group">'+
                                 '<label for="kodeAkunCredit'+formCounter+'">Kode Akun</label>'+
-                                '<select name="code_credit_id[]" id="kodeAkunCredit'+formCounter+'" class="form-control select2Akun" required>'+
+                                '<select name="code_credit_id[]" id="kodeAkunCredit'+formCounter+'" class="form-control select2Akun select2AkunKredit" required data-index="'+formCounter+'">'+
                                 '@foreach ($creditCodes as $code)'+
                                     '<option value="{{ $code->id }}">{{ $code->CODE }} {{ $code->NAMA_TRANSAKSI }}</option>'+
                                 '@endforeach'+
