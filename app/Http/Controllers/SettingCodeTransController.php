@@ -116,7 +116,7 @@ class SettingCodeTransController extends Controller
         $codeTypes = CodeType::pluck('name', 'id')->all();
         $codeCategories = CodeCategory::pluck('name', 'id')->all();
         $normalBalances = NormalBalance::pluck('name', 'id')->all();
-        $parents = Code::where('is_parent', 1)->pluck('NAMA_TRANSAKSI', 'CODE')->all();
+        $parents = Code::where('is_parent', 1)->pluck('NAMA_TRANSAKSI', 'id')->all();
         $codes = Code::find($id);
 
         $data['title'] = "Edit Code Transaksi";
@@ -195,7 +195,7 @@ class SettingCodeTransController extends Controller
             $data['codetrans'] = $codetrans;
             $filename = 'export_coa_excel_' . Carbon::now()->format('d M Y') . '.xlsx';
             return Excel::download(new CoaExport($data), $filename);
-        } catch (Exception $e) 
+        } catch (Exception $e)
         {
             $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
             Log::error($message);
