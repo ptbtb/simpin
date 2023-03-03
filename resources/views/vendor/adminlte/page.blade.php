@@ -1,6 +1,6 @@
 @extends('adminlte::master')
 
-@inject('layoutHelper', \JeroenNoten\LaravelAdminLte\Helpers\LayoutHelper)
+@inject('layoutHelper', '\JeroenNoten\LaravelAdminLte\Helpers\LayoutHelper')
 
 @if($layoutHelper->isLayoutTopnavEnabled())
     @php( $def_container_class = 'container' )
@@ -27,7 +27,7 @@
                 <span class="label label-danger">{{ $notification['count'] }}</span>
             @endif
         </a>
-        
+
         <ul class="dropdown-menu">
             <li class="header">You have {{ $notification['count'] ? $notification['count'] : 'no' }} notifications</li>
             <li class="notification-content">
@@ -35,7 +35,7 @@
               <ul class="menu">
                 @foreach ($notification['all_notification'] as $notif)
                   <li class="{{ $notif->has_read ? '' : 'unread'}} d-flex justify-content-center align-items-center">
-                    <i class="fas fa-hand-holding-usd pr-3 text-info"></i> 
+                    <i class="fas fa-hand-holding-usd pr-3 text-info"></i>
                     <a href={{ $notif->url }} data={{ $notif->id }} id="update-notif" >
                       {{ $notif->informasi_notifikasi }}
                     </a>
