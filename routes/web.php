@@ -438,6 +438,8 @@ Route::group(['prefix' => 'jurnal-umum'], function () {
         Route::post('print-jkk', [App\Http\Controllers\JurnalUmumController::class, 'printJkk'])->name('jurnal-umum-print-jkk');
         Route::get('print-jkk-pdf', [App\Http\Controllers\JurnalUmumController::class, 'printJkk'])->name('jurnal-umum-print-jkk-pdf');
         Route::get('show-payment/{id}', [App\Http\Controllers\JurnalUmumController::class, 'showPayment'])->name('jurnal-umum-show');
+        Route::get('import-excel', [App\Http\Controllers\JurnalUmumController::class, 'importJurnalUmum'])->name('import-jurnal-umum');
+        Route::post('import-excel', [App\Http\Controllers\JurnalUmumController::class, 'storeImportJurnalUmum'])->name('import-jurnal-umum');
     });
 });
 

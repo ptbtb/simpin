@@ -19,12 +19,15 @@ use App\Models\SumberDana;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
+use App\Imports\JurnalUmumImport;
+
 use Auth;
 use DB;
 use Hash;
 use Carbon\Carbon;
 use Excel;
 use PDF;
+use Rap2hpoutre\FastExcel\Facades\FastExcel;
 use Yajra\DataTables\Facades\DataTables;
 
 class JurnalUmumController extends Controller
@@ -619,5 +622,37 @@ class JurnalUmumController extends Controller
         $data['title'] = 'Detail Jurnal Umum';
 
         return view('jurnal_umum.detail-payment', $data);
+    }
+
+    public function importJurnalUmum()
+    {
+        try
+        {
+            $data['title'] = 'Import Jurnal Umum';
+            return view('jurnal_umum.import', $data);
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            \Log::error($message);
+
+            return redirect()->back()->withError('Terjadi Kesalahan');
+        }
+    }
+
+    public function storeImportJurnalUmum(Request $request)
+    {
+        $this->authorize('import user', Auth::user());
+        try
+        {
+            Excel::import(new JurnalUmumImport, $request->file);
+            return redirect()->back()->withSuccess('Import data berhasil');
+        }
+        catch (\Throwable $e)
+        {
+            $message = class_basename( $e ) . ' in ' . basename( $e->getFile() ) . ' line ' . $e->getLine() . ': ' . $e->getMessage();
+            \Log::error($message);
+            return redirect()->back()->withError('Gagal import data');
+        }
     }
 }

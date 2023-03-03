@@ -647,6 +647,12 @@ return [
                     'icon' => 'fas fa-upload nav-icon',
                     'can'  => ['import angsuran'],
                 ],
+                [
+                    'text' => 'Import Jurnal Umum',
+                    'url' => '/jurnal-umum/import-excel',
+                    'icon' => 'fas fa-upload nav-icon',
+                    'can'  => ['import angsuran'],
+                ],
 
             ],
         ],

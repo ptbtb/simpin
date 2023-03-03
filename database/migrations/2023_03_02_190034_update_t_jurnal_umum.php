@@ -15,6 +15,8 @@ class UpdateTJurnalUmum extends Migration
     {
         Schema::table('t_jurnal_umum', function (Blueprint $table) {
             $table->integer('kode_anggota')->nullable()->after('approved_by');
+            $table->integer('import')->default(0)->after('kode_anggota');
+            $table->string('no_ju_import', 20)->nullable()->after('import');
         });
     }
 
@@ -27,6 +29,8 @@ class UpdateTJurnalUmum extends Migration
     {
         Schema::table('t_jurnal_umum', function (Blueprint $table) {
             $table->dropColumn('kode_anggota');
+            $table->dropColumn('import');
+            $table->dropColumn('no_ju_import');
         });
     }
 }
