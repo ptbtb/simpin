@@ -59,15 +59,36 @@ class UpdateJurnalJUCommand extends Command
             return 0;
         }
         $jurnalUmum = JurnalUmum::where('import', 1)
-                        ->whereBetween('tgl_transaksi', [$start, $end])->get();
+                        ->whereBetween('tgl_transaksi', [$start, $end]);
         if ($jurnalUmum->count() > 0){
+            $jurnalUmum = $jurnalUmum->orderBy('id', 'asc')->get();
             foreach ($jurnalUmum as $value) {
-                $value->serial_number = JurnalUmumManager::getSerialNumber($value->tgl_transaksi);
-                $value->save();
                 $jurnal = Jurnal::where('jurnalable_id', $value->id)
                 ->where('jurnalable_type', 'App\Models\JurnalUmum')->get();
                 if ($jurnal->count() < 1){
-                    // $value->userid = 1;
+                    // cek debet = kredit
+                    $jurnalUmumItems = $value->jurnalUmumItems;
+                    $debet = 0;
+                    $kredit = 0;
+                    foreach ($jurnalUmumItems as $key => $jurnalUmumItem) {
+                        if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_DEBET) {
+                            $debet += $jurnalUmumItem->nominal;
+                        }
+                        elseif ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_KREDIT) {
+                            $kredit += $jurnalUmumItem->nominal;
+                        }
+                    }
+                    if ($debet != $kredit) {
+                        $this->info("Debet != Kredit for Jurnal Umum with id $value->id");
+                        $log = $log . "\nDebet != Kredit for Jurnal Umum with id $value->id";
+                        continue;
+                    }
+
+                    // create serial_number
+                    $value->serial_number = JurnalUmumManager::getSerialNumber($value->tgl_transaksi->format('Y-m-d'));
+                    $value->save();
+
+                    // create jurnal
                     JurnalManager::createJurnalUmum($value);
                     $this->info("Jurnal Umum with id $value->id is created!");
                     $log = $log . "\nJurnal Umum with id $value->id is created!";
