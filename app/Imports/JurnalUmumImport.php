@@ -34,6 +34,7 @@ class JurnalUmumImport implements ToCollection
                     $ju->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $value[1]);
                     $ju->deskripsi = $value[2];
                     $ju->tgl_acc = Carbon::createFromFormat('Y-m-d', $value[1]);
+                    $ju->kode_anggota = $value[6];
                     $ju->status_jkk = 1;
                     $ju->import = 1;
                     $ju->paid_by_cashier = $user->id;
