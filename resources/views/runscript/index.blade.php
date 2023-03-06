@@ -50,6 +50,7 @@
                             <option value="">--Choose Script--</option>
                             <option value="1">Jurnal Balance Resolver</option>
                             <option value="2">Jurnal Penarikan Generator</option>
+                            <option value="3">Jurnal Umum Generator</option>
                         </select>
                     </div>
                 </div>
