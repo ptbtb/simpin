@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Managers\JurnalManager;
+use App\Managers\JurnalUmumManager;
 use App\Models\Jurnal;
 use App\Models\JurnalUmum;
 use Carbon\Carbon;
@@ -61,6 +62,8 @@ class UpdateJurnalJUCommand extends Command
                         ->whereBetween('tgl_transaksi', [$start, $end])->get();
         if ($jurnalUmum->count() > 0){
             foreach ($jurnalUmum as $value) {
+                $value->serial_number = JurnalUmumManager::getSerialNumber($value->tgl_transaksi);
+                $value->save();
                 $jurnal = Jurnal::where('jurnalable_id', $value->id)
                 ->where('jurnalable_type', 'App\Models\JurnalUmum')->get();
                 if ($jurnal->count() < 1){
