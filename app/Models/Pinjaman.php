@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,21 @@ class Pinjaman extends Model implements Auditable
     protected $dates = ['tgl_entri', 'tgl_tempo',];
     protected $appends = ['serial_number_view','serial_number_kredit_view'];
     protected $fillable = ['kode_anggota','kode_jenis_pinjam','besar_pinjam','sisa_pinjaman','biaya_asuransi','biaya_provisi','biaya_administrasi','id_status_pinjaman'];
+    
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        // you can do the same thing using anonymous function
+        // let's add another scope using anonymous function
+        static::addGlobalScope('real', function (Builder $builder) {
+            $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
+            return $builder->whereDate('tgl_transaksi', '>', $date);
+        });
+    }
 
     public function anggota() {
         return $this->belongsTo(Anggota::class, 'kode_anggota');
@@ -53,6 +69,18 @@ class Pinjaman extends Model implements Auditable
     public function akunKredit()
     {
         return $this->belongsTo(Code::class, 'id_akun_kredit');
+    }
+
+    /**
+     * Scope a query to only include real
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeReal($query)
+    {
+        $date = Carbon::createFromFormat('d-m-Y', '01-02-2020');
+        return $query->whereDate('tgl_transaksi', '>=', $date);
     }
 
     /**

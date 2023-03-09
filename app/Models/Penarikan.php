@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -16,6 +17,21 @@ class Penarikan extends Model implements Auditable
     use SoftDeletes;
      use Userstamps;
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        // you can do the same thing using anonymous function
+        // let's add another scope using anonymous function
+        static::addGlobalScope('real', function (Builder $builder) {
+            $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
+            return $builder->whereDate('tgl_transaksi', '>', $date);
+        });
+    }
+    
     protected $table = "t_pengambilan";
     protected $primaryKey = "kode_ambil";
     protected $dates = ['tgl_ambil', 'tgl_acc','deleted_at', 'tgl_transaksi'];

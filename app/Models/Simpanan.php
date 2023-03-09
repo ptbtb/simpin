@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -22,6 +23,21 @@ class Simpanan extends Model implements Auditable
     protected $appends = ['tanggal_entri', 'tanggal_mulai','besar_simpanan_rupiah','temp_besar_simpanan_rupiah', 'serial_number_view', 'status_simpanan_view','periode_view','periode_full_view'];
     protected $fillable = ['jenis_simpan', 'besar_simpanan','kode_anggota','u_entry','tgl_mulai','tgl_entri','kode_jenis_simpan','keterangan'];
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        // you can do the same thing using anonymous function
+        // let's add another scope using anonymous function
+        static::addGlobalScope('real', function (Builder $builder) {
+            $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
+            return $builder->whereDate('tgl_transaksi', '>', $date);
+        });
+    }
+    
     public function anggota()
     {
         return $this->belongsTo(Anggota::class, 'kode_anggota');
