@@ -103,6 +103,7 @@ class SaldoAwalController extends Controller
                     $saldoAwal = new SaldoAwal();
                     $saldoAwal->code_id = $request->code_id[$i];
                     $saldoAwal->nominal = $nominal;
+                    $saldoAwal->batch = Carbon::parse($request->batch[$i]);
                     $saldoAwal->created_at = Carbon::today()->subYear()->endOfYear()->format('Y-m-d');
                     $saldoAwal->save();
                 }
@@ -189,6 +190,7 @@ class SaldoAwalController extends Controller
             {
                 $saldoAwal->code_id = $request->code_id;
                 $saldoAwal->nominal = $nominal;
+                $saldoAwal->batch = Carbon::parse($request->batch);
                 
                 // update jurnal data
                 JurnalManager::updateSaldoAwal($saldoAwal);

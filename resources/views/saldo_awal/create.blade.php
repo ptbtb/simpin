@@ -29,7 +29,7 @@
             @csrf
             <div id="formBody" data-form="1">
                 <div class="row" id="form1">
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-4 form-group">
                         <label for="kodeAkun">Kode Akun</label>
                         <select name="code_id[]" id="kodeAkun1" class="form-control select2Akun" required>
                         @foreach ($codes as $code)
@@ -37,9 +37,14 @@
                         @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-4 form-group">
                         <label for="nominal1">Besar Nominal</label>
                         <input type="text" name="nominal[]" id="nominal1" data-form="1" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >
+                        <div class="text-danger" id="warningText"></div>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label for="nominal1">Batch</label>
+                        <input type="text" name="batch[]" class="form-control datepicker" placeholder="Batch" autocomplete="off" required>
                         <div class="text-danger" id="warningText"></div>
                     </div>
                 </div>
@@ -67,9 +72,18 @@
 @stop
 
 @section('js')
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="{{ asset('js/collect.min.js') }}"></script>
 <script src="{{ asset('js/cleave.min.js') }}"></script>
 <script src="{{ asset('js/moment.js') }}"></script>
+<script>
+    // initiate datepicker
+    $('.datepicker').datepicker({
+        uiLibrary: 'bootstrap4',
+        format: 'dd-mm-yyyy'
+    });
+</script>
 <script>
 
     $(document).ready(function ()
@@ -105,7 +119,7 @@
         var formCounter = Number(dataForm)+1;
 
         var element =   '<div class="row" id="form'+formCounter+'">'+
-                            '<div class="col-md-6 form-group">'+
+                            '<div class="col-md-4 form-group">'+
                                 '<label for="kodeAkun">Kode Akun</label>'+
                                 '<select name="code_id[]" id="kodeAkun" class="form-control select2Akun" required>'+
                                 '@foreach ($codes as $code)'+
@@ -113,9 +127,14 @@
                                 '@endforeach'+
                                 '</select>'+
                             '</div>'+
-                            '<div class="col-md-6 form-group">'+
+                            '<div class="col-md-4 form-group">'+
                                 '<label for="nominal'+formCounter+'">Besar Nominal</label>'+
                                 '<input type="text" name="nominal[]" id="nominal'+formCounter+'" data-form="'+formCounter+'" class="form-control nominal" placeholder="Besar Nominal" autocomplete="off" required >'+
+                                '<div class="text-danger" id="warningText"></div>'+
+                            '</div>'+
+                            '<div class="col-md-4 form-group">' +
+                                '<label for="nominal">Batch</label>' +
+                                '<input type="text" name="batch[]" class="form-control datepicker" placeholder="Batch" autocomplete="off" required>'+
                                 '<div class="text-danger" id="warningText"></div>'+
                             '</div>'+
                         '</div>';
@@ -127,6 +146,11 @@
 
         // add thousand separator
         toRupiah($('#form'+formCounter+' .nominal'));
+
+        $("#form"+formCounter+" .datepicker").datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'dd-mm-yyyy'
+        });
     }
 
     function delFormItem(sectionId) {

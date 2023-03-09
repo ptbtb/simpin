@@ -14,7 +14,7 @@ class SaldoAwal extends Model
     protected $table = "t_saldo_awal";
     protected $fillable = ['code_id', 'nominal'];
     protected $appends = ['nominal_rupiah'];
-    protected $dates = ['created_at'];
+    protected $dates = ['created_at, batch'];
 
     public function code()
     {

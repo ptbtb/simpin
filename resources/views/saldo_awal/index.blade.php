@@ -46,6 +46,7 @@
                         <th>Code</th>
                         <th>Nama Transaksi</th>
                         <th>Nominal</th>
+                        <th>Batch</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -99,6 +100,10 @@
             { 
                 mData: 'nominal_rupiah', sType: "string", 
                 className: "dt-body-center text-right", "name": "nominal_rupiah"		
+            },
+            { 
+                mData: 'batch', sType: "string", 
+                className: "dt-body-center", "name": "batch"				
             },
             { 
                 mData: 'id', sType: "string", 
