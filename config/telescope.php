@@ -120,7 +120,7 @@ return [
         Watchers\CacheWatcher::class => env('TELESCOPE_CACHE_WATCHER', false),
 
         Watchers\CommandWatcher::class => [
-            'enabled' => env('TELESCOPE_COMMAND_WATCHER', false),
+            'enabled' => env('TELESCOPE_COMMAND_WATCHER', true),
             'ignore' => [],
         ],
 
@@ -137,7 +137,7 @@ return [
         Watchers\MailWatcher::class => env('TELESCOPE_MAIL_WATCHER', false),
 
         Watchers\ModelWatcher::class => [
-            'enabled' => env('TELESCOPE_MODEL_WATCHER', false),
+            'enabled' => env('TELESCOPE_MODEL_WATCHER', true),
             'events' => ['eloquent.*'],
             'hydrations' => true,
         ],

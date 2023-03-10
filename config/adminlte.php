@@ -690,6 +690,12 @@ return [
             'icon' => 'fas fa-fw fa-list-alt',
              'can'  => ['view audit'],
         ],
+        [
+            'text' => 'Active Saldo Awal',
+            'url' => 'active-saldo-awal',
+            'icon' => 'fas fa-fw fa-list-alt',
+             'can'  => ['view active saldo awal'],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

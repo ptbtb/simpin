@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActiveSaldoAwalController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CodeController;
@@ -600,4 +601,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 Route::resource('sumber-dana', SumberDanaController::class);
 
 Route::resource('pengurus', PengurusController::class)->middleware('auth');
+Route::resource('active-saldo-awal', ActiveSaldoAwalController::class)->middleware('auth');
 //Route::get('test', [App\Http\Controllers\TestController::class, 'index'])->name('test');
