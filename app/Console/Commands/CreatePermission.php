@@ -41,6 +41,7 @@ class CreatePermission extends Command
     {
         $group = PermissionGroup::where('name', $this->argument('permissiongroup'))
                                 ->first();
+        
         if (is_null($group))
         {
             $group = PermissionGroup::create(['name' => $this->argument('permissiongroup')]);
@@ -54,7 +55,7 @@ class CreatePermission extends Command
         } 
         else 
         {
-            Permission::create(['name' => $this->argument('name'), 'permission_group_id' => $group->id]);
+            Permission::create(['name' => $this->argument('name'), 'permissions_group_id' => $group->id]);
             echo "added permission ".$this->argument('name')."\n";
         }
     }
