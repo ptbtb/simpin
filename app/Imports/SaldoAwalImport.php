@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Managers\JurnalManager;
 use App\Models\SaldoAwal;
 use App\Models\Code;
 use Carbon\Carbon;
@@ -47,14 +48,16 @@ class SaldoAwalImport implements OnEachRow
                 }
             }
             \Log::error($codeId);
-            if($codeId != null)
+            $batch = ($row[2] == "\N" || $row[2] == '' || $row[2] == null)? null:Carbon::createFromFormat('d-m-Y', $row[2]);
+            if($codeId != null && $batch != null)
             {
-                 
+                
                 $fields = [
                     'code_id' => $codeId,
                     'nominal' => ($row[1] == "\N" || $row[1] == '' || $row[1] == null)? 0:$row[1],
+                    'batch' => $batch,
                 ];
-        
+                
                 $saldoAwal = SaldoAwal::create($fields);
                JurnalManager::createSaldoAwal($saldoAwal);
             }

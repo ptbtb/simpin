@@ -12,7 +12,7 @@ class SaldoAwal extends Model
     use Userstamps;
 
     protected $table = "t_saldo_awal";
-    protected $fillable = ['code_id', 'nominal'];
+    protected $fillable = ['code_id', 'nominal', 'batch'];
     protected $appends = ['nominal_rupiah'];
     protected $dates = ['created_at, batch'];
 
