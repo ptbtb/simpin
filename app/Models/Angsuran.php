@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Wildside\Userstamps\Userstamps;
@@ -21,6 +22,15 @@ class Angsuran extends Model implements Auditable
     protected $primaryKey = "kode_angsur";
     protected $dates = ['tgl_entri','paid_at','jatuh_tempo'];
     protected $appends = ['serial_number_view', 'created_at_view', 'created_by_view', 'updated_at_view', 'updated_by_view'];
+    protected static function booted()
+    {
+        // you can do the same thing using anonymous function
+        // let's add another scope using anonymous function
+        static::addGlobalScope('real', function (Builder $builder) {
+            $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
+            return $builder->whereDate('tgl_transaksi', '>=', $date);
+        });
+    }
 
     public function statusAngsuran()
     {
