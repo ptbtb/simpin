@@ -281,11 +281,11 @@ class Pinjaman extends Model implements Auditable
 //            ->where('id_status_angsuran', STATUS_ANGSURAN_LUNAS)
             ->wherebetween('tgl_transaksi',[$from,$to])
             ->sum('besar_angsuran');
-        if ($this->mutasi_juli>0){
-            $sisa=$this->mutasi_juli-$jumlah_angsuran;
-        }else{
+//        if ($this->mutasi_juli>0){
+//            $sisa=$this->mutasi_juli-$jumlah_angsuran;
+//        }else{
             $sisa=$this->besar_pinjam-$jumlah_angsuran;
-        }
+//        }
         return $sisa;
     }
 }

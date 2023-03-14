@@ -32,7 +32,7 @@ class PinjamanController extends Controller
             $anggota = $user->anggota;
             $tgl = Carbon::now()->format('Y-m-d');
             $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                ->wherenotnull('mutasi_juli')
+//                ->wherenotnull('mutasi_juli')
                 ->sum('sisa_pinjaman');
 //            $data['saldo'] = \App\Models\PinjamanV2::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
 //            $data['saldo'] = 0;

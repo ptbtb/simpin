@@ -23,15 +23,15 @@
                 <th>Besar Pinjaman</th>
                 <th>Sisa Pinjaman</th>
                 <th>Sisa Angsuran</th>
-                <th>Mutasi Juli</th>
+{{--                <th>Mutasi Juli</th>--}}
                 <th>Jatuh Tempo</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($listPinjaman as $pinjaman)
+{{--            @foreach ($listPinjaman as $pinjaman)--}}
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+{{--                    <td>{{ $loop->iteration }}</td>--}}
                     <td>{{ $pinjaman->kode_pinjam }}</td>
                     <td> @if ($pinjaman->anggota)
                             @if ($pinjaman->anggota->company)
@@ -77,7 +77,7 @@
                     <td>{{ $pinjaman->besar_pinjam }}</td>
                     <td>{{ $pinjaman->sisa_pinjaman }}</td>
                     <td>{{ $pinjaman->sisa_angsuran }}</td>
-                    <td>{{ $pinjaman->mutasi_juli }}</td>
+{{--                    <td>{{ $pinjaman->mutasi_juli }}</td>--}}
                     <td>{{ $pinjaman->tgl_tempo->format('d M Y') }}</td>
                     <td>{{ ucwords($pinjaman->status) }}</td>
                 </tr>

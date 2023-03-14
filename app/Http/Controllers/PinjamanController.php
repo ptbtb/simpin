@@ -120,7 +120,7 @@ class PinjamanController extends Controller
         }
         $data['unitKerja'] = Company::get()->pluck('nama', 'id');
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
-        $listPinjaman = $listPinjaman->wherenotnull('mutasi_juli')->get();
+        $listPinjaman = $listPinjaman->get();
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
         $data['request'] = $request;
@@ -167,7 +167,7 @@ class PinjamanController extends Controller
 
         // $data['unitKerja'] = Company::get()->pluck('nama', 'id');
         // $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
-        $listPinjaman = $listPinjaman->wherenotnull('mutasi_juli')->get();
+        $listPinjaman = $listPinjaman->get();
         // dd($listPinjaman->pluck('id'));
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
@@ -480,7 +480,7 @@ class PinjamanController extends Controller
             $listPinjaman = $listPinjaman->where('lama_angsuran', $request->tenor);
         }
         $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
-        $listPinjaman = $listPinjaman->wherenotnull('mutasi_juli')->get();
+        $listPinjaman = $listPinjaman->get();
 
         // share data to view
         view()->share('listPinjaman', $listPinjaman);
