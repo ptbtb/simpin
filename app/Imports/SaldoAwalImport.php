@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SaldoAwalImport implements OnEachRow
 {
@@ -48,20 +49,21 @@ class SaldoAwalImport implements OnEachRow
                 }
             }
             \Log::error($codeId);
-            $batch = ($row[2] == "\N" || $row[2] == '' || $row[2] == null)? null:Carbon::createFromFormat('d-m-Y', $row[2]);
+            $batch = ($row[2] == "\N" || $row[2] == '' || $row[2] == null)? null:Carbon::parse(Date::excelToDateTimeObject($row[2]))->format('Y-m-d');
+//            dd($batch);
             if($codeId != null && $batch != null)
             {
-                
+
                 $fields = [
                     'code_id' => $codeId,
                     'nominal' => ($row[1] == "\N" || $row[1] == '' || $row[1] == null)? 0:$row[1],
                     'batch' => $batch,
                 ];
-                
+
                 $saldoAwal = SaldoAwal::create($fields);
                JurnalManager::createSaldoAwal($saldoAwal);
             }
-            
+
             return $saldoAwal;
         }
         catch (\Throwable $th)

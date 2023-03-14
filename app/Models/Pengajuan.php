@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -25,6 +27,15 @@ class Pengajuan extends Model implements Auditable
      */
     protected $appends = ['created_at_view', 'updated_at_view', 'created_by_view', 'updated_by_view','kode_pinj_lama'];
 
+    protected static function booted()
+    {
+        // you can do the same thing using anonymous function
+        // let's add another scope using anonymous function
+        static::addGlobalScope('real', function (Builder $builder) {
+            $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
+            return $builder->whereDate('tgl_pengajuan', '>=', $date);
+        });
+    }
     public function anggota()
     {
         return $this->belongsTo(Anggota::class, 'kode_anggota', 'kode_anggota');

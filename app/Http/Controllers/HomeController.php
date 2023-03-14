@@ -46,12 +46,12 @@ class HomeController extends Controller
             $anggota = $user->anggota;
             $data['saldo'] = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->first();
             $data['listPinjaman'] = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                                        ->wherenotnull('mutasi_juli')
+//                                        ->wherenotnull('mutasi_juli')
                                         ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
                                         ->get();
 
             $data['sisaPinjaman'] = Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-                                    ->wherenotnull('mutasi_juli')
+//                                    ->wherenotnull('mutasi_juli')
                                     ->sum('sisa_pinjaman');
             $data['transferredShu'] = TransferredSHU::where('kode_anggota', $anggota->kode_anggota)->sum('amount');
             $data['anggota']=$anggota;
@@ -63,8 +63,7 @@ class HomeController extends Controller
             $Simpanan = Simpanan::sum('besar_simpanan');
             $penarikan = Penarikan::wherenotnull('paid_by_cashier')->sum('besar_ambil');
             $data['simpanan']=$Simpanan-$penarikan;
-            $data['sisaPinjaman'] = str_replace('.', '', Pinjaman::wherenotnull('mutasi_juli')
-                                    ->where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
+            $data['sisaPinjaman'] = str_replace('.', '', Pinjaman::where('id_status_pinjaman', STATUS_PINJAMAN_BELUM_LUNAS)
                                     ->sum('sisa_pinjaman'));
 
             // if search

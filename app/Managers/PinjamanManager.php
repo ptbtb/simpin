@@ -223,4 +223,30 @@ class PinjamanManager
             \Log::error($e);
         }
     }
+    public static function getSerialNumberSA($date)
+    {
+        try {
+            $nextSerialNumber = 1;
+
+            // get date
+            $date = Carbon::createFromFormat('d-m-Y', $date);
+            $year = $date->year;
+            $month = $date->month;
+
+            // get pinjaman data on this year
+            $lastPinjaman = Pinjaman::whereYear('tgl_mutasi', '=', $year)
+                ->wheremonth('tgl_mutasi', '=', $month)
+                ->where('saldo_mutasi','>',0)
+                ->orderBy('serial_number_kredit', 'desc')
+                ->first();
+            if ($lastPinjaman) {
+                $nextSerialNumber = $lastPinjaman->serial_number_kredit + 1;
+            }
+
+            return $nextSerialNumber;
+        } catch (\Exception $e) {
+            \Log::info($e->getMessage());
+            return false;
+        }
+    }
 }

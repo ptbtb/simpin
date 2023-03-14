@@ -34,10 +34,10 @@ class Simpanan extends Model implements Auditable
         // let's add another scope using anonymous function
         static::addGlobalScope('real', function (Builder $builder) {
             $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
-            return $builder->whereDate('tgl_transaksi', '>', $date);
+            return $builder->whereDate('tgl_transaksi', '>=', $date);
         });
     }
-    
+
     public function anggota()
     {
         return $this->belongsTo(Anggota::class, 'kode_anggota');

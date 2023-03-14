@@ -28,10 +28,10 @@ class Penarikan extends Model implements Auditable
         // let's add another scope using anonymous function
         static::addGlobalScope('real', function (Builder $builder) {
             $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
-            return $builder->whereDate('tgl_transaksi', '>', $date);
+            return $builder->whereDate('tgl_transaksi', '>=', $date);
         });
     }
-    
+
     protected $table = "t_pengambilan";
     protected $primaryKey = "kode_ambil";
     protected $dates = ['tgl_ambil', 'tgl_acc','deleted_at', 'tgl_transaksi'];

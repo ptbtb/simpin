@@ -25,7 +25,7 @@ class Pinjaman extends Model implements Auditable
     protected $dates = ['tgl_entri', 'tgl_tempo',];
     protected $appends = ['serial_number_view','serial_number_kredit_view'];
     protected $fillable = ['kode_anggota','kode_jenis_pinjam','besar_pinjam','sisa_pinjaman','biaya_asuransi','biaya_provisi','biaya_administrasi','id_status_pinjaman'];
-    
+
     /**
      * The "booted" method of the model.
      *
@@ -37,7 +37,7 @@ class Pinjaman extends Model implements Auditable
         // let's add another scope using anonymous function
         static::addGlobalScope('real', function (Builder $builder) {
             $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
-            return $builder->whereDate('tgl_transaksi', '>', $date);
+            return $builder->whereDate('tgl_transaksi', '>=', $date);
         });
     }
 

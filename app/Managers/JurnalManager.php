@@ -235,15 +235,15 @@ class JurnalManager
             // jurnal untuk debet
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JSA;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $pinjaman->tgl_entri)->format('Ymd') . (Jurnal::count() + 1);
+            $jurnal->nomer = $pinjaman->tgl_transaksi->format('Ymd') . (Jurnal::count() + 1);
             $jurnal->akun_debet = $pinjaman->kode_jenis_pinjam;
-            $jurnal->debet = $pinjaman->besar_pinjam;
+            $jurnal->debet = $pinjaman->sisa_pinjaman;
             $jurnal->akun_kredit = 0;
             $jurnal->kredit = 0;
             $jurnal->keterangan = 'Pinjaman ' . strtolower($pinjaman->jenisPinjaman->nama_pinjaman) . ' anggota ' . ucwords(strtolower($pinjaman->anggota->nama_anggota));
             $jurnal->created_by = Auth::user()->id;
             $jurnal->updated_by = Auth::user()->id;
-            $jurnal->tgl_transaksi = Carbon::createFromFormat('Y-m-d', '2020-12-31');
+            $jurnal->tgl_transaksi = $pinjaman->tgl_mutasi;
             $jurnal->trans_id = $pinjaman->kode_pinjam;
             $jurnal->anggota = $pinjaman->kode_anggota;
 

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -26,7 +28,7 @@ class Jurnal extends Model implements Auditable
         'akun_debet',
         'debet',
         'tgl_transaksi',
-        
+
         ];
         protected $dates = ['deleted_at'];
 
@@ -36,6 +38,16 @@ class Jurnal extends Model implements Auditable
      * @var array
      */
     protected $appends = ['view_created_at', 'jurnalable_view','nominal_rupiah_debet','nominal_rupiah_kredit','ser_num_view','kode_anggota_view'];
+
+    protected static function booted()
+    {
+        // you can do the same thing using anonymous function
+        // let's add another scope using anonymous function
+        static::addGlobalScope('real', function (Builder $builder) {
+            $date = Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo);
+            return $builder->whereDate('tgl_transaksi', '>', $date);
+        });
+    }
 
 
     /**
@@ -75,12 +87,12 @@ class Jurnal extends Model implements Auditable
     {
         return $this->created_at->format('d F Y');
     }
-    
+
     public function getJurnalableViewAttribute()
     {
         if($this->jurnalable)
         {
-            
+
             return $this->jurnalable;
         }
         else
