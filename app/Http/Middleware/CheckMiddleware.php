@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CompanySetting;
 
 class CheckMiddleware
 {
@@ -17,10 +18,14 @@ class CheckMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Auth::user()->hasRole('Admin')){
-            Auth::logout();
-            return redirect()->route('login')->withError('Aplikasi sedang dalam Pemeliharaan');
+        $maintenance= CompanySetting::findorfail(7)->value;
+        if($maintenance==1){
+            if(!Auth::user()->hasRole('Admin')){
+                Auth::logout();
+                return redirect()->route('login')->withError('Aplikasi sedang dalam Pemeliharaan');
+            }
         }
+
         if (Auth::user()->isVerified())
         {
              if (Auth::user()->isAllowed())
