@@ -119,7 +119,7 @@ class PinjamanController extends Controller
             $listPinjaman = $listPinjaman->where('lama_angsuran', $request->tenor);
         }
         $data['unitKerja'] = Company::get()->pluck('nama', 'id');
-        $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$request->from, $request->to]);
+        $listPinjaman = $listPinjaman->whereBetween('tgl_transaksi', [$request->from, $request->to]);
         $listPinjaman = $listPinjaman->get();
         $data['title'] = "List Pinjaman";
         $data['listPinjaman'] = $listPinjaman;
