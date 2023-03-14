@@ -23,7 +23,7 @@ class Pinjaman extends Model implements Auditable
     // protected $keyType = 'string';
     // public $incrementing = false;
     protected $dates = ['tgl_entri', 'tgl_tempo',];
-    protected $appends = ['serial_number_view','serial_number_kredit_view'];
+    protected $appends = ['serial_number_view','serial_number_kredit_view','serial_number_saldo_awal_view'];
     protected $fillable = ['kode_anggota','kode_jenis_pinjam','besar_pinjam','sisa_pinjaman','biaya_asuransi','biaya_provisi','biaya_administrasi','id_status_pinjaman'];
 
     /**
@@ -214,6 +214,15 @@ class Pinjaman extends Model implements Auditable
         if ($this->tgl_transaksi && $this->serial_number_kredit)
         {
             return 'PIJ' . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_transaksi)->format('m') . str_pad($this->serial_number_kredit, 4, "0", STR_PAD_LEFT);
+        }
+        return '-';
+    }
+
+    public function getSerialNumberSaldoAwalViewAttribute()
+    {
+        if ($this->tgl_mutasi && $this->serial_number_kredit)
+        {
+            return 'JSA' . Carbon::createFromFormat('Y-m-d',$this->tgl_mutasi)->format('Y') . Carbon::createFromFormat('Y-m-d',$this->tgl_mutasi)->format('m') . str_pad($this->serial_number_kredit, 4, "0", STR_PAD_LEFT);
         }
         return '-';
     }

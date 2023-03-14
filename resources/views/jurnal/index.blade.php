@@ -117,11 +117,11 @@
                         <th></th>
                         <th id="totalkredit" style="text-align:right"></th>
                         @if (Auth::user()->can('edit jurnal'))
-                            
+
                         <th colspan="3"></th>
                         @else
                         <th colspan="2"></th>
-                            
+
                         @endif
                     </tr>
                 </tfoot>
@@ -199,6 +199,10 @@
                                     "App\\Models\\Pinjaman") {
                                     return data.serial_number_kredit_view;
                                 }
+                                if (full.id_tipe_jurnal == 4 && full.jurnalable_type ==
+                                    "App\\Models\\Pinjaman") {
+                                    return data.serial_number_saldo_awal_view;
+                                }
                                 return data.serial_number_view;
                             }
                         }
@@ -253,7 +257,7 @@
                         "name": "tgl_transaksi",
                     },
                     @can('edit jurnal')
-                        
+
                     {
                         mData: 'id',
                         sType: "string",
@@ -264,7 +268,7 @@
                             var baseURL = {!! json_encode(url('/')) !!};
                             @can('edit jurnal')
                                 var serial_number = '';
-                                
+
                                 @if ($request->serial_number)
                                     serial_number = '{{ $request->serial_number }}';
                                 @else
@@ -287,7 +291,7 @@
                                 }
                             @endcan
                             @can('delete jurnal')
-                            
+
                             markup += '<a data-url="' + baseURL + '/jurnal/delete/' + data + '" class="btn btn-sm btn-danger btn-approval"><i class="fa fa-edit"></i>Delete</a> '
                                 // var csrf = '@csrf';
                                 // var method = '@method("delete")';
