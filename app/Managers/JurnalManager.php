@@ -613,8 +613,8 @@ class JurnalManager
     {
         try {
             $jurnal = new Jurnal();
-            $jurnal->id_tipe_jurnal = TIPE_JURNAL_JKM;
-            $jurnal->nomer = Carbon::createFromFormat('Y-m-d', $simpanan->tgl_entri)->format('Ymd') . (Jurnal::count() + 1);
+            $jurnal->id_tipe_jurnal = 4;
+            $jurnal->nomer = $simpanan->tgl_transaksi->format('Ymd') . (Jurnal::count() + 1);
             $jurnal->akun_kredit = $simpanan->kode_jenis_simpan;
             $jurnal->kredit = $simpanan->besar_simpanan;
             $jurnal->akun_debet = 0;
@@ -627,8 +627,10 @@ class JurnalManager
             $jurnal->anggota = $simpanan->kode_anggota;
             // save as polymorphic
             $simpanan->jurnals()->save($jurnal);
+            return true;
         } catch (\Exception $e) {
             \Log::error($e);
+            return ($e->getMessage());
         }
     }
 
