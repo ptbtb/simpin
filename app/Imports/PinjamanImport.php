@@ -39,7 +39,7 @@ class PinjamanImport implements OnEachRow
                 $pinjaman->kode_pinjam = $kodePinjaman;
                 $check = Pinjaman::where('kode_pinjam',$kodePinjaman)->first();
                 if($check){
-                    throw new \Exception("Saldo Awal Pinjaman Sudah Ada, silahkan Hapus dahulu pinjaman lama");
+                    throw new \Exception("Saldo Awal Pinjaman Sudah Ada, silahkan Hapus dahulu pinjaman lama. data row ".$rowIndex);
                 }
                 $pinjaman->kode_pengajuan_pinjaman = $kodePinjaman;
                 $pinjaman->kode_anggota = $kodeAnggota;
