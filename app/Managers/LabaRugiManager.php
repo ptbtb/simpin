@@ -63,7 +63,7 @@ class LabaRugiManager
             ->where('akun_debet','607.01.101')
             ->orWhere('akun_kredit', '607.01.101')
             ->first();
-        $saldo = $shu->kredit - $shu->debet;
+        $saldo = ($shu)?$shu->kredit:0 - ($shu)?$shu->debet:0;
         return $saldo;
     }
 
