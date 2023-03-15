@@ -55,10 +55,10 @@ class TabunganImport implements OnEachRow
                 $simpanan->serial_number = $nextSerialNumber;
                 $simpanan->mutasi = 1;
                 $simpanan->save();
-                $feed=JurnalManager::createJurnalSaldoSimpanan($simpanan);
-                if(!$feed){
-                    throw new \Exception('Jurnal Failed row '.$rowIndex.' msg: '.$feed);
-                }
+//                $feed=JurnalManager::createJurnalSaldoSimpanan($simpanan);
+//                if(!$feed){
+//                    throw new \Exception('Jurnal Failed row '.$rowIndex.' msg: '.$feed);
+//                }
                 // dd($simpanan);
                 return $simpanan;
             }

@@ -1151,8 +1151,12 @@ class SimpananController extends Controller
                     $simpanan->serial_number = SimpananManager::getSerialNumber(Carbon::now()->format('d-m-Y'));
                     $simpanan->save();
                 }
+                if ($simpanan->mutasi==1){
+                    JurnalManager::createJurnalSaldoSimpanan($simpanan);
+                }else{
+                    JurnalManager::createJurnalSimpanan($simpanan);
+                }
 
-                JurnalManager::createJurnalSimpanan($simpanan);
             }
             return redirect()->back()->withSuccess('Posting Berhasil');
         } catch (\Throwable $th) {
