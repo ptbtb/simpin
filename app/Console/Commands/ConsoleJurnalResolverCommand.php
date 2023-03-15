@@ -57,9 +57,15 @@ class ConsoleJurnalResolverCommand extends Command
             return 0;
         }
         $jurnal = Jurnal::whereBetween('tgl_transaksi', [$start, $end])->get();
+        if (!$jurnal){
+            $this->info("There's no Jurnal in this period $periode");
+            $log = $log . "\nThere's no Jurnal in this period $periode";
+            return 0;
+        }
         $totalDebet = $jurnal->sum('debet');
         $totalKredit = $jurnal->sum('kredit');
         $this->info("Total Debet: $totalDebet \nTotal Kredit : $totalKredit");
+        $log = $log . "\nTotal Debet: $totalDebet \nTotal Kredit : $totalKredit";
 
         if ($totalDebet == $totalKredit){
             $this->info("Debet and Kredit are equal!");
