@@ -60,14 +60,15 @@ class KodeTransaksi extends Model implements Auditable
         $todays=Carbon::createFromFormat('Y-m-d', $tgl);
         $today=Carbon::createFromFormat('Y-m-d', $tgl)->format('Y-m-d');
         if ($this->code_type_id==3 ||$this->code_type_id==4){
-            if ($y=='2020'){
-                $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
+            if ($y=='2022'){
+                $startOf=Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo)->format('Y-m-d');
             }else{
                 $startOf = $todays->startOfYear()->format('Y-m-d');
             }
 
+
         }else{
-            $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
+            $startOf=Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo)->format('Y-m-d');
         }
 
         $saldoDebet = $this->saldoDr($startOf,$today);

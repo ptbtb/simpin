@@ -57,7 +57,7 @@ class UpdateJurnalSimpananCommand extends Command
             return 0;
         }
         $simpanan = Simpanan::whereBetween('tgl_transaksi', [$start, $end])
-                    ->whereDoesntHave('jurnals');
+                    ->whereDoesntHave('jurnals')->where('besar_simpanan','<>',0);
         $simpanan = $simpanan->orderBy('kode_simpan', 'asc')->get();
 //        dd($simpanan->count());
         if ($simpanan->count() > 0){

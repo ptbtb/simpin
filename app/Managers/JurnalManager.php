@@ -620,8 +620,8 @@ class JurnalManager
             $jurnal->akun_debet = 0;
             $jurnal->debet = 0;
             $jurnal->keterangan = $simpanan->keterangan . ' ' . ucwords(strtolower($simpanan->anggota->nama_anggota));
-            $jurnal->created_by = Auth::user()->id;
-            $jurnal->updated_by = Auth::user()->id;
+            $jurnal->created_by = (Auth::user())?Auth::user()->id:1;
+            $jurnal->updated_by = (Auth::user())?Auth::user()->id:1;
             $jurnal->tgl_transaksi = $simpanan->tgl_transaksi;
             $jurnal->trans_id = $simpanan->kode_simpan;
             $jurnal->anggota = $simpanan->kode_anggota;

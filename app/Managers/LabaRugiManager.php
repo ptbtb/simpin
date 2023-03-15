@@ -47,7 +47,7 @@ class LabaRugiManager
 
     public static function getShuBerjalan($date){
         $year = Carbon::createFromFormat('Y-m-d',$date)->format('Y');
-        if ($year>'2020'){
+        if ($year>'2022'){
             $shu = static::getLabaRugi($date);
             $shutahunberjalan= $shu['pendapatan']-$shu['beban'];
         }else{
@@ -70,13 +70,13 @@ class LabaRugiManager
     public static function getShuditahan($date){
 
             $year = Carbon::createFromFormat('Y-m-d',$date)->format('Y');
-            $yearawal='2020';
+            $yearawal='2022';
             $saldoawal=static::getShuBerjalanSaldoAwal();
             $saldoTahunJalan=0;
             $result = 0;
             if ($year>$yearawal){
                 foreach(range($yearawal, date($year) - 1) as $y) {
-                    if ($y=='2020'){
+                    if ($y=='2022'){
                         $saldoTahunJalan += $saldoawal;
                     }else{
                         $tgl = Carbon::createFromFormat('Y',$y)->endOfYear()->format('Y-m-d');

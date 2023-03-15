@@ -58,7 +58,7 @@ class BukuBesarController extends Controller
 
             if ($request->search) {
                 $y = Carbon::createFromFormat('Y-m-d',$request->period)->format('Y');
-                if($y=='2020'){
+                if($y=='2022'){
                     $jurnalCode = KodeTransaksi::where('is_parent', 0)
                         ->wherenotin('CODE', [ '606.01.101'])
                         ->orderby('code_type_id','asc')
@@ -112,7 +112,7 @@ class BukuBesarController extends Controller
             $request->period = Carbon::today()->format('Y-m-d');
         }
         $y = Carbon::createFromFormat('Y-m-d',$request->period)->format('Y');
-        if($y=='2020'){
+        if($y=='2022'){
             $jurnalCode = KodeTransaksi::where('is_parent', 0)
                 ->wherenotin('CODE', [ '606.01.101'])
                 ->orderby('code_type_id','asc')
@@ -163,7 +163,7 @@ class BukuBesarController extends Controller
             $request->period = Carbon::today()->format('Y-m-d');
         }
         $y = Carbon::createFromFormat('Y-m-d',$request->period)->format('Y');
-        if($y=='2020'){
+        if($y=='2022'){
             $jurnalCode = KodeTransaksi::where('is_parent', 0)
                 ->wherenotin('CODE', [ '606.01.101'])
                 ->orderby('code_type_id','asc')
@@ -267,7 +267,7 @@ class BukuBesarController extends Controller
 
                 $tglawal = Carbon::createFromFormat('Y-m-d', $request->from)->subDays(1)->format('Y-m-d');
                 $y = Carbon::createFromFormat('Y-m-d',$tglawal)->format('Y');
-                if($y=='2020'){
+                if($y=='2022'){
                     $jurnalCode = KodeTransaksi::where('is_parent', 0)
                         ->wherenotin('CODE', [ '606.01.101'])
                         ->orderby('code_type_id','asc')
@@ -326,7 +326,7 @@ class BukuBesarController extends Controller
 
         $tglawal = Carbon::createFromFormat('Y-m-d', $request->from)->subDays(1)->format('Y-m-d');
         $y = Carbon::createFromFormat('Y-m-d',$tglawal)->format('Y');
-        if($y=='2020'){
+        if($y=='2022'){
             $jurnalCode = KodeTransaksi::where('is_parent', 0)
                 ->wherenotin('CODE', [ '606.01.101'])
                 ->orderby('code_type_id','asc')
