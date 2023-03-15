@@ -125,14 +125,14 @@ class KodeTransaksi extends Model implements Auditable
         return $this->jurnalItemsDr
             ->whereBetween('tgl_transaksi', [$from,$to])
 //            ->where('trans','D')
-            ->sum('amount');
+            ->sum('debet');
     }
 
     public  function saldoCr($from,$to){
         return $this->jurnalItemsCr
             ->whereBetween('tgl_transaksi', [$from,$to])
 //            ->where('trans','K')
-            ->sum('amount');
+            ->sum('kredit');
     }
 
 }
