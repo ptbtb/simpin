@@ -61,11 +61,11 @@ class UpdateJurnalJUCommand extends Command
         $jurnalUmum = JurnalUmum::where('import', 1)
                         ->whereBetween('tgl_transaksi', [$start, $end]);
         if ($jurnalUmum->count() > 0){
-            $jurnalUmum = $jurnalUmum->orderBy('id', 'asc')->get();
-            foreach ($jurnalUmum as $value) {
-                $jurnal = Jurnal::where('jurnalable_id', $value->id)
-                ->where('jurnalable_type', 'App\Models\JurnalUmum')->get();
-                if ($jurnal->count() < 1){
+            $jurnalUmum = $jurnalUmum->whereDoesntHave('jurnals');
+            // dd($jurnalUmum->get());
+            if ($jurnalUmum->count() > 0){
+                $jurnalUmum = $jurnalUmum->orderBy('id', 'asc')->get();
+                foreach ($jurnalUmum as $value) {
                     // cek debet = kredit
                     $jurnalUmumItems = $value->jurnalUmumItems;
                     $debet = 0;
@@ -94,10 +94,10 @@ class UpdateJurnalJUCommand extends Command
                     $log = $log . "\nJurnal Umum with id $value->id is created!";
                 }
             }
-            if ($log == "Updating Jurnal Umum..."){
+            else {
                 $log = $log . "\nThere's no jurnal umum without journal in periode $periode";
                 Log::info($log);
-                return 0;
+                return 1;
             }
         } else {
             $this->info("There's no jurnal umum with import=1 in periode $periode");
