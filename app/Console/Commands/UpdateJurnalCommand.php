@@ -57,26 +57,19 @@ class UpdateJurnalCommand extends Command
             $this->error("Periode Must Be Input In Format YYYY-MM");
             return 0;
         }
-        $tarik = Penarikan::whereBetween('tgl_transaksi', [$start, $end])->get();
+        $tarik = Penarikan::whereBetween('tgl_transaksi', [$start, $end])
+                ->whereDoesntHave('jurnals');
         if ($tarik->count() > 0){
+            $tarik = $tarik->orderBy('kode_ambil', 'asc')->get();
             foreach ($tarik as $value) {
-                $jurnal = Jurnal::where('jurnalable_id', $value->kode_ambil)
-                ->where('jurnalable_type', 'App\Models\Penarikan')->get();
-                if ($jurnal->count() < 1){
-                    $value->userid = 1;
-                    JurnalManager::createJurnalPenarikan($value);
-                    $this->info("Jurnal Penarikan with kode_ambil $value->kode_ambil is created!");
-                    $log = $log . "\nJurnal Penarikan with kode_ambil $value->kode_ambil is created!";
-                }
-            }
-            if ($log == "Updating Jurnal Penarikan..."){
-                $log = $log . "\nThere's no withdrawl without journal in periode $periode";
-                Log::info($log);
-                return 0;
+                JurnalManager::createJurnalPenarikan($value);
+                $this->info("Jurnal Penarikan with kode_ambil $value->kode_ambil is created!");
+                $log = $log . "\nJurnal Penarikan with kode_ambil $value->kode_ambil is created!";
             }
         } else {
-            $this->info("There's no withdrawl in periode $periode");
-            return 0;
+            $this->info("There's no penarikan without journals in periode $periode");
+            $log = $log . "\nThere's no penarikan without journals in periode $periode";
+            return 1;
         }
         $this->info("Update Jurnal Penarikan is Done");
         $log = $log . "\nUpdate Jurnal Penarikan is Done";
