@@ -20,6 +20,14 @@ class KodeTransaksi extends Model implements Auditable
     {
         return $this->hasMany(BukuBesarJurnal::class,'kode','CODE');
     }
+    public function jurnalItemsDr()
+    {
+        return $this->hasMany(Jurnal::class,'akun_debet','CODE');
+    }
+    public function jurnalItemsCr()
+    {
+        return $this->hasMany(Jurnal::class,'akun_kredit','CODE');
+    }
 //    public function jurnalItemDr()
 //    {
 //        return $this->hasMany(Jurnal::class,'akun_debet','CODE');
@@ -80,15 +88,15 @@ class KodeTransaksi extends Model implements Auditable
         $todays=Carbon::createFromFormat('Y-m-d', $tgl);
         $today=Carbon::createFromFormat('Y-m-d', $tgl)->format('Y-m-d');
         if ($this->code_type_id==3 ||$this->code_type_id==4){
-            if ($y=='2020'){
-                $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
+            if ($y=='2022'){
+                $startOf=Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo)->format('Y-m-d');
             }else{
                 $startOf = $todays->startOfYear()->format('Y-m-d');
             }
 
 
         }else{
-            $startOf=Carbon::createFromFormat('Y-m-d', '2020-12-30')->format('Y-m-d');
+            $startOf=Carbon::parse(ActiveSaldoAwal::where('status', 1)->first()->tgl_saldo)->format('Y-m-d');
         }
 
         $saldoDebet = $this->saldoDr($startOf,$today);
@@ -114,16 +122,16 @@ class KodeTransaksi extends Model implements Auditable
 
 
     public  function saldoDr($from,$to){
-        return $this->jurnalItems
+        return $this->jurnalItemsDr
             ->whereBetween('tgl_transaksi', [$from,$to])
-            ->where('trans','D')
+//            ->where('trans','D')
             ->sum('amount');
     }
 
     public  function saldoCr($from,$to){
-        return $this->jurnalItems
+        return $this->jurnalItemsCr
             ->whereBetween('tgl_transaksi', [$from,$to])
-            ->where('trans','K')
+//            ->where('trans','K')
             ->sum('amount');
     }
 
