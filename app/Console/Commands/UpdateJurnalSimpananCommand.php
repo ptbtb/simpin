@@ -61,7 +61,11 @@ class UpdateJurnalSimpananCommand extends Command
         if ($simpanan->count() > 0){
             $simpanan = $simpanan->orderBy('kode_simpan', 'asc')->get();
             foreach ($simpanan as $value) {
-                JurnalManager::createJurnalSimpanan($value);
+                if ($value->mutasi==1){
+                    JurnalManager::createJurnalSaldoSimpanan($value);
+                }else{
+                    JurnalManager::createJurnalSimpanan($value);
+                }
                 $this->info("Jurnal Simpanan with kode_simpan $value->kode_simpan is created!");
                 $log = $log . "\nJurnal Simpanan with kode_simpan $value->kode_simpan is created!";
             }

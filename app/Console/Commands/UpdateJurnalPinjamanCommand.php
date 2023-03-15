@@ -61,7 +61,11 @@ class UpdateJurnalPinjamanCommand extends Command
         if ($pinjaman->count() > 0){
             $pinjaman = $pinjaman->orderBy('id', 'asc')->get();
             foreach ($pinjaman as $value) {
-                JurnalManager::createJurnalPinjaman($value);
+                if ($value->tgl_mutasi){
+                    JurnalManager::createJurnalSaldoPinjaman($value);
+                }else{
+                    JurnalManager::createJurnalPinjaman($value);
+                }
                 $this->info("Jurnal Pinjaman with id $value->id is created!");
                 $log = $log . "\nJurnal Pinjaman with id $value->id is created!";
             }
