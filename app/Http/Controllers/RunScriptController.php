@@ -19,16 +19,42 @@ class RunScriptController extends Controller
     public function runScript(Request $request)
     {
         try {
+            $return = 2;
+            $transaksi = '';
             if ($request->script == COMMAND_JURNAL_BALANCE_RESOLVER) {
+                $transaksi = 'resolver';
                 Artisan::call('console:jurnal', ['--periode' => $request->periode]);
             }
             elseif ($request->script == COMMAND_JURNAL_PENARIKAN_GENERATOR) {
-                Artisan::call('update:jurnalpenarikan', ['--periode' => $request->periode]);
+                $transaksi = 'penarikan';
+                $return = Artisan::call('update:jurnalpenarikan', ['--periode' => $request->periode]);
             }
             elseif ($request->script == COMMAND_JURNAL_UMUM_GENERATOR) {
-                Artisan::call('update:jurnalju', ['--periode' => $request->periode]);
+                $transaksi = 'jurnal umum';
+                $return = Artisan::call('update:jurnalju', ['--periode' => $request->periode]);
             }
-            return redirect()->back()->withSuccess('Done running script, open log to see details..');
+            elseif ($request->script == COMMAND_JURNAL_PINJAMAN_GENERATOR) {
+                $transaksi = 'pinjaman';
+                $return = Artisan::call('update:jurnalpinjaman', ['--periode' => $request->periode]);
+            }
+            elseif ($request->script == COMMAND_JURNAL_SIMPANAN_GENERATOR) {
+                $transaksi = 'simpanan';
+                $return = Artisan::call('update:jurnalsimpanan', ['--periode' => $request->periode]);
+            }
+            elseif ($request->script == COMMAND_JURNAL_ANGSURAN_GENERATOR) {
+                $transaksi = 'angsuran';
+                $return = Artisan::call('update:jurnalangsuran', ['--periode' => $request->periode]);
+            }
+
+            if ($transaksi == 'resolver'){
+                return redirect()->back()->withSuccess('Done running script, open log to see details..');
+            }
+            if ($return == 0){
+                return redirect()->back()->withSuccess('Done running script, open log to see details..');
+            }
+            elseif ($return == 1){
+                return redirect()->back()->withSuccess('Done running script, but there is no ' . $transaksi . ' without journal');
+            }
         } catch (\Throwable $th) {
             Log::error($th);
             return redirect()->back()->withErrors('Error');

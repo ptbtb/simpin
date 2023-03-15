@@ -51,6 +51,9 @@
                             <option value="1">Jurnal Balance Resolver</option>
                             <option value="2">Jurnal Penarikan Generator</option>
                             <option value="3">Jurnal Umum Generator</option>
+                            <option value="4">Jurnal Pinjaman Generator</option>
+                            <option value="5">Jurnal Simpanan Generator</option>
+                            <option value="6">Jurnal Angsuran Generator</option>
                         </select>
                     </div>
                 </div>
