@@ -58,8 +58,10 @@ class UpdateJurnalSimpananCommand extends Command
         }
         $simpanan = Simpanan::whereBetween('tgl_transaksi', [$start, $end])
                     ->whereDoesntHave('jurnals');
+        $simpanan = $simpanan->orderBy('kode_simpan', 'asc')->get();
+//        dd($simpanan->count());
         if ($simpanan->count() > 0){
-            $simpanan = $simpanan->orderBy('kode_simpan', 'asc')->get();
+
             foreach ($simpanan as $value) {
                 if ($value->mutasi==1){
                     JurnalManager::createJurnalSaldoSimpanan($value);
