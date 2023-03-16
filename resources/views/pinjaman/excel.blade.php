@@ -29,9 +29,9 @@
             </tr>
         </thead>
         <tbody>
-{{--            @foreach ($listPinjaman as $pinjaman)--}}
+           @foreach ($listPinjaman as $pinjaman)
                 <tr>
-{{--                    <td>{{ $loop->iteration }}</td>--}}
+                   <td>{{ $loop->iteration }}</td>
                     <td>{{ $pinjaman->kode_pinjam }}</td>
                     <td> @if ($pinjaman->anggota)
                             @if ($pinjaman->anggota->company)
