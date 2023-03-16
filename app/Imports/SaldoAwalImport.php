@@ -36,10 +36,10 @@ class SaldoAwalImport implements OnEachRow
             {
                 $code = Code::where('CODE', $row[0])
                             ->where('is_parent', 0)
-                            ->where('CODE', 'not like', "411%")
-                            ->where('CODE', 'not like', "106%")
-                            ->where('CODE', 'not like', "502%")
-                            ->where('CODE', 'not like', "105%")
+//                            ->where('CODE', 'not like', "411%")
+//                            ->where('CODE', 'not like', "106%")
+//                            ->where('CODE', 'not like', "502%")
+//                            ->where('CODE', 'not like', "105%")
                             ->doesntHave('saldoAwals')
                             ->first();
 
