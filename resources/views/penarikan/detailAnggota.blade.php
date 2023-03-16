@@ -30,7 +30,7 @@
         <td>Telepon</td>
         <td>:</td>
         <td>{{ ($anggota->telp)? $anggota->telp:'-' }}</td>
-    </tr> 
+    </tr>
     <tr>
         <td>Status</td>
         <td>:</td>
@@ -39,7 +39,7 @@
         <td>:</td>
         <td>
             @foreach ($saldoTabungan as $tabungan)
-                {{ ucwords(strtolower($tabungan->jenisSimpanan->nama_simpanan)) }} : {{ 'Rp. '. number_format($tabungan->besar_tabungan,0,",",".") }} <br>
+                {{ ucwords(strtolower($tabungan->nama_simpanan)) }} : {{ 'Rp. '. number_format($tabungan->besar_tabungan,0,",",".") }} <br>
             @endforeach
         </td>
     </tr>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\Penarikan\PenarikanApproved;
+use App\Managers\TabunganManager;
 use Illuminate\Http\Request;
 
 use App\Events\Penarikan\PenarikanCreated;
@@ -276,8 +277,9 @@ class PenarikanController extends Controller
         $user = Auth::user();
         $this->authorize('add penarikan', $user);
 
-        $anggota = Anggota::with('tabungan')->find($id);
-        $saldoTabungan = Tabungan::where('kode_anggota', $id)->get();
+        $anggota = Anggota::find($id);
+        $saldoTabungan = TabunganManager::getSaldoTabungan($id,Carbon::now());
+//        dd($saldoTabungan);
 
 
         $data['anggota'] = $anggota;

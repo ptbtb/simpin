@@ -2,13 +2,14 @@
 namespace App\Managers;
 
 use App\Models\Anggota;
+use App\Models\Jurnal;
 use App\Models\Penarikan;
 use App\Models\Tabungan;
 use App\Models\JenisSimpanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class TabunganManager 
+class TabunganManager
 {
     static function updateSaldo(Penarikan $penarikan, Tabungan $tabungan)
     {
@@ -44,13 +45,13 @@ class TabunganManager
                             ->get();
 
         foreach($anggotas as $anggota)
-        {                            
+        {
             $lastYear = Carbon::now()->year-1;
             $listTabungan = $anggota->tabungan->filter(function ($value) use ($lastYear)
             {
                 return $value->batch < $lastYear || $value->batch == null;
             });
-            
+
             if ($listTabungan->count())
             {
                 foreach ($listTabungan as $tabungan)
@@ -72,5 +73,39 @@ class TabunganManager
             }
         }
         echo 'sukses';
+    }
+
+    static public function getSaldoTabungan($id,$tgl){
+        $result = [];
+        $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+
+        foreach ($jenisSimpanan as $key=> $val){
+//            dd($key);
+            $saldo = static::getSimpanan($id,$val,$tgl) -  static::getTarikan($id,$val,$tgl);
+            $result[$key]=collect();
+            $result[$key]->kode_trans=$val;
+            $result[$key]->besar_tabungan=$saldo;
+            $result[$key]->nama_simpanan=JenisSimpanan::where('kode_jenis_simpan',$val)->first()->nama_simpanan;
+
+        }
+       return $result;
+
+
+    }
+    static public function getSimpanan($id,$kode,$tgl){
+
+        $simpanan = Jurnal::where('anggota',$id)
+            ->where('akun_kredit',$kode)
+            ->get();
+        return $simpanan->sum('kredit');
+
+    }
+    static public function getTarikan($id,$kode,$tgl){
+
+        $simpanan = Jurnal::where('anggota',$id)
+            ->where('akun_debet',$kode)
+            ->get();
+        return $simpanan->sum('debet');
+
     }
 }
