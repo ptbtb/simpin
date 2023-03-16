@@ -38,7 +38,7 @@
                         <div class="inner" style="min-height: 123px;">
                             <h3><a href="{{ route('simpanan-index-card') }}" class="link-dashboard">
                                 @if (isset($saldo))
-                                    Rp. {{ number_format($saldo->jumlah,0,",",".") }}
+                                    Rp. {{ number_format($saldo,0,",",".") }}
                                 @else
                                     0
                                 @endif
