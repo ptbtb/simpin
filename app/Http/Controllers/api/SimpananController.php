@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Managers\PenarikanManager;
+use App\Managers\SimpananManager;
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
 use App\Models\Penarikan;
@@ -22,7 +24,7 @@ class SimpananController extends Controller
         {
             $user = $request->user('api');
             $anggota = $user->anggota;
-            $data['saldo'] = ViewSaldo::where('kode_anggota', $anggota->kode_anggota)->sum('jumlah');
+            $data['saldo'] = SimpananManager::getTotalSimpanan($anggota->kode_anggota)-PenarikanManager::getTotalPenarikan($anggota->kode_anggota);
             $response['message'] = null;
             $response['data'] = $data;
             return response()->json($response, 200);

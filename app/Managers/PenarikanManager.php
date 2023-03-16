@@ -2,6 +2,8 @@
 
 namespace App\Managers;
 
+use App\Models\JenisSimpanan;
+use App\Models\Jurnal;
 use App\Models\Penarikan;
 
 use Illuminate\Http\Request;
@@ -42,6 +44,29 @@ class PenarikanManager
             \Log::info($e->getMessage());
             return false;
         }
+    }
+
+    static public function getListPenarikan($id,$from,$to){
+        $result = [];
+        $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+
+        return Jurnal::where('anggota',$id)
+            ->wherein('akun_debet',$jenisSimpanan)
+            ->wherenotin('id_tipe_jurnal',[4])
+            ->whereBetween('tgl_transaksi',[$from,$to])
+            ;
+
+
+    }
+
+    static public function getTotalPenarikan($id=null){
+        $result = [];
+        $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+        if ($id){
+            return Jurnal::wherein('akun_debet',$jenisSimpanan)->where('anggota',$id)->sum('debet');
+        }
+        return Jurnal::wherein('akun_debet',$jenisSimpanan)->sum('debet');
+
     }
 
 }

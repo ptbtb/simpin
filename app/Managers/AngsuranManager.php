@@ -2,6 +2,8 @@
 namespace App\Managers;
 
 use App\Models\Angsuran;
+use App\Models\JenisPinjaman;
+use App\Models\Jurnal;
 use App\Models\Pinjaman;
 
 use Carbon\Carbon;
@@ -118,5 +120,17 @@ class AngsuranManager
         $angsuran->save();
 
         return $angsuran;
+    }
+    static public function getTotalAngsuran($id=null){
+        $result = [];
+        $jenisPinjaman= JenisPinjaman::pluck('kode_jenis_pinjam');
+        if($id){
+            return Jurnal::wherein('akun_kredit',$jenisPinjaman)
+                ->where('anggota',$id)
+                ->sum('kredit');
+        }
+
+        return Jurnal::wherein('akun_kredit',$jenisPinjaman)->sum('kredit');
+
     }
 }

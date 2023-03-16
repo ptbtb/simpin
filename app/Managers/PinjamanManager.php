@@ -5,6 +5,9 @@ namespace App\Managers;
 use App\Events\Pinjaman\PinjamanCreated;
 use App\Managers\JurnalManager;
 use App\Models\AsuransiPinjaman;
+use App\Models\JenisPinjaman;
+use App\Models\JenisSimpanan;
+use App\Models\Jurnal;
 use App\Models\Pinjaman;
 use App\Models\Pengajuan;
 use App\Models\PinjamanV2;
@@ -248,5 +251,16 @@ class PinjamanManager
             \Log::info($e->getMessage());
             return false;
         }
+    }
+    static public function getTotalPinjaman($id=NULL){
+        $result = [];
+        $jenisPinjaman= JenisPinjaman::pluck('kode_jenis_pinjam');
+        if($id){
+            return Jurnal::wherein('akun_debet',$jenisPinjaman)
+            ->where('anggota',$id)
+                ->sum('debet');
+        }
+        return Jurnal::wherein('akun_debet',$jenisPinjaman)->sum('debet');
+
     }
 }

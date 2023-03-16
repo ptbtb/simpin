@@ -88,7 +88,7 @@ class TabunganManager
             $result[$key]->nama_simpanan=JenisSimpanan::where('kode_jenis_simpan',$val)->first()->nama_simpanan;
 
         }
-       return $result;
+       return collect($result);
 
 
     }
@@ -96,6 +96,7 @@ class TabunganManager
 
         $simpanan = Jurnal::where('anggota',$id)
             ->where('akun_kredit',$kode)
+            ->where('tgl_transaksi','<=',$tgl)
             ->get();
         return $simpanan->sum('kredit');
 
@@ -104,6 +105,7 @@ class TabunganManager
 
         $simpanan = Jurnal::where('anggota',$id)
             ->where('akun_debet',$kode)
+            ->where('tgl_transaksi','<=',$tgl)
             ->get();
         return $simpanan->sum('debet');
 

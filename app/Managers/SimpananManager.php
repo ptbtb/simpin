@@ -3,6 +3,7 @@ namespace App\Managers;
 
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
+use App\Models\Jurnal;
 use App\Models\Penarikan;
 use App\Models\Pengajuan;
 use App\Models\Simpanan;
@@ -172,6 +173,41 @@ class SimpananManager
 
 //        JurnalManager::createJurnalSimpanan($simpanan);
     }
+
+    static public function getListSimpanan($id,$from,$to){
+        $result = [];
+        $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+
+        return Jurnal::where('anggota',$id)
+            ->wherenotin('id_tipe_jurnal',[4])
+            ->wherein('akun_kredit',$jenisSimpanan)
+            ->whereBetween('tgl_transaksi',[$from,$to]);
+
+
+    }
+    static public function getListSimpananSaldoAwal($id){
+        $result = [];
+        $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+
+        return Jurnal::where('anggota',$id)
+            ->wherein('akun_kredit',$jenisSimpanan)
+            ->wherein('id_tipe_jurnal',[4]);
+
+
+    }
+    static public function getTotalSimpanan($id=null){
+        $result = [];
+        $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+        if($id){
+            return Jurnal::wherein('akun_kredit',$jenisSimpanan)->where('anggota',$id)->sum('kredit');
+        }
+        return Jurnal::wherein('akun_kredit',$jenisSimpanan)->sum('kredit');
+
+
+
+    }
+
+
 }
 
 ?>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Managers\AngsuranManager;
+use App\Managers\PinjamanManager;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -31,9 +33,7 @@ class PinjamanController extends Controller
             $user = $request->user('api');
             $anggota = $user->anggota;
             $tgl = Carbon::now()->format('Y-m-d');
-            $data['saldo'] = \App\Models\Pinjaman::where('kode_anggota', $anggota->kode_anggota)
-//                ->wherenotnull('mutasi_juli')
-                ->sum('sisa_pinjaman');
+            $data['saldo'] = PinjamanManager::getTotalPinjaman($anggota->kode_anggota)-AngsuranManager::getTotalAngsuran($anggota->kode_anggota);
 //            $data['saldo'] = \App\Models\PinjamanV2::where('kode_anggota', $anggota->kode_anggota)->sum('sisa_pinjaman');
 //            $data['saldo'] = 0;
 
