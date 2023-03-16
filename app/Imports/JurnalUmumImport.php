@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class JurnalUmumImport implements ToCollection
 {
@@ -24,6 +25,7 @@ class JurnalUmumImport implements ToCollection
             if ($key > 0)
             {
                 $user = Auth::user();
+                $posting=Carbon::parse(Date::excelToDateTimeObject($value[1]));
 
                 $ju = JurnalUmum::where('no_ju_import', $value[0]);
                 if ($ju->count() > 0){
@@ -31,17 +33,18 @@ class JurnalUmumImport implements ToCollection
                 } else {
                     $ju = new JurnalUmum();
                     $ju->no_ju_import = $value[0];
-                    $ju->tgl_transaksi = Carbon::createFromFormat('Y-m-d', $value[1]);
+                    $ju->tgl_transaksi = $posting;
                     $ju->deskripsi = $value[2];
-                    $ju->tgl_acc = Carbon::createFromFormat('Y-m-d', $value[1]);
+                    $ju->tgl_acc = $posting;
                     $ju->kode_anggota = $value[6];
                     $ju->status_jkk = 1;
                     $ju->import = 1;
+                    $ju->status_jurnal_umum_id = 8;
                     $ju->paid_by_cashier = $user->id;
                     $ju->approved_by = $user->id;
                     $ju->save();
                 }
-                
+
                 $jui = new JurnalUmumItem();
                 $jui->jurnal_umum_id = $ju->id;
                 $jui->code_id = Code::where('CODE', $value[3])->pluck('id')->first();

@@ -93,7 +93,7 @@
                     <tr>
                         <td colspan="2"></td>
                         <td><b>Total</b></td>
-                        <td>{{ $jurnalUmum->total_nominal_debet }}</td>
+                        <td>{{ $jurnalUmum->total_nominal_debet_rupiah }}</td>
                     </tr>
                 </table>
             </div>
@@ -119,7 +119,7 @@
                     <tr>
                         <td colspan="2"></td>
                         <td><b>Total</b></td>
-                        <td>{{ $jurnalUmum->total_nominal_kredit }}</td>
+                        <td>{{ $jurnalUmum->total_nominal_kredit_rupiah }}</td>
                     </tr>
                 </table>
             </div>
