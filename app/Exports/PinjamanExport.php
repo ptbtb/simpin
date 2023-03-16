@@ -54,7 +54,7 @@ class PinjamanExport implements FromView
         {
             $listPinjaman = $listPinjaman->where('lama_angsuran',$request->tenor);
         }
-        $listPinjaman = $listPinjaman->whereBetween('tgl_entri', [$this->request->from,$this->request->to]);
+        $listPinjaman = $listPinjaman->whereBetween('tgl_transaksi', [$this->request->from,$this->request->to]);
         $listPinjaman = $listPinjaman->get();
         return view('pinjaman.excel', [
             'listPinjaman' => $listPinjaman
