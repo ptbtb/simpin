@@ -986,8 +986,8 @@ class SimpananController extends Controller
             $year = $request->tahun;
 
             if ($year) {
-                $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null and id_status_simpanan=1'));
-                $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = ' . $year . ' and deleted_at is null and paid_by_cashier=1'));
+                $simpanan = collect(DB::select('SELECT kredit AS val, month(tgl_transaksi) AS month, akun_kredit as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null  and akun_kredit in (select kode_jenis_simpan from t_jenis_simpan)'));
+                $penarikan = collect(DB::select('SELECT debet AS val, month(tgl_transaksi) AS month, akun_debet as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null and akun_debet in (select kode_jenis_simpan from t_jenis_simpan)'));
                 $simpananPerbulan = $simpanan->groupBy('month')
                     ->map(function ($s) {
                         return $s->sum('val');
@@ -1020,6 +1020,7 @@ class SimpananController extends Controller
                 $data['simpananPerjenis'] = $simpananPerjenis;
                 $data['penarikanPerbulan'] = $penarikanPerbulan;
                 $data['penarikanPerjenis'] = $penarikanPerjenis;
+                $data['tahun'] = $year;
             }
 
             return view('simpanan.laporan', $data);
@@ -1039,8 +1040,8 @@ class SimpananController extends Controller
             ->take(5)
             ->get();
         if ($year) {
-            $simpanan = collect(DB::select('SELECT besar_simpanan AS val, month(tgl_transaksi) AS month, kode_jenis_simpan as jenis_simpanan FROM t_simpan WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null and id_status_simpanan=1'));
-            $penarikan = collect(DB::select('SELECT besar_ambil AS val, month(tgl_ambil) AS month, code_trans as jenis_simpanan FROM t_pengambilan WHERE YEAR(tgl_ambil) = ' . $year . ' and deleted_at is null and paid_by_cashier=1'));
+            $simpanan = collect(DB::select('SELECT kredit AS val, month(tgl_transaksi) AS month, akun_kredit as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null  and akun_kredit in (select kode_jenis_simpan from t_jenis_simpan)'));
+            $penarikan = collect(DB::select('SELECT debet AS val, month(tgl_transaksi) AS month, akun_debet as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null and akun_debet in (select kode_jenis_simpan from t_jenis_simpan)'));
             $simpananPerbulan = $simpanan->groupBy('month')
                 ->map(function ($s) {
                     return $s->sum('val');
@@ -1073,6 +1074,7 @@ class SimpananController extends Controller
             $data['simpananPerjenis'] = $simpananPerjenis;
             $data['penarikanPerbulan'] = $penarikanPerbulan;
             $data['penarikanPerjenis'] = $penarikanPerjenis;
+            $data['tahun'] = $year;
 
             if ($request->pdf) {
                 $filename = 'laporan_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';

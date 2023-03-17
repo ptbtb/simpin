@@ -3,6 +3,7 @@ namespace App\Exports;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use App\Models\Pinjaman;
@@ -12,11 +13,18 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class SaldoPinjamanAnggotaSheet implements FromQuery, WithTitle,WithHeadings, ShouldAutoSize, WithEvents, WithMapping
+class SaldoPinjamanAnggotaSheet implements FromCollection, WithTitle,WithHeadings, ShouldAutoSize, WithEvents, WithMapping
 {
+    use Exportable;
     public function __construct(Request $request)
     {
         $this->request = $request;
+    }
+    public function collection()
+    {
+        $result=collect();
+
+        return $result;
     }
     /**
      * @return Builder

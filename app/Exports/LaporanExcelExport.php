@@ -18,13 +18,13 @@ class LaporanExcelExport implements WithMultipleSheets
         $this->data = $data;
     }
 
-    
+
     public function sheets(): array
     {
-       
+
        return [
             'Resume Tahun' => new LaporanExcelResumeAllExport($this->data),
-            'Saldo Anggota' => new SaldoAnggotaSheet(),
+//            'Saldo Anggota' => new SaldoAnggotaSheet(),
         ];
     }
 }

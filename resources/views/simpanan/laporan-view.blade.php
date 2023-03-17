@@ -17,9 +17,9 @@
     </tr>
     <tr>
         <td rowspan="2" style="text-align: center; font-weight: bold">Bulan</td>
-        <td colspan="2" style="text-align: center; font-weight: bold">Simpanan 2021</td>
+        <td colspan="2" style="text-align: center; font-weight: bold">Simpanan {!! $tahun!!}</td>
         <td style="width: 3%"></td>
-        <td colspan="14" style="text-align: center; font-weight: bold">Penerimaan Simpanan 2021</td>
+        <td colspan="14" style="text-align: center; font-weight: bold">Penerimaan Simpanan {!! $tahun !!}</td>
     </tr>
     <tr>
         <td style="text-align: center; font-weight: bold">Penerimaan</td>
@@ -89,7 +89,7 @@
             <tr>
                 <td colspan="3" style="text-align: center; font-weight: bold"></td>
                 <td style="width: 3%"></td>
-                <td colspan="14" style="text-align: center; font-weight: bold">Penarikan Simpanan 2021</td>
+                <td colspan="14" style="text-align: center; font-weight: bold">Penarikan Simpanan {!! $tahun !!}</td>
             </tr>
         @endif
     @endforeach
