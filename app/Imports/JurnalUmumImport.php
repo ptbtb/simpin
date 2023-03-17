@@ -36,7 +36,7 @@ class JurnalUmumImport implements ToCollection
                     $ju->tgl_transaksi = $posting;
                     $ju->deskripsi = $value[2];
                     $ju->tgl_acc = $posting;
-                    $ju->kode_anggota = $value[6];
+//                    $ju->kode_anggota = $value[6];
                     $ju->status_jkk = 1;
                     $ju->import = 1;
                     $ju->status_jurnal_umum_id = 8;
@@ -50,6 +50,7 @@ class JurnalUmumImport implements ToCollection
                 $jui->code_id = Code::where('CODE', $value[3])->pluck('id')->first();
                 $jui->normal_balance_id = ($value[4] == 'D') ? NORMAL_BALANCE_DEBET : NORMAL_BALANCE_KREDIT;
                 $jui->nominal = $value[5];
+                $jui->kode_anggota = $value[6];
                 $jui->save();
             }
         }

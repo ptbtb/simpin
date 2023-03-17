@@ -235,7 +235,7 @@ class JurnalManager
             // jurnal untuk debet
             $jurnal = new Jurnal();
             $jurnal->id_tipe_jurnal = TIPE_JURNAL_JSA;
-            $jurnal->nomer = $pinjaman->tgl_transaksi->format('Ymd') . (Jurnal::count() + 1);
+            $jurnal->nomer = Carbon::parse($pinjaman->tgl_transaksi)->format('Ymd') . (Jurnal::count() + 1);
             $jurnal->akun_debet = $pinjaman->kode_jenis_pinjam;
             $jurnal->debet = $pinjaman->sisa_pinjaman;
             $jurnal->akun_kredit = 0;
@@ -619,7 +619,7 @@ class JurnalManager
             $jurnal->kredit = $simpanan->besar_simpanan;
             $jurnal->akun_debet = 0;
             $jurnal->debet = 0;
-            $jurnal->keterangan = $simpanan->keterangan . ' ' . ucwords(strtolower($simpanan->anggota->nama_anggota));
+            $jurnal->keterangan = $simpanan->keterangan ;
             $jurnal->created_by = (Auth::user())?Auth::user()->id:1;
             $jurnal->updated_by = (Auth::user())?Auth::user()->id:1;
             $jurnal->tgl_transaksi = $simpanan->tgl_transaksi;
@@ -715,16 +715,18 @@ class JurnalManager
                 $jurnal->debet = $jurnalUmumItem->nominal;
                 $jurnal->akun_kredit = 0;
                 $jurnal->kredit = 0;
+                $jurnal->anggota = $jurnalUmumItem->kode_anggota;
             } else if ($jurnalUmumItem->normal_balance_id == NORMAL_BALANCE_KREDIT) {
                 $jurnal->akun_debet = 0;
                 $jurnal->debet = 0;
                 $jurnal->akun_kredit = $jurnalUmumItem->code->CODE;
                 $jurnal->kredit = $jurnalUmumItem->nominal;
+                $jurnal->anggota = $jurnalUmumItem->kode_anggota;
             }
 
             $jurnal->keterangan = $jurnalUmum->deskripsi;
-            $jurnal->created_by = Auth::user()->id;
-            $jurnal->updated_by = Auth::user()->id;
+            $jurnal->created_by = (Auth::user())?Auth::user()->id:1;
+            $jurnal->updated_by = (Auth::user())?Auth::user()->id:1;
             $jurnal->tgl_transaksi = $jurnalUmum->tgl_transaksi;
 
             // save as polymorphic
