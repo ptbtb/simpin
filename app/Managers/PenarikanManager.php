@@ -77,13 +77,21 @@ class PenarikanManager
 
     }
 
-    static public function getTotalPenarikan($id=null){
+    static public function getTotalPenarikan($id=null,$kode=null,$tgl=null){
         $result = [];
         $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
-        if ($id){
-            return Jurnal::wherein('akun_debet',$jenisSimpanan)->where('anggota',$id)->sum('debet');
+        $tar= Jurnal::wherein('akun_debet',$jenisSimpanan);
+        if($id){
+            $tar=  $tar->where('anggota',$id);
         }
-        return Jurnal::wherein('akun_debet',$jenisSimpanan)->sum('debet');
+        if($kode){
+            $tar=  $tar->where('akun_debet',$kode);
+        }
+        if($tgl){
+            $tar=  $tar->where('tgl_transaksi','<=',$tgl);
+        }
+
+        return $tar->sum('debet');
 
     }
 

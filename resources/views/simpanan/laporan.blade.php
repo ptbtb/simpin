@@ -22,6 +22,7 @@
 @endsection
 
 @section('css')
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -30,19 +31,14 @@
             <label>Filter</label>
         </div>
         <div class="card-body">
-            <form action="{{ route('filter-laporan-simpanan') }}" method="POST">
+            <form  action="{{ route('filter-laporan-simpanan') }}" method="POST">
                 @csrf
                 <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label>Tahun</label>
-                        <select name="tahun" class="form-control">
-                            <option value="">Select Year</option>
-                            @foreach ($years as $year)
-                                <option value="{{ $year }}" {{ ($request->tahun == $year)? 'selected':'' }}>{{ $year }}</option>
-                            @endforeach
-                        </select>
+                    <div class="col-md-2 form-group">
+                        <label>Tanggal</label>
+                        <input id="tahun" type="text" name="tahun" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{{$request->tahun }}">
                     </div>
-                    <div class="col-12 text-center">
+                    <div class="col-md-1 form-group" style="margin-top: 26px">
                         <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-filter"></i> Filter</button>
                     </div>
                 </div>
@@ -63,4 +59,12 @@
 @stop
 
 @section('js')
-@stop
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $('#tahun').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
+    </script>
+@endsection

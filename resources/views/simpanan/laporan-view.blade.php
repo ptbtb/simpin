@@ -12,7 +12,7 @@
 <table style="min-width: 100%" border="1">
     <tr>
         <td colspan="18" style="text-align: center; font-weight: bold">
-            Laporan Simpanan
+            Laporan Simpanan Sampai Dengan tanggal {!! Carbon\Carbon::createFromFormat('Y-m-d',$request->tahun)->format('d M Y') !!}
         </td>
     </tr>
     <tr>

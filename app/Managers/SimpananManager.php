@@ -203,13 +203,21 @@ class SimpananManager
             ->wherein('id_tipe_jurnal',[4]);
 
     }
-    static public function getTotalSimpanan($id=null){
+    static public function getTotalSimpanan($id=null,$kode=null,$tgl=null){
         $result = [];
         $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+        $sim= Jurnal::wherein('akun_kredit',$jenisSimpanan);
         if($id){
-            return Jurnal::wherein('akun_kredit',$jenisSimpanan)->where('anggota',$id)->sum('kredit');
+            $sim=  $sim->where('anggota',$id);
         }
-        return Jurnal::wherein('akun_kredit',$jenisSimpanan)->sum('kredit');
+        if($kode){
+            $sim=  $sim->where('akun_kredit',$kode);
+        }
+        if($tgl){
+            $sim=  $sim->where('tgl_transaksi','<=',$tgl);
+        }
+
+        return $sim->sum('kredit');
 
 
 

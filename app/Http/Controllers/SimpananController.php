@@ -975,19 +975,22 @@ class SimpananController extends Controller
     public function laporan(Request $request)
     {
         try {
-            $years = range(Carbon::now()->year, 2000);
+
             $data['title'] = 'Laporan Simpanan';
-            $data['years'] = $years;
             $data['request'] = $request;
             $data['listJenisSimpanan'] = JenisSimpanan::select('nama_simpanan as name', 'kode_jenis_simpan as id')
                 ->take(5)
                 ->get();
+            if(!$request->tahun){
+                $request->tahun = Carbon::now()->format('Y-m-d');
+            }
 
-            $year = $request->tahun;
-
+            $year = Carbon::createFromFormat('Y-m-d', $request->tahun)->format('Y');
+//            dd($request->tahun);
             if ($year) {
-                $simpanan = collect(DB::select('SELECT kredit AS val, month(tgl_transaksi) AS month, akun_kredit as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null  and akun_kredit in (select kode_jenis_simpan from t_jenis_simpan)'));
-                $penarikan = collect(DB::select('SELECT debet AS val, month(tgl_transaksi) AS month, akun_debet as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null and akun_debet in (select kode_jenis_simpan from t_jenis_simpan)'));
+                $simpanan = collect(DB::select('SELECT kredit AS val, month(tgl_transaksi) AS month, akun_kredit as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and tgl_transaksi<="'.$request->tahun.'" and deleted_at is null  and akun_kredit in (select kode_jenis_simpan from t_jenis_simpan)  '));
+//                dd($simpanan);
+                $penarikan = collect(DB::select('SELECT debet AS val, month(tgl_transaksi) AS month, akun_debet as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and tgl_transaksi<="'.$request->tahun.'" and deleted_at is null and akun_debet in (select kode_jenis_simpan from t_jenis_simpan) '));
                 $simpananPerbulan = $simpanan->groupBy('month')
                     ->map(function ($s) {
                         return $s->sum('val');
@@ -1033,15 +1036,21 @@ class SimpananController extends Controller
 
     public function laporanExcel(Request $request)
     {
-        $years = range(Carbon::now()->year, 2000);
-        $data['years'] = $years;
-        $year = $request->tahun;
+        $data['title'] = 'Laporan Simpanan';
+        $data['request'] = $request;
         $data['listJenisSimpanan'] = JenisSimpanan::select('nama_simpanan as name', 'kode_jenis_simpan as id')
             ->take(5)
             ->get();
+        if(!$request->tahun){
+            $request->tahun = Carbon::now()->format('Y-m-d');
+        }
+
+        $year = Carbon::createFromFormat('Y-m-d', $request->tahun)->format('Y');
+//            dd($request->tahun);
         if ($year) {
-            $simpanan = collect(DB::select('SELECT kredit AS val, month(tgl_transaksi) AS month, akun_kredit as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null  and akun_kredit in (select kode_jenis_simpan from t_jenis_simpan)'));
-            $penarikan = collect(DB::select('SELECT debet AS val, month(tgl_transaksi) AS month, akun_debet as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and deleted_at is null and akun_debet in (select kode_jenis_simpan from t_jenis_simpan)'));
+            $simpanan = collect(DB::select('SELECT kredit AS val, month(tgl_transaksi) AS month, akun_kredit as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and tgl_transaksi<="'.$request->tahun.'" and deleted_at is null  and akun_kredit in (select kode_jenis_simpan from t_jenis_simpan)  '));
+//                dd($simpanan);
+            $penarikan = collect(DB::select('SELECT debet AS val, month(tgl_transaksi) AS month, akun_debet as jenis_simpanan FROM t_jurnal WHERE YEAR(tgl_transaksi) = ' . $year . ' and tgl_transaksi<="'.$request->tahun.'" and deleted_at is null and akun_debet in (select kode_jenis_simpan from t_jenis_simpan) '));
             $simpananPerbulan = $simpanan->groupBy('month')
                 ->map(function ($s) {
                     return $s->sum('val');
