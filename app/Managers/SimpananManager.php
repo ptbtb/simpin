@@ -185,14 +185,22 @@ class SimpananManager
 
 
     }
-    static public function getListSimpananSaldoAwal($id){
+    static public function getListSimpananSaldoAwal($id,$year=null){
         $result = [];
         $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
-
+        if($year){
+            $tgl= Carbon::createFromFormat('Y',$year)->startOfYear()->format('Y-m-d');
+            return Jurnal::where('anggota',$id)
+                ->wherein('akun_kredit',$jenisSimpanan)
+                ->where('tgl_transaksi','<',$tgl)
+                ->groupBy('akun_kredit')
+                ->selectRaw("sum(kredit) as kredit,akun_kredit")
+                ;
+//                ->wherein('id_tipe_jurnal',[4]);
+        }
         return Jurnal::where('anggota',$id)
             ->wherein('akun_kredit',$jenisSimpanan)
             ->wherein('id_tipe_jurnal',[4]);
-
 
     }
     static public function getTotalSimpanan($id=null){

@@ -7,6 +7,7 @@ use App\Exports\LaporanExcelExport;
 use App\Exports\LaporanExcelExportPDF;
 use App\Exports\SimpananExport;
 use App\Imports\SimpananImport;
+use App\Managers\PenarikanManager;
 use App\Models\Anggota;
 use App\Models\JenisSimpanan;
 use App\Models\Jurnal;
@@ -560,7 +561,7 @@ class SimpananController extends Controller
     {
         try {
             // get anggota
-            $anggota = Anggota::with('simpanSaldoAwal')->findOrFail($kodeAnggota);
+            $anggota = Anggota::findOrFail($kodeAnggota);
 
             // get this year
             if (!$request->year) {
@@ -570,19 +571,27 @@ class SimpananController extends Controller
                 $year = Carbon::createFromFormat('Y', $request->year)->subYear()->endOfYear();
                 $thisYear = Carbon::createFromFormat('Y', $request->year)->year;
             }
+            $from = Carbon::createFromFormat('Y',$thisYear)->startOfYear()->format('Y-m-d');
+            $to = Carbon::createFromFormat('Y',$thisYear)->endOfYear()->format('Y-m-d');
 
             // $thisYear = 2020;
 
             // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
 
-            $listSimpanan = Simpanan::whereYear('periode', $thisYear)
-                ->where('kode_anggota', $anggota->kode_anggota)
-                ->where("mutasi", 0)
-                ->orderBy('periode', 'asc')
+//            $listSimpanan = Simpanan::whereYear('periode', $thisYear)
+//                ->where('kode_anggota', $anggota->kode_anggota)
+//                ->where("mutasi", 0)
+//                ->orderBy('periode', 'asc')
+//                ->get();
+            $listSimpanan = SimpananManager::getListSimpanan($anggota->kode_anggota,$from,$to)
                 ->get();
+            $awalSimpan = SimpananManager::getListSimpananSaldoAwal($anggota->kode_anggota,$thisYear)->get();
+            $awaltarik = PenarikanManager::getListPenarikanSaldoAwal($anggota->kode_anggota,$thisYear)->get();
+
+
 
             // data di grouping berdasarkan kode jenis simpan
-            $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
+            $groupedListSimpanan = $listSimpanan->groupBy('akun_kredit');
 
             // kode_jenis_simpan yang wajib ada
             $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc');
@@ -596,13 +605,17 @@ class SimpananController extends Controller
                 }
             }
 
+
             $simpananKeys = $groupedListSimpanan->keys();
-            $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                ->whereYear('tgl_transaksi', $thisYear)
-                ->whereIn('code_trans', $simpananKeys)
-                ->whereraw('paid_by_cashier is not null')
-                ->orderBy('tgl_transaksi', 'asc')
+//            $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
+//                ->whereYear('tgl_transaksi', $thisYear)
+//                ->whereIn('code_trans', $simpananKeys)
+//                ->whereraw('paid_by_cashier is not null')
+//                ->orderBy('tgl_transaksi', 'asc')
+//                ->get();
+            $listPengambilan = PenarikanManager::getListPenarikan($anggota->kode_anggota,$from,$to)
                 ->get();
+
             /*
                 tiap jenis simpanan di bagi jadi 3 komponen
                 1. saldo akhir tahun tiap jenis simpanan
@@ -617,24 +630,27 @@ class SimpananController extends Controller
             foreach ($groupedListSimpanan as $key => $list) {
                 $jenisSimpanan = JenisSimpanan::find($key);
                 if ($jenisSimpanan) {
-                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
-                    $transsimpan = $anggota->listSimpanan
-                        ->where('kode_jenis_simpan', $key)
-                        ->where('periode', '<', $year)
-                        ->where('mutasi', 0)
-                        ->sum('besar_simpanan');
-                    $transtarik = $anggota->listPenarikan
-                        ->where('code_trans', $key)
-                        ->where('tgl_transaksi', '<', $year)
-                        ->wherenotnull('paid_by_cashier')
-                        ->sum('besar_ambil');
+                    $tabungan = $awalSimpan->where('akun_kredit',$key)->sum('kredit')-$awaltarik->where('akun_debet',$key)->sum('debet');
+
+//                    $transsimpan = $anggota->listSimpanan
+//                        ->where('kode_jenis_simpan', $key)
+//                        ->where('periode', '<', $year)
+//                        ->where('mutasi', 0)
+//                        ->sum('besar_simpanan');
+//                    $transtarik = $anggota->listPenarikan
+//                        ->where('code_trans', $key)
+//                        ->where('tgl_transaksi', '<', $year)
+//                        ->wherenotnull('paid_by_cashier')
+//                        ->sum('besar_ambil');
+                    $transsimpan = $list->sum('kredit');
+                    $transtarik = $listPengambilan->where('akun_debet', $key)->values()->sum('debet');
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan + $transsimpan - $transtarik : $transsimpan - $transtarik;
+                    $res['balance'] = ($tabungan) ? $tabungan + $transsimpan - $transtarik : $transsimpan - $transtarik;
                     $res['list'] = $list;
-                    $res['amount'] = $list->sum('besar_simpanan');
+                    $res['amount'] = $list->sum('kredit');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
-                    $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
-                    $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
+                    $res['withdrawalList'] = $listPengambilan->where('akun_debet', $key)->values();
+                    $res['withdrawalAmount'] = $listPengambilan->where('akun_debet', $key)->values()->sum('debet');
                     if (isset($requiredKeyIndex[$key])) {
                         $seq = $requiredKeyIndex[$key];
                         $listSimpanan[$seq] = (object)$res;
@@ -648,7 +664,7 @@ class SimpananController extends Controller
 
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
-            // dd($data);
+//             dd($data['listSimpanan']);
 
             return view('simpanan.card.detail', $data);
         } catch (\Throwable $e) {

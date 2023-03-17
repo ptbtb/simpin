@@ -97,6 +97,7 @@ use Carbon\Carbon;
         $countSimpanan = 0;
         $countPengambilan = 0;
         $maxIteration = 0;
+//        dd($listSimpanan);
     @endphp
     @foreach ($listSimpanan as $value)
         @php
@@ -122,8 +123,8 @@ use Carbon\Carbon;
         @for ($i = 0; $i < $maxIteration; $i++)
             <tr>
                 @if (isset($list[$i]))
-                    <td colspan="4" class="border-right-0 bordery-0">{{ $list[$i]->periode->format('m-Y') }}</td>
-                    <td class="border-0">{{ number_format($list[$i]->besar_simpanan,0) }}</td>
+                    <td colspan="4" class="border-right-0 bordery-0">{{ $list[$i]->tgl_transaksi }}</td>
+                    <td class="border-0">{{ number_format($list[$i]->kredit,0) }}</td>
                     <td colspan="3" class="border-left-0 bordery-0"></td>
                 @else
                     <td colspan="4" class="border-right-0 bordery-0"></td>
@@ -131,8 +132,8 @@ use Carbon\Carbon;
                     <td colspan="3" class="border-left-0 bordery-0"></td>
                 @endif
                 @if (isset($withdrawalList[$i]))
-                    <td colspan="2" class="border-right-0 bordery-0">{{ $withdrawalList[$i]->tgl_transaksi->format('d-m-Y') }}</td>
-                    <td colspan="2" class="border-left-0 bordery-0" style="text-align: right">{{ number_format($withdrawalList[$i]->besar_ambil,0) }}</td>
+                    <td colspan="2" class="border-right-0 bordery-0">{{ $withdrawalList[$i]->tgl_transaksi}}</td>
+                    <td colspan="2" class="border-left-0 bordery-0" style="text-align: right">{{ number_format($withdrawalList[$i]->debet,0) }}</td>
                 @else
                     <td colspan="2" class="border-right-0 bordery-0"></td>
                     <td colspan="2" class="border-left-0 bordery-0"></td>

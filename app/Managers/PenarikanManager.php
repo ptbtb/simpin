@@ -46,6 +46,24 @@ class PenarikanManager
         }
     }
 
+    static public function getListPenarikanSaldoAwal($id,$year=null){
+        $result = [];
+        $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
+        if($year){
+            $tgl= Carbon::createFromFormat('Y',$year)->startOfYear()->format('Y-m-d');
+            return Jurnal::where('anggota',$id)
+                ->wherein('akun_debet',$jenisSimpanan)
+                ->where('tgl_transaksi','<',$tgl)
+                ->groupBy('akun_debet')
+                ->selectRaw("sum(debet) as debet,akun_debet")
+                ;
+//                ->wherein('id_tipe_jurnal',[4]);
+        }
+        return Jurnal::where('anggota',$id)
+            ->wherein('akun_debet',$jenisSimpanan)
+            ->wherein('id_tipe_jurnal',[4]);
+
+    }
     static public function getListPenarikan($id,$from,$to){
         $result = [];
         $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc')->pluck('kode_jenis_simpan');
