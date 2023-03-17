@@ -74,7 +74,8 @@
         $('.datepicker').datepicker({
             format: "yyyy-mm",
             viewMode: "months",
-            minViewMode: "months"
+            minViewMode: "months",
+            autoclose: true
         });
 
         $('input.datepicker').bind('keyup keydown keypress', function(evt) {
