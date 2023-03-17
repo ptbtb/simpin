@@ -208,10 +208,10 @@
                         }
                     },
                     {
-                        mData: 'kode_anggota_view',
+                        mData: 'anggota',
                         sType: "string",
                         className: "dt-body-center",
-                        "name": "kode_anggota_view",
+                        "name": "anggota",
 
                     },
                     {
