@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompanySetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -40,10 +42,10 @@ class LoginController extends Controller
         }
 
         $trans = DB::table('company_setting')
-                    ->where('name','version') 
+                    ->where('name','version')
                     ->first();
 
-        $version=$trans->value;   
+        $version=$trans->value;
 
         if($request->version){
             if($request->version!==$version){
@@ -53,14 +55,22 @@ class LoginController extends Controller
         ];
         return response()->json($response, 422);
             }
-        }  
+        }
         if(!$request->version){
             $response = [
             "message"=>"The given data was invalid.",
             "errors"=>'Versi terbaru sudah tersedia, Mohon Update Aplikasi Anda Terlebih Dahulu'
         ];
         return response()->json($response, 422);
-        }   
+        }
+        $maintenance= CompanySetting::findorfail(7)->value;
+        if($maintenance==1){
+            $response = [
+                "message"=>"Application is Under Maintenance.",
+                "errors"=>'Silahkan Coba Lagi beberapa waktu kembali'
+            ];
+            return response()->json($response, 422);
+        }
         $token = $user->createToken('Auth Token')->accessToken;
         $response = [
             "message"=>"",

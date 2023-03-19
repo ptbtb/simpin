@@ -68,22 +68,25 @@ class SimpananController extends Controller
             $user = $request->user('api');
             $anggota = $user->anggota;
             if (!$request->year) {
-                $year= Carbon::today()->subYear()->endOfYear();
+                $year = Carbon::today()->subYear()->endOfYear();
                 $thisYear = Carbon::now()->year;
             } else {
-                $year= Carbon::createFromFormat('Y', $request->year)->subYear()->endOfYear();
+                $year = Carbon::createFromFormat('Y', $request->year)->subYear()->endOfYear();
                 $thisYear = Carbon::createFromFormat('Y', $request->year)->year;
             }
-            $listTabungan = \App\Models\View\ViewSimpanSaldoAwal::where('kode_anggota', $anggota->kode_anggota)
+            $from = Carbon::createFromFormat('Y',$thisYear)->startOfYear()->format('Y-m-d');
+            $to = Carbon::createFromFormat('Y',$thisYear)->endOfYear()->format('Y-m-d');
+
+           
+            $listSimpanan = SimpananManager::getListSimpanan($anggota->kode_anggota,$from,$to)
                 ->get();
-            // get list simpanan by this year and kode anggota. sort by tgl_entry ascending
-            $listSimpanan = Simpanan::whereYear('tgl_transaksi', $thisYear)
-                ->where('kode_anggota', $anggota->kode_anggota)
-                ->where("mutasi",0)
-                ->orderBy('periode', 'asc')
-                ->get();
+            $awalSimpan = SimpananManager::getListSimpananSaldoAwal($anggota->kode_anggota,$thisYear)->get();
+            $awaltarik = PenarikanManager::getListPenarikanSaldoAwal($anggota->kode_anggota,$thisYear)->get();
+
+
+
             // data di grouping berdasarkan kode jenis simpan
-            $groupedListSimpanan = $listSimpanan->groupBy('kode_jenis_simpan');
+            $groupedListSimpanan = $listSimpanan->groupBy('akun_kredit');
 
             // kode_jenis_simpan yang wajib ada
             $jenisSimpanan = JenisSimpanan::orderBy('sequence', 'asc');
@@ -97,45 +100,27 @@ class SimpananController extends Controller
                 }
             }
 
+
             $simpananKeys = $groupedListSimpanan->keys();
-            $listPengambilan = Penarikan::where('kode_anggota', $anggota->kode_anggota)
-                ->whereYear('tgl_transaksi', $thisYear)
-                ->whereIn('code_trans', $simpananKeys)
-                ->whereraw('paid_by_cashier is not null')
-                ->orderBy('tgl_transaksi', 'asc')
+            $listPengambilan = PenarikanManager::getListPenarikan($anggota->kode_anggota,$from,$to)
                 ->get();
-            /*
-                tiap jenis simpanan di bagi jadi 3 komponen
-                1. saldo akhir tahun tiap jenis simpanan
-                2. list simpanan untuk tiap jenis simpanan pada tahun ini
-                3. jumlah simpanan untuk tiap jenis simpanan pada tahun ini
-                4. nama jenis simpanan
-                5. total saldo akhir tiap jenis simpanan
-            */
+
 
             $listSimpanan = [];
             $index = count($requiredKey);
             foreach ($groupedListSimpanan as $key => $list) {
                 $jenisSimpanan = JenisSimpanan::find($key);
                 if ($jenisSimpanan) {
-                    $tabungan = $anggota->simpanSaldoAwal->where('kode_trans', $key)->first();
-                    $transsimpan = $anggota->listSimpanan
-                                    ->where('kode_jenis_simpan', $key)
-                                    ->where('periode','<',$year)
-                                    ->where('mutasi',0)
-                                    ->sum('besar_simpanan');
-                        $transtarik = $anggota->listPenarikan
-                                    ->where('code_trans', $key)
-                                    ->where('tgl_ambil','<',$year)
-                                    ->wherenotnull('paid_by_cashier')
-                                    ->sum('besar_ambil');
+                    $tabungan = $awalSimpan->where('akun_kredit',$key)->sum('kredit')-$awaltarik->where('akun_debet',$key)->sum('debet');
+                    $transsimpan = $list->sum('kredit');
+                    $transtarik = $listPengambilan->where('akun_debet', $key)->values()->sum('debet');
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = ($tabungan) ? $tabungan->besar_tabungan+$transsimpan-$transtarik : 0;
+                    $res['balance'] = ($tabungan) ? $tabungan + $transsimpan - $transtarik : $transsimpan - $transtarik;
                     $res['list'] = $list;
-                    $res['amount'] = $list->sum('besar_simpanan');
+                    $res['amount'] = $list->sum('kredit');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
-                    $res['withdrawalList'] = $listPengambilan->where('code_trans', $key)->values();
-                    $res['withdrawalAmount'] = $listPengambilan->where('code_trans', $key)->values()->sum('besar_ambil');
+                    $res['withdrawalList'] = $listPengambilan->where('akun_debet', $key)->values();
+                    $res['withdrawalAmount'] = $listPengambilan->where('akun_debet', $key)->values()->sum('debet');
                     if (isset($requiredKeyIndex[$key])) {
                         $seq = $requiredKeyIndex[$key];
                         $listSimpanan[$seq] = (object)$res;
@@ -146,13 +131,14 @@ class SimpananController extends Controller
                 }
             }
 
+
             $data['anggota'] = $anggota;
             $data['listSimpanan'] = collect($listSimpanan)->sortKeys();
             // dd($data);
             // share data to view
             view()->share('data', $data);
             PDF::setOptions(['margin-left' => 0, 'margin-right' => 0]);
-            $pdf = PDF::loadView('simpanan.card.export2', $data)->setPaper('a4', 'portrait');
+            $pdf = PDF::loadView('simpanan.card.detail', $data)->setPaper('a4', 'portrait');
 
             // download PDF file with download method
             $filename = 'export_kartu_simpanan_' . Carbon::now()->format('d M Y') . '.pdf';
