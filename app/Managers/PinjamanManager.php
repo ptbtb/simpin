@@ -263,4 +263,33 @@ class PinjamanManager
         return Jurnal::wherein('akun_debet',$jenisPinjaman)->sum('debet');
 
     }
+    static public function getListPinjaman($id,$from,$to){
+        $result = [];
+        $jenisPinjaman = JenisPinjaman::orderBy('kode_jenis_pinjam', 'asc')->pluck('kode_jenis_pinjam');
+
+        return Jurnal::where('anggota',$id)
+            ->wherenotin('id_tipe_jurnal',[4])
+            ->wherein('akun_debet',$jenisPinjaman)
+            ->whereBetween('tgl_transaksi',[$from,$to]);
+
+
+    }
+    static public function getListPinjamanSaldoAwal($id,$year=null){
+        $result = [];
+        $jenisPinjaman = JenisPinjaman::orderBy('kode_jenis_pinjam', 'asc')->pluck('kode_jenis_pinjam');
+        if($year){
+            $tgl= Carbon::createFromFormat('Y',$year)->startOfYear()->format('Y-m-d');
+            return Jurnal::where('anggota',$id)
+                ->wherein('akun_debet',$jenisPinjaman)
+                ->where('tgl_transaksi','<',$tgl)
+                ->groupBy('akun_debet')
+                ->selectRaw("sum(debet) as debet,akun_debet")
+                ;
+//                ->wherein('id_tipe_jurnal',[4]);
+        }
+        return Jurnal::where('anggota',$id)
+            ->wherein('akun_debet',$jenisPinjaman)
+            ->wherein('id_tipe_jurnal',[4]);
+
+    }
 }

@@ -276,6 +276,12 @@ Route::group(['prefix' => 'pinjaman'], function () {
             Route::get('calculate-angsuran', [App\Http\Controllers\PinjamanController::class, 'calculateAngsuran'])->name('pengajuan-pinjaman-calculate-angsuran');
             Route::post('update-status', [App\Http\Controllers\PinjamanController::class, 'updateStatusPengajuanPinjaman'])->name('pengajuan-pinjaman-update-status');
         });
+        Route::group(['prefix' => 'card'], function () {
+            Route::get('', [App\Http\Controllers\CardController::class, 'indexCardPinjaman'])->name('pinjaman-index-card');
+            Route::get('view/{kodeAnggota}', [App\Http\Controllers\CardController::class, 'showCardPinjaman'])->name('pinjaman-show-card');
+            Route::get('download/pdf/{kodeAnggota}', [App\Http\Controllers\CardController::class, 'downloadPDFCardPinjaman'])->name('pinjaman-download-pdf-card');
+            Route::get('download/excel/{kodeAnggota}', [App\Http\Controllers\CardController::class, 'downloadExcelCardPinjaman'])->name('pinjaman-download-pdf-card');
+        });
 
         Route::get('saldo-awal/excel', [PinjamanController::class, 'exportSaldoAwalPinjaman'])->name('export-saldo-awal-pinjaman');
     });
@@ -307,10 +313,10 @@ Route::group(['prefix' => 'simpanan'], function () {
         Route::post('postJurnal', [App\Http\Controllers\SimpananController::class, 'postPendingJurnal'])->name('simpanan-post-jurnal');
 
         Route::group(['prefix' => 'card'], function () {
-            Route::get('', [App\Http\Controllers\SimpananController::class, 'indexCard'])->name('simpanan-index-card');
-            Route::get('view/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'showCard'])->name('simpanan-show-card');
-            Route::get('download/pdf/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadPDFCard'])->name('simpanan-download-pdf-card');
-            Route::get('download/excel/{kodeAnggota}', [App\Http\Controllers\SimpananController::class, 'downloadExcelCard'])->name('simpanan-download-pdf-card');
+            Route::get('', [App\Http\Controllers\CardController::class, 'indexCard'])->name('simpanan-index-card');
+            Route::get('view/{kodeAnggota}', [App\Http\Controllers\CardController::class, 'showCard'])->name('simpanan-show-card');
+            Route::get('download/pdf/{kodeAnggota}', [App\Http\Controllers\CardController::class, 'downloadPDFCard'])->name('simpanan-download-pdf-card');
+            Route::get('download/excel/{kodeAnggota}', [App\Http\Controllers\CardController::class, 'downloadExcelCard'])->name('simpanan-download-pdf-card');
         });
 
         Route::get('laporan', [App\Http\Controllers\SimpananController::class, 'laporan'])->name('laporan-simpanan');

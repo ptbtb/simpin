@@ -253,7 +253,8 @@
             </div>
             @if($searchResult->tabungan->isNotEmpty())
             <div class="col-md-2">
-                <a href="{{ route('simpanan-index-card', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-warning btn-sm w-100 mt-1"><i class="fas fa-clipboard"></i> Kartu Simpanan</a>
+                <a href="{{ route('simpanan-index-card', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-primary btn-sm w-100 mt-1"><i class="fas fa-clipboard"></i> Kartu Simpanan</a>
+                <a href="{{ route('pinjaman-index-card', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-warning btn-sm w-100 mt-1"><i class="fas fa-clipboard"></i> Kartu Pinjaman</a>
                 @if($searchResult->pinjaman->isEmpty())
                 <a href="{{ route('pinjaman-create', ['kode_anggota' => $searchResult->kode_anggota]) }}" class="btn btn-primary btn-sm w-100 mt-1"><i class="fas fa-clipboard"></i> Set Saldo Pinjaman</a>
                 @endif

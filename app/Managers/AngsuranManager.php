@@ -3,6 +3,7 @@ namespace App\Managers;
 
 use App\Models\Angsuran;
 use App\Models\JenisPinjaman;
+use App\Models\JenisSimpanan;
 use App\Models\Jurnal;
 use App\Models\Pinjaman;
 
@@ -131,6 +132,36 @@ class AngsuranManager
         }
 
         return Jurnal::wherein('akun_kredit',$jenisPinjaman)->sum('kredit');
+
+    }
+
+    static public function getListAngsuran($id,$from,$to){
+        $result = [];
+        $jenisPinjaman= JenisPinjaman::pluck('kode_jenis_pinjam');
+
+        return Jurnal::where('anggota',$id)
+            ->wherenotin('id_tipe_jurnal',[4])
+            ->wherein('akun_kredit',$jenisPinjaman)
+            ->whereBetween('tgl_transaksi',[$from,$to]);
+
+
+    }
+    static public function getListAngsuranSaldoAwal($id,$year=null){
+        $result = [];
+        $jenisPinjaman= JenisPinjaman::pluck('kode_jenis_pinjam');
+        if($year){
+            $tgl= Carbon::createFromFormat('Y',$year)->startOfYear()->format('Y-m-d');
+            return Jurnal::where('anggota',$id)
+                ->wherein('akun_kredit',$jenisPinjaman)
+                ->where('tgl_transaksi','<',$tgl)
+                ->groupBy('akun_kredit')
+                ->selectRaw("sum(kredit) as kredit,akun_kredit")
+                ;
+//                ->wherein('id_tipe_jurnal',[4]);
+        }
+        return Jurnal::where('anggota',$id)
+            ->wherein('akun_kredit',$jenisPinjaman)
+            ->wherein('id_tipe_jurnal',[4]);
 
     }
 }

@@ -396,13 +396,19 @@ return [
                     'text' => 'List Pinjaman',
                     'url' => '/pinjaman/list',
                     'icon' => 'fas fa-file-invoice-dollar nav-icon',
-                    'can'  => ['view pinjaman'],
+                    'can'  => ['edit pinjaman'],
                 ],
                 [
                     'text' => 'List Angsuran',
                     'url' => '/pinjaman/angsuran-list',
                     'icon' => 'fas fa-file-invoice-dollar nav-icon',
-                    'can'  => ['view angsuran'],
+                    'can'  => ['edit pinjaman'],
+                ],
+                [
+                    'text' => 'Kartu Pinjaman',
+                    'url' => '/pinjaman/card',
+                    'icon' => 'fas fa-file-invoice-dollar nav-icon',
+                    'can'  => ['view pinjaman'],
                 ],
                 [
                     'text' => 'History Pinjaman',
@@ -585,7 +591,7 @@ return [
             'text' => 'Import Tools',
             //'url' => '/saldo-awal',
             'icon' => 'fas fa-upload nav-icon',
-            //'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal'],
+            'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal','import simpanan','import penarikan','import pinjaman','import angsuran','import user'],
             'submenu' => [
                 [
                     'text' => 'Import Saldo Awal COA',
@@ -660,7 +666,7 @@ return [
             'text' => 'Export Tools',
             //'url' => '/saldo-awal',
             'icon' => 'fas fa-download nav-icon',
-            //'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal'],
+            'can'  => ['view saldo awal', 'add saldo awal', 'edit saldo awal'],
             'submenu' => [
                 [
                     'text' => 'Export Saldo Awal Pinjaman',
