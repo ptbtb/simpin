@@ -145,7 +145,7 @@ class CardController extends Controller
                     $transsimpan = $list->sum('kredit');
                     $transtarik = $listPengambilan->where('akun_debet', $key)->values()->sum('debet');
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = ($tabungan) ? $tabungan + $transsimpan - $transtarik : $transsimpan - $transtarik;
+                    $res['balance'] = $tabungan ;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('kredit');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
@@ -266,7 +266,7 @@ class CardController extends Controller
                     $transsimpan = $list->sum('kredit');
                     $transtarik = $listPengambilan->where('akun_debet', $key)->values()->sum('debet');
                     $res['name'] = $jenisSimpanan->nama_simpanan;
-                    $res['balance'] = ($tabungan) ? $tabungan + $transsimpan - $transtarik : $transsimpan - $transtarik;
+                    $res['balance'] = $tabungan;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('kredit');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
@@ -387,7 +387,7 @@ class CardController extends Controller
                     $transpinjam = $list->sum('debet');
                     $transangsur = $listAngsuran->where('akun_kredit', $key)->values()->sum('kredit');
                     $res['name'] = $jenisPinjaman->nama_pinjaman;
-                    $res['balance'] = ($tabungan) ? $tabungan + $transpinjam - $transangsur : $transpinjam - $transangsur;
+                    $res['balance'] = $tabungan;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('debet');
                     $res['final_balance'] = $res['balance'] + $res['amount'];
@@ -485,7 +485,7 @@ class CardController extends Controller
                     $transpinjam = $list->sum('debet');
                     $transangsur = $listAngsuran->where('akun_kredit', $key)->values()->sum('kredit');
                     $res['name'] = $jenisPinjaman->nama_pinjaman;
-                    $res['balance'] = ($tabungan) ? $tabungan + $transpinjam - $transangsur : $transpinjam - $transangsur;
+                    $res['balance'] = $tabungan;
                     $res['list'] = $list;
                     $res['amount'] = $list->sum('debet');
                     $res['final_balance'] = $res['balance'] + $res['amount'];

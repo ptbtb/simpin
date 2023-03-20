@@ -292,4 +292,13 @@ class PinjamanManager
             ->wherein('id_tipe_jurnal',[4]);
 
     }
+    static public function getListAllPinjaman($id=null,$from,$to){
+        $result = [];
+        $jenisPinjaman = JenisPinjaman::orderBy('kode_jenis_pinjam', 'asc')->pluck('kode_jenis_pinjam');
+
+        return Jurnal::wherein('akun_debet',$jenisPinjaman)
+            ->whereBetween('tgl_transaksi',[$from,$to]);
+
+
+    }
 }

@@ -24,7 +24,8 @@ class LaporanExcelExport implements WithMultipleSheets
 
        return [
             'Resume Tahun' => new LaporanExcelResumeAllExport($this->data),
-//            'Saldo Anggota' => new SaldoAnggotaSheet(),
+            'Saldo Anggota' => new SaldoAnggotaSheet($this->data['request']),
+            'trx Tanpa Anggota' => new WithoutAnggotaSheet($this->data['request']),
         ];
     }
 }

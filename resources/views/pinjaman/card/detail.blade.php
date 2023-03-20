@@ -114,7 +114,7 @@ use Carbon\Carbon;
             $list = $value->list;
             $withdrawalList = $value->withdrawalList;
         @endphp
-    @if ($value->final_balance>0)
+    @if ($value->final_balance!==0)
         <tr>
             <td colspan="4" style="text-align: center" class="border-right-0 bordery-0">{{ strtoupper($value->name) }}</td>
             <td colspan="4" style="text-align: right" class="border-left-0 bordery-0">{{ number_format($value->balance,0) }}</td>

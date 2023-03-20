@@ -1965,13 +1965,13 @@ class PinjamanController extends Controller
 
         // period
         // check if period date has been selected
-        if (!$request->period) {
-            $request->period = Carbon::today()->format('Y-m-d');
+        if (!$request->tahun) {
+            $request->tahun = Carbon::today()->format('Y-m-d');
         }
 
         // get start and end of year
-        $startOfYear = Carbon::createFromFormat('Y-m-d', $request->period)->startOfYear()->toDateTimeString();
-        $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->period)->endOfYear()->toDateTimeString();
+        $startOfYear = Carbon::createFromFormat('Y-m-d', $request->tahun)->startOfYear()->toDateTimeString();
+        $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->tahun)->endOfYear()->toDateTimeString();
 
         $pinjamanJapens = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
             ->orderBy('tgl_pengajuan')
@@ -2094,14 +2094,14 @@ class PinjamanController extends Controller
 
                 // period
                 // check if period date has been selected
-                if(!$request->period)
+                if(!$request->tahun)
                 {
-                    $request->period = Carbon::today()->format('Y-m-d');
+                    $request->tahun = Carbon::today()->format('Y-m-d');
                 }
 
                 // get start and end of year
-                $startOfYear = Carbon::createFromFormat('Y-m-d', $request->period)->startOfYear()->toDateTimeString();
-                $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->period)->endOfYear()->toDateTimeString();
+                $startOfYear = Carbon::createFromFormat('Y-m-d', $request->tahun)->startOfYear()->toDateTimeString();
+                $endOfYear   = Carbon::createFromFormat('Y-m-d', $request->tahun)->endOfYear()->toDateTimeString();
 
                 $pinjamanJapens = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
                                         ->orderBy('tgl_pengajuan')
@@ -2237,10 +2237,10 @@ class PinjamanController extends Controller
                 $pdf = PDF::loadView('pinjaman.reportExcel', $data)->setPaper('a4', 'landscape');
 
                 // download PDF file with download method
-                $filename = 'export_pinjaman_report_excel_' . Carbon::createFromFormat('Y-m-d', $request->period)->format('d M Y') . '.pdf';
+                $filename = 'export_pinjaman_report_excel_' . Carbon::createFromFormat('Y-m-d', $request->tahun)->format('d M Y') . '.pdf';
                 return $pdf->download($filename);
             }
-            $filename = 'export_pinjaman_report_excel_' . Carbon::createFromFormat('Y-m-d', $request->period)->format('d M Y') . '.xlsx';
+            $filename = 'export_pinjaman_report_excel_' . Carbon::createFromFormat('Y-m-d', $request->tahun)->format('d M Y') . '.xlsx';
             return Excel::download(new LaporanPinjamanExcelExport($request), $filename, \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $e) {
             Log::error($e);
@@ -2525,4 +2525,5 @@ class PinjamanController extends Controller
 
         return false;
     }
+
 }

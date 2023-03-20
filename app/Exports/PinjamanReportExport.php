@@ -25,14 +25,14 @@ class PinjamanReportExport implements FromView
 
         // period
         // check if period date has been selected
-        if(!$this->request->period)
+        if(!$this->request->tahun)
         {
-            $this->request->period = Carbon::today()->format('Y-m-d');
+            $this->request->tahun = Carbon::today()->format('Y-m-d');
         }
 
         // get start and end of year
-        $startOfYear = Carbon::createFromFormat('Y-m-d', $this->request->period)->startOfYear()->toDateTimeString();
-        $endOfYear   = Carbon::createFromFormat('Y-m-d', $this->request->period)->endOfYear()->toDateTimeString();
+        $startOfYear = Carbon::createFromFormat('Y-m-d', $this->request->tahun)->startOfYear()->toDateTimeString();
+        $endOfYear   = Carbon::createFromFormat('Y-m-d', $this->request->tahun)->endOfYear()->toDateTimeString();
 
         $pinjamanJapens = Pengajuan::whereBetween('tgl_pengajuan', [$startOfYear, $endOfYear])
                                 ->orderBy('tgl_pengajuan')
