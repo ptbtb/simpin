@@ -32,6 +32,7 @@ class WithoutAnggotaSheet implements FromQuery, WithTitle,WithHeadings, ShouldAu
 //        $anggota = Anggota::limit(500)->get()->pluck('kode_anggota');
         return Jurnal::selectRaw('anggota,nomer,akun_kredit,kredit,akun_debet,debet,keterangan,tgl_transaksi')
             ->whereRaw('(akun_debet in (select kode_jenis_simpan from t_jenis_simpan) or akun_kredit in(select kode_jenis_simpan from t_jenis_simpan)) and (anggota is null or anggota not in (select kode_anggota from t_anggota))')
+            ->where('tgl_transaksi','<=',$this->request->tahun)
             ;
     }
 
