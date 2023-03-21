@@ -79,7 +79,7 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-header text-right">
+        <div class="card-header text-right d-none">
             <a href="{{ route('pinjaman-download-pdf', ['from' => $request->from,'to' => $request->to,'status' => STATUS_PINJAMAN_BELUM_LUNAS,'unit_kerja' => $request->unit_kerja,'tenor' => $request->tenor]) }}"
                 class="btn btn-info btn-sm"><i class="fa fa-download"></i> Download PDF</a>
             <a href="{{ route('pinjaman-download-excel', ['from' => $request->from,'to' => $request->to,'status' => STATUS_PINJAMAN_BELUM_LUNAS,'unit_kerja' => $request->unit_kerja,'tenor' => $request->tenor]) }}"
